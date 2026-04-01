@@ -1,0 +1,33 @@
+{
+  "name": "@fused-gaming/skill-frontend-design",
+  "version": "1.0.0",
+  "description": "Frontend component design and HTML/CSS generation for modern web applications",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "@fused-gaming/mcp-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "keywords": [
+    "mcp",
+    "skill",
+    "frontend",
+    "design",
+    "html",
+    "css",
+    "components"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}
