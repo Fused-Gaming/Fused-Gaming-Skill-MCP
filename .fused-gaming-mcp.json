@@ -1,0 +1,34 @@
+{
+  "server": {
+    "name": "fused-gaming-mcp",
+    "version": "1.0.0",
+    "transport": "stdio",
+    "port": 3000
+  },
+  "skills": {
+    "enabled": [
+      "algorithmic-art",
+      "ascii-mockup",
+      "canvas-design",
+      "frontend-design",
+      "theme-factory",
+      "mcp-builder",
+      "pre-deploy-validator",
+      "skill-creator"
+    ],
+    "disabled": [
+      "web-artifacts-builder",
+      "webapp-testing",
+      "brand-guidelines",
+      "doc-coauthoring",
+      "internal-comms"
+    ],
+    "custom": []
+  },
+  "auth": {
+    "apiKeys": {}
+  },
+  "logging": {
+    "level": "info"
+  }
+}
