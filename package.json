@@ -1,0 +1,36 @@
+{
+  "name": "@fused-gaming/mcp",
+  "version": "1.0.0",
+  "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fused-gaming/mcp"
+  },
+  "homepage": "https://github.com/fused-gaming/mcp",
+  "workspaces": [
+    "packages/core",
+    "packages/skills/*",
+    "packages/cli"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "eslint . --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "dev": "npm run dev --workspace=packages/core",
+    "prepare": "npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@fused-gaming/skill-theme-factory",
+  "version": "1.0.0",
+  "description": "Design system and theme generation for consistent UI/UX across applications",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "@fused-gaming/mcp-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "keywords": [
+    "mcp",
+    "skill",
+    "theme",
+    "design-system",
+    "tailwind",
+    "css"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

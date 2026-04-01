@@ -1,0 +1,24 @@
+{
+  "name": "@fused-gaming/mcp-cli",
+  "version": "1.0.0",
+  "description": "CLI tool for managing Fused Gaming MCP skills and configuration",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "fused-gaming-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "@fused-gaming/mcp-core": "workspace:*",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/yargs": "^17.0.24",
+    "typescript": "^5.3.2"
+  }
+}
