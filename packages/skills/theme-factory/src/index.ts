@@ -13,7 +13,7 @@ export const themeFactorySkill: Skill = {
     "Generate design systems and themes for consistent UI/UX across applications",
   tools: [generateThemeTool],
 
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     console.log("[ThemeFactory] Skill initialized");
   },
 
