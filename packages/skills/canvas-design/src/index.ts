@@ -13,7 +13,7 @@ export const canvasDesignSkill: Skill = {
     "Generate visual designs for web with SVG and canvas rendering capabilities",
   tools: [generateSVGDesignTool],
 
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     console.log("[CanvasDesign] Skill initialized");
   },
 

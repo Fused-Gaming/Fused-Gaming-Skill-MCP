@@ -13,7 +13,7 @@ export const skillCreatorSkill: Skill = {
     "Create custom skills and tools for the Fused Gaming MCP ecosystem with templates and generators",
   tools: [createSkillTool],
 
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     console.log("[SkillCreator] Skill initialized");
   },
 

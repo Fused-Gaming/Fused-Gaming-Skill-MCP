@@ -13,7 +13,7 @@ export const asciiMockupSkill: Skill = {
     "Generate mobile-first ASCII wireframe mockups for rapid UI prototyping and layout planning",
   tools: [generateMockupTool],
 
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     console.log("[ASCIIMockup] Skill initialized");
   },
 
