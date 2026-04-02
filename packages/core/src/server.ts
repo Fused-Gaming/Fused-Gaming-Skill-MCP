@@ -14,10 +14,15 @@ class FusedGamingMCPServer {
   private registry: SkillRegistry;
 
   constructor() {
-    this.server = new Server({
-      name: "fused-gaming-mcp",
-      version: "1.0.0",
-    });
+    this.server = new Server(
+      {
+        name: "fused-gaming-mcp",
+        version: "1.0.0",
+      },
+      {
+        capabilities: {},
+      }
+    );
     this.registry = new SkillRegistry();
   }
 
@@ -54,12 +59,12 @@ class FusedGamingMCPServer {
     }
 
     for (const tool of skill.tools) {
-      this.server.registerTool(
+      this.server.setRequestHandler(
         {
           name: tool.name,
           description: tool.description,
           inputSchema: tool.inputSchema,
-        },
+        } as any,
         async (input: Record<string, unknown>) => {
           try {
             const result = await tool.handler(input);

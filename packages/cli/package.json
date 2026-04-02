@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "workspace:*",
+    "@fused-gaming/mcp-core": "*",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

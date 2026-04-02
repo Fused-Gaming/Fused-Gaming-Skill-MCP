@@ -57,5 +57,5 @@ yargs(hideBin(process.argv))
   .alias("v", "version")
   .strictCommands()
   .demandCommand(1, "Please provide a command")
-  .wrap(yargs.terminalWidth())
+  .wrap(process.stdout.columns || 80)
   .parse();
