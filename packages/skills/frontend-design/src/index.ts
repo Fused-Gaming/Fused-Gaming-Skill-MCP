@@ -13,7 +13,7 @@ export const frontendDesignSkill: Skill = {
     "Design frontend components and generate HTML/CSS for modern web applications",
   tools: [generateComponentTool],
 
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     console.log("[FrontendDesign] Skill initialized");
   },
 

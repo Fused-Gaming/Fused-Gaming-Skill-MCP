@@ -3,7 +3,7 @@
  * Generative art using p5.js with seeded randomness, flow fields, and particle systems
  */
 
-import type { Skill, ToolDefinition, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
 import { generateArtTool } from "./tools/generate-art.js";
 import { createFlowFieldTool } from "./tools/flow-field.js";
 

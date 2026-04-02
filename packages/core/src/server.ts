@@ -64,7 +64,7 @@ class FusedGamingMCPServer {
           name: tool.name,
           description: tool.description,
           inputSchema: tool.inputSchema,
-        } as any,
+        } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         async (input: Record<string, unknown>) => {
           try {
             const result = await tool.handler(input);
