@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "workspace:*"
+    "@fused-gaming/mcp-core": "*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

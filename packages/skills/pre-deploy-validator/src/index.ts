@@ -13,7 +13,7 @@ export const preDeployValidatorSkill: Skill = {
     "Perform pre-deployment validation and quality checks to ensure production readiness",
   tools: [validateDeploymentTool],
 
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     console.log("[PreDeployValidator] Skill initialized");
   },
 

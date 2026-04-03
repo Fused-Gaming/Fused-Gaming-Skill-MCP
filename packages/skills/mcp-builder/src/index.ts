@@ -13,7 +13,7 @@ export const mcpBuilderSkill: Skill = {
     "Build and scaffold MCP servers and skills following best practices and architecture patterns",
   tools: [scaffoldSkillTool],
 
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     console.log("[MCPBuilder] Skill initialized");
   },
 
