@@ -189,9 +189,10 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 
 ## 🎉 Footer
 
-**Version:** 1.0.0  
-**Released:** April 2, 2026  
-**Status:** Stable (Production Ready)  
+[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-blue)](./VERSION.json)
+[![Released April 2, 2026](https://img.shields.io/badge/released-april%202%2C%202026-brightgreen)](./RELEASE_NOTES.md)
+[![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
+[![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)
 
 <div align="center">
 
@@ -202,18 +203,5 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 **Built with ❤️ by [Fused Gaming](https://fused-gaming.io)**
 
 [GitHub](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP) • [NPM](https://www.npmjs.com/package/@fused-gaming/mcp) • [Support](mailto:support@fused-gaming.io)
-
----
-
-### 📸 Adding/Updating the Social Preview
-
-To configure the GitHub social preview:
-
-1. Go to **Settings** → **General** → **Social preview**
-2. Click **Upload an image**
-3. Select `.github/assets/social-preview.png`
-4. Save changes
-
-The preview will appear on Twitter, LinkedIn, Discord, and other social platforms.
 
 </div>
