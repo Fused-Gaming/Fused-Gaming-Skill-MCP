@@ -1,0 +1,33 @@
+{
+  "name": "@fused-gaming/skill-mermaid-terminal",
+  "version": "1.0.0",
+  "description": "Visualization engine for generating Mermaid diagrams from code analysis and documentation",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "dependencies": {
+    "@fused-gaming/mcp-core": "*",
+    "mermaid": "^10.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "keywords": [
+    "mcp",
+    "skill",
+    "mermaid",
+    "diagrams",
+    "visualization",
+    "architecture"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}
