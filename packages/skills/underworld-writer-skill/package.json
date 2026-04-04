@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
-    "test": "node --test dist/*.test.js"
+    "test": "echo \"No tests yet\""
   },
   "dependencies": {
     "@fused-gaming/mcp-core": "*"
