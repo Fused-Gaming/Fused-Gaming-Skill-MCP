@@ -187,21 +187,7 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 
 ---
 
-## 🎉 Footer
-
 [![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-blue)](./VERSION.json)
 [![Released April 2, 2026](https://img.shields.io/badge/released-april%202%2C%202026-brightgreen)](./RELEASE_NOTES.md)
 [![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
 [![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)
-
-<div align="center">
-
-### Ready to Level Up?
-
-**[Get Started](./QUICKSTART.md)** • **[View Docs](./docs/)** • **[See Examples](./docs/EXAMPLES.md)**
-
-**Built with ❤️ by [Fused Gaming](https://fused-gaming.io)**
-
-[GitHub](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP) • [NPM](https://www.npmjs.com/package/@fused-gaming/mcp) • [Support](mailto:support@fused-gaming.io)
-
-</div>
