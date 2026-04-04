@@ -11,6 +11,16 @@
 #
 name: "CodeQL Advanced"
 
+# DELIVERABLES:
+# - Fix broken CodeQL workflow by providing valid matrix configuration
+# - Enable automated code security scanning on main branch
+# - Support JavaScript/TypeScript and Python languages
+#
+# SUCCESS CRITERIA:
+# - Workflow file syntax is valid (no YAML errors at line 45)
+# - All matrix variables (language, build-mode) are properly defined
+# - CodeQL analysis can execute without missing parameter errors
+
 on:
   push:
     branches: [ "main" ]
@@ -43,6 +53,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - language: 'javascript-typescript'
+            build-mode: 'none'
+          - language: 'python'
+            build-mode: 'none'
         # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'rust', 'swift'
         # Use `c-cpp` to analyze code written in C, C++ or both
         # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
