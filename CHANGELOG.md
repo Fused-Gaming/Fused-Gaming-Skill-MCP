@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Changed
-- TBD for next release
+- **CI/CD**: Updated GitHub Actions to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) and disabled matrix fail-fast in `test.yml` so Node 24 jobs still run when Node 20 fails.
 
 ### Deprecated
 - TBD for next release
