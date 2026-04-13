@@ -25,7 +25,6 @@ export function aggregateSessions(input: AggregateSessionsInput): UnifiedDailyRe
   let totalFocusScore = 0;
   let totalTokens = 0;
   let totalEnergy = 0;
-  let totalStress = 0;
   let totalInterruptions = 0;
 
   const accountDistribution: Record<string, any> = {};
