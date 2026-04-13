@@ -124,6 +124,9 @@ None reported at this time.
 2. Monitor error logs and performance
 3. Gather user feedback on new skills
 4. Plan next feature development cycle
+5. Split and monitor release automation:
+   - npm publishing in `.github/workflows/publish.yml`
+   - GitHub Releases in `.github/workflows/github-release.yml`
 
 ---
 **Release Date:** April 2, 2026  
