@@ -167,6 +167,22 @@ To avoid `E404 Scope not found` during workspace publishing:
 
 This allows forks and contributor tokens to publish without rewriting package manifests manually.
 
+### Duplicate Version Auto-Bump + Preflight Guard
+
+The publish workflow now runs:
+1. `node scripts/auto-bump-publish-versions.js`
+2. `node scripts/preflight-publish-check.js`
+
+This runs **before lint/typecheck/build**. The auto-bump script checks npm for every workspace package (`npm view <name>@<version> version`) and automatically increments patch versions across root + all workspaces until an unpublished version is found. The preflight script then verifies there are no duplicates left.
+
+This prevents late-stage `npm publish --workspaces` failures like:
+- `E403 Forbidden - You cannot publish over the previously published versions`
+
+Local commands:
+1. `npm run publish:auto-bump`
+2. `npm run publish:preflight`
+3. `npm run publish:prepare` (runs both in sequence)
+
 ## Automated CI/CD
 
 ### GitHub Actions Setup

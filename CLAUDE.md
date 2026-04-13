@@ -18,3 +18,6 @@
 9. If `npm ci` fails with missing workspace packages after merges, run `npm install` at repo root to regenerate `package-lock.json`, then re-run `npm ci` to verify lockfile sync.
 
 10. Root documentation was reorganized into categorized folders under `docs/`; place new process docs in `docs/process/`, release records in `docs/releases/`, quickstarts in `docs/getting-started/`, and historical artifacts in `docs/archive/`.
+
+11. Publish workflow now runs `scripts/preflight-publish-check.js` before lint/typecheck/build to stop duplicate-version releases early (avoids npm E403 on already-published versions).
+12. Use `npm run publish:prepare` to auto-bump workspace versions and run duplicate-version preflight before publishing; this avoids manual per-package version tracking.
