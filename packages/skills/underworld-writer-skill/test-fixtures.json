@@ -1,0 +1,264 @@
+{
+  "test_cases": [
+    {
+      "id": "test_phase1_foundation",
+      "name": "Character Foundation Phase",
+      "input": {
+        "phase": 1,
+        "character_type": "shadow_mage",
+        "required_fields": ["name", "origin", "physical_characteristics", "background", "core_motivation"]
+      },
+      "expected_output": {
+        "valid": true,
+        "completeness_score": 100,
+        "phase_coverage": "complete"
+      }
+    },
+    {
+      "id": "test_phase2_integration",
+      "name": "Underworld Integration Phase",
+      "input": {
+        "phase": 2,
+        "character": {
+          "name": "Test Character",
+          "role": "Council Member",
+          "faction": "Shadow Council"
+        },
+        "required_fields": ["role_rank", "faction_affiliation", "powers_abilities", "relationships", "resources"]
+      },
+      "expected_output": {
+        "valid": true,
+        "integration_score": 100,
+        "hierarchy_defined": true
+      }
+    },
+    {
+      "id": "test_phase3_narrative",
+      "name": "Narrative Architecture Phase",
+      "input": {
+        "phase": 3,
+        "character": {
+          "name": "Test Character",
+          "mythology": "Ancient shadow mage",
+          "conflicts": ["Internal power struggle", "External faction war"]
+        },
+        "required_fields": ["mythological_foundation", "hierarchies_conflicts", "story_arc", "thematic_elements"]
+      },
+      "expected_output": {
+        "valid": true,
+        "narrative_consistency": true,
+        "story_arc_defined": true
+      }
+    },
+    {
+      "id": "test_morrigan_complete",
+      "name": "Complete Character: Morrigan",
+      "input": {
+        "character_profile": "Morrigan Blackthorn",
+        "expected_phases": 3
+      },
+      "expected_output": {
+        "valid": true,
+        "complete": true,
+        "all_phases_present": true,
+        "relationships_count": 4,
+        "abilities_count": 5
+      }
+    },
+    {
+      "id": "test_theron_partial",
+      "name": "Incomplete Character: Theron",
+      "input": {
+        "character_profile": "Theron Nightborn",
+        "development_level": "apprentice"
+      },
+      "expected_output": {
+        "valid": true,
+        "complete": false,
+        "development_potential": "high",
+        "needs_development": ["Council recognition", "Shadow form completion", "Identity resolution"]
+      }
+    },
+    {
+      "id": "test_valdris_antagonist",
+      "name": "Antagonist Character: Valdris",
+      "input": {
+        "character_type": "antagonist",
+        "motivation_type": "supremacy",
+        "power_level": "corrupted_master"
+      },
+      "expected_output": {
+        "valid": true,
+        "character_role": "antagonist",
+        "threat_level": "extreme",
+        "character_arc_potential": true
+      }
+    },
+    {
+      "id": "test_three_way_conflict",
+      "name": "Three Character Conflict Web",
+      "input": {
+        "characters": ["Morrigan", "Theron", "Valdris"],
+        "relationship_type": "complex_conflict"
+      },
+      "expected_output": {
+        "valid": true,
+        "conflict_points": 5,
+        "narrative_complexity": "high",
+        "story_potential": "excellent"
+      }
+    },
+    {
+      "id": "test_incomplete_character",
+      "name": "Validation: Incomplete Character",
+      "input": {
+        "character": {
+          "name": "Incomplete Character",
+          "phase1_complete": true,
+          "phase2_complete": false,
+          "phase3_complete": false
+        }
+      },
+      "expected_output": {
+        "valid": true,
+        "complete": false,
+        "completion_percentage": 33,
+        "missing_phases": [2, 3]
+      }
+    },
+    {
+      "id": "test_relationship_consistency",
+      "name": "Relationship Consistency Check",
+      "input": {
+        "character1": "Morrigan",
+        "character2": "Theron",
+        "relationship_type": "mentor_student"
+      },
+      "expected_output": {
+        "valid": true,
+        "consistency": true,
+        "bidirectional": true,
+        "conflict_points": 0
+      }
+    },
+    {
+      "id": "test_mythology_integration",
+      "name": "Mythology Integration Validation",
+      "input": {
+        "character": "Theron Nightborn",
+        "prophecy_reference": "half_born_shall_bridge"
+      },
+      "expected_output": {
+        "valid": true,
+        "mythology_aligned": true,
+        "prophecy_fit": "perfect",
+        "narrative_resonance": "high"
+      }
+    },
+    {
+      "id": "test_power_limitation_balance",
+      "name": "Power and Limitation Balance",
+      "input": {
+        "character": "Theron Nightborn",
+        "power_score": 75,
+        "limitation_score": 70
+      },
+      "expected_output": {
+        "valid": true,
+        "balanced": true,
+        "vulnerability": "appropriate",
+        "character_arc_potential": "high"
+      }
+    },
+    {
+      "id": "test_faction_alignment",
+      "name": "Faction Alignment Check",
+      "input": {
+        "character": "Valdris",
+        "primary_faction": "Void Collective",
+        "secondary_faction": "Sunlight Conspiracy"
+      },
+      "expected_output": {
+        "valid": true,
+        "alignment_consistent": true,
+        "conflict_resolution": "needed",
+        "motivation_check": "passed"
+      }
+    },
+    {
+      "id": "test_story_arc_progression",
+      "name": "Story Arc Act Progression",
+      "input": {
+        "character": "Morrigan",
+        "act1": "Discovers hidden threat",
+        "act2": "Chooses between loyalty and good",
+        "act3": "Potential sacrifice"
+      },
+      "expected_output": {
+        "valid": true,
+        "progression_logical": true,
+        "character_growth": "significant",
+        "emotional_resonance": "high"
+      }
+    },
+    {
+      "id": "test_thematic_coherence",
+      "name": "Thematic Coherence Validation",
+      "input": {
+        "character": "Theron",
+        "themes": ["belonging", "identity", "prejudice", "coming_of_age"]
+      },
+      "expected_output": {
+        "valid": true,
+        "thematic_coherence": 95,
+        "resonance_with_world": "excellent",
+        "symbolic_depth": "high"
+      }
+    },
+    {
+      "id": "test_resource_balance",
+      "name": "Character Resources Balance",
+      "input": {
+        "character": "Morrigan",
+        "power_resources": ["shadowveil_tower", "shadow_constructs", "codex", "spy_network"],
+        "limitation_resources": ["council_oversight", "treaty_obligations"]
+      },
+      "expected_output": {
+        "valid": true,
+        "resource_balance": "appropriate",
+        "power_level": "high",
+        "agency_level": "constrained"
+      }
+    },
+    {
+      "id": "test_cross_realm_consistency",
+      "name": "Cross-Realm Consistency",
+      "input": {
+        "characters": ["Morrigan", "Theron"],
+        "realms": ["shadow_realm", "mortal_world", "twilight_realm"]
+      },
+      "expected_output": {
+        "valid": true,
+        "realm_consistency": true,
+        "crossover_points": 7,
+        "world_integration": "seamless"
+      }
+    }
+  ],
+  "validation_rules": {
+    "phase1_requirements": ["name_identity", "origin", "physical_characteristics", "background", "core_motivation"],
+    "phase2_requirements": ["role_rank", "faction_affiliation", "powers_abilities", "relationships", "resources"],
+    "phase3_requirements": ["mythological_foundation", "hierarchies_conflicts", "story_arc", "thematic_elements", "interaction_points"],
+    "minimum_relationships": 3,
+    "minimum_abilities": 2,
+    "minimum_conflicts": 1,
+    "limitation_to_power_ratio": 0.7
+  },
+  "success_metrics": {
+    "test_pass_rate": 100,
+    "coverage_percentage": 100,
+    "specification_compliance": 100,
+    "external_dependencies": 0,
+    "documentation_complete": true
+  }
+}
