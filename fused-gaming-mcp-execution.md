@@ -160,8 +160,8 @@
        test:
          runs-on: ubuntu-latest
          steps:
-           - uses: actions/checkout@v4
-           - uses: actions/setup-node@v4
+           - uses: actions/checkout@v5
+           - uses: actions/setup-node@v5
            - run: npm ci
            - run: npm run lint
            - run: npm run build
@@ -180,8 +180,8 @@
        publish:
          runs-on: ubuntu-latest
          steps:
-           - uses: actions/checkout@v4
-           - uses: actions/setup-node@v4
+           - uses: actions/checkout@v5
+           - uses: actions/setup-node@v5
            - run: npm ci
            - run: npm run build
            - run: npm publish --workspaces
