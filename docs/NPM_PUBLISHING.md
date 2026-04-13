@@ -156,6 +156,15 @@ git push origin v1.1.0
 # Update version and releaseDate
 ```
 
+## Scope Selection in CI
+
+To avoid `E404 Scope not found` during workspace publishing:
+
+- Set repository variable `NPM_SCOPE` to force an org/user scope (for example `fused-gaming`).
+- If `NPM_SCOPE` is not set, the workflow falls back to `npm whoami` and publishes using the token owner's scope.
+
+This allows forks and contributor tokens to publish without rewriting package manifests manually.
+
 ## Automated CI/CD
 
 ### GitHub Actions Setup
