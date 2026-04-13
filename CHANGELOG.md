@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Changed
+- **CI/CD**: Updated GitHub Actions to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) and disabled matrix fail-fast in `test.yml` so Node 24 jobs still run when Node 20 fails.
+- **CI/CD**: Set `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` in repository workflows (`test`, `publish`, `codeql`) to proactively validate JavaScript-based actions on Node 24 before the June 2, 2026 default switch.
+- **Docs**: Updated embedded workflow examples and action-version guidance from `@v4` to `@v5` across publishing/execution/prompt/manifest docs for consistency with live CI configuration.
 - Updated `publish.yml` to publish npm workspaces on every push to `main` (including merges), while retaining tag-triggered releases and adding manual `workflow_dispatch` support.
 - Switched GitHub release authentication in the publish workflow to use the repository `GH_TOKEN` secret.
 
@@ -21,7 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
-- TBD for next release
+- **Multi-account session tracking**: Removed an unused accumulator variable in session aggregation to resolve static analysis/code quality findings (multi-account-session-tracking-skill).
+- **Multi-account session tracking**: Replaced `any` typing in daily review/session aggregation models with explicit typed records to remove lint warnings that can break stricter CI gates (multi-account-session-tracking-skill).
 
 ### Security
 - TBD for next release
