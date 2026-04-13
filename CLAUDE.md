@@ -17,6 +17,7 @@
   - `npm test`
 - Keep `VERSION.json` runtime requirements aligned with `package.json` engines (currently Node >=20).
 - GitHub Actions Node runtime migration is active: prefer `actions/checkout@v5` and `actions/setup-node@v5` to avoid Node 20 deprecation warnings and upcoming forced Node 24 execution behavior.
+- For transition-period stability, keep `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` set in workflow `env` so action-runtime regressions surface before Node 24 becomes mandatory.
 
 ## Environment Constraints
 - GitHub REST API and anonymous PR listing can return `403 Forbidden` in this execution environment; when that happens, rely on local files (`SESSION_SUMMARY.md`, `OPEN_PR_INSTRUCTIONS.md`, git history) for orientation and explicitly call out the API-access blocker.
