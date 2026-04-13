@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
-- TBD for next release
+- **Multi-account session tracking**: Removed an unused accumulator variable in session aggregation to resolve static analysis/code quality findings (multi-account-session-tracking-skill).
 
 ### Security
 - TBD for next release
