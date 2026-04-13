@@ -10,3 +10,8 @@
 1. Validate that `NPM_SCOPE` is configured in repository variables for official releases.
 2. For forks, leave `NPM_SCOPE` unset to use token-owner scope automatically.
 3. Keep CHANGELOG and publishing docs updated whenever release automation changes.
+4. GitHub Release creation is now handled by `.github/workflows/github-release.yml` (tag-triggered + manual); `publish.yml` no longer creates releases directly.
+5. If PR triage is requested, prefer `gh pr list` when available; if `gh` is missing in environment, document that as a blocker and fall back to local git history.
+6. Public npm publication currently uses `@h4shed/*`; keep release-facing docs aligned with that scope until org scope changes.
+7. Skill inventory, missing skills, and backlog planning are tracked in `docs/ROADMAP.md`; update it whenever release priorities change.
+8. New skill scaffolds now exist under `packages/skills/` for mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
