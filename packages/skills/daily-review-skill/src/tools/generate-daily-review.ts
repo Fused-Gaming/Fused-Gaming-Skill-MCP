@@ -109,7 +109,6 @@ export function formatDailyReview(review: DailyReview): string {
 export function assessProductivity(metrics: DailyMetrics): string {
   const focusScore = metrics.averageFocusScore;
   const sessionCount = metrics.totalSessions;
-  const artifacts = metrics.totalArtifacts;
 
   if (focusScore >= 8.5 && sessionCount >= 4) return 'very-high';
   if (focusScore >= 7.5 && sessionCount >= 3) return 'high';
