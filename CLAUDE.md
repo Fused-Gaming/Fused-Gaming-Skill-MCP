@@ -15,3 +15,4 @@
 6. Public npm publication currently uses `@h4shed/*`; keep release-facing docs aligned with that scope until org scope changes.
 7. Skill inventory, missing skills, and backlog planning are tracked in `docs/ROADMAP.md`; update it whenever release priorities change.
 8. New skill scaffolds now exist under `packages/skills/` for mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
+9. If `npm ci` fails with missing workspace packages after merges, run `npm install` at repo root to regenerate `package-lock.json`, then re-run `npm ci` to verify lockfile sync.
