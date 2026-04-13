@@ -1,7 +1,7 @@
 {
-  "name": "@fused-gaming/skill-algorithmic-art",
+  "name": "@fused-gaming/skill-underworld-writer",
   "version": "1.0.0",
-  "description": "Generative art using p5.js with seeded randomness, flow fields, and particle systems",
+  "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories",
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
@@ -22,10 +22,10 @@
   "keywords": [
     "mcp",
     "skill",
-    "art",
-    "generative",
-    "p5js",
-    "visualization"
+    "underworld",
+    "character",
+    "narrative",
+    "creative-writing"
   ],
   "author": "Fused Gaming",
   "license": "Apache-2.0"
