@@ -1,0 +1,147 @@
+# Roadmap & Release Orientation (April 2026)
+
+## Current Published Packages (npm)
+
+The active public npm scope is currently `@h4shed` (not an npm org scope).
+
+### Published now
+1. `@h4shed/mcp-cli`
+2. `@h4shed/mcp-core`
+3. `@h4shed/skill-algorithmic-art`
+4. `@h4shed/skill-ascii-mockup`
+5. `@h4shed/skill-canvas-design`
+6. `@h4shed/skill-frontend-design`
+7. `@h4shed/skill-mcp-builder`
+8. `@h4shed/skill-pre-deploy-validator`
+9. `@h4shed/skill-skill-creator`
+10. `@h4shed/skill-theme-factory`
+11. `@h4shed/skill-underworld-writer`
+
+---
+
+## Skill Status Updates
+
+### Published
+- `@h4shed/skill-underworld-writer` (confirmed published)
+
+### Scaffolded in repository (queued for publish)
+- `@h4shed/skill-mermaid-terminal`
+- `@h4shed/skill-ux-journeymapper`
+- `@h4shed/skill-svg-generator`
+- `@h4shed/skill-project-manager`
+- `@h4shed/skill-project-status-tool`
+- `@h4shed/skill-daily-review`
+- `@h4shed/multi-account-session-tracking`
+- `@h4shed/skill-linkedin-master-journalist`
+
+---
+
+## Planned Skill Backlog
+
+### A
+- Accessibility Audit
+- API Contract Generator
+- Architecture Decision Record (ADR) Writer
+
+### B
+- Backend Refactorer
+- Bug Reproduction Planner
+
+### C
+- Codebase Analyzer
+- Component Generator
+- Context Builder
+- Core Web Vitals Optimizer
+
+### D
+- Data Model Designer
+- Debugging Strategist
+- Dependency Auditor
+
+### E
+- Error Log Analyzer
+
+### F
+- Feature Planner
+- Frontend Performance Optimizer
+
+### G
+- Git Diff Summarizer
+- GitHub PR Reviewer
+
+### I
+- Integration Tester Generator
+- Infrastructure Generator (Terraform)
+
+### L
+- Logging Strategy Designer
+
+### M
+- Meeting Notes Summarizer
+- Microservice Boundary Identifier
+
+### O
+- Observability Setup Guide
+
+### P
+- Performance Profiler
+- Planning with Files
+- PRD Generator
+
+### Q
+- Query Optimizer
+
+### R
+- Refactor Planner
+- Repository Scraper
+
+### S
+- Security Analyzer
+- SEO Optimizer
+- Skill Generator
+- State Management Advisor
+
+### T
+- Test Generator
+- Task Breakdown Engine
+- Tech Debt Analyzer
+
+### U
+- UI/UX Critic
+
+### V
+- Validation Rule Generator
+
+### W
+- Web Quality Auditor
+- Workflow Automator
+
+---
+
+## Blockers
+
+1. GitHub CLI/API visibility is required to inspect live PR comments/check-runs from this environment.
+2. Newly scaffolded skills still need full tool logic, tests, and release tags before npm publication.
+3. Planned backlog is not yet mapped into implementation-ready milestones (owners, dates, dependencies).
+
+## Current Steps
+
+1. Keep release-facing docs synchronized with actual `@h4shed` package publication.
+2. Complete implementation for newly scaffolded skills.
+3. Keep release workflow docs synchronized with CI workflows.
+
+## Immediate Next 3 Steps
+
+1. Implement production logic + tests for `mermaid-terminal`, `ux-journeymapper`, `svg-generator`.
+2. Create release tags and publish plan for the full scaffolded skill batch.
+3. Add CI validation to ensure docs package names stay aligned with published scope metadata.
+
+---
+
+## Recent PR Context (Local-Git View)
+
+- `#32` `fix(ci): prevent npm scope-not-found publish failures`
+- `#30` `ci: publish npm packages on main pushes`
+- `#14` merge for underworld writer feature delivery
+
+CI/deployment status for these PRs must be verified in GitHub UI/API.
