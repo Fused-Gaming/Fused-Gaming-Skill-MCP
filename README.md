@@ -132,6 +132,8 @@ npm run typecheck   # Validate TypeScript
 npm run dev         # Start dev server
 ```
 
+> CI tip: keep lint output warning-free in addition to error-free to avoid stricter pipeline gates in downstream environments.
+
 ---
 
 ## 📚 Documentation

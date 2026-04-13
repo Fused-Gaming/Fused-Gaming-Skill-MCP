@@ -15,7 +15,10 @@
   - `npm run lint`
   - `npm run typecheck`
   - `npm test`
-- Lint currently reports `no-explicit-any` warnings in multi-account skill types, but no lint errors.
+- Keep `VERSION.json` runtime requirements aligned with `package.json` engines (currently Node >=20).
+
+## Environment Constraints
+- GitHub REST API and anonymous PR listing can return `403 Forbidden` in this execution environment; when that happens, rely on local files (`SESSION_SUMMARY.md`, `OPEN_PR_INSTRUCTIONS.md`, git history) for orientation and explicitly call out the API-access blocker.
 
 ## Guardrails
 - Never commit secrets or credentials.

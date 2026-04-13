@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Multi-account session tracking**: Removed an unused accumulator variable in session aggregation to resolve static analysis/code quality findings (multi-account-session-tracking-skill).
+- **Multi-account session tracking**: Replaced `any` typing in daily review/session aggregation models with explicit typed records to remove lint warnings that can break stricter CI gates (multi-account-session-tracking-skill).
 
 ### Security
 - TBD for next release
