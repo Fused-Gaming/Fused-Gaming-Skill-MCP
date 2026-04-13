@@ -59,3 +59,20 @@
 ### GitHub Visibility Constraint Encountered
 - Public PR pages #38/#40/#41/#42/#43 are visible, but unauthenticated checks/deployments detail is partially unavailable in this environment (GitHub API returns HTTP 403; checks UI reports loading errors).
 - Next agent should validate real checks/deployments from an authenticated GitHub session or Actions UI.
+
+## Agent Notes (2026-04-13, Orientation + Priority Refresh)
+
+### Blockers Confirmed
+- No dedicated roadmap file was found from local repo discovery (`roadmap`/`ROADMAP`/`plan` filename patterns did not return a project roadmap document).
+- GitHub PR checks/deployments for PRs `#38`, `#40`, `#41`, `#42`, `#43` cannot be fully validated in this environment due unauthenticated/API access limits (HTTP 403 responses).
+
+### Current Progress Snapshot
+- Publish control point remains centralized in:
+  - `scripts/prepare-publish-versions.cjs`
+  - `.github/workflows/publish.yml`
+- Lockfile synchronization mitigation is already landed in `publish.yml` and should be treated as baseline behavior for tag publish verification.
+
+### Immediate Next 3 Steps (for next agent)
+1. Validate checks/deployments for PRs `#38/#40/#41/#42/#43` from an authenticated GitHub Actions session.
+2. Push a test tag (`v*` or `skill-*`) and confirm publish workflow completes end-to-end with the current `publish:prepare -> lockfile sync -> npm ci` sequence.
+3. If publish errors persist, iterate first in `scripts/prepare-publish-versions.cjs` and `.github/workflows/publish.yml`, then re-run tag publish.
