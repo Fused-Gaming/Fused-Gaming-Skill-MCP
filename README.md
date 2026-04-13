@@ -158,13 +158,14 @@ npm run dev         # Start dev server
 
 | Resource | Purpose |
 |----------|---------|
-| [QUICKSTART.md](./QUICKSTART.md) | Get started in minutes |
+| [QUICKSTART.md](./docs/getting-started/QUICKSTART.md) | Get started in minutes |
 | [ARCHITECTURE.md](./docs/ARCHITECTURE.md) | System design & internals |
 | [SKILLS_GUIDE.md](./docs/SKILLS_GUIDE.md) | Build custom skills |
 | [API_REFERENCE.md](./docs/API_REFERENCE.md) | Complete API docs |
 | [EXAMPLES.md](./docs/EXAMPLES.md) | Real-world usage patterns |
 | [RELEASE_COMMUNICATION.md](./docs/RELEASE_COMMUNICATION.md) | Launch summary + LinkedIn post draft |
 | [ROADMAP.md](./docs/ROADMAP.md) | Published/missing/planned skills and priorities |
+| [docs/README.md](./docs/README.md) | Documentation index by category |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | How to contribute |
 
 ---
@@ -243,6 +244,6 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 ---
 
 [![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-blue)](./VERSION.json)
-[![Released April 2, 2026](https://img.shields.io/badge/released-april%202%2C%202026-brightgreen)](./RELEASE_NOTES.md)
+[![Released April 2, 2026](https://img.shields.io/badge/released-april%202%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
 [![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
 [![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)
