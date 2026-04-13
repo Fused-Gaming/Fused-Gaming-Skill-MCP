@@ -28,3 +28,18 @@
 
 ### Documentation Drift Prevention
 - Keep GitHub Actions examples in `docs/NPM_PUBLISHING.md`, `fused-gaming-mcp-manifest.md`, `fused-gaming-mcp-prompts.md`, and `fused-gaming-mcp-execution.md` aligned with live workflows to avoid reintroducing deprecated `@v4` references.
+
+## Agent Notes (2026-04-13, Workspace Publish Merge-Conflict Recovery)
+
+### What Was Fixed
+- Added `scripts/prepare-publish-versions.cjs` to detect workspace package versions that are already published on npm and patch-bump them before release.
+- Script also rewrites internal workspace dependency ranges to keep package graph consistent after bumping.
+- Updated `.github/workflows/publish.yml` to run `npm run publish:prepare` before dependency install and publish steps.
+
+### Why This Prevents Repeat Failures
+- Merge-order conflicts across CI/version-bump PRs no longer depend on manual sequencing.
+- Publish jobs can recover automatically when a package version already exists upstream.
+
+### Follow-up for Next Agent
+1. Validate publish workflow on a tag in GitHub Actions with npm registry access.
+2. If any package requires a non-patch bump policy, add a strategy flag to `prepare-publish-versions.cjs`.
