@@ -33,7 +33,7 @@ This release represents the complete production deployment of the Fused Gaming M
 - Usage examples (EXAMPLES.md)
 - Skills guide (SKILLS_GUIDE.md)
 - Contributing guidelines (CONTRIBUTING.md)
-- Branching strategy documentation (BRANCHING_STRATEGY.md)
+- Branching strategy documentation (docs/process/BRANCHING_STRATEGY.md)
 
 ### 🧪 Testing
 - Test framework prepared across all packages
