@@ -10,7 +10,7 @@
 
 ## 📊 Status & Technology
 
-[![npm version](https://img.shields.io/npm/v/@fused-gaming/mcp)](https://www.npmjs.com/package/@fused-gaming/mcp)
+[![npm scope](https://img.shields.io/badge/npm-scope%20%40h4shed-red)](https://www.npmjs.com/~h4shed)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE)
 [![Build](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/workflows/test/badge.svg)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
@@ -21,7 +21,7 @@
 
 ## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server packed with **8 powerful skills** for creative professionals, developers, and AI enthusiasts.
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **9 published skills** plus core infrastructure packages.
 
 ### 🎯 Your Creative Arsenal Includes:
 
@@ -35,8 +35,27 @@
 | **mcp-builder** | MCP server scaffolding | ✅ |
 | **pre-deploy-validator** | Deployment validation | ✅ |
 | **skill-creator** | Custom skill builder | ✅ |
+| **underworld-writer** | Character/world narrative generation | ✅ |
 
 **All skills are production-ready and actively maintained** ✨
+
+### 📦 Publishing now / next wave
+
+**Published now (`@h4shed`)**
+- `mcp-cli`, `mcp-core`
+- `skill-algorithmic-art`, `skill-ascii-mockup`, `skill-canvas-design`
+- `skill-frontend-design`, `skill-mcp-builder`, `skill-pre-deploy-validator`
+- `skill-skill-creator`, `skill-theme-factory`, `skill-underworld-writer`
+
+**Scaffolded and queued for publish (`@h4shed`)**
+- `skill-mermaid-terminal`
+- `skill-ux-journeymapper`
+- `skill-svg-generator`
+- `skill-project-manager`
+- `skill-project-status-tool`
+- `skill-daily-review`
+- `multi-account-session-tracking`
+- `skill-linkedin-master-journalist`
 
 ---
 
@@ -59,24 +78,25 @@ Transform your Claude workflow with meticulously crafted tools designed for:
 ### Install
 
 ```bash
-# Core + default skills
-npm install @fused-gaming/mcp
+# Install published packages (active scope: @h4shed)
+npm install @h4shed/mcp-core @h4shed/mcp-cli
 
-# Or pick your skills
-npm install @fused-gaming/mcp \
-  @fused-gaming/skill-algorithmic-art \
-  @fused-gaming/skill-theme-factory
+# Add selected skills
+npm install \
+  @h4shed/skill-algorithmic-art \
+  @h4shed/skill-theme-factory \
+  @h4shed/skill-underworld-writer
 ```
 
 ### Initialize & Run
 
 ```bash
-# Generate configuration
-npx fused-gaming-mcp init
+# Run CLI
+npx @h4shed/mcp-cli init
 
 # Add more skills anytime
-npx fused-gaming-mcp add frontend-design
-npx fused-gaming-mcp add pre-deploy-validator
+npx @h4shed/mcp-cli add frontend-design
+npx @h4shed/mcp-cli add pre-deploy-validator
 
 # Start the MCP server
 npm run dev
@@ -143,7 +163,42 @@ npm run dev         # Start dev server
 | [SKILLS_GUIDE.md](./docs/SKILLS_GUIDE.md) | Build custom skills |
 | [API_REFERENCE.md](./docs/API_REFERENCE.md) | Complete API docs |
 | [EXAMPLES.md](./docs/EXAMPLES.md) | Real-world usage patterns |
+| [RELEASE_COMMUNICATION.md](./docs/RELEASE_COMMUNICATION.md) | Launch summary + LinkedIn post draft |
+| [ROADMAP.md](./docs/ROADMAP.md) | Published/missing/planned skills and priorities |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | How to contribute |
+
+---
+
+## 🗺️ Roadmap Snapshot (Existing + Planned)
+
+### Existing (v1.0.0)
+- ✅ 11 published `@h4shed/*` packages (core + CLI + 9 skills)
+- ✅ npm workspace publishing pipeline active on `main` and tags
+- ✅ Security baseline hardened (0 known vulnerabilities at last audit)
+
+### Planned (next release cycle)
+- 🔄 Promote release checklist automation from docs into CI validation gates
+- 🔄 Expand deployment verification for npm + GitHub release parity
+- 🔄 Add richer release announcement templates for community launch posts
+
+### Current blockers to watch
+- GitHub PR/status triage currently depends on repository API/CLI availability in the execution environment.
+- Scope configuration (`NPM_SCOPE`) must be set in GitHub Actions variables for organization-owned publishing.
+
+### Top 3 priorities now
+1. Ship missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`).
+2. Add automated docs/package consistency checks for published scope metadata.
+3. Track deployment/test status per release PR in a single release checklist.
+
+---
+
+## 🚢 Release Automation
+
+- **npm publish workflow:** `.github/workflows/publish.yml`
+  - Runs lint, typecheck, build, scope preparation, and workspace publish.
+- **GitHub release workflow:** `.github/workflows/github-release.yml`
+  - Runs on the same release tags (`v*`, `skill-*`) and creates GitHub Releases with generated notes.
+- This split keeps npm publishing and release-note generation independently observable and easier to retry.
 
 ---
 

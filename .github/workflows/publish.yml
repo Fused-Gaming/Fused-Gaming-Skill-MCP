@@ -39,20 +39,24 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Prepare package scope for publishing
+        run: |
+          if [ -z "${NPM_SCOPE}" ]; then
+            export NPM_SCOPE=$(npm whoami)
+          fi
+          echo "Publishing with scope: @${NPM_SCOPE#@}"
+          node scripts/prepare-publish-scope.js
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_SCOPE: ${{ vars.NPM_SCOPE }}
+
       - name: Publish workspaces to npm
         run: npm publish --workspaces --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
+      - name: Release hand-off note
         if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Published to npm with tag: ${{ github.ref }}
-          draft: false
-          prerelease: false
+        run: |
+          echo "Tag publish complete."
+          echo "GitHub release is created by .github/workflows/github-release.yml."

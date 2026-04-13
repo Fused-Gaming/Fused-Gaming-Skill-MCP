@@ -20,7 +20,7 @@ Complete guide for publishing Fused Gaming MCP and its skills to npm with automa
 
 ### Required Permissions
 
-- **Core team**: Publish to `@fused-gaming` scope
+- **Core team**: Publish to `@h4shed` scope
 - **Collaborators**: Can publish specific skills under their namespace
 
 ### Local Setup
@@ -40,7 +40,7 @@ npm whoami
 
 ### Configure NPM Scope
 
-The `@fused-gaming` scope is already configured in `package.json`:
+The `@h4shed` scope is already configured in `package.json`:
 
 ```json
 {
@@ -57,7 +57,7 @@ Each package in `packages/` has its own `package.json`:
 
 ```json
 {
-  "name": "@fused-gaming/skill-my-feature",
+  "name": "@h4shed/skill-my-feature",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -70,8 +70,9 @@ Each package in `packages/` has its own `package.json`:
 Add team members who can publish (on npm.js):
 
 ```bash
-npm owner add username @fused-gaming/mcp
-npm owner add username @fused-gaming/skill-algorithmic-art
+npm owner add username @h4shed/mcp-core
+npm owner add username @h4shed/mcp-cli
+npm owner add username @h4shed/skill-algorithmic-art
 # ... etc
 ```
 
@@ -111,7 +112,7 @@ npm run test
 npm publish
 
 # Verify on npm
-npm view @fused-gaming/skill-my-feature
+npm view @h4shed/skill-my-feature
 ```
 
 #### Option B: Publish All Skills
@@ -130,8 +131,9 @@ npm test
 npm run publish:packages
 
 # Verify
-npm view @fused-gaming/mcp
-npm view @fused-gaming/skill-algorithmic-art
+npm view @h4shed/mcp-core
+npm view @h4shed/mcp-cli
+npm view @h4shed/skill-algorithmic-art
 ```
 
 ### Post-Publish
@@ -156,11 +158,20 @@ git push origin v1.1.0
 # Update version and releaseDate
 ```
 
+## Scope Selection in CI
+
+To avoid `E404 Scope not found` during workspace publishing:
+
+- Set repository variable `NPM_SCOPE` to force an org/user scope (for example `fused-gaming`).
+- If `NPM_SCOPE` is not set, the workflow falls back to `npm whoami` and publishes using the token owner's scope.
+
+This allows forks and contributor tokens to publish without rewriting package manifests manually.
+
 ## Automated CI/CD
 
 ### GitHub Actions Setup
 
-Create `.github/workflows/publish.yml`:
+Create `.github/workflows/publish.yml` for npm and `.github/workflows/github-release.yml` for GitHub Releases:
 
 ```yaml
 name: Publish to NPM
@@ -214,17 +225,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            CHANGELOG.md
-            VERSION.json
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Notify Slack (optional)
         uses: 8398a7/action-slack@v3
         if: always()
@@ -232,6 +232,32 @@ jobs:
           status: ${{ job.status }}
           text: 'NPM Publish: ${{ job.status }}'
           webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+```
+
+Create `.github/workflows/github-release.yml`:
+
+```yaml
+name: GitHub Release
+
+on:
+  push:
+    tags:
+      - "v*"
+      - "skill-*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
 ### Set Up Secrets
@@ -246,7 +272,13 @@ In GitHub repository settings (Settings > Secrets and variables > Actions):
    # Copy token to GitHub secret
    ```
 
-2. **SLACK_WEBHOOK** (optional)
+2. **GH_TOKEN**
+   ```bash
+   # Personal access token (repo scope) for release creation
+   # Store as Actions secret: GH_TOKEN
+   ```
+
+3. **SLACK_WEBHOOK** (optional)
    ```bash
    # Create Slack app webhook
    # In GitHub: Settings > Secrets > New secret
@@ -305,7 +337,7 @@ npm publish --tag beta
 
 Install beta version:
 ```bash
-npm install @fused-gaming/mcp@beta
+npm install @h4shed/mcp-core@beta
 ```
 
 ### Canary Releases
@@ -317,7 +349,7 @@ For testing before full release:
 npm publish --tag canary
 
 # Install canary
-npm install @fused-gaming/mcp@canary
+npm install @h4shed/mcp-core@canary
 ```
 
 ### Monorepo Publishing
@@ -342,10 +374,9 @@ npm publish
 Primary: https://registry.npmjs.org/
 
 Packages:
-- `@fused-gaming/mcp` - Root metapackage
-- `@fused-gaming/mcp-core` - Core server
-- `@fused-gaming/mcp-cli` - CLI tool
-- `@fused-gaming/skill-*` - Individual skills
+- `@h4shed/mcp-core` - Core server
+- `@h4shed/mcp-cli` - CLI tool
+- `@h4shed/skill-*` - Individual skills
 
 ### Yarn & PNPM
 
@@ -353,10 +384,10 @@ Both support npm registry:
 
 ```bash
 # Yarn
-yarn add @fused-gaming/mcp
+yarn add @h4shed/mcp-core @h4shed/mcp-cli
 
 # PNPM
-pnpm add @fused-gaming/mcp
+pnpm add @h4shed/mcp-core @h4shed/mcp-cli
 ```
 
 ## Version Management
@@ -439,8 +470,8 @@ Track downloads:
 
 ```bash
 # View package stats
-npm stats @fused-gaming/mcp
-npm stats @fused-gaming/skill-algorithmic-art
+npm stats @h4shed/mcp-core
+npm stats @h4shed/skill-algorithmic-art
 ```
 
 Or use [npm analytics](https://www.npmjs.com/package/npm-stats):
@@ -454,7 +485,7 @@ npm stats --json | jq '.downloads'
 When removing a package:
 
 ```bash
-npm deprecate @fused-gaming/old-skill "Use @fused-gaming/new-skill instead"
+npm deprecate @h4shed/old-skill "Use @h4shed/new-skill instead"
 ```
 
 ## Troubleshooting
@@ -474,7 +505,7 @@ npm config set //registry.npmjs.org/:_authToken=YOUR_TOKEN
 
 ```bash
 # Check if already published
-npm view @fused-gaming/mcp@1.1.0
+npm view @h4shed/mcp-core@1.1.0
 
 # Check npm registry connectivity
 npm ping
@@ -488,10 +519,10 @@ npm login
 
 ```bash
 # Check published versions
-npm view @fused-gaming/mcp versions
+npm view @h4shed/mcp-core versions
 
 # View latest
-npm view @fused-gaming/mcp@latest version
+npm view @h4shed/mcp-core@latest version
 ```
 
 ## Best Practices
