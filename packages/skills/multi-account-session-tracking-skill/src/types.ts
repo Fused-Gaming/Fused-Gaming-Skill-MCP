@@ -130,10 +130,10 @@ export interface UnifiedDailyReview {
   review_period: string;
   accounts_tracked: number;
   total_combined_duration_minutes: number;
-  accounts: Record<string, any>;
+  accounts: Record<string, AccountSessions>;
   unified_metrics: MultiAccountMetrics;
   accomplishments_by_account: Record<string, string[]>;
-  blockers_by_account: Record<string, any[]>;
+  blockers_by_account: Record<string, string[]>;
   next_day_priorities: {
     primary?: string[];
     secondary?: string[];
@@ -141,17 +141,17 @@ export interface UnifiedDailyReview {
   };
   cross_account_analysis: {
     specialization_effectiveness: string;
-    session_distribution: any;
-    productivity_correlation: any;
+    session_distribution: Record<string, number>;
+    productivity_correlation: Record<string, number>;
     optimization_recommendations: string[];
   };
 }
 
 export interface WeeklyProjection {
   if_maintaining_current_pace: {
-    primary_week?: any;
-    secondary_week?: any;
-    combined_week?: any;
+    primary_week?: Record<string, number | string>;
+    secondary_week?: Record<string, number | string>;
+    combined_week?: Record<string, number | string>;
   };
 }
 

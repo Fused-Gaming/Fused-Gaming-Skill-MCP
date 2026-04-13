@@ -26,7 +26,7 @@ export function aggregateSessions(input: AggregateSessionsInput): UnifiedDailyRe
   let totalTokens = 0;
   let totalInterruptions = 0;
 
-  const accountDistribution: Record<string, any> = {};
+  const accountDistribution: MultiAccountMetrics['account_distribution'] = {};
   const focusComparison: Record<string, number> = {};
   const accomplishmentsByAccount: Record<string, string[]> = {};
 

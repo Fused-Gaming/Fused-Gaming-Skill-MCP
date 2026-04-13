@@ -1,5 +1,12 @@
 # Session Summary: Complete Project Delivery with Proper Branching
 
+## Update: 2026-04-13 — CI Stabilization (Node Matrix)
+
+- Removed `any` types from multi-account session aggregation/review models to eliminate lint warnings that can fail stricter CI policies.
+- Verified `npm ci`, `npm run lint`, `npm run typecheck`, `npm run build`, and `npm test` all pass locally.
+- Aligned `VERSION.json` Node minimum metadata with package engines (Node >=20).
+- Added environment note in `CLAUDE.md` documenting GitHub API `403` limitations for unauthenticated PR discovery in this runtime.
+
 **Date:** April 1, 2026  
 **Duration:** Single comprehensive session  
 **Status:** ✅ COMPLETE  
