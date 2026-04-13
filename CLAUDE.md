@@ -15,3 +15,13 @@
 1. Re-run GitHub Actions for the current branch to confirm `Install dependencies` passes on both Node matrix lanes.
 2. Execute `npm run lint`, `npm run typecheck`, `npm run build`, and `npm test` in an environment with full npm registry access.
 3. If failures appear, patch and iterate until both matrix lanes pass.
+
+## Agent Notes (2026-04-13, Node 24 Actions Migration)
+
+### CI / Actions Compatibility
+- Updated GitHub Actions references from `actions/checkout@v4` to `actions/checkout@v5` and `actions/setup-node@v4` to `actions/setup-node@v5` in test, publish, and codeql workflows.
+- This removes the runner deprecation warnings about JavaScript actions pinned to Node.js 20 and aligns workflows with Node.js 24 action runtime migration.
+
+### Follow-up Verification
+1. Re-run `Test` workflow matrix (`20.x`, `24.x`) and verify no Node 20 deprecation warnings remain.
+2. Re-run `CodeQL Advanced` and `Publish to npm` workflow checks on PR to confirm upgraded actions are accepted.
