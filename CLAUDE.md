@@ -10,6 +10,7 @@
 - The unused variable `totalEnergy` in `packages/skills/multi-account-session-tracking-skill/src/tools/session-aggregation.ts` has been removed in this session.
 
 ## Execution Tips
+- CI `npm ci` can fail with EUSAGE if a new workspace package is added but root `package-lock.json` is not regenerated. Run `npm install` at repo root and commit the lockfile update.
 - Run quality checks with:
   - `npm run lint`
   - `npm run typecheck`
