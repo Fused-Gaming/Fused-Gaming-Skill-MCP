@@ -30,15 +30,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint --if-present
-
-      - name: Typecheck
-        run: npm run typecheck --if-present
-
-      - name: Build
-        run: npm run build
-
       - name: Prepare package scope for publishing
         run: |
           if [ -z "${NPM_SCOPE}" ]; then
@@ -49,6 +40,18 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_SCOPE: ${{ vars.NPM_SCOPE }}
+
+      - name: Preflight publish version check
+        run: node scripts/preflight-publish-check.js
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Typecheck
+        run: npm run typecheck --if-present
+
+      - name: Build
+        run: npm run build
 
       - name: Publish workspaces to npm
         run: npm publish --workspaces --access public

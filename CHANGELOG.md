@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.
 - Added a documentation index (`docs/README.md`) and reorganized root-level docs into categorized directories (`docs/getting-started`, `docs/process`, `docs/releases`, `docs/archive`).
 - Added a dedicated GitHub release workflow (`.github/workflows/github-release.yml`) that triggers on release tags (`v*`, `skill-*`) and can also be started manually.
 - Added a roadmap document (`docs/ROADMAP.md`) with published/missing/planned skill inventories, blockers, and immediate next steps.
@@ -28,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
+- Prevented wasted publish pipeline compute by running npm duplicate-version checks before lint/typecheck/build in `publish.yml`.
 - Prevented npm publish workflow failures from missing scopes by adding CI scope preparation with `NPM_SCOPE` override and `npm whoami` fallback.
 - Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
 
