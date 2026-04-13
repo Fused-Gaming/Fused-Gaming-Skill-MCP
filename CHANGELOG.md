@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **CI/CD**: Updated GitHub Actions to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) and disabled matrix fail-fast in `test.yml` so Node 24 jobs still run when Node 20 fails.
+- **CI/CD**: Set `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` in repository workflows (`test`, `publish`, `codeql`) to proactively validate JavaScript-based actions on Node 24 before the June 2, 2026 default switch.
+- **Docs**: Updated embedded workflow examples and action-version guidance from `@v4` to `@v5` across publishing/execution/prompt/manifest docs for consistency with live CI configuration.
 
 ### Deprecated
 - TBD for next release

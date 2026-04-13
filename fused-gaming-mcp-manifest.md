@@ -473,8 +473,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org
@@ -502,7 +502,7 @@ jobs:
   submit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Generate MCP metadata
         run: npm run gen:mcp-metadata
       - name: Create PR to MCP registry
