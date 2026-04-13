@@ -41,6 +41,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_SCOPE: ${{ vars.NPM_SCOPE }}
 
+      - name: Auto-bump workspace versions for npm publish
+        run: node scripts/auto-bump-publish-versions.js
+
       - name: Preflight publish version check
         run: node scripts/preflight-publish-check.js
 

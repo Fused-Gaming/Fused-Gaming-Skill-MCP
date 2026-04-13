@@ -40,7 +40,9 @@
     "version": "node scripts/update-version.js && git add VERSION.json",
     "publish:packages": "npm publish --workspaces",
     "prerelease": "npm run build && npm run typecheck && npm run lint",
-    "publish:preflight": "node scripts/preflight-publish-check.js"
+    "publish:preflight": "node scripts/preflight-publish-check.js",
+    "publish:auto-bump": "node scripts/auto-bump-publish-versions.js",
+    "publish:prepare": "npm run publish:auto-bump && npm run publish:preflight"
   },
   "engines": {
     "node": ">=20.0.0",
