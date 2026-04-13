@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Prevented npm publish workflow failures from missing scopes by adding CI scope preparation with `NPM_SCOPE` override and `npm whoami` fallback.
+- Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
 
 ### Security
 - TBD for next release
