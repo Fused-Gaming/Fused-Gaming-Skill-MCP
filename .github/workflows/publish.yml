@@ -39,6 +39,17 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Prepare package scope for publishing
+        run: |
+          if [ -z "${NPM_SCOPE}" ]; then
+            export NPM_SCOPE=$(npm whoami)
+          fi
+          echo "Publishing with scope: @${NPM_SCOPE#@}"
+          node scripts/prepare-publish-scope.js
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_SCOPE: ${{ vars.NPM_SCOPE }}
+
       - name: Publish workspaces to npm
         run: npm publish --workspaces --access public
         env:
