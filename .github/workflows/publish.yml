@@ -2,9 +2,12 @@ name: Publish to npm
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
       - "skill-*"
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
@@ -12,6 +15,9 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v5
@@ -36,8 +42,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Publish to npm
-        run: npm publish --workspaces
+      - name: Publish workspaces to npm
+        run: npm publish --workspaces --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -45,7 +51,7 @@ jobs:
         uses: actions/create-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
