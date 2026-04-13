@@ -3,6 +3,7 @@
  * Records a session with metadata for later aggregation
  */
 
+import { randomBytes } from 'crypto';
 import { Session } from '../types.js';
 
 export interface LogSessionInput {
@@ -19,7 +20,7 @@ export interface LogSessionInput {
 }
 
 export function logSession(input: LogSessionInput): Session {
-  const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const sessionId = `session_${Date.now()}_${randomBytes(9).toString('base64url')}`;
 
   const session: Session = {
     sessionId,
