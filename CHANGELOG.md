@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Changed
-- TBD for next release
+- Updated `publish.yml` to publish npm workspaces on every push to `main` (including merges), while retaining tag-triggered releases and adding manual `workflow_dispatch` support.
+- Switched GitHub release authentication in the publish workflow to use the repository `GH_TOKEN` secret.
 
 ### Deprecated
 - TBD for next release
