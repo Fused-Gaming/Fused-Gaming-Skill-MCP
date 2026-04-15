@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **Multi-account session tracking**: Removed an unused accumulator variable in session aggregation to resolve static analysis/code quality findings (multi-account-session-tracking-skill).
 - **Multi-account session tracking**: Replaced `any` typing in daily review/session aggregation models with explicit typed records to remove lint warnings that can break stricter CI gates (multi-account-session-tracking-skill).
+- **CI/CD**: Added lockfile verification in `test` and `publish` workflows to fail fast when package dependencies change without corresponding `package-lock.json` updates.
 
 ### Security
 - TBD for next release
