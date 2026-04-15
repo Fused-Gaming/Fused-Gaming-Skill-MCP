@@ -11,6 +11,7 @@
 
 ## Execution Tips
 - CI `npm ci` can fail with EUSAGE if a new workspace package is added but root `package-lock.json` is not regenerated. Run `npm install` at repo root and commit the lockfile update.
+- CI now enforces lockfile freshness in `test.yml` and `publish.yml` via `npm install --package-lock-only --ignore-scripts && git diff --exit-code package-lock.json`; dependency-only edits must include lockfile changes in the same commit.
 - Run quality checks with:
   - `npm run lint`
   - `npm run typecheck`
