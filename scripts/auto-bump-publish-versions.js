@@ -16,7 +16,6 @@ if (!Number.isInteger(maxBumps) || maxBumps < 0) {
 
 const rootDir = process.cwd();
 const rootPkgPath = path.join(rootDir, 'package.json');
-const versionJsonPath = path.join(rootDir, 'VERSION.json');
 const rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, 'utf8'));
 
 function collectWorkspacePackagePaths(pkg) {
@@ -53,8 +52,38 @@ if (!workspacePackagePaths.length) {
 
 const packageRecords = workspacePackagePaths.map((pkgPath) => {
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-  return { pkgPath, pkg };
+  const packageDir = path.relative(rootDir, path.dirname(pkgPath)).replace(/\\/g, '/');
+  return { pkgPath, packageDir, pkg };
 });
+
+function getChangedFiles() {
+  const explicitBase = process.env.VERSION_BUMP_BASE_REF;
+  const githubBefore = process.env.GITHUB_EVENT_BEFORE;
+  const zeroSha = /^0+$/;
+  const baseRef = explicitBase || (githubBefore && !zeroSha.test(githubBefore) ? githubBefore : null);
+  const diffRange = baseRef ? `${baseRef}..HEAD` : 'HEAD~1..HEAD';
+
+  try {
+    const out = execSync(`git diff --name-only ${diffRange}`, {
+      stdio: 'pipe',
+      encoding: 'utf8'
+    }).trim();
+    return out ? out.split('\n').filter(Boolean) : [];
+  } catch (error) {
+    const stderr = String(error.stderr || error.message || '').trim();
+    console.warn(
+      `Unable to determine changed files from "${diffRange}". Falling back to all workspace packages.${stderr ? `\n${stderr}` : ''}`
+    );
+    return null;
+  }
+}
+
+const changedFiles = getChangedFiles();
+const targetRecords = Array.isArray(changedFiles)
+  ? packageRecords.filter((record) =>
+      changedFiles.some((changedPath) => changedPath === record.packageDir || changedPath.startsWith(`${record.packageDir}/`))
+    )
+  : packageRecords;
 
 function checkAlreadyPublished(records) {
   const duplicates = [];
@@ -87,27 +116,27 @@ function bumpPatch(version) {
   return `${major}.${minor}.${patch + 1}`;
 }
 
-function applyVersion(nextVersion) {
-  rootPkg.version = nextVersion;
+function applyPatchBump(records) {
+  for (const record of records) {
+    record.pkg.version = bumpPatch(record.pkg.version);
+  }
 
-  const internalNames = new Set(packageRecords.map((record) => record.pkg.name).filter(Boolean));
+  const versionMap = new Map(packageRecords.map((record) => [record.pkg.name, record.pkg.version]));
   for (const record of packageRecords) {
-    record.pkg.version = nextVersion;
-
     for (const depField of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
       const deps = record.pkg[depField];
       if (!deps || typeof deps !== 'object') continue;
 
       for (const depName of Object.keys(deps)) {
-        if (depName === rootPkg.name || internalNames.has(depName)) {
-          deps[depName] = nextVersion;
+        if (versionMap.has(depName)) {
+          deps[depName] = versionMap.get(depName);
         }
       }
     }
   }
 }
 
-let duplicateSpecs = forceBump ? ['forced-bump'] : checkAlreadyPublished(packageRecords);
+let duplicateSpecs = forceBump ? ['forced-bump'] : checkAlreadyPublished(targetRecords);
 let bumps = 0;
 
 while (duplicateSpecs.length) {
@@ -119,45 +148,31 @@ while (duplicateSpecs.length) {
     process.exit(1);
   }
 
-  const currentVersion = rootPkg.version;
-  const nextVersion = bumpPatch(currentVersion);
-  applyVersion(nextVersion);
+  const snapshot = targetRecords.map((record) => `${record.pkg.name}@${record.pkg.version}`).join(', ');
+  applyPatchBump(targetRecords);
   bumps += 1;
 
-  console.log(`Auto-bumped workspace versions: ${currentVersion} -> ${nextVersion}`);
+  const nextSnapshot = targetRecords.map((record) => `${record.pkg.name}@${record.pkg.version}`).join(', ');
+  console.log(`Auto-bumped changed workspace versions: ${snapshot} -> ${nextSnapshot}`);
 
-  duplicateSpecs = checkAlreadyPublished(packageRecords);
+  duplicateSpecs = checkAlreadyPublished(targetRecords);
 }
 
 if (isDryRun) {
-  console.log(`Dry run complete. Final candidate version: ${rootPkg.version} (bumps applied: ${bumps}).`);
+  console.log(`Dry run complete. Changed workspace bump attempts: ${bumps}.`);
   process.exit(0);
 }
 
-fs.writeFileSync(rootPkgPath, `${JSON.stringify(rootPkg, null, 2)}\n`);
 for (const record of packageRecords) {
   fs.writeFileSync(record.pkgPath, `${JSON.stringify(record.pkg, null, 2)}\n`);
 }
 
-if (bumps > 0 && fs.existsSync(versionJsonPath)) {
-  const versionJson = JSON.parse(fs.readFileSync(versionJsonPath, 'utf8'));
-  const [major, minor, patch] = rootPkg.version.split('.').map((v) => Number.parseInt(v, 10));
-  versionJson.version = rootPkg.version;
-  versionJson.majorVersion = major;
-  versionJson.minorVersion = minor;
-  versionJson.patchVersion = patch;
-  versionJson.prerelease = null;
-  versionJson.releaseDate = new Date().toISOString().split('T')[0];
-
-  if (versionJson.metadata) {
-    versionJson.metadata.buildNumber = (versionJson.metadata.buildNumber || 1000) + bumps;
-  }
-
-  fs.writeFileSync(versionJsonPath, `${JSON.stringify(versionJson, null, 2)}\n`);
-}
-
 if (bumps === 0) {
-  console.log(`No auto-bump needed; version ${rootPkg.version} is publishable.`);
+  if (Array.isArray(changedFiles)) {
+    console.log(`No auto-bump needed; ${targetRecords.length} changed workspace package(s) are publishable.`);
+  } else {
+    console.log(`No auto-bump needed; all workspace packages are publishable.`);
+  }
 } else {
-  console.log(`Auto-bump complete. Updated manifests to ${rootPkg.version}.`);
+  console.log('Auto-bump complete for changed workspace packages.');
 }
