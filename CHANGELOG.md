@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `docs/process/PR_51_MERGE_CHECKLIST.md` with explicit PR #51 deliverables, success metrics, blockers, execution order, and next-agent handoff directives.
 - Added `scripts/auto-bump-publish-versions.js` to automatically patch-bump root/workspace package versions until npm reports they are publishable.
 - Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.
 - Added a documentation index (`docs/README.md`) and reorganized root-level docs into categorized directories (`docs/getting-started`, `docs/process`, `docs/releases`, `docs/archive`).
@@ -36,14 +37,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Aligned workflow runtime expectations and release docs around Node.js LTS lanes (`20.x`, `22.x`) to prevent test matrix Node-version mismatches.
+- Resolved Node `24.x` CI workspace discovery failure (`EDUPLICATEWORKSPACE`) by assigning the legacy Mermaid package a unique workspace name (`@fused-gaming/skill-mermaid-terminal-legacy`) after the production `mermaid-terminal` merge.
 - Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
-- Added an explicit lockfile sync step in `.github/workflows/publish.yml` immediately after `publish:prepare` so `npm ci` uses an updated lockfile after version auto-bumps.
 - Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
 - Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
 - Resolved `EDUPLICATEWORKSPACE` install/test blocker by assigning a unique workspace package name to `packages/skills/mermaid-terminal-skill`.
 
 ### Security
 - TBD for next release
+
+## [1.0.1] - 2026-04-16
+
+### Added
+- PR #51 merge-readiness checklist and handoff doc with blockers, active steps, and immediate next three tasks.
+- Milestone and issue-oriented roadmap entries for planned tools/skills (`daily-review`, `project-status-tool`, `project-manager`, and deployment/status automation).
+
+### Changed
+- Bumped repository version metadata to `1.0.1` for daily-review merge readiness documentation and planning sync.
+- Refreshed root README roadmap snapshot, priorities, and blockers to align with the PR #51 review window.
 
 ## [1.0.0] - 2026-04-02
 

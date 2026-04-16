@@ -181,10 +181,14 @@ npm run dev         # Start dev server
 - 🔄 Promote release checklist automation from docs into CI validation gates
 - 🔄 Expand deployment verification for npm + GitHub release parity
 - 🔄 Add richer release announcement templates for community launch posts
+- 🔄 Merge and publish `daily-review` with release-quality docs and examples (PR #51 target)
+- 🔄 Implement tool logic + tests for `project-status-tool` and `project-manager`
+- 🔄 Formalize planned-tool milestones into trackable issue groups for weekly triage
 
 ### Current blockers to watch
 - GitHub PR/status triage currently depends on repository API/CLI availability in the execution environment.
 - Scope configuration (`NPM_SCOPE`) must be set in GitHub Actions variables for organization-owned publishing.
+- Without GitHub CLI/API credentials in the runtime, PR #51 check-run and deployment state must be confirmed directly in GitHub UI.
 
 ### Top 3 priorities now
 1. Ship missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`).
