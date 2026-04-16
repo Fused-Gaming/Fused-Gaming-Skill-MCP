@@ -31,12 +31,16 @@ export function generateDashboard(input: GenerateDashboardInput): ProjectDashboa
       ? projects.reduce((sum, p) => sum + (healthScores[p.health] || 3), 0) / projects.length
       : 5;
 
-  let overallHealth: HealthStatus = 'good';
-  if (avgHealth >= 4.5) overallHealth = 'excellent';
-  else if (avgHealth >= 3.5) overallHealth = 'good';
-  else if (avgHealth >= 2.5) overallHealth = 'fair';
-  else if (avgHealth >= 1.5) overallHealth = 'poor';
-  else overallHealth = 'critical';
+  const overallHealth: HealthStatus =
+    avgHealth >= 4.5
+      ? 'excellent'
+      : avgHealth >= 3.5
+        ? 'good'
+        : avgHealth >= 2.5
+          ? 'fair'
+          : avgHealth >= 1.5
+            ? 'poor'
+            : 'critical';
 
   // Collect critical risks and blockers
   const criticalRisks = projects
