@@ -33,7 +33,7 @@ This release represents the complete production deployment of the Fused Gaming M
 - Usage examples (EXAMPLES.md)
 - Skills guide (SKILLS_GUIDE.md)
 - Contributing guidelines (CONTRIBUTING.md)
-- Branching strategy documentation (BRANCHING_STRATEGY.md)
+- Branching strategy documentation (docs/process/BRANCHING_STRATEGY.md)
 
 ### 🧪 Testing
 - Test framework prepared across all packages
@@ -124,6 +124,9 @@ None reported at this time.
 2. Monitor error logs and performance
 3. Gather user feedback on new skills
 4. Plan next feature development cycle
+5. Split and monitor release automation:
+   - npm publishing in `.github/workflows/publish.yml`
+   - GitHub Releases in `.github/workflows/github-release.yml`
 
 ---
 **Release Date:** April 2, 2026  

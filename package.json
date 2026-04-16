@@ -59,7 +59,7 @@
   },
   "files": [
     "CHANGELOG.md",
-    "QUICKSTART.md",
+    "docs/getting-started/QUICKSTART.md",
     "CONTRIBUTING.md",
     "LICENSE",
     "VERSION.json",
