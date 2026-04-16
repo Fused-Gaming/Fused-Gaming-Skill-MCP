@@ -181,15 +181,19 @@ npm run dev         # Start dev server
 - 🔄 Promote release checklist automation from docs into CI validation gates
 - 🔄 Expand deployment verification for npm + GitHub release parity
 - 🔄 Add richer release announcement templates for community launch posts
+- 🔄 Merge and publish `daily-review` with release-quality docs and examples (PR #51 target)
+- 🔄 Implement tool logic + tests for `project-status-tool` and `project-manager`
+- 🔄 Formalize planned-tool milestones into trackable issue groups for weekly triage
 
 ### Current blockers to watch
 - GitHub PR/status triage currently depends on repository API/CLI availability in the execution environment.
 - Scope configuration (`NPM_SCOPE`) must be set in GitHub Actions variables for organization-owned publishing.
+- Without GitHub CLI/API credentials in the runtime, PR #51 check-run and deployment state must be confirmed directly in GitHub UI.
 
 ### Top 3 priorities now
-1. Ship missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`).
-2. Add automated docs/package consistency checks for published scope metadata.
-3. Track deployment/test status per release PR in a single release checklist.
+1. Complete PR #51 merge-readiness checks (docs/version/changelog + status triage evidence).
+2. Ship missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`) with executable tests.
+3. Add automated docs/package consistency checks for published scope metadata and release checklists.
 
 ---
 
@@ -243,7 +247,7 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 
 ---
 
-[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-blue)](./VERSION.json)
-[![Released April 2, 2026](https://img.shields.io/badge/released-april%202%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
+[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-blue)](./VERSION.json)
+[![Released April 16, 2026](https://img.shields.io/badge/released-april%2016%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
 [![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
 [![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)
