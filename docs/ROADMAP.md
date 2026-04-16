@@ -127,14 +127,15 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 ## Current Steps
 
 1. Keep release-facing docs synchronized with actual `@h4shed` package publication.
-2. Complete implementation for newly scaffolded skills.
-3. Keep release workflow docs synchronized with CI workflows.
+2. Keep CI test/runtime lanes aligned to active Node LTS versions (20.x/22.x) across all workflows.
+3. Complete implementation for newly scaffolded skills.
+4. Keep release workflow docs synchronized with CI workflows.
 
 ## Immediate Next 3 Steps
 
-1. Implement production logic + tests for `mermaid-terminal`, `ux-journeymapper`, `svg-generator`.
-2. Create release tags and publish plan for the full scaffolded skill batch.
-3. Add CI validation to ensure docs package names stay aligned with published scope metadata.
+1. Validate GitHub Actions `Test` matrix (`20.x`, `22.x`) and release workflow after Node lane adjustments.
+2. Implement production logic + tests for `mermaid-terminal`, `ux-journeymapper`, `svg-generator`.
+3. Add CI validation to ensure docs package names and Node runtime references stay aligned with workflows.
 
 ---
 
