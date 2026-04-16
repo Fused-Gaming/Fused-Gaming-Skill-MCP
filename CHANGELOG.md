@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `publish.yml` to hand off tag-based release creation to the dedicated GitHub release workflow for clearer separation of responsibilities.
 - Expanded README release/roadmap documentation to include existing status, planned follow-ups, and operational blockers.
 - Updated release-facing documentation to reflect currently published npm scope/packages under `@h4shed`.
+- Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
 
 ### Deprecated
 - TBD for next release
@@ -28,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Prevented npm publish workflow failures from missing scopes by adding CI scope preparation with `NPM_SCOPE` override and `npm whoami` fallback.
 - Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
+- Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
+- Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
 
 ### Security
 - TBD for next release
