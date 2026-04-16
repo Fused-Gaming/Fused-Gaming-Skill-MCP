@@ -172,7 +172,7 @@ npm run dev         # Start dev server
 
 ## 🗺️ Roadmap Snapshot (Existing + Planned)
 
-### Existing (v1.0.2)
+### Existing (v1.0.3)
 - ✅ 11 published `@h4shed/*` packages (core + CLI + 9 skills)
 - ✅ npm workspace publishing pipeline active on `main` and tags
 - ✅ Security baseline hardened (0 known vulnerabilities at last audit)
@@ -247,7 +247,7 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 
 ---
 
-[![Version 1.0.2](https://img.shields.io/badge/version-1.0.2-blue)](./VERSION.json)
+[![Version 1.0.3](https://img.shields.io/badge/version-1.0.3-blue)](./VERSION.json)
 [![Released April 16, 2026](https://img.shields.io/badge/released-april%2016%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
 [![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
 [![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)
