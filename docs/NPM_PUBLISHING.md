@@ -167,6 +167,29 @@ To avoid `E404 Scope not found` during workspace publishing:
 
 This allows forks and contributor tokens to publish without rewriting package manifests manually.
 
+### Duplicate Version Preflight Guard
+
+The publish workflow now runs `node scripts/preflight-publish-check.js` **before lint/typecheck/build**.
+It queries npm for every workspace package (`npm view <name>@<version> version`) and fails fast if any version already exists.
+### Duplicate Version Auto-Bump + Preflight Guard
+
+The publish workflow now runs:
+1. `node scripts/auto-bump-publish-versions.js`
+2. `node scripts/preflight-publish-check.js`
+
+This runs **before lint/typecheck/build**. The auto-bump script checks npm for every workspace package (`npm view <name>@<version> version`) and automatically increments patch versions across root + all workspaces until an unpublished version is found. The preflight script then verifies there are no duplicates left.
+
+This prevents late-stage `npm publish --workspaces` failures like:
+- `E403 Forbidden - You cannot publish over the previously published versions`
+
+If this guard fails:
+1. Bump package versions (`npm version patch|minor|major` or workspace-specific updates).
+2. Re-run CI so preflight can verify the new versions are available for publish.
+Local commands:
+1. `npm run publish:auto-bump`
+2. `npm run publish:preflight`
+3. `npm run publish:prepare` (runs both in sequence)
+
 ## Automated CI/CD
 
 ### GitHub Actions Setup
@@ -195,12 +218,12 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
