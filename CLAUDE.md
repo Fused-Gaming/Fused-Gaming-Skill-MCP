@@ -106,3 +106,66 @@
 ### Validation Notes
 1. Workspace tests still execute (`npm run test --workspaces --if-present`), but are mostly placeholder scripts.
 2. Lockfile/dependency sync remains blocked in this environment by npm registry HTTP 403 on `mermaid` (`npm install --package-lock-only --ignore-scripts`).
+
+
+## Agent Notes (2026-04-16, Node Workflow Test Lane Stabilization)
+
+### What Was Updated
+- Test workflow matrix was moved from Node `20.x` + `24.x` to `20.x` + `22.x` to keep CI on current active LTS lanes.
+- GitHub release workflow now uses `actions/checkout@v5` and includes explicit `actions/setup-node@v5` (`22.x`).
+- Release metadata/docs were bumped to `v1.0.3` and aligned with the workflow/runtime changes.
+
+### Remaining Blockers
+1. GitHub PR checks/deployment status still require authenticated API/UI access from outside this execution environment.
+2. Full dependency reinstall/lock refresh can still fail here when npm registry access returns HTTP 403 for transitive packages.
+## Agent Notes (2026-04-16, PR #73 Node Test Failure)
+
+### Root Cause
+- Three skill workspaces used placeholder test scripts (`jest --passWithNoTests`) but `jest` is not installed in the monorepo, causing CI `npm test --workspaces` to fail on merge checks.
+
+### Fix Applied
+- Updated test scripts in:
+  - `packages/skills/mermaid-terminal/package.json`
+  - `packages/skills/svg-generator/package.json`
+  - `packages/skills/ux-journeymapper/package.json`
+- All three now use `echo "No tests yet"` to keep pipeline green until real tests are implemented.
+
+### Follow-up
+1. Add a shared test runner dependency (Jest or Vitest) only when real test suites are introduced.
+2. Replace placeholder test scripts with runnable tests as each skill reaches implementation phase.
+
+## Agent Notes (2026-04-16, Lint Unused-Args Cleanup)
+
+### What Was Fixed
+- Resolved `@typescript-eslint/no-unused-vars` failures in skill tools by renaming intentionally unused parameters to underscore-prefixed names in:
+  - `packages/skills/mermaid-terminal/src/tools/generate-mermaid-diagram.ts`
+  - `packages/skills/ux-journeymapper/src/tools/map-user-journey.ts`
+
+### Validation
+1. `npm run lint -- packages/skills/mermaid-terminal/src/tools/generate-mermaid-diagram.ts packages/skills/ux-journeymapper/src/tools/map-user-journey.ts` passes locally.
+
+## Agent Notes (2026-04-16, Changed-Only Publish Version Bumps)
+
+### What Was Updated
+- `scripts/prepare-publish-versions.cjs` now computes changed files from git diff (`VERSION_BUMP_BASE_REF` or `GITHUB_EVENT_BEFORE` fallback) and only evaluates changed workspace packages for npm-version collisions.
+- `scripts/auto-bump-publish-versions.js` now limits auto-bump targets to changed workspace packages and avoids global/root version increments when unchanged packages exist.
+
+### Why
+- Previous behavior could patch-bump packages that had no source changes, creating unnecessary version churn and avoidable metadata drift.
+
+### Next-Agent Validation
+1. In CI, verify `GITHUB_EVENT_BEFORE` is present for push events so changed-package detection is accurate.
+2. For manual runs, set `VERSION_BUMP_BASE_REF=<sha>` when comparing against a non-default baseline.
+
+## Agent Notes (2026-04-16, PR #73 Typecheck Regression + Versioning Standard)
+
+### What Was Fixed
+- Resolved TypeScript workflow failure in `packages/skills/svg-generator/src/tools/generate-svg-asset.ts` by defining the missing `width` constant in `generateButton(...)`.
+- This unblocks CI jobs that execute TypeScript compilation during dependency/install lifecycle.
+
+### Versioning Standard Update
+- `docs/NPM_PUBLISHING.md` now includes a **Validated Update Standards** sequence requiring `typecheck`, `lint`, `build`, workspace tests, and `publish:prepare` before any version bump or release tagging.
+
+### Next-Agent Reminder
+1. If workflow annotations show `Cannot find name 'width'`, verify the `generateButton` template variables in `generate-svg-asset.ts` first.
+2. Keep version/changelog updates coupled to a successful full validation pass (do not bump before checks are green).
