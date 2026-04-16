@@ -106,3 +106,15 @@
 ### Validation Notes
 1. Workspace tests still execute (`npm run test --workspaces --if-present`), but are mostly placeholder scripts.
 2. Lockfile/dependency sync remains blocked in this environment by npm registry HTTP 403 on `mermaid` (`npm install --package-lock-only --ignore-scripts`).
+
+
+## Agent Notes (2026-04-16, Node Workflow Test Lane Stabilization)
+
+### What Was Updated
+- Test workflow matrix was moved from Node `20.x` + `24.x` to `20.x` + `22.x` to keep CI on current active LTS lanes.
+- GitHub release workflow now uses `actions/checkout@v5` and includes explicit `actions/setup-node@v5` (`22.x`).
+- Release metadata/docs were bumped to `v1.0.3` and aligned with the workflow/runtime changes.
+
+### Remaining Blockers
+1. GitHub PR checks/deployment status still require authenticated API/UI access from outside this execution environment.
+2. Full dependency reinstall/lock refresh can still fail here when npm registry access returns HTTP 403 for transitive packages.

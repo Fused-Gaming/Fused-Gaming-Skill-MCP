@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
 
 ### Changed
+- Updated `.github/workflows/test.yml` Node matrix from `20.x`/`24.x` to active LTS lanes `20.x`/`22.x` to resolve Actions Node-version failures in CI testing.
+- Updated `.github/workflows/github-release.yml` to `actions/checkout@v5` and added an explicit `actions/setup-node@v5` (`22.x`) runtime step for consistent release-job Node behavior.
 - Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
 - Updated README and package publish file list to reflect the new documentation paths.
 - Updated `publish.yml` to publish npm workspaces on every push to `main` (including merges), while retaining tag-triggered releases and adding manual `workflow_dispatch` support.
@@ -25,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expanded README release/roadmap documentation to include existing status, planned follow-ups, and operational blockers.
 - Raised release metadata and docs minimum Node.js requirement references from `18.0.0` to `20.0.0` to align with workspace engines and active CI lanes.
 - Standardized workspace package README files to follow npm package documentation conventions (installation, usage/tooling context, development, and license sections).
-- Advanced release metadata from `1.0.1` to `1.0.2` for the current patch iteration.
+- Advanced release metadata from `1.0.2` to `1.0.3` for the current patch iteration.
 
 ### Deprecated
 - TBD for next release
@@ -34,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
+- Aligned workflow runtime expectations and release docs around Node.js LTS lanes (`20.x`, `22.x`) to prevent test matrix Node-version mismatches.
 - Resolved Node `24.x` CI workspace discovery failure (`EDUPLICATEWORKSPACE`) by assigning the legacy Mermaid package a unique workspace name (`@fused-gaming/skill-mermaid-terminal-legacy`) after the production `mermaid-terminal` merge.
 - Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
 - Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
