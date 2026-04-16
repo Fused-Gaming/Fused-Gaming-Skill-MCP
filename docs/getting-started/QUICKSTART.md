@@ -4,13 +4,13 @@ Get started with Fused Gaming MCP in 5 minutes!
 
 ## Prerequisites
 
-- **Node.js** 18.0.0 or higher ([install](https://nodejs.org/))
+- **Node.js** 20.0.0 or higher ([install](https://nodejs.org/))
 - **npm** 8.0.0 or higher (comes with Node.js)
 - **Git** for version control
 
 Check your versions:
 ```bash
-node --version  # v18.0.0 or higher
+node --version  # v20.0.0 or higher
 npm --version   # 8.0.0 or higher
 ```
 
@@ -230,8 +230,8 @@ npm install
 **Solution**: Use Node Version Manager (nvm)
 ```bash
 # Install nvm: https://github.com/nvm-sh/nvm
-nvm install 18.0.0
-nvm use 18.0.0
+nvm install 20
+nvm use 20
 ```
 
 ### Build Issues

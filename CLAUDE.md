@@ -76,3 +76,33 @@
 1. Validate checks/deployments for PRs `#38/#40/#41/#42/#43` from an authenticated GitHub Actions session.
 2. Push a test tag (`v*` or `skill-*`) and confirm publish workflow completes end-to-end with the current `publish:prepare -> lockfile sync -> npm ci` sequence.
 3. If publish errors persist, iterate first in `scripts/prepare-publish-versions.cjs` and `.github/workflows/publish.yml`, then re-run tag publish.
+
+## Agent Notes (2026-04-16, Workspace Install Blocker Fix)
+
+### What Broke
+- Root workspace install (`npm install --package-lock-only --ignore-scripts`) failed with `EDUPLICATEWORKSPACE` because two workspaces shared `@fused-gaming/skill-mermaid-terminal`:
+  - `packages/skills/mermaid-terminal`
+  - `packages/skills/mermaid-terminal-skill`
+
+### What Was Changed
+- Renamed `packages/skills/mermaid-terminal-skill/package.json` package name to `@fused-gaming/skill-mermaid-terminal-skill` to restore unique workspace naming.
+- Updated release metadata/docs to align on Node.js `>=20.0.0` and patch release `1.0.1`.
+
+### Next-Agent Guardrail
+1. If workspace install fails, run `npm install --package-lock-only --ignore-scripts` first and check for duplicate package names across `packages/*/package.json`.
+2. Keep `VERSION.json` metadata `nodeMinimum` aligned with root `package.json` `engines.node` and docs.
+
+## Agent Notes (2026-04-16, v1.0.2 Metadata + Package README Standardization)
+
+### What Was Updated
+- Advanced root release metadata to `1.0.2` (`package.json` + `VERSION.json` patch/build fields).
+- Added missing `packages/cli/README.md`.
+- Standardized every workspace package README to include npm-oriented baseline sections:
+  - `Installation` with explicit `npm install <package-name>`
+  - `Development` workspace build/test commands
+  - `License`
+- Replaced the legacy `packages/skills/mermaid-terminal-skill/README.md` with a corrected package-name-aware README (`@fused-gaming/skill-mermaid-terminal-skill`).
+
+### Validation Notes
+1. Workspace tests still execute (`npm run test --workspaces --if-present`), but are mostly placeholder scripts.
+2. Lockfile/dependency sync remains blocked in this environment by npm registry HTTP 403 on `mermaid` (`npm install --package-lock-only --ignore-scripts`).

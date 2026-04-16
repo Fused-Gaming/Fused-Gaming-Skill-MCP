@@ -71,3 +71,19 @@ const result = await callTool("create-flow-field", {
 - [p5.js Documentation](https://p5js.org)
 - [Perlin Noise Guide](https://en.wikipedia.org/wiki/Perlin_noise)
 - [Flow Fields Tutorial](https://thecodingtrain.com)
+
+## Usage
+
+This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+
+## Development
+
+```bash
+# from repository root
+npm run build --workspace=packages/skills/algorithmic-art
+npm run test --workspace=packages/skills/algorithmic-art
+```
+
+## License
+
+Apache-2.0
