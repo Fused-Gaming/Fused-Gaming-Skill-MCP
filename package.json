@@ -1,10 +1,10 @@
 {
-  "name": "@h4shed/mcp",
-  "version": "1.0.7",
+  "name": "@fused-gaming/mcp",
+  "version": "1.0.3",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
   "license": "Apache-2.0",
-  "author": "Fused Gaming <info@h4shed.io>",
+  "author": "Fused Gaming <info@fused-gaming.io>",
   "keywords": [
     "mcp",
     "claude",
@@ -23,15 +23,12 @@
   "homepage": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
   "bugs": {
     "url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/issues",
-    "email": "support@vln.gg"
+    "email": "support@fused-gaming.io"
   },
   "workspaces": [
     "packages/core",
     "packages/skills/*",
-    "packages/tools/*",
-    "packages/cli",
-    "packages/docs",
-    "packages/web"
+    "packages/cli"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
@@ -39,42 +36,20 @@
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
     "dev": "npm run dev --workspace=packages/core",
-    "prepare": "echo 'Prepare hook skipped: run npm run build explicitly when needed.'",
-    "postinstall": "node scripts/postinstall.js",
+    "prepare": "npm run build",
     "version": "node scripts/update-version.js && git add VERSION.json",
     "publish:packages": "npm publish --workspaces",
     "prerelease": "npm run build && npm run typecheck && npm run lint",
-    "publish:prepare": "node scripts/prepare-publish-versions.cjs",
-    "orchestration:init": "bash scripts/install-orchestration.sh",
-    "orchestration:init:simple": "bash scripts/install-orchestration.sh simple",
-    "orchestration:init:balanced": "bash scripts/install-orchestration.sh balanced",
-    "orchestration:init:advanced": "bash scripts/install-orchestration.sh advanced",
-    "orchestration:ui": "bash scripts/start-orchestration-ui.sh",
-    "orchestration:api": "bash scripts/start-orchestration-api.sh",
-    "start:all": "bash scripts/start-all-services.sh",
-    "mcp:init": "bash scripts/init-mcp-core.sh",
-    "mcp:install": "node scripts/interactive-install.js",
-    "registry:generate": "node scripts/generate-skill-registry.js",
-    "registry:validate": "npm run registry:generate && npm run typecheck && npm run lint",
-    "registry:view": "cat registry/REGISTRY.md | less",
-    "update:check": "node scripts/check-updates.js",
-    "update:apply": "npm install && npm run registry:generate && npm run build",
-    "syncpulse:hub:setup": "bash scripts/setup-syncpulse-hub.sh full",
-    "syncpulse:hub:setup:essential": "bash scripts/setup-syncpulse-hub.sh essential",
-    "syncpulse:hub:setup:autoupdate": "bash scripts/setup-session-autoupdate.sh",
-    "syncpulse:hub:check-updates": "npm run build --workspace=packages/skills/syncpulse-hub && node packages/skills/syncpulse-hub/dist/updates/UpdateChecker.js",
-    "validate:deployment": "bash scripts/validate-deployment.sh",
-    "validate:pre-merge": "npm run build && npm run typecheck && npm run lint && npm run registry:validate && npm run validate:deployment"
+    "publish:prepare": "node scripts/prepare-publish-versions.cjs && npm install --package-lock-only --ignore-scripts"
   },
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=8.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.19.39",
+    "@types/node": "^20.12.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
-    "@vercel/node": "^3.0.0",
     "eslint": "^10.1.0",
     "typescript": "^5.3.2"
   },
@@ -89,16 +64,5 @@
     "LICENSE",
     "VERSION.json",
     "docs/"
-  ],
-  "dependencies": {
-    "@h4shed/syncpulse-hub": "^0.1.0",
-    "boxen": "^8.0.1",
-    "chalk": "^5.3.0",
-    "claude-flow": "^3.5.80",
-    "figlet": "^1.8.2",
-    "gradient-string": "^3.0.0",
-    "inquirer": "^12.9.4",
-    "ora": "^8.2.0",
-    "yargs": "^17.7.2"
-  }
+  ]
 }
