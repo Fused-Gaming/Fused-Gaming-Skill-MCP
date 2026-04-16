@@ -148,7 +148,6 @@ function generateButton(
   color: string,
   label: string = "Button"
 ): string {
-  const padding = 10;
   const width = size;
   const height = size * 0.4;
   const textSize = height * 0.6;
