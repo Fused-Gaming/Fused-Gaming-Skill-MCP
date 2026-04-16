@@ -40,8 +40,6 @@ function extractStages(objective: string): string[] {
     /churn|exit|cancellation/i,
   ];
 
-  const detectedStages: string[] = [];
-
   // Default stages for a typical journey
   const defaultStages = [
     "Awareness",
@@ -83,7 +81,6 @@ function generateTouchpoints(
   context: string
 ): string[] {
   const stageLower = stage.toLowerCase();
-  const objectiveLower = objective.toLowerCase();
 
   const touchpointMap: Record<string, string[]> = {
     awareness: [
