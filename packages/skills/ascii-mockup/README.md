@@ -30,3 +30,19 @@ Generate ASCII wireframe mockups for rapid prototyping.
 - ✅ Tool definitions
 - 📝 ASCII rendering templates
 - ⏳ Full implementation (WIP)
+
+## Usage
+
+This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+
+## Development
+
+```bash
+# from repository root
+npm run build --workspace=packages/skills/ascii-mockup
+npm run test --workspace=packages/skills/ascii-mockup
+```
+
+## License
+
+Apache-2.0

@@ -123,18 +123,53 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 1. GitHub CLI/API visibility is required to inspect live PR comments/check-runs from this environment.
 2. Newly scaffolded skills still need full tool logic, tests, and release tags before npm publication.
 3. Planned backlog is not yet mapped into implementation-ready milestones (owners, dates, dependencies).
+4. **Resolved (2026-04-16):** Node `24.x` `test` workflow duplicate workspace failure caused by two Mermaid workspaces sharing the same package name.
+
+## PR #51 Merge Readiness (Daily Review + Follow-on Skills)
+
+### Deliverables and success metrics
+1. **Documentation sync complete**: README, roadmap, changelog, and release planning docs are aligned.
+2. **Versioning complete**: repository metadata bumped for merge-review traceability.
+3. **Execution clarity**: blockers/current steps/next-three-steps are explicitly documented for handoff.
+4. **Milestone + issue mapping**: planned tools/skills are grouped into trackable delivery streams.
+
+### Recent PR status notes (environment constraints)
+- Local git history confirms related merged PRs (`#44`, `#46`, `#45`, `#42`, `#39`) touching CI, docs, and scaffolding.
+- Live comments/check-runs/deployment states for PR #51 and recent PRs **cannot be queried in this runtime** because GitHub CLI (`gh`) and remote/API credentials are unavailable.
+- Action required: confirm check suites and deployment conclusions in GitHub UI before merging PR #51.
 
 ## Current Steps
 
 1. Keep release-facing docs synchronized with actual `@h4shed` package publication.
-2. Complete implementation for newly scaffolded skills.
-3. Keep release workflow docs synchronized with CI workflows.
+2. Finalize PR #51 merge-readiness docs/version/changelog updates.
+3. Complete implementation for newly scaffolded skills (after workspace collision fix validation).
+4. Keep release workflow docs synchronized with CI workflows.
 
 ## Immediate Next 3 Steps
 
-1. Implement production logic + tests for `mermaid-terminal`, `ux-journeymapper`, `svg-generator`.
-2. Create release tags and publish plan for the full scaffolded skill batch.
+1. Verify PR #51 checks/deployments in GitHub UI and resolve any failing workflows before merge.
+2. Implement production logic + tests for `mermaid-terminal`, `ux-journeymapper`, `svg-generator`.
 3. Add CI validation to ensure docs package names stay aligned with published scope metadata.
+
+---
+
+## Milestones and Issue Buckets (Planned Tools + Skills)
+
+### Milestone M1 — PR #51 Daily Review Merge Stabilization (target: immediate)
+- **Issue A:** Validate and document PR #51 check-run and deployment outcomes.
+- **Issue B:** Keep changelog/version/docs synchronized in same merge window.
+- **Issue C:** Capture blocker/handoff notes for next agent to avoid duplicate triage.
+
+### Milestone M2 — Next-Wave Skill Completion (target: next release cycle)
+- **Issue A:** `skill-mermaid-terminal` implementation + tests.
+- **Issue B:** `skill-ux-journeymapper` implementation + tests.
+- **Issue C:** `skill-svg-generator` implementation + tests.
+- **Issue D:** `skill-project-manager` and `skill-project-status-tool` MVP command sets.
+
+### Milestone M3 — Planned Tooling and Release Observability (target: subsequent cycle)
+- **Issue A:** Unified PR release checklist with test/deploy evidence links.
+- **Issue B:** CI guardrails to detect docs/package/version drift.
+- **Issue C:** Automation for milestone issue template generation from roadmap backlog.
 
 ---
 

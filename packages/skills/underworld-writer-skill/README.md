@@ -30,3 +30,19 @@ Create detailed character profiles using the three-phase methodology:
 - ✅ Sample characters and examples
 - ✅ Test fixtures for validation
 - ✅ Full specification compliance
+
+## Usage
+
+This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+
+## Development
+
+```bash
+# from repository root
+npm run build --workspace=packages/skills/underworld-writer-skill
+npm run test --workspace=packages/skills/underworld-writer-skill
+```
+
+## License
+
+Apache-2.0
