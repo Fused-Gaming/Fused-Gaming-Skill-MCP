@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `docs/process/PR_51_MERGE_CHECKLIST.md` with explicit PR #51 deliverables, success metrics, blockers, execution order, and next-agent handoff directives.
 - Added `scripts/auto-bump-publish-versions.js` to automatically patch-bump root/workspace package versions until npm reports they are publishable.
 - Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.
 - Added a documentation index (`docs/README.md`) and reorganized root-level docs into categorized directories (`docs/getting-started`, `docs/process`, `docs/releases`, `docs/archive`).
@@ -17,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
+- Updated roadmap and README planning sections to include milestone/issue tracking for the daily-review merge and next-wave skill/tool rollout.
+- Updated `CLAUDE.md` with PR #51 orientation notes to reduce repeated PR-status/debug loops for the next agent.
 
 ### Deprecated
 - TBD for next release
@@ -31,6 +34,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - TBD for next release
+
+## [1.0.1] - 2026-04-16
+
+### Added
+- PR #51 merge-readiness checklist and handoff doc with blockers, active steps, and immediate next three tasks.
+- Milestone and issue-oriented roadmap entries for planned tools/skills (`daily-review`, `project-status-tool`, `project-manager`, and deployment/status automation).
+
+### Changed
+- Bumped repository version metadata to `1.0.1` for daily-review merge readiness documentation and planning sync.
+- Refreshed root README roadmap snapshot, priorities, and blockers to align with the PR #51 review window.
 
 ## [1.0.0] - 2026-04-02
 

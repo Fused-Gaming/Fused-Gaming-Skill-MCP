@@ -43,3 +43,19 @@
 ### Follow-up for Next Agent
 1. Validate publish workflow on a tag in GitHub Actions with npm registry access.
 2. If any package requires a non-patch bump policy, add a strategy flag to `prepare-publish-versions.cjs`.
+
+## Agent Notes (2026-04-16, PR #51 Merge Readiness)
+
+### Orientation Updates
+- PR #51 merge-readiness documentation was consolidated into `docs/process/PR_51_MERGE_CHECKLIST.md`.
+- Version metadata was bumped to `1.0.1` to mark the daily-review merge-prep window.
+- Roadmap now includes explicit milestone/issue buckets for planned tools/skills and release observability tasks.
+
+### Environment Constraints Reconfirmed
+- `gh` CLI is not available in this runtime.
+- Git remotes/API credentials are not configured locally, so live PR comments/check-runs/deployment outcomes cannot be queried from terminal.
+
+### Next Agent Priority Sequence
+1. Verify PR #51 and related recent PR workflow/deployment states in GitHub UI.
+2. If any checks fail, fix those errors first and rerun workflows before additional feature work.
+3. Continue next-wave skill implementation (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`) after CI/deployment stability is confirmed.
