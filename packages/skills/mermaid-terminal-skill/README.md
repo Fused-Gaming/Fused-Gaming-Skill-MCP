@@ -1,4 +1,4 @@
-# Mermaid Terminal Skill
+# Mermaid Terminal Skill (Legacy Workspace)
 
 Visualization engine for generating Mermaid diagrams in Fused Gaming MCP.
 
@@ -29,7 +29,7 @@ npm run build
 ### Generate Flowchart
 
 ```typescript
-import { generateFlowchart } from '@fused-gaming/skill-mermaid-terminal';
+import { generateFlowchart } from '@fused-gaming/skill-mermaid-terminal-legacy';
 
 const flowchart = generateFlowchart('Development Process', [
   { id: 'start', text: 'Start' },
