@@ -30,9 +30,6 @@ jobs:
       - name: Prepare workspace publish versions
         run: npm run publish:prepare
 
-      - name: Sync lockfile for publish adjustments
-        run: npm install --package-lock-only --ignore-scripts
-
       - name: Install dependencies
         run: npm ci
 

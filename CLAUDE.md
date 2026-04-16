@@ -43,36 +43,3 @@
 ### Follow-up for Next Agent
 1. Validate publish workflow on a tag in GitHub Actions with npm registry access.
 2. If any package requires a non-patch bump policy, add a strategy flag to `prepare-publish-versions.cjs`.
-
-## Agent Notes (2026-04-13, Publish Lockfile Sync + PR Check Visibility)
-
-### What Was Adjusted
-- Added a dedicated lockfile synchronization step to `.github/workflows/publish.yml`:
-  - `npm install --package-lock-only --ignore-scripts`
-  - Runs immediately after `npm run publish:prepare` and before `npm ci`.
-- This ensures auto-bumped workspace versions from `prepare-publish-versions.cjs` are reflected in `package-lock.json` before frozen install.
-
-### Why
-- `publish:prepare` mutates workspace `package.json` versions and internal ranges.
-- Without refreshing the lockfile first, `npm ci` can fail due to lock/package manifest mismatch.
-
-### GitHub Visibility Constraint Encountered
-- Public PR pages #38/#40/#41/#42/#43 are visible, but unauthenticated checks/deployments detail is partially unavailable in this environment (GitHub API returns HTTP 403; checks UI reports loading errors).
-- Next agent should validate real checks/deployments from an authenticated GitHub session or Actions UI.
-
-## Agent Notes (2026-04-13, Orientation + Priority Refresh)
-
-### Blockers Confirmed
-- No dedicated roadmap file was found from local repo discovery (`roadmap`/`ROADMAP`/`plan` filename patterns did not return a project roadmap document).
-- GitHub PR checks/deployments for PRs `#38`, `#40`, `#41`, `#42`, `#43` cannot be fully validated in this environment due unauthenticated/API access limits (HTTP 403 responses).
-
-### Current Progress Snapshot
-- Publish control point remains centralized in:
-  - `scripts/prepare-publish-versions.cjs`
-  - `.github/workflows/publish.yml`
-- Lockfile synchronization mitigation is already landed in `publish.yml` and should be treated as baseline behavior for tag publish verification.
-
-### Immediate Next 3 Steps (for next agent)
-1. Validate checks/deployments for PRs `#38/#40/#41/#42/#43` from an authenticated GitHub Actions session.
-2. Push a test tag (`v*` or `skill-*`) and confirm publish workflow completes end-to-end with the current `publish:prepare -> lockfile sync -> npm ci` sequence.
-3. If publish errors persist, iterate first in `scripts/prepare-publish-versions.cjs` and `.github/workflows/publish.yml`, then re-run tag publish.
