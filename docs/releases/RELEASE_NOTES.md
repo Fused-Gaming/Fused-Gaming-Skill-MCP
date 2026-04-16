@@ -35,7 +35,7 @@ This release represents the complete production deployment of the Fused Gaming M
 - Generated `package-lock.json` for reproducible builds
 - Converted pnpm workspace:* protocol to npm-compatible format
 - All 11 workspace packages verified and resolved
-- Node.js requirement: >=18.0.0
+- Node.js requirement: >=20.0.0
 - npm requirement: >=8.0.0
 
 ### ✅ Build & Verification
@@ -95,7 +95,7 @@ eslint: ^10.1.0
 ## Deployment Instructions
 
 ### Prerequisites
-- Node.js 18.0.0 or higher
+- Node.js 20.0.0 or higher
 - npm 8.0.0 or higher
 
 ### Installation

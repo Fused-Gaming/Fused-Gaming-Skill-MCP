@@ -1,6 +1,6 @@
 {
   "name": "@fused-gaming/mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
   "license": "Apache-2.0",
