@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
 
 ### Changed
+- Added a validated update standard to `docs/NPM_PUBLISHING.md` requiring typecheck/lint/build/tests/publish-prepare before version bumps or release tagging.
 - Updated `.github/workflows/test.yml` Node matrix from `20.x`/`24.x` to active LTS lanes `20.x`/`22.x` to resolve Actions Node-version failures in CI testing.
 - Updated `.github/workflows/github-release.yml` to `actions/checkout@v5` and added an explicit `actions/setup-node@v5` (`22.x`) runtime step for consistent release-job Node behavior.
 - Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
@@ -36,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
+- Fixed `packages/skills/svg-generator/src/tools/generate-svg-asset.ts` to define `width` in `generateButton`, resolving CI TypeScript failures (`Cannot find name 'width'`) reported in PR #73 workflow annotations.
 - Updated publish version bump automation to only consider changed workspace packages when checking for already-published npm versions, preventing unrelated packages from being patch-bumped without source changes.
 - Aligned workflow runtime expectations and release docs around Node.js LTS lanes (`20.x`, `22.x`) to prevent test matrix Node-version mismatches.
 - Replaced placeholder Jest test commands in `mermaid-terminal`, `svg-generator`, and `ux-journeymapper` workspace packages with shell no-op test scripts so CI does not fail with `jest: command not found` during PR merge checks.

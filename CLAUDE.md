@@ -156,3 +156,16 @@
 ### Next-Agent Validation
 1. In CI, verify `GITHUB_EVENT_BEFORE` is present for push events so changed-package detection is accurate.
 2. For manual runs, set `VERSION_BUMP_BASE_REF=<sha>` when comparing against a non-default baseline.
+
+## Agent Notes (2026-04-16, PR #73 Typecheck Regression + Versioning Standard)
+
+### What Was Fixed
+- Resolved TypeScript workflow failure in `packages/skills/svg-generator/src/tools/generate-svg-asset.ts` by defining the missing `width` constant in `generateButton(...)`.
+- This unblocks CI jobs that execute TypeScript compilation during dependency/install lifecycle.
+
+### Versioning Standard Update
+- `docs/NPM_PUBLISHING.md` now includes a **Validated Update Standards** sequence requiring `typecheck`, `lint`, `build`, workspace tests, and `publish:prepare` before any version bump or release tagging.
+
+### Next-Agent Reminder
+1. If workflow annotations show `Cannot find name 'width'`, verify the `generateButton` template variables in `generate-svg-asset.ts` first.
+2. Keep version/changelog updates coupled to a successful full validation pass (do not bump before checks are green).
