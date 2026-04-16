@@ -123,6 +123,7 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 1. GitHub CLI/API visibility is required to inspect live PR comments/check-runs from this environment.
 2. Newly scaffolded skills still need full tool logic, tests, and release tags before npm publication.
 3. Planned backlog is not yet mapped into implementation-ready milestones (owners, dates, dependencies).
+4. **Resolved (2026-04-16):** Node `24.x` `test` workflow duplicate workspace failure caused by two Mermaid workspaces sharing the same package name.
 
 ## PR #51 Merge Readiness (Daily Review + Follow-on Skills)
 
@@ -141,7 +142,7 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 
 1. Keep release-facing docs synchronized with actual `@h4shed` package publication.
 2. Finalize PR #51 merge-readiness docs/version/changelog updates.
-3. Complete implementation for newly scaffolded skills.
+3. Complete implementation for newly scaffolded skills (after workspace collision fix validation).
 4. Keep release workflow docs synchronized with CI workflows.
 
 ## Immediate Next 3 Steps

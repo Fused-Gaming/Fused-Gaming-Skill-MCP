@@ -59,3 +59,15 @@
 1. Verify PR #51 and related recent PR workflow/deployment states in GitHub UI.
 2. If any checks fail, fix those errors first and rerun workflows before additional feature work.
 3. Continue next-wave skill implementation (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`) after CI/deployment stability is confirmed.
+
+## Agent Notes (2026-04-16, Node 24 test(24.x) workspace failure)
+
+### Root Cause
+- CI/test lane failed quickly with `EDUPLICATEWORKSPACE` because both `packages/skills/mermaid-terminal` and `packages/skills/mermaid-terminal-skill` declared the same package name `@fused-gaming/skill-mermaid-terminal`.
+
+### Fix Applied
+- Renamed the legacy workspace package to `@fused-gaming/skill-mermaid-terminal-legacy` to remove workspace-name collision while preserving old code for reference.
+
+### Guardrail for Next Agent
+1. Before merging scaffolded/legacy skill folders, verify **unique workspace package names** across `packages/skills/*/package.json`.
+2. If retaining a legacy directory, suffix with `-legacy` to avoid npm workspace discovery conflicts.
