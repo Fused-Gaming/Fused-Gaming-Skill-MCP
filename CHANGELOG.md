@@ -8,10 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- TBD for next release
+- Added `docs/process/PR_51_MERGE_CHECKLIST.md` with explicit PR #51 deliverables, success metrics, blockers, execution order, and next-agent handoff directives.
+- Added `scripts/auto-bump-publish-versions.js` to automatically patch-bump root/workspace package versions until npm reports they are publishable.
+- Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.
+- Added a documentation index (`docs/README.md`) and reorganized root-level docs into categorized directories (`docs/getting-started`, `docs/process`, `docs/releases`, `docs/archive`).
+- Added a dedicated GitHub release workflow (`.github/workflows/github-release.yml`) that triggers on release tags (`v*`, `skill-*`) and can also be started manually.
+- Added a roadmap document (`docs/ROADMAP.md`) with published/missing/planned skill inventories, blockers, and immediate next steps.
+- Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
 
 ### Changed
-- TBD for next release
+- Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
+- Updated roadmap and README planning sections to include milestone/issue tracking for the daily-review merge and next-wave skill/tool rollout.
+- Updated `CLAUDE.md` with PR #51 orientation notes to reduce repeated PR-status/debug loops for the next agent.
 
 ### Deprecated
 - TBD for next release
@@ -20,10 +28,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
-- TBD for next release
+- Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
+- Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
+- Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
 
 ### Security
 - TBD for next release
+
+## [1.0.1] - 2026-04-16
+
+### Added
+- PR #51 merge-readiness checklist and handoff doc with blockers, active steps, and immediate next three tasks.
+- Milestone and issue-oriented roadmap entries for planned tools/skills (`daily-review`, `project-status-tool`, `project-manager`, and deployment/status automation).
+
+### Changed
+- Bumped repository version metadata to `1.0.1` for daily-review merge readiness documentation and planning sync.
+- Refreshed root README roadmap snapshot, priorities, and blockers to align with the PR #51 review window.
 
 ## [1.0.0] - 2026-04-02
 

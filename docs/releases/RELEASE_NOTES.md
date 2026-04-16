@@ -1,4 +1,22 @@
-# Release Notes - Production Deployment 2026-04-02
+# Release Notes
+
+## 1.0.1 - 2026-04-16 (PR #51 Merge-Readiness Update)
+
+### Overview
+This maintenance release prepares the repository for PR #51 merge approval by synchronizing version metadata and release-planning documentation.
+
+### Included in this update
+- PR #51 checklist and agent-orientation handoff document.
+- Updated roadmap milestones/issues for planned skills and tools.
+- Updated README roadmap snapshot and priority ordering.
+- Updated changelog and version metadata consistency (`VERSION.json`, `package.json`, README badge).
+
+### Known limitations
+- Live PR comment/check/deployment states still require GitHub UI verification when CLI/API access is unavailable in runtime.
+
+---
+
+## 1.0.0 - 2026-04-02 (Production Deployment)
 
 ## Overview
 This release represents the complete production deployment of the Fused Gaming MCP with comprehensive dependency updates, security hardening, and build verification.
@@ -33,7 +51,7 @@ This release represents the complete production deployment of the Fused Gaming M
 - Usage examples (EXAMPLES.md)
 - Skills guide (SKILLS_GUIDE.md)
 - Contributing guidelines (CONTRIBUTING.md)
-- Branching strategy documentation (BRANCHING_STRATEGY.md)
+- Branching strategy documentation (docs/process/BRANCHING_STRATEGY.md)
 
 ### 🧪 Testing
 - Test framework prepared across all packages
@@ -124,6 +142,9 @@ None reported at this time.
 2. Monitor error logs and performance
 3. Gather user feedback on new skills
 4. Plan next feature development cycle
+5. Split and monitor release automation:
+   - npm publishing in `.github/workflows/publish.yml`
+   - GitHub Releases in `.github/workflows/github-release.yml`
 
 ---
 **Release Date:** April 2, 2026  

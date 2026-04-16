@@ -242,8 +242,8 @@ FILES:
    - Post success message (optional)
 
 REQUIREMENTS:
-- Use actions/checkout@v4
-- Use actions/setup-node@v4
+- Use actions/checkout@v5
+- Use actions/setup-node@v5
 - Fail fast on errors
 - Clear job names
 - Optional: codecov or coverage reporting
