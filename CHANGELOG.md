@@ -18,14 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
-- Updated README and package publish file list to reflect the new documentation paths.
-- Updated `publish.yml` to publish npm workspaces on every push to `main` (including merges), while retaining tag-triggered releases and adding manual `workflow_dispatch` support.
-- Switched GitHub release authentication in the publish workflow to use the repository `GH_TOKEN` secret.
-- Updated `publish.yml` to hand off tag-based release creation to the dedicated GitHub release workflow for clearer separation of responsibilities.
-- Expanded README release/roadmap documentation to include existing status, planned follow-ups, and operational blockers.
-- Raised release metadata and docs minimum Node.js requirement references from `18.0.0` to `20.0.0` to align with workspace engines and active CI lanes.
-- Standardized workspace package README files to follow npm package documentation conventions (installation, usage/tooling context, development, and license sections).
-- Advanced release metadata from `1.0.1` to `1.0.2` for the current patch iteration.
 
 ### Deprecated
 - TBD for next release
