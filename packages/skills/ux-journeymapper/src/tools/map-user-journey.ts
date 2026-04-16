@@ -83,7 +83,6 @@ function generateTouchpoints(
   context: string
 ): string[] {
   const stageLower = stage.toLowerCase();
-  const objectiveLower = objective.toLowerCase();
 
   const touchpointMap: Record<string, string[]> = {
     awareness: [
