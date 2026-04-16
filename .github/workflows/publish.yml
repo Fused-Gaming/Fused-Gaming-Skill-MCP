@@ -2,27 +2,53 @@ name: Publish to npm
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
       - "skill-*"
+  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
           registry-url: https://registry.npmjs.org
 
+      - name: Prepare workspace publish versions
+        run: npm run publish:prepare
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Prepare package scope for publishing
+        run: |
+          if [ -z "${NPM_SCOPE}" ]; then
+            export NPM_SCOPE=$(npm whoami)
+          fi
+          echo "Publishing with scope: @${NPM_SCOPE#@}"
+          node scripts/prepare-publish-scope.js
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_SCOPE: ${{ vars.NPM_SCOPE }}
+
+      - name: Auto-bump workspace versions for npm publish
+        run: node scripts/auto-bump-publish-versions.js
+
+      - name: Preflight publish version check
+        run: node scripts/preflight-publish-check.js
 
       - name: Lint
         run: npm run lint --if-present
@@ -33,20 +59,13 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Publish to npm
-        run: npm publish --workspaces
+      - name: Publish workspaces to npm
+        run: npm publish --workspaces --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
+      - name: Release hand-off note
         if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Published to npm with tag: ${{ github.ref }}
-          draft: false
-          prerelease: false
+        run: |
+          echo "Tag publish complete."
+          echo "GitHub release is created by .github/workflows/github-release.yml."
