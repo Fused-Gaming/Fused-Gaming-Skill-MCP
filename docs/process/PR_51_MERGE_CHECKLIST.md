@@ -3,25 +3,26 @@
 ## Scope
 Prepare merge-ready documentation and versioning for PR #51 (daily review integration + planned follow-on skills/tools alignment).
 
-## Deliverables
-1. Update `README.md` roadmap snapshot and priority list.
-2. Update `docs/ROADMAP.md` blockers, current steps, and immediate next three steps.
-3. Add/refresh milestone + issue buckets for planned tools and skills.
-4. Bump repository version metadata for merge-window traceability.
-5. Update `CHANGELOG.md` for unreleased and versioned notes.
-6. Add agent handoff context to `CLAUDE.md`.
+## Deliverables Checklist
+- [x] Update `README.md` roadmap snapshot and priority list.
+- [x] Update `docs/ROADMAP.md` blockers, current steps, and immediate next three steps.
+- [x] Add/refresh milestone + issue buckets for planned tools and skills.
+- [x] Bump repository version metadata for merge-window traceability.
+- [x] Update `CHANGELOG.md` for unreleased and versioned notes.
+- [x] Add agent handoff context to `CLAUDE.md`.
 
-## Success Metrics
-- Documentation sections referenced above are internally consistent.
-- Version values match across `VERSION.json`, `package.json`, and README badge.
-- A clear blocker list exists and includes execution-environment constraints.
-- Immediate next three steps are explicit and actionable.
-- Milestone and issue buckets map to the planned tools/skills in roadmap.
+## Success Metrics Checklist
+- [x] Documentation sections referenced above are internally consistent.
+- [x] Version values match across `VERSION.json`, `package.json`, and README badge.
+- [x] A clear blocker list exists and includes execution-environment constraints.
+- [x] Immediate next three steps are explicit and actionable.
+- [x] Milestone and issue buckets map to the planned tools/skills in roadmap.
 
 ## Blockers
 1. GitHub CLI (`gh`) is not installed in this environment.
 2. No git remotes/API credentials are configured; live PR comments and check-runs cannot be queried from terminal.
 3. Deployment/test status for recent PRs must be verified in GitHub UI.
+4. `npm ci` dependency install can stall in this runtime under current proxy/network conditions.
 
 ## Current Steps
 1. Keep docs/version/changelog in sync for PR #51 review.
@@ -32,7 +33,7 @@ Prepare merge-ready documentation and versioning for PR #51 (daily review integr
 ## Immediate Next 3 Steps
 1. Open PR #51 in GitHub and confirm all checks + deployments are green.
 2. If any workflow fails, patch branch and rerun until green.
-3. Start implementation/test pass for `mermaid-terminal`, `ux-journeymapper`, and `svg-generator`.
+3. Re-run `npm ci` from an unrestricted network runtime and attach logs to the PR thread.
 
 ## Recent PRs Related to Current Branch (Local-Git Evidence)
 - `#44` fix(ci): recover publish flow from merged workspace-version conflicts.
@@ -42,6 +43,14 @@ Prepare merge-ready documentation and versioning for PR #51 (daily review integr
 - `#39` merge: migrate deprecated Node.js GitHub Actions references.
 
 > Note: live check/deploy state for the PRs above must be confirmed in GitHub UI due to local environment limitations.
+
+## Issue Specifications (required evidence per issue)
+- **Issue: PR check/deploy verification**
+  - Record workflow URL, run ID, commit SHA, conclusion, and failed step (if applicable).
+- **Issue: Version/doc sync**
+  - Confirm semantic version matches in `package.json`, `VERSION.json`, README version badge, and changelog release section.
+- **Issue: Dependency install health**
+  - Include install command used (`npm ci`), duration, and whether proxy/network constraints impacted completion.
 
 ## Agent Directives for Continuation
 - Prioritize workflow/deployment failures before new feature implementation.

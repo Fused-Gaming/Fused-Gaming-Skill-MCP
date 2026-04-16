@@ -47,6 +47,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - TBD for next release
 
+## [1.0.3] - 2026-04-16
+
+### Added
+- Added explicit issue-level specifications to roadmap milestone buckets and PR #51 checklist guidance to standardize execution evidence.
+
+### Changed
+- Updated blocker/current-step/next-step planning to include dependency install runtime constraints and dependency-validation follow-up tasks.
+- Bumped repository metadata/version references to `1.0.3` across `package.json`, `VERSION.json`, and README badge.
+
+### Fixed
+- Re-synchronized `package-lock.json` metadata with current workspace manifests using `npm install --package-lock-only --ignore-scripts`.
+
 ## [1.0.1] - 2026-04-16
 
 ### Added
