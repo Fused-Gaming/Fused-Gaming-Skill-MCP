@@ -143,3 +143,16 @@
 
 ### Validation
 1. `npm run lint -- packages/skills/mermaid-terminal/src/tools/generate-mermaid-diagram.ts packages/skills/ux-journeymapper/src/tools/map-user-journey.ts` passes locally.
+
+## Agent Notes (2026-04-16, Changed-Only Publish Version Bumps)
+
+### What Was Updated
+- `scripts/prepare-publish-versions.cjs` now computes changed files from git diff (`VERSION_BUMP_BASE_REF` or `GITHUB_EVENT_BEFORE` fallback) and only evaluates changed workspace packages for npm-version collisions.
+- `scripts/auto-bump-publish-versions.js` now limits auto-bump targets to changed workspace packages and avoids global/root version increments when unchanged packages exist.
+
+### Why
+- Previous behavior could patch-bump packages that had no source changes, creating unnecessary version churn and avoidable metadata drift.
+
+### Next-Agent Validation
+1. In CI, verify `GITHUB_EVENT_BEFORE` is present for push events so changed-package detection is accurate.
+2. For manual runs, set `VERSION_BUMP_BASE_REF=<sha>` when comparing against a non-default baseline.
