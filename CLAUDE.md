@@ -122,3 +122,29 @@
 ### Next-Agent Follow-up
 1. Re-run `npm ci`, `npm run lint`, `npm run typecheck`, and `npm run build` in a network-stable environment and attach logs to the active PR.
 2. Verify PR #51 and latest branch-related PR checks/deployments directly in GitHub UI, then update checklist evidence entries.
+
+## Agent Notes (2026-04-16, Node Workflow Test Lane Stabilization)
+
+### What Was Updated
+- Test workflow matrix was moved from Node `20.x` + `24.x` to `20.x` + `22.x` to keep CI on current active LTS lanes.
+- GitHub release workflow now uses `actions/checkout@v5` and includes explicit `actions/setup-node@v5` (`22.x`).
+- Release metadata/docs were bumped to `v1.0.3` and aligned with the workflow/runtime changes.
+
+### Remaining Blockers
+1. GitHub PR checks/deployment status still require authenticated API/UI access from outside this execution environment.
+2. Full dependency reinstall/lock refresh can still fail here when npm registry access returns HTTP 403 for transitive packages.
+## Agent Notes (2026-04-16, PR #73 Node Test Failure)
+
+### Root Cause
+- Three skill workspaces used placeholder test scripts (`jest --passWithNoTests`) but `jest` is not installed in the monorepo, causing CI `npm test --workspaces` to fail on merge checks.
+
+### Fix Applied
+- Updated test scripts in:
+  - `packages/skills/mermaid-terminal/package.json`
+  - `packages/skills/svg-generator/package.json`
+  - `packages/skills/ux-journeymapper/package.json`
+- All three now use `echo "No tests yet"` to keep pipeline green until real tests are implemented.
+
+### Follow-up
+1. Add a shared test runner dependency (Jest or Vitest) only when real test suites are introduced.
+2. Replace placeholder test scripts with runnable tests as each skill reaches implementation phase.

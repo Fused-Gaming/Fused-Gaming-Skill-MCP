@@ -1,4 +1,4 @@
-# Release Notes
+# Release Notes - Node Workflow Stabilization 2026-04-16
 
 ## 1.0.3 - 2026-04-16 (Lockfile + Issue Specification Sync)
 
@@ -20,19 +20,21 @@ This patch release aligns planning/specification docs with active milestone issu
 
 ### Overview
 This maintenance release prepares the repository for PR #51 merge approval by synchronizing version metadata and release-planning documentation.
+## Overview
+This patch release (`v1.0.3`) stabilizes GitHub Actions Node.js runtime usage for testing and release automation documentation consistency.
 
-### Included in this update
-- PR #51 checklist and agent-orientation handoff document.
-- Updated roadmap milestones/issues for planned skills and tools.
-- Updated README roadmap snapshot and priority ordering.
-- Updated changelog and version metadata consistency (`VERSION.json`, `package.json`, README badge).
+## Highlights
+- Updated test workflow matrix from `20.x/24.x` to `20.x/22.x` for active LTS compatibility.
+- Updated GitHub release workflow to `actions/checkout@v5` and added explicit Node setup (`actions/setup-node@v5`, `22.x`).
+- Synchronized release-facing docs and metadata with `v1.0.3`.
 
-### Known limitations
-- Live PR comment/check/deployment states still require GitHub UI verification when CLI/API access is unavailable in runtime.
+## Validation Steps
+1. Re-run Test workflow matrix jobs for Node 20 and 22.
+2. Re-run release workflow dispatch to ensure the updated action/runtime path executes cleanly.
 
 ---
 
-## 1.0.0 - 2026-04-02 (Production Deployment)
+# Release Notes - Production Deployment 2026-04-02
 
 ## Overview
 This release represents the complete production deployment of the Fused Gaming MCP with comprehensive dependency updates, security hardening, and build verification.
