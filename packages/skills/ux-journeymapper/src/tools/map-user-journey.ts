@@ -40,8 +40,6 @@ function extractStages(objective: string): string[] {
     /churn|exit|cancellation/i,
   ];
 
-  const detectedStages: string[] = [];
-
   // Default stages for a typical journey
   const defaultStages = [
     "Awareness",
