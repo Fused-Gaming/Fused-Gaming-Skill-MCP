@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-mermaid-terminal",
+  "name": "@fused-gaming/skill-mermaid-terminal-skill",
   "version": "1.0.0",
   "description": "Visualization engine for generating Mermaid diagrams from code analysis and documentation",
   "type": "module",

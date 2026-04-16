@@ -1,4 +1,4 @@
-# Daily Review Skill
+# @fused-gaming/skill-daily-review
 
 Comprehensive session tracking and productivity metrics skill for Fused Gaming MCP.
 
@@ -21,7 +21,7 @@ The Daily Review Skill enables tracking Claude sessions across multiple accounts
 
 Install via npm workspace:
 ```bash
-npm install
+npm install @fused-gaming/skill-daily-review
 ```
 
 Build the skill:
@@ -262,3 +262,4 @@ Apache-2.0
 - `multi-account-session-tracking-skill` - Multi-account aggregation
 - `project-status-tool` - Project metrics dashboard
 - `project-manager-skill` - Task management integration
+

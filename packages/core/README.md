@@ -66,3 +66,15 @@ interface ToolDefinition {
 ```
 
 See `src/types.ts` for complete type definitions.
+
+## Development
+
+```bash
+# from repository root
+npm run build --workspace=packages/core
+npm run test --workspace=packages/core
+```
+
+## License
+
+Apache-2.0
