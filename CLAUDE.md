@@ -133,3 +133,13 @@
 ### Follow-up
 1. Add a shared test runner dependency (Jest or Vitest) only when real test suites are introduced.
 2. Replace placeholder test scripts with runnable tests as each skill reaches implementation phase.
+
+## Agent Notes (2026-04-16, Lint Unused-Args Cleanup)
+
+### What Was Fixed
+- Resolved `@typescript-eslint/no-unused-vars` failures in skill tools by renaming intentionally unused parameters to underscore-prefixed names in:
+  - `packages/skills/mermaid-terminal/src/tools/generate-mermaid-diagram.ts`
+  - `packages/skills/ux-journeymapper/src/tools/map-user-journey.ts`
+
+### Validation
+1. `npm run lint -- packages/skills/mermaid-terminal/src/tools/generate-mermaid-diagram.ts packages/skills/ux-journeymapper/src/tools/map-user-journey.ts` passes locally.
