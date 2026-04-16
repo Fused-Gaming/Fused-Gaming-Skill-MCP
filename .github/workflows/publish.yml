@@ -17,27 +17,21 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
           registry-url: https://registry.npmjs.org
 
+      - name: Prepare workspace publish versions
+        run: npm run publish:prepare
+
       - name: Install dependencies
         run: npm ci
-
-      - name: Lint
-        run: npm run lint --if-present
-
-      - name: Typecheck
-        run: npm run typecheck --if-present
-
-      - name: Build
-        run: npm run build
 
       - name: Prepare package scope for publishing
         run: |
@@ -49,6 +43,21 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_SCOPE: ${{ vars.NPM_SCOPE }}
+
+      - name: Auto-bump workspace versions for npm publish
+        run: node scripts/auto-bump-publish-versions.js
+
+      - name: Preflight publish version check
+        run: node scripts/preflight-publish-check.js
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Typecheck
+        run: npm run typecheck --if-present
+
+      - name: Build
+        run: npm run build
 
       - name: Publish workspaces to npm
         run: npm publish --workspaces --access public

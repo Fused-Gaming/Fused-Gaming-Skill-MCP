@@ -1,6 +1,6 @@
 {
   "name": "@fused-gaming/mcp",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
   "license": "Apache-2.0",
@@ -39,7 +39,8 @@
     "prepare": "npm run build",
     "version": "node scripts/update-version.js && git add VERSION.json",
     "publish:packages": "npm publish --workspaces",
-    "prerelease": "npm run build && npm run typecheck && npm run lint"
+    "prerelease": "npm run build && npm run typecheck && npm run lint",
+    "publish:prepare": "node scripts/prepare-publish-versions.cjs && npm install --package-lock-only --ignore-scripts"
   },
   "engines": {
     "node": ">=20.0.0",

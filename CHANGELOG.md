@@ -8,18 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `docs/process/PR_51_MERGE_CHECKLIST.md` with explicit PR #51 deliverables, success metrics, blockers, execution order, and next-agent handoff directives.
+- Added `scripts/auto-bump-publish-versions.js` to automatically patch-bump root/workspace package versions until npm reports they are publishable.
+- Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.
 - Added a documentation index (`docs/README.md`) and reorganized root-level docs into categorized directories (`docs/getting-started`, `docs/process`, `docs/releases`, `docs/archive`).
 - Added a dedicated GitHub release workflow (`.github/workflows/github-release.yml`) that triggers on release tags (`v*`, `skill-*`) and can also be started manually.
 - Added a roadmap document (`docs/ROADMAP.md`) with published/missing/planned skill inventories, blockers, and immediate next steps.
 - Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
 
 ### Changed
-- Updated README and package publish file list to reflect the new documentation paths.
-- Updated `publish.yml` to publish npm workspaces on every push to `main` (including merges), while retaining tag-triggered releases and adding manual `workflow_dispatch` support.
-- Switched GitHub release authentication in the publish workflow to use the repository `GH_TOKEN` secret.
-- Updated `publish.yml` to hand off tag-based release creation to the dedicated GitHub release workflow for clearer separation of responsibilities.
-- Expanded README release/roadmap documentation to include existing status, planned follow-ups, and operational blockers.
-- Updated release-facing documentation to reflect currently published npm scope/packages under `@h4shed`.
+- Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
 
 ### Deprecated
 - TBD for next release
@@ -28,11 +26,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
-- Prevented npm publish workflow failures from missing scopes by adding CI scope preparation with `NPM_SCOPE` override and `npm whoami` fallback.
+- Resolved Node `24.x` CI workspace discovery failure (`EDUPLICATEWORKSPACE`) by assigning the legacy Mermaid package a unique workspace name (`@fused-gaming/skill-mermaid-terminal-legacy`) after the production `mermaid-terminal` merge.
+- Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
+- Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
 - Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
+- Resolved `EDUPLICATEWORKSPACE` install/test blocker by assigning a unique workspace package name to `packages/skills/mermaid-terminal-skill`.
 
 ### Security
 - TBD for next release
+
+## [1.0.1] - 2026-04-16
+
+### Added
+- PR #51 merge-readiness checklist and handoff doc with blockers, active steps, and immediate next three tasks.
+- Milestone and issue-oriented roadmap entries for planned tools/skills (`daily-review`, `project-status-tool`, `project-manager`, and deployment/status automation).
+
+### Changed
+- Bumped repository version metadata to `1.0.1` for daily-review merge readiness documentation and planning sync.
+- Refreshed root README roadmap snapshot, priorities, and blockers to align with the PR #51 review window.
 
 ## [1.0.0] - 2026-04-02
 
