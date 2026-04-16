@@ -43,3 +43,19 @@
 ### Follow-up for Next Agent
 1. Validate publish workflow on a tag in GitHub Actions with npm registry access.
 2. If any package requires a non-patch bump policy, add a strategy flag to `prepare-publish-versions.cjs`.
+
+## Agent Notes (2026-04-16, PR #73 Node Test Failure)
+
+### Root Cause
+- Three skill workspaces used placeholder test scripts (`jest --passWithNoTests`) but `jest` is not installed in the monorepo, causing CI `npm test --workspaces` to fail on merge checks.
+
+### Fix Applied
+- Updated test scripts in:
+  - `packages/skills/mermaid-terminal/package.json`
+  - `packages/skills/svg-generator/package.json`
+  - `packages/skills/ux-journeymapper/package.json`
+- All three now use `echo "No tests yet"` to keep pipeline green until real tests are implemented.
+
+### Follow-up
+1. Add a shared test runner dependency (Jest or Vitest) only when real test suites are introduced.
+2. Replace placeholder test scripts with runnable tests as each skill reaches implementation phase.
