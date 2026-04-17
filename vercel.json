@@ -7,7 +7,7 @@
   "regions": ["sfo1"],
   "builds": [
     {
-      "src": "package.json",
+      "src": "api/index.ts",
       "use": "@vercel/node"
     }
   ],
