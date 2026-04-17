@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md` with blockers, current steps, immediate next actions, PR-context triage, and agent directives for the `feat/github-agents` branch.
+- Added `docs/process/VERCEL_PROJECT_SETUP.md` with explicit Vercel project directory and framework preset guidance for `skills.vln.gg` (skills API) and `sync.vln.gg` (augmented agents app).
 - Added `docs/process/PR_51_MERGE_CHECKLIST.md` with explicit PR #51 deliverables, success metrics, blockers, execution order, and next-agent handoff directives.
 - Added `scripts/auto-bump-publish-versions.js` to automatically patch-bump root/workspace package versions until npm reports they are publishable.
 - Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.

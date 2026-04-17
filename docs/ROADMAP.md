@@ -180,3 +180,15 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 - `#14` merge for underworld writer feature delivery
 
 CI/deployment status for these PRs must be verified in GitHub UI/API.
+
+---
+
+## GitHub MCP Agents Branch Snapshot (2026-04-17)
+
+- Active planning branch: `feat/github-agents`.
+- Orientation/runbook added at `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md`.
+- Priority focus remains:
+  1. Authenticated visibility for PR checks/deployments.
+  2. Failing-check-first remediation policy.
+  3. Queued skill implementation with full validation and handoff discipline.
+- Vercel setup guidance documented for `skills.vln.gg` and `sync.vln.gg` in `docs/process/VERCEL_PROJECT_SETUP.md`.
