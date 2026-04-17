@@ -1,0 +1,16 @@
+{
+  "name": "@h4shed/skill-syncpulse",
+  "version": "0.1.0",
+  "description": "SyncPulse - intelligent project state caching and coordination",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "test": "echo \"tests pending\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.3.2"
+  }
+}

@@ -1,5 +1,19 @@
 # CLAUDE.md
 
+## Agent Notes (2026-04-16, Vercel install failure fix)
+
+### Root Cause
+- Root `prepare` script invoked `npm run build` across all workspaces during `npm install`.
+- In production installs (such as Vercel), workspace package dependencies were not guaranteed to be present when that hook ran, causing TypeScript module resolution failures in `packages/cli`.
+
+### What Was Changed
+- Replaced root `prepare` build hook with a no-op message in `package.json`.
+- This prevents installation-time build failures; explicit CI/build steps should continue to call `npm run build`.
+
+### Next Agent Checks
+1. Confirm Vercel/CI install stage succeeds with the new prepare behavior.
+2. Verify the explicit build stage still runs and passes in environments that install all workspace dependencies.
+
 ## Agent Notes (2026-04-13)
 
 ### Environment / Dependency Constraints
@@ -169,3 +183,16 @@
 ### Next-Agent Reminder
 1. If workflow annotations show `Cannot find name 'width'`, verify the `generateButton` template variables in `generate-svg-asset.ts` first.
 2. Keep version/changelog updates coupled to a successful full validation pass (do not bump before checks are green).
+
+## Agent Notes (2026-04-17, CLI Child-Branch Build Dependency Resolution)
+
+### Root Cause Pattern
+- Child branches that include richer CLI UI command modules can fail TypeScript compilation with `TS2307` when optional CLI UI libraries are imported but not declared in `packages/cli/package.json`.
+- Missing modules observed in failures: `ora`, `chalk`, `gradient-string`, `figlet`, `inquirer`, `boxen`, plus type package gaps for `figlet`/`inquirer`.
+
+### Fix Applied
+- Added the missing CLI runtime dependencies and associated type packages to `packages/cli/package.json`.
+
+### Next-Agent Guardrail
+1. If CLI build fails with `TS2307` module errors, verify dependency declarations in `packages/cli/package.json` before debugging TypeScript config.
+2. In restricted environments, lockfile refresh may fail with npm `403`; validate dependency graph in CI with registry access.

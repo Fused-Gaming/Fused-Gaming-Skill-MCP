@@ -1,0 +1,20 @@
+{
+  "name": "fused-gaming-skill-mcp",
+  "version": 2,
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "regions": ["sfo1"],
+  "builds": [
+    {
+      "src": "api/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "^/(.*)",
+      "dest": "api/index.ts"
+    }
+  ]
+}
