@@ -1,9 +1,30 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+let landingPageHtml: string | null = null;
+
+function getLandingPage(): string {
+  if (!landingPageHtml) {
+    try {
+      landingPageHtml = readFileSync(join(__dirname, '../public/index.html'), 'utf-8');
+    } catch {
+      landingPageHtml = '<html><body><h1>Fused Gaming MCP Skills API</h1><p>Service is running</p></body></html>';
+    }
+  }
+  return landingPageHtml;
+}
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
+    // Landing page endpoint
+    if (req.url === '/' && req.method === 'GET') {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      return res.status(200).send(getLandingPage());
+    }
+
     // Health check endpoint
-    if ((req.url === '/health' || req.url === '/') && req.method === 'GET') {
+    if (req.url === '/health' && req.method === 'GET') {
       return res.status(200).json({
         status: 'ok',
         service: 'fused-gaming-skill-mcp',
