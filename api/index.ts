@@ -1,6 +1,6 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-export default async (req: VercelRequest, res: VercelResponse) => {
+export default async (req: any, res: any) => {
   try {
     // Health check endpoint
     if (req.url?.startsWith('/health') && req.method === 'GET') {
