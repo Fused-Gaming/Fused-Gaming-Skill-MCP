@@ -33,7 +33,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // MCP API endpoint
     if (req.url === '/api' && req.method === 'POST') {
-      const { jsonrpc, method, params, id } = req.body;
+      const { jsonrpc, method, _params, id } = req.body;
 
       if (jsonrpc === '2.0') {
         // Echo back the request as a placeholder
