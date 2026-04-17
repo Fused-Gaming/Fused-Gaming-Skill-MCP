@@ -47,6 +47,11 @@ async function runInteractive() {
   console.log("👋 Goodbye");
 }
 
+async function launchSyncPulsePanel() {
+  await runBootSequence();
+  showSyncPulseDashboard();
+}
+
 // If no command provided → launch UI
 if (hideBin(process.argv).length === 0) {
   runInteractive();
@@ -68,6 +73,22 @@ if (hideBin(process.argv).length === 0) {
         }),
       async (argv: any) => {
         await add(argv.skill);
+      }
+    )
+    .command(
+      "panel",
+      "Launch the SyncPulse panel directly",
+      {},
+      async () => {
+        await launchSyncPulsePanel();
+      }
+    )
+    .command(
+      "syncpulse",
+      "Alias for launching the SyncPulse panel",
+      {},
+      async () => {
+        await launchSyncPulsePanel();
       }
     )
     .command(
