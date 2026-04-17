@@ -209,3 +209,21 @@
 ### Next-Agent Starter
 1. Run authenticated GitHub PR/check/deployment inspection first; fix any failing checks before starting new feature implementation.
 2. Keep `CHANGELOG.md`, `docs/ROADMAP.md`, and `CLAUDE.md` synchronized after each merge.
+
+
+## Agent Notes (2026-04-17, Agentic Flow Devkit + Trailer Sourcing)
+
+### Delivered
+- Added new workspace skill `@fused-gaming/skill-agentic-flow-devkit`.
+- Introduced tools:
+  - `visualize-agentic-flow` for Mermaid + GUI layout output of multi-agent orchestration.
+  - `plan-trailer-rolls` for A-roll/B-roll source planning and search prompts.
+
+### Blockers Observed
+1. Local clone has no configured git remotes, so PR lineage against parent origin cannot be checked here.
+2. Unauthenticated environment still blocks live PR comments/check/deployment inspection.
+
+### Next-Agent Guardrails
+1. Verify authenticated PR checks/deployments before adding additional skills.
+2. Add tests for the new devkit tools before publish.
+3. Keep docs + version metadata synchronized in the same commit to avoid release drift.
