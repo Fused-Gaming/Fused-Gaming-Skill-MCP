@@ -57,7 +57,7 @@ function detectDiagramType(objective: string): string {
 /**
  * Generates a basic flowchart diagram from objective description
  */
-function generateFlowchart(objective: string, context: string): string {
+function generateFlowchart(objective: string, _context: string): string {
   const lines = objective.split(/[,;.]/);
   const steps = lines.filter((l) => l.trim().length > 0).slice(0, 5);
 
@@ -120,7 +120,7 @@ function generateSequenceDiagram(objective: string, context: string): string {
 /**
  * Generates a state diagram for state-based objectives
  */
-function generateStateDiagram(objective: string, context: string): string {
+function generateStateDiagram(objective: string, _context: string): string {
   const states = objective
     .split(/[,;]/)
     .filter((s) => s.trim().length > 0)

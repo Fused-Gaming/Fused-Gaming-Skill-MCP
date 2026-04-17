@@ -1,5 +1,19 @@
 # CLAUDE.md
 
+## Agent Notes (2026-04-16, Vercel install failure fix)
+
+### Root Cause
+- Root `prepare` script invoked `npm run build` across all workspaces during `npm install`.
+- In production installs (such as Vercel), workspace package dependencies were not guaranteed to be present when that hook ran, causing TypeScript module resolution failures in `packages/cli`.
+
+### What Was Changed
+- Replaced root `prepare` build hook with a no-op message in `package.json`.
+- This prevents installation-time build failures; explicit CI/build steps should continue to call `npm run build`.
+
+### Next Agent Checks
+1. Confirm Vercel/CI install stage succeeds with the new prepare behavior.
+2. Verify the explicit build stage still runs and passes in environments that install all workspace dependencies.
+
 ## Agent Notes (2026-04-13)
 
 ### Environment / Dependency Constraints
@@ -148,3 +162,52 @@
 ### Follow-up
 1. Add a shared test runner dependency (Jest or Vitest) only when real test suites are introduced.
 2. Replace placeholder test scripts with runnable tests as each skill reaches implementation phase.
+
+## Agent Notes (2026-04-16, Lint Unused-Args Cleanup)
+
+### What Was Fixed
+- Resolved `@typescript-eslint/no-unused-vars` failures in skill tools by renaming intentionally unused parameters to underscore-prefixed names in:
+  - `packages/skills/mermaid-terminal/src/tools/generate-mermaid-diagram.ts`
+  - `packages/skills/ux-journeymapper/src/tools/map-user-journey.ts`
+
+### Validation
+1. `npm run lint -- packages/skills/mermaid-terminal/src/tools/generate-mermaid-diagram.ts packages/skills/ux-journeymapper/src/tools/map-user-journey.ts` passes locally.
+
+## Agent Notes (2026-04-16, Changed-Only Publish Version Bumps)
+
+### What Was Updated
+- `scripts/prepare-publish-versions.cjs` now computes changed files from git diff (`VERSION_BUMP_BASE_REF` or `GITHUB_EVENT_BEFORE` fallback) and only evaluates changed workspace packages for npm-version collisions.
+- `scripts/auto-bump-publish-versions.js` now limits auto-bump targets to changed workspace packages and avoids global/root version increments when unchanged packages exist.
+
+### Why
+- Previous behavior could patch-bump packages that had no source changes, creating unnecessary version churn and avoidable metadata drift.
+
+### Next-Agent Validation
+1. In CI, verify `GITHUB_EVENT_BEFORE` is present for push events so changed-package detection is accurate.
+2. For manual runs, set `VERSION_BUMP_BASE_REF=<sha>` when comparing against a non-default baseline.
+
+## Agent Notes (2026-04-16, PR #73 Typecheck Regression + Versioning Standard)
+
+### What Was Fixed
+- Resolved TypeScript workflow failure in `packages/skills/svg-generator/src/tools/generate-svg-asset.ts` by defining the missing `width` constant in `generateButton(...)`.
+- This unblocks CI jobs that execute TypeScript compilation during dependency/install lifecycle.
+
+### Versioning Standard Update
+- `docs/NPM_PUBLISHING.md` now includes a **Validated Update Standards** sequence requiring `typecheck`, `lint`, `build`, workspace tests, and `publish:prepare` before any version bump or release tagging.
+
+### Next-Agent Reminder
+1. If workflow annotations show `Cannot find name 'width'`, verify the `generateButton` template variables in `generate-svg-asset.ts` first.
+2. Keep version/changelog updates coupled to a successful full validation pass (do not bump before checks are green).
+
+## Agent Notes (2026-04-17, CLI Child-Branch Build Dependency Resolution)
+
+### Root Cause Pattern
+- Child branches that include richer CLI UI command modules can fail TypeScript compilation with `TS2307` when optional CLI UI libraries are imported but not declared in `packages/cli/package.json`.
+- Missing modules observed in failures: `ora`, `chalk`, `gradient-string`, `figlet`, `inquirer`, `boxen`, plus type package gaps for `figlet`/`inquirer`.
+
+### Fix Applied
+- Added the missing CLI runtime dependencies and associated type packages to `packages/cli/package.json`.
+
+### Next-Agent Guardrail
+1. If CLI build fails with `TS2307` module errors, verify dependency declarations in `packages/cli/package.json` before debugging TypeScript config.
+2. In restricted environments, lockfile refresh may fail with npm `403`; validate dependency graph in CI with registry access.

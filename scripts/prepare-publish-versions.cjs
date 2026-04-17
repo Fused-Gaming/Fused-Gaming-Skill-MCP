@@ -14,6 +14,29 @@ const { execSync } = require('child_process');
 const repoRoot = path.resolve(__dirname, '..');
 const defaultWorkspaceRoots = ['packages/core', 'packages/cli', 'packages/skills'];
 
+function getChangedFiles() {
+  const explicitBase = process.env.VERSION_BUMP_BASE_REF;
+  const githubBefore = process.env.GITHUB_EVENT_BEFORE;
+  const zeroSha = /^0+$/;
+  const baseRef = explicitBase || (githubBefore && !zeroSha.test(githubBefore) ? githubBefore : null);
+  const diffRange = baseRef ? `${baseRef}..HEAD` : 'HEAD~1..HEAD';
+
+  try {
+    const out = execSync(`git diff --name-only ${diffRange}`, {
+      cwd: repoRoot,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      encoding: 'utf8'
+    }).trim();
+    return out ? out.split('\n').filter(Boolean) : [];
+  } catch (error) {
+    const stderr = String(error.stderr || error.message || '').trim();
+    console.warn(
+      `⚠️ Unable to determine changed files from "${diffRange}". Falling back to full workspace scan.${stderr ? `\n${stderr}` : ''}`
+    );
+    return null;
+  }
+}
+
 function findWorkspacePackageJsons() {
   const files = [];
 
@@ -70,12 +93,27 @@ function bumpPatch(version) {
 const packageFiles = findWorkspacePackageJsons();
 const packages = packageFiles.map((file) => {
   const json = JSON.parse(fs.readFileSync(file, 'utf8'));
-  return { file, name: json.name, version: json.version, json };
+  const packageDir = path.relative(repoRoot, path.dirname(file)).replace(/\\/g, '/');
+  return { file, packageDir, name: json.name, version: json.version, json };
 });
+
+const changedFiles = getChangedFiles();
+const changedPackages = new Set();
+if (Array.isArray(changedFiles)) {
+  for (const pkg of packages) {
+    const hasChanges = changedFiles.some(
+      (changedPath) => changedPath === pkg.packageDir || changedPath.startsWith(`${pkg.packageDir}/`)
+    );
+    if (hasChanges) {
+      changedPackages.add(pkg.name);
+    }
+  }
+}
 
 const changed = [];
 for (const pkg of packages) {
   if (!pkg.name || !pkg.version) continue;
+  if (Array.isArray(changedFiles) && !changedPackages.has(pkg.name)) continue;
   if (npmVersionExists(pkg.name, pkg.version)) {
     const nextVersion = bumpPatch(pkg.version);
     pkg.json.version = nextVersion;
@@ -103,7 +141,13 @@ for (const pkg of packages) {
 }
 
 if (changed.length === 0) {
-  console.log('✅ All workspace package versions are publishable (no bump needed).');
+  if (Array.isArray(changedFiles)) {
+    console.log(
+      `✅ No publish version bumps required for changed workspaces (${changedPackages.size} package(s) changed).`
+    );
+  } else {
+    console.log('✅ All workspace package versions are publishable (no bump needed).');
+  }
 } else {
   console.log('⚠️ Bumped workspace package versions already present on npm:');
   for (const item of changed) {

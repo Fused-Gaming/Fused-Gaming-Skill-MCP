@@ -77,8 +77,8 @@ function extractStages(objective: string): string[] {
  */
 function generateTouchpoints(
   stage: string,
-  objective: string,
-  context: string
+  _objective: string,
+  _context: string
 ): string[] {
   const stageLower = stage.toLowerCase();
 
@@ -153,7 +153,7 @@ function generateTouchpoints(
 /**
  * Generates pain points for a stage
  */
-function generatePainPoints(stage: string, objective: string): string[] {
+function generatePainPoints(stage: string, _objective: string): string[] {
   const stageLower = stage.toLowerCase();
 
   const painPointMap: Record<string, string[]> = {
