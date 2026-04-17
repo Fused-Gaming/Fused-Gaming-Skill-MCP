@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md` with blockers, current steps, immediate next actions, PR-context triage, and agent directives for the `feat/github-agents` branch.
+- Added `docs/process/VERCEL_PROJECT_SETUP.md` with explicit Vercel project directory and framework preset guidance for `skills.vln.gg` (skills API) and `sync.vln.gg` (augmented agents app).
 - Added one-command SyncPulse panel launcher commands to the CLI: `fused-gaming-mcp panel` and `fused-gaming-mcp syncpulse` (alias).
 - Added `@fused-gaming/skill-agentic-flow-devkit` workspace with `visualize-agentic-flow` and `plan-trailer-rolls` tools to support orchestration GUI planning and trailer A/B-roll sourcing.
 - Added `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md` with blockers, current steps, immediate next actions, PR-context triage, and agent directives for the `feat/github-agents` branch.

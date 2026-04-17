@@ -225,6 +225,20 @@
 1. Run authenticated GitHub PR/check/deployment inspection first; fix any failing checks before starting new feature implementation.
 2. Keep `CHANGELOG.md`, `docs/ROADMAP.md`, and `CLAUDE.md` synchronized after each merge.
 
+## Agent Notes (2026-04-17, Vercel Project Directory + Preset Guidance)
+
+### What Was Added
+- Added `docs/process/VERCEL_PROJECT_SETUP.md` with concrete Vercel settings for:
+  - `skills.vln.gg` (API project from repo root, framework preset `Other`)
+  - `sync.vln.gg` (separate augmented agents app project, recommended `Next.js` rooted at `apps/sync`)
+- Linked the new Vercel guide from `docs/README.md` and referenced it in the GitHub agents orientation doc.
+
+### Constraint Still Present
+- Live PR comments/check/deployment status still cannot be queried in this environment due missing authenticated GitHub CLI/API access.
+
+### Next-Agent Action
+1. Apply these Vercel project settings in the Vercel dashboard.
+2. If `sync.vln.gg` app does not yet exist, scaffold `apps/sync` before enabling the project.
 
 ## Agent Notes (2026-04-17, Agentic Flow Devkit + Trailer Sourcing)
 

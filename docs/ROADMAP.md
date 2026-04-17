@@ -193,6 +193,7 @@ CI/deployment status for these PRs must be verified in GitHub UI/API.
   1. Authenticated visibility for PR checks/deployments.
   2. Failing-check-first remediation policy.
   3. Queued skill implementation with full validation and handoff discipline.
+- Vercel setup guidance documented for `skills.vln.gg` and `sync.vln.gg` in `docs/process/VERCEL_PROJECT_SETUP.md`.
 
 
 ## Session Update (2026-04-17, Agentic Flow Devkit)

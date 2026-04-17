@@ -28,6 +28,12 @@ _Date: 2026-04-17_
 2. Implement and test one queued skill end-to-end (`mermaid-terminal` recommended first), then run full workspace validation.
 3. Add a lightweight status artifact (JSON/Markdown) generated in CI that captures PR readiness signals for agent ingestion.
 
+## Vercel Project Configuration Recommendation
+
+- `skills.vln.gg`: keep as a dedicated API project using framework preset `Other`, root directory `.` and existing `vercel.json` routing to `api/index.ts`.
+- `sync.vln.gg`: create a separate app project (recommended `Next.js`) rooted at `apps/sync` to isolate frontend deployments from skills API releases.
+- Full setup guide: `docs/process/VERCEL_PROJECT_SETUP.md`.
+
 ## Recent Pull Requests (Local Git History View)
 
 > Source: `git log --oneline --decorate -n 25` in this repository.
