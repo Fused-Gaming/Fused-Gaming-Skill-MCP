@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added one-command SyncPulse panel launcher commands to the CLI: `fused-gaming-mcp panel` and `fused-gaming-mcp syncpulse` (alias).
 - Added `docs/process/PR_51_MERGE_CHECKLIST.md` with explicit PR #51 deliverables, success metrics, blockers, execution order, and next-agent handoff directives.
 - Added `scripts/auto-bump-publish-versions.js` to automatically patch-bump root/workspace package versions until npm reports they are publishable.
 - Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
 
 ### Changed
+- Updated CLI and root README command references to document the new one-command SyncPulse panel launcher.
 - Added a validated update standard to `docs/NPM_PUBLISHING.md` requiring typecheck/lint/build/tests/publish-prepare before version bumps or release tagging.
 - Updated `.github/workflows/test.yml` Node matrix from `20.x`/`24.x` to active LTS lanes `20.x`/`22.x` to resolve Actions Node-version failures in CI testing.
 - Updated `.github/workflows/github-release.yml` to `actions/checkout@v5` and added an explicit `actions/setup-node@v5` (`22.x`) runtime step for consistent release-job Node behavior.

@@ -113,6 +113,7 @@ fused-gaming-mcp init              # Initialize config
 fused-gaming-mcp list              # Show available skills
 fused-gaming-mcp add <skill>       # Enable a skill
 fused-gaming-mcp remove <skill>    # Disable a skill
+fused-gaming-mcp panel             # Launch SyncPulse panel directly
 fused-gaming-mcp config            # View current config
 ```
 

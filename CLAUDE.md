@@ -1,5 +1,20 @@
 # CLAUDE.md
 
+## Agent Notes (2026-04-17, One-Command SyncPulse Panel Launcher)
+
+### What Was Added
+- CLI now supports direct panel launch commands:
+  - `fused-gaming-mcp panel`
+  - `fused-gaming-mcp syncpulse` (alias)
+- Both commands run the existing boot sequence and then open the SyncPulse dashboard without entering the interactive main menu loop.
+
+### Why
+- Reduces operator friction for the SyncPulse workflow by providing a single-command launcher entrypoint.
+
+### Next-Agent Guardrail
+1. If adding new UI surfaces, keep direct-launch command aliases documented in both `README.md` and `packages/cli/README.md`.
+2. Validate launcher behavior with `npm run build --workspace=packages/cli` and a direct invocation (for example `node packages/cli/dist/index.js panel`) after build.
+
 ## Agent Notes (2026-04-16, Vercel install failure fix)
 
 ### Root Cause
