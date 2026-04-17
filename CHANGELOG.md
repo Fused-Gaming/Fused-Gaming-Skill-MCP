@@ -17,9 +17,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
 
 ### Changed
+- Added a validated update standard to `docs/NPM_PUBLISHING.md` requiring typecheck/lint/build/tests/publish-prepare before version bumps or release tagging.
+- Updated `.github/workflows/test.yml` Node matrix from `20.x`/`24.x` to active LTS lanes `20.x`/`22.x` to resolve Actions Node-version failures in CI testing.
+- Updated `.github/workflows/github-release.yml` to `actions/checkout@v5` and added an explicit `actions/setup-node@v5` (`22.x`) runtime step for consistent release-job Node behavior.
 - Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
-- Updated roadmap and README planning sections to include milestone/issue tracking for the daily-review merge and next-wave skill/tool rollout.
-- Updated `CLAUDE.md` with PR #51 orientation notes to reduce repeated PR-status/debug loops for the next agent.
+- Updated README and package publish file list to reflect the new documentation paths.
+- Updated `publish.yml` to publish npm workspaces on every push to `main` (including merges), while retaining tag-triggered releases and adding manual `workflow_dispatch` support.
+- Switched GitHub release authentication in the publish workflow to use the repository `GH_TOKEN` secret.
+- Updated `publish.yml` to hand off tag-based release creation to the dedicated GitHub release workflow for clearer separation of responsibilities.
+- Expanded README release/roadmap documentation to include existing status, planned follow-ups, and operational blockers.
+- Raised release metadata and docs minimum Node.js requirement references from `18.0.0` to `20.0.0` to align with workspace engines and active CI lanes.
+- Standardized workspace package README files to follow npm package documentation conventions (installation, usage/tooling context, development, and license sections).
+- Advanced release metadata from `1.0.2` to `1.0.3` for the current patch iteration.
 
 ### Deprecated
 - TBD for next release
@@ -32,10 +41,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
 - Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
 - Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
+- Added missing CLI dependency declarations (`boxen`, `chalk`, `figlet`, `gradient-string`, `inquirer`, `ora`) plus type packages for `figlet`/`inquirer` to prevent TypeScript module resolution failures during workspace CLI builds in child branches/deploy environments.
+- Fixed `packages/skills/svg-generator/src/tools/generate-svg-asset.ts` to define `width` in `generateButton`, resolving CI TypeScript failures (`Cannot find name 'width'`) reported in PR #73 workflow annotations.
+- Updated publish version bump automation to only consider changed workspace packages when checking for already-published npm versions, preventing unrelated packages from being patch-bumped without source changes.
+- Aligned workflow runtime expectations and release docs around Node.js LTS lanes (`20.x`, `22.x`) to prevent test matrix Node-version mismatches.
+- Replaced placeholder Jest test commands in `mermaid-terminal`, `svg-generator`, and `ux-journeymapper` workspace packages with shell no-op test scripts so CI does not fail with `jest: command not found` during PR merge checks.
+- Resolved Node `24.x` CI workspace discovery failure (`EDUPLICATEWORKSPACE`) by assigning the legacy Mermaid package a unique workspace name (`@fused-gaming/skill-mermaid-terminal-legacy`) after the production `mermaid-terminal` merge.
+- Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
+- Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
+- Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
+- Resolved `EDUPLICATEWORKSPACE` install/test blocker by assigning a unique workspace package name to `packages/skills/mermaid-terminal-skill`.
 - Stopped running the monorepo workspace build from the root `prepare` hook so production `npm install` (for example on Vercel) no longer fails before workspace dependencies are installed.
 
 ### Security
 - TBD for next release
+
+## [1.0.3] - 2026-04-16
+
+### Added
+- Added explicit issue-level specifications to roadmap milestone buckets and PR #51 checklist guidance to standardize execution evidence.
+
+### Changed
+- Updated blocker/current-step/next-step planning to include dependency install runtime constraints and dependency-validation follow-up tasks.
+- Bumped repository metadata/version references to `1.0.3` across `package.json`, `VERSION.json`, and README badge.
+
+### Fixed
+- Re-synchronized `package-lock.json` metadata with current workspace manifests using `npm install --package-lock-only --ignore-scripts`.
 
 ## [1.0.1] - 2026-04-16
 

@@ -1,4 +1,4 @@
-# Release Communication Guide (v1.0.0)
+# Release Communication Guide (v1.0.3)
 
 This document captures a ready-to-use launch summary and recommendation set for announcing the first stable release.
 
@@ -7,7 +7,7 @@ This document captures a ready-to-use launch summary and recommendation set for 
 Use this in terminal or release-call notes:
 
 ```text
-Fused Gaming MCP v1.0.0 release prep summary
+Fused Gaming MCP v1.0.3 release prep summary
 - Existing: 9 production-ready skills (+ core + CLI) published on npm under @h4shed.
 - Updated: Release automation split into dedicated workflows:
   * npm publish: .github/workflows/publish.yml
@@ -19,7 +19,7 @@ Fused Gaming MCP v1.0.0 release prep summary
 ## LinkedIn Post (Recommended Draft)
 
 ```text
-🚀 We just shipped Fused Gaming MCP v1.0.0!
+🚀 We just shipped Fused Gaming MCP v1.0.3!
 
 After a full production hardening cycle, we launched our modular Model Context Protocol stack with 9 ready-to-use skills for design, dev, and creative automation.
 

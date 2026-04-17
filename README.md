@@ -172,7 +172,7 @@ npm run dev         # Start dev server
 
 ## 🗺️ Roadmap Snapshot (Existing + Planned)
 
-### Existing (v1.0.0)
+### Existing (v1.0.3)
 - ✅ 11 published `@h4shed/*` packages (core + CLI + 9 skills)
 - ✅ npm workspace publishing pipeline active on `main` and tags
 - ✅ Security baseline hardened (0 known vulnerabilities at last audit)
@@ -191,9 +191,10 @@ npm run dev         # Start dev server
 - Without GitHub CLI/API credentials in the runtime, PR #51 check-run and deployment state must be confirmed directly in GitHub UI.
 
 ### Top 3 priorities now
-1. Complete PR #51 merge-readiness checks (docs/version/changelog + status triage evidence).
-2. Ship missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`) with executable tests.
-3. Add automated docs/package consistency checks for published scope metadata and release checklists.
+1. Ship missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`).
+2. Add automated docs/package consistency checks for published scope metadata.
+3. Track deployment/test status per release PR in a single release checklist.
+4. Keep Actions test matrix pinned to active LTS lanes (20.x, 22.x) to avoid Node-version runtime drift.
 
 ---
 
@@ -247,7 +248,7 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 
 ---
 
-[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-blue)](./VERSION.json)
+[![Version 1.0.3](https://img.shields.io/badge/version-1.0.3-blue)](./VERSION.json)
 [![Released April 16, 2026](https://img.shields.io/badge/released-april%2016%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
 [![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
 [![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)
