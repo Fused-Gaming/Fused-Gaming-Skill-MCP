@@ -87,3 +87,15 @@
 1. Verify PR #51 and related recent PR workflow/deployment states in GitHub UI.
 2. If any checks fail, fix those errors first and rerun workflows before additional feature work.
 3. Continue next-wave skill implementation (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`) after CI/deployment stability is confirmed.
+
+## Agent Notes (2026-04-16, Deployment Build Resolution)
+
+### What Changed
+- Promoted CLI runtime dependencies (`boxen`, `chalk`, `figlet`, `gradient-string`, `inquirer`, `ora`, `yargs`) to the root `package.json` `dependencies` block so monorepo root installs include modules needed by `packages/cli` TypeScript builds in deployment runtimes.
+
+### Why
+- Deployment logs showed `TS2307` module-resolution failures during workspace builds for `packages/cli` when these modules were not present at the root install boundary.
+
+### Next Agent Check
+1. In CI/Vercel with full registry access, run a clean install and `npm run build` to confirm CLI module-resolution errors are resolved.
+2. If remaining failures are type-only, verify whether the install mode omits dev dependencies and adjust compile pipeline accordingly.
