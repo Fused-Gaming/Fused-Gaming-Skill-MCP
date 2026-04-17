@@ -1,5 +1,33 @@
 # CLAUDE.md
 
+## Agent Notes (2026-04-17, Vercel TypeScript ambient types failure fix)
+
+### Root Cause
+- `packages/skills/daily-review-skill/tsconfig.json` and `packages/skills/underworld-writer-skill/tsconfig.json` were standalone and did not inherit root compiler settings (`types: ["node"]`).
+- During monorepo workspace builds, TypeScript attempted to include ambient `@types/*` entries from transitive dependencies, producing TS2688 missing-type-library errors in CI/Vercel.
+
+### What Was Changed
+- Updated `packages/skills/daily-review-skill/tsconfig.json` and `packages/skills/underworld-writer-skill/tsconfig.json` to extend `../../../tsconfig.json` and keep only package-local `rootDir`/`outDir` overrides.
+- This aligns the package with the other workspace tsconfig patterns and constrains default ambient type loading.
+
+### Next Agent Checks
+1. Re-run Vercel deployment for the branch and confirm build no longer fails with TS2688 type-definition lookup errors.
+2. Keep new package tsconfigs aligned with the workspace-extends pattern to prevent ambient type drift regressions.
+
+## Agent Notes (2026-04-16, Vercel install failure fix)
+
+### Root Cause
+- Root `prepare` script invoked `npm run build` across all workspaces during `npm install`.
+- In production installs (such as Vercel), workspace package dependencies were not guaranteed to be present when that hook ran, causing TypeScript module resolution failures in `packages/cli`.
+
+### What Was Changed
+- Replaced root `prepare` build hook with a no-op message in `package.json`.
+- This prevents installation-time build failures; explicit CI/build steps should continue to call `npm run build`.
+
+### Next Agent Checks
+1. Confirm Vercel/CI install stage succeeds with the new prepare behavior.
+2. Verify the explicit build stage still runs and passes in environments that install all workspace dependencies.
+
 ## Agent Notes (2026-04-13)
 
 ### Environment / Dependency Constraints
