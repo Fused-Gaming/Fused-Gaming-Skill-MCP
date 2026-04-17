@@ -196,3 +196,16 @@
 ### Next-Agent Guardrail
 1. If CLI build fails with `TS2307` module errors, verify dependency declarations in `packages/cli/package.json` before debugging TypeScript config.
 2. In restricted environments, lockfile refresh may fail with npm `403`; validate dependency graph in CI with registry access.
+
+## Agent Notes (2026-04-17, GitHub MCP Agents Orientation Branch)
+
+### Session Output
+- Created branch `feat/github-agents` and added `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md`.
+- Captured blockers, current steps, immediate next 3 steps, open-issue execution plan, top-3 priorities, and role-based agent directives.
+
+### Blocking Constraint
+- GitHub check/deployment verification remains blocked in this environment due unavailable authenticated GitHub CLI/API access.
+
+### Next-Agent Starter
+1. Run authenticated GitHub PR/check/deployment inspection first; fix any failing checks before starting new feature implementation.
+2. Keep `CHANGELOG.md`, `docs/ROADMAP.md`, and `CLAUDE.md` synchronized after each merge.
