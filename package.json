@@ -36,7 +36,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
     "dev": "npm run dev --workspace=packages/core",
-    "prepare": "node -e \"console.log('Prepare hook skipped: run `npm run build` explicitly when needed.')\"",
+    "prepare": "echo 'Prepare hook skipped: run npm run build explicitly when needed.'",
     "version": "node scripts/update-version.js && git add VERSION.json",
     "publish:packages": "npm publish --workspaces",
     "prerelease": "npm run build && npm run typecheck && npm run lint",
@@ -50,6 +50,7 @@
     "@types/node": "^20.12.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
+    "@vercel/node": "^3.0.0",
     "eslint": "^10.1.0",
     "typescript": "^5.3.2"
   },

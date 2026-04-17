@@ -1,0 +1,21 @@
+{
+  "name": "fused-gaming-skill-mcp",
+  "version": 2,
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "regions": ["sfo1"],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "^/(.*)",
+      "dest": "api/index.ts"
+    }
+  ],
+  "domains": ["skill.vln.gg"]
+}

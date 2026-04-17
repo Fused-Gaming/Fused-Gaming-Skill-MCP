@@ -17,6 +17,6 @@
     "types": ["node"],
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["packages/**/src/**/*.ts"],
+  "include": ["packages/**/src/**/*.ts", "api/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
