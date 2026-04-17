@@ -1,5 +1,19 @@
 # CLAUDE.md
 
+## Agent Notes (2026-04-16, Vercel install failure fix)
+
+### Root Cause
+- Root `prepare` script invoked `npm run build` across all workspaces during `npm install`.
+- In production installs (such as Vercel), workspace package dependencies were not guaranteed to be present when that hook ran, causing TypeScript module resolution failures in `packages/cli`.
+
+### What Was Changed
+- Replaced root `prepare` build hook with a no-op message in `package.json`.
+- This prevents installation-time build failures; explicit CI/build steps should continue to call `npm run build`.
+
+### Next Agent Checks
+1. Confirm Vercel/CI install stage succeeds with the new prepare behavior.
+2. Verify the explicit build stage still runs and passes in environments that install all workspace dependencies.
+
 ## Agent Notes (2026-04-13)
 
 ### Environment / Dependency Constraints
