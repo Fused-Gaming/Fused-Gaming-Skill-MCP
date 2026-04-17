@@ -1,5 +1,20 @@
 # CLAUDE.md
 
+## Agent Notes (2026-04-17, One-Command SyncPulse Panel Launcher)
+
+### What Was Added
+- CLI now supports direct panel launch commands:
+  - `fused-gaming-mcp panel`
+  - `fused-gaming-mcp syncpulse` (alias)
+- Both commands run the existing boot sequence and then open the SyncPulse dashboard without entering the interactive main menu loop.
+
+### Why
+- Reduces operator friction for the SyncPulse workflow by providing a single-command launcher entrypoint.
+
+### Next-Agent Guardrail
+1. If adding new UI surfaces, keep direct-launch command aliases documented in both `README.md` and `packages/cli/README.md`.
+2. Validate launcher behavior with `npm run build --workspace=packages/cli` and a direct invocation (for example `node packages/cli/dist/index.js panel`) after build.
+
 ## Agent Notes (2026-04-16, Vercel install failure fix)
 
 ### Root Cause
@@ -224,3 +239,20 @@
 ### Next-Agent Action
 1. Apply these Vercel project settings in the Vercel dashboard.
 2. If `sync.vln.gg` app does not yet exist, scaffold `apps/sync` before enabling the project.
+
+## Agent Notes (2026-04-17, Agentic Flow Devkit + Trailer Sourcing)
+
+### Delivered
+- Added new workspace skill `@fused-gaming/skill-agentic-flow-devkit`.
+- Introduced tools:
+  - `visualize-agentic-flow` for Mermaid + GUI layout output of multi-agent orchestration.
+  - `plan-trailer-rolls` for A-roll/B-roll source planning and search prompts.
+
+### Blockers Observed
+1. Local clone has no configured git remotes, so PR lineage against parent origin cannot be checked here.
+2. Unauthenticated environment still blocks live PR comments/check/deployment inspection.
+
+### Next-Agent Guardrails
+1. Verify authenticated PR checks/deployments before adding additional skills.
+2. Add tests for the new devkit tools before publish.
+3. Keep docs + version metadata synchronized in the same commit to avoid release drift.

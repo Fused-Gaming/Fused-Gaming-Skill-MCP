@@ -16,6 +16,7 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 9. `@h4shed/skill-skill-creator`
 10. `@h4shed/skill-theme-factory`
 11. `@h4shed/skill-underworld-writer`
+12. `@h4shed/skill-agentic-flow-devkit` *(newly scaffolded locally; pending publish)*
 
 ---
 
@@ -33,6 +34,7 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 - `@h4shed/skill-daily-review`
 - `@h4shed/multi-account-session-tracking`
 - `@h4shed/skill-linkedin-master-journalist`
+- `@h4shed/skill-agentic-flow-devkit`
 
 ---
 
@@ -192,3 +194,25 @@ CI/deployment status for these PRs must be verified in GitHub UI/API.
   2. Failing-check-first remediation policy.
   3. Queued skill implementation with full validation and handoff discipline.
 - Vercel setup guidance documented for `skills.vln.gg` and `sync.vln.gg` in `docs/process/VERCEL_PROJECT_SETUP.md`.
+
+
+## Session Update (2026-04-17, Agentic Flow Devkit)
+
+### Blockers
+1. GitHub PR comments/checks/deployments cannot be queried from this runtime due missing authenticated remote/API access.
+2. No configured git remotes in this local clone, so parent-origin PR comparison is blocked locally.
+
+### Current Steps
+1. Scaffold and wire `skill-agentic-flow-devkit` tools for orchestration visualization and trailer shot planning.
+2. Keep release docs (roadmap/changelog/version/CLAUDE) synchronized in the same change set.
+3. Preserve a failing-check-first policy when authenticated PR telemetry becomes available.
+
+### Immediate Next 3 Steps
+1. Add tests for `visualize-agentic-flow` and `plan-trailer-rolls` response contracts.
+2. Verify branch PR checks/deployments in authenticated GitHub UI/API and remediate any failures first.
+3. Publish `@h4shed/skill-agentic-flow-devkit` after lockfile refresh and release-tag validation.
+
+### Top 3 Priorities and Agent Directives
+1. **Reliability first**: resolve any failing CI/deployment checks before new feature expansion.
+2. **Shipping value**: finish production-grade orchestration GUI payloads + trailer sourcing playbooks.
+3. **Release hygiene**: keep version/changelog/README/CLAUDE in sync on every merge-ready branch.
