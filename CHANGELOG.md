@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
+- Normalized `packages/skills/daily-review-skill/tsconfig.json` and `packages/skills/underworld-writer-skill/tsconfig.json` to extend the workspace root TypeScript config so build environments (including Vercel) no longer attempt to load unrelated ambient `@types/*` libraries and fail with TS2688 during workspace builds.
 - Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
 - Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
 - Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
