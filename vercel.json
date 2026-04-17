@@ -16,6 +16,5 @@
       "src": "^/(.*)",
       "dest": "api/index.ts"
     }
-  ],
-  "domains": ["skill.vln.gg"]
+  ]
 }
