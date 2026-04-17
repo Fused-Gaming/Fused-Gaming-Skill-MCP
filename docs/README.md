@@ -10,6 +10,9 @@
 - [`EXAMPLES.md`](./EXAMPLES.md)
 - [`SCALING_GUIDE.md`](./SCALING_GUIDE.md)
 
+## Skills (Proposed / In Development)
+- [`skills/SYNCPULSE.md`](./skills/SYNCPULSE.md)
+
 ## Release & Planning
 - [`ROADMAP.md`](./ROADMAP.md)
 - [`NPM_PUBLISHING.md`](./NPM_PUBLISHING.md)
