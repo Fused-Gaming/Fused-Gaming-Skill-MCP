@@ -1,26 +1,163 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
-let landingPageHtml: string | null = null;
+const LANDING_PAGE_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fused Gaming MCP Skills API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px 40px;
+            max-width: 700px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #667eea;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .status {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 30px 0;
+            border-radius: 6px;
+            text-align: left;
+        }
+        .status h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .endpoint {
+            background: #f5f5f5;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            word-break: break-all;
+        }
+        .endpoint-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .skills {
+            margin-top: 40px;
+            text-align: left;
+        }
+        .skills h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .skill-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+        .skill-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .skill-desc {
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 5px;
+        }
+        .footer {
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.9em;
+        }
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-right: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Fused Gaming MCP</h1>
+        <p class="subtitle">AI Skill Management & Execution API</p>
 
-function getLandingPage(): string {
-  if (!landingPageHtml) {
-    try {
-      landingPageHtml = readFileSync(join(__dirname, '../public/index.html'), 'utf-8');
-    } catch {
-      landingPageHtml = '<html><body><h1>Fused Gaming MCP Skills API</h1><p>Service is running</p></body></html>';
-    }
-  }
-  return landingPageHtml;
-}
+        <div class="status">
+            <h3>✅ Service Status</h3>
+            <div style="color: #666;">Server is running and ready to serve skills</div>
+        </div>
+
+        <div class="status">
+            <h3>📡 Available Endpoints</h3>
+            <div class="endpoint-label">Health Check:</div>
+            <div class="endpoint">GET /health</div>
+
+            <div class="endpoint-label" style="margin-top: 15px;">List Skills:</div>
+            <div class="endpoint">GET /skills</div>
+
+            <div class="endpoint-label" style="margin-top: 15px;">MCP API:</div>
+            <div class="endpoint">POST /api</div>
+        </div>
+
+        <div class="skills">
+            <h3>🎯 Available Skills</h3>
+            <div class="skill-item">
+                <div class="skill-name">SyncPulse</div>
+                <div class="skill-desc">Task synchronization and session management service for coordinating distributed project states</div>
+                <div style="margin-top: 8px;">
+                    <span class="badge">v1.0.0</span>
+                    <span class="badge">Production</span>
+                </div>
+            </div>
+
+            <div class="skill-item">
+                <div class="skill-name">Mermaid Terminal</div>
+                <div class="skill-desc">Generate Mermaid diagrams from terminal commands and natural language descriptions</div>
+                <div style="margin-top: 8px;">
+                    <span class="badge">v1.0.0</span>
+                    <span class="badge">Production</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🚀 Powered by Model Context Protocol</p>
+            <p>Domain: <strong>skill.vln.gg</strong></p>
+        </div>
+    </div>
+</body>
+</html>`;
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
     // Landing page endpoint
-    if (req.url === '/' && req.method === 'GET') {
+    if ((req.url === '/' || req.url?.startsWith('/?')) && req.method === 'GET') {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      return res.status(200).send(getLandingPage());
+      return res.status(200).send(LANDING_PAGE_HTML);
     }
 
     // Health check endpoint
