@@ -121,6 +121,21 @@
 1. Workspace tests still execute (`npm run test --workspaces --if-present`), but are mostly placeholder scripts.
 2. Lockfile/dependency sync remains blocked in this environment by npm registry HTTP 403 on `mermaid` (`npm install --package-lock-only --ignore-scripts`).
 
+## Agent Notes (2026-04-16, v1.0.3 Lockfile + Issue Specification Sync)
+
+### What Was Updated
+- Executed `npm install --package-lock-only --ignore-scripts` successfully to ensure lock metadata aligns with workspace manifests.
+- Expanded `docs/ROADMAP.md` milestone issue buckets to include issue-by-issue specification criteria.
+- Converted PR #51 checklist document into explicit checklist format and added required evidence fields.
+- Bumped repository metadata from `1.0.2` to `1.0.3` (`package.json`, `VERSION.json`, README badge, changelog/release notes).
+
+### Remaining Constraints
+1. `npm ci` can remain long-running/stalled in this runtime due proxy/network behavior, so dependency-install completion should be revalidated in unrestricted CI or local network.
+2. GitHub PR comments/check-runs/deployment details are still not directly queryable here without authenticated remote access.
+
+### Next-Agent Follow-up
+1. Re-run `npm ci`, `npm run lint`, `npm run typecheck`, and `npm run build` in a network-stable environment and attach logs to the active PR.
+2. Verify PR #51 and latest branch-related PR checks/deployments directly in GitHub UI, then update checklist evidence entries.
 
 ## Agent Notes (2026-04-16, Node Workflow Test Lane Stabilization)
 
