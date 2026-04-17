@@ -1,16 +1,16 @@
 {
-  "version": "1.0.3",
-  "releaseDate": "2026-04-16",
+  "version": "1.0.4",
+  "releaseDate": "2026-04-17",
   "status": "stable",
   "majorVersion": 1,
   "minorVersion": 0,
-  "patchVersion": 3,
+  "patchVersion": 4,
   "prerelease": null,
   "metadata": {
     "nodeMinimum": "20.0.0",
     "npmMinimum": "8.0.0",
     "typescriptVersion": "5.3.2",
-    "buildNumber": 1004
+    "buildNumber": 1005
   },
   "packageInfo": {
     "name": "@fused-gaming/mcp",
@@ -130,6 +130,11 @@
         "name": "@fused-gaming/skill-linkedin-master-journalist",
         "version": "1.0.0",
         "published": false
+      },
+      {
+        "name": "@fused-gaming/skill-agentic-flow-devkit",
+        "version": "1.0.0",
+        "published": false
       }
     ],
     "publishingSoon": [
@@ -140,7 +145,8 @@
       "@h4shed/skill-project-status-tool",
       "@h4shed/skill-daily-review",
       "@h4shed/multi-account-session-tracking",
-      "@h4shed/skill-linkedin-master-journalist"
+      "@h4shed/skill-linkedin-master-journalist",
+      "@h4shed/skill-agentic-flow-devkit"
     ]
   },
   "versioningStrategy": {
