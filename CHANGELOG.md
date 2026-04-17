@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
+- Added missing CLI dependency declarations (`boxen`, `chalk`, `figlet`, `gradient-string`, `inquirer`, `ora`) plus type packages for `figlet`/`inquirer` to prevent TypeScript module resolution failures during workspace CLI builds in child branches/deploy environments.
 - Fixed `packages/skills/svg-generator/src/tools/generate-svg-asset.ts` to define `width` in `generateButton`, resolving CI TypeScript failures (`Cannot find name 'width'`) reported in PR #73 workflow annotations.
 - Updated publish version bump automation to only consider changed workspace packages when checking for already-published npm versions, preventing unrelated packages from being patch-bumped without source changes.
 - Aligned workflow runtime expectations and release docs around Node.js LTS lanes (`20.x`, `22.x`) to prevent test matrix Node-version mismatches.

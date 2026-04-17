@@ -169,3 +169,16 @@
 ### Next-Agent Reminder
 1. If workflow annotations show `Cannot find name 'width'`, verify the `generateButton` template variables in `generate-svg-asset.ts` first.
 2. Keep version/changelog updates coupled to a successful full validation pass (do not bump before checks are green).
+
+## Agent Notes (2026-04-17, CLI Child-Branch Build Dependency Resolution)
+
+### Root Cause Pattern
+- Child branches that include richer CLI UI command modules can fail TypeScript compilation with `TS2307` when optional CLI UI libraries are imported but not declared in `packages/cli/package.json`.
+- Missing modules observed in failures: `ora`, `chalk`, `gradient-string`, `figlet`, `inquirer`, `boxen`, plus type package gaps for `figlet`/`inquirer`.
+
+### Fix Applied
+- Added the missing CLI runtime dependencies and associated type packages to `packages/cli/package.json`.
+
+### Next-Agent Guardrail
+1. If CLI build fails with `TS2307` module errors, verify dependency declarations in `packages/cli/package.json` before debugging TypeScript config.
+2. In restricted environments, lockfile refresh may fail with npm `403`; validate dependency graph in CI with registry access.
