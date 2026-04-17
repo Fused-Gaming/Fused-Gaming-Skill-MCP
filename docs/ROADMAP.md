@@ -152,6 +152,34 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 
 ---
 
+
+## Session Orientation Update (2026-04-17)
+
+### Recent PRs (local branch context)
+- `#90` `codex/fix-deployment-failures` merged into `work`.
+- `#88` `claude/fix-yargs-dependencies-WfwLJ` merged into `work`.
+- `#87` `claude/fix-yargs-dependencies-dnDMm` merged into `work`.
+
+> Runtime limitation: GitHub CLI/API credentials are unavailable in this environment, so live PR comments, check-runs, and deployment outcomes must be verified in the GitHub web UI.
+
+### Blockers and Current Steps
+1. **Blocker:** cannot fetch live PR comments/check statuses from local terminal.
+   - **Current step:** use local git history + documentation snapshots for triage, then hand off UI verification tasks.
+2. **Blocker:** recently scaffolded skills still had stubbed logic.
+   - **Current step:** implement highest-priority skill behavior (started with `ux-journeymapper`).
+3. **Blocker:** no automated tests for newly scaffolded skills.
+   - **Current step:** build/typecheck targeted packages and queue follow-on tests in next iteration.
+
+### Immediate Next 3 Steps (execution order)
+1. Verify PR #90/#88/#87 checks and deployments in GitHub UI; fix any failing workflow/deploy jobs first.
+2. Add tests for `ux-journeymapper` and complete remaining scaffolded skills (`mermaid-terminal`, `svg-generator`).
+3. Add CI guardrail that rejects scaffold-only tool handlers in publishable skill packages.
+
+### Top 3 Priorities and Agent Directives
+1. **Deployment Health Agent** — confirm failing checks/deployments and patch CI/deploy scripts until green.
+2. **Skill Implementation Agent** — complete production-grade tool logic for queued skills and publish readiness.
+3. **Release Hygiene Agent** — keep version/changelog/README/roadmap synchronized and generate handoff artifacts each session.
+
 ## Milestones and Issue Buckets (Planned Tools + Skills)
 
 ### Milestone M1 — PR #51 Daily Review Merge Stabilization (target: immediate)

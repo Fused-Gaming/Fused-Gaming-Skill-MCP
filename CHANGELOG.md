@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added a 2026-04-17 session orientation update in `docs/ROADMAP.md` with blockers, current steps, immediate next three tasks, local recent PR context, and agent directives.
 - Added `docs/process/PR_51_MERGE_CHECKLIST.md` with explicit PR #51 deliverables, success metrics, blockers, execution order, and next-agent handoff directives.
 - Added `scripts/auto-bump-publish-versions.js` to automatically patch-bump root/workspace package versions until npm reports they are publishable.
 - Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.
@@ -17,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
 
 ### Changed
+- Implemented production journey-map generation in `@fused-gaming/skill-ux-journeymapper` with persona/phases input support and a specialized command-and-control flow for army/squad orchestration use cases.
+- Expanded `@fused-gaming/skill-ux-journeymapper` README with concrete input/output guidance and a military orchestration example.
+- Updated `CLAUDE.md` with current-session notes and next-agent follow-up priorities.
 - Added `npm run publish:prepare` to automatically bump workspace package patch versions when a matching npm version already exists.
 - Updated roadmap and README planning sections to include milestone/issue tracking for the daily-review merge and next-wave skill/tool rollout.
 - Updated `CLAUDE.md` with PR #51 orientation notes to reduce repeated PR-status/debug loops for the next agent.

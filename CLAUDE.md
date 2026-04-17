@@ -73,3 +73,20 @@
 1. Verify PR #51 and related recent PR workflow/deployment states in GitHub UI.
 2. If any checks fail, fix those errors first and rerun workflows before additional feature work.
 3. Continue next-wave skill implementation (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`) after CI/deployment stability is confirmed.
+
+## Agent Notes (2026-04-17, UX Journeymapper Implementation Pass)
+
+### What Was Completed
+- Implemented `map-user-journey` production logic in `packages/skills/ux-journeymapper/src/tools/map-user-journey.ts`.
+- Added support for optional `persona` and `phases` input fields.
+- Added command-and-control specialized journey generation when objective/context includes orchestration terms (`army`, `squad`, `troop`, `commander`, `orchestrate`).
+- Updated roadmap orientation with refreshed blockers/current steps/next-three-step execution order and agent directives.
+
+### Runtime Constraints Still Active
+- No local `gh` auth/remote metadata available for querying PR comments/check-run/deployment status.
+- Continue treating GitHub UI as source of truth for live CI/deployment state.
+
+### Next Agent Follow-up
+1. Verify PR #90/#88/#87 status in GitHub UI and fix any failing checks first.
+2. Add automated tests for `ux-journeymapper` output structure and keyword-trigger behavior.
+3. Continue scaffold completion for `mermaid-terminal` and `svg-generator` with matching docs/changelog updates.
