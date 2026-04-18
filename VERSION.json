@@ -1,20 +1,21 @@
 {
-  "version": "1.0.0",
-  "releaseDate": "2026-04-02",
+  "version": "1.0.4",
+  "releaseDate": "2026-04-17",
   "status": "stable",
   "majorVersion": 1,
   "minorVersion": 0,
-  "patchVersion": 0,
+  "patchVersion": 4,
   "prerelease": null,
   "metadata": {
-    "nodeMinimum": "18.0.0",
+    "nodeMinimum": "20.0.0",
     "npmMinimum": "8.0.0",
     "typescriptVersion": "5.3.2",
-    "buildNumber": 1001
+    "buildNumber": 1005
   },
   "packageInfo": {
     "name": "@fused-gaming/mcp",
     "scope": "fused-gaming",
+    "publishedScope": "h4shed",
     "description": "Modular MCP server with scalable Claude skills",
     "repository": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
     "npmRegistry": "https://registry.npmjs.org"
@@ -31,6 +32,19 @@
         "fused-gaming-mcp": "dist/index.js"
       }
     },
+    "publishedPackages": [
+      "@h4shed/mcp-cli",
+      "@h4shed/mcp-core",
+      "@h4shed/skill-algorithmic-art",
+      "@h4shed/skill-ascii-mockup",
+      "@h4shed/skill-canvas-design",
+      "@h4shed/skill-frontend-design",
+      "@h4shed/skill-mcp-builder",
+      "@h4shed/skill-pre-deploy-validator",
+      "@h4shed/skill-skill-creator",
+      "@h4shed/skill-theme-factory",
+      "@h4shed/skill-underworld-writer"
+    ],
     "skills": [
       {
         "name": "@fused-gaming/skill-algorithmic-art",
@@ -68,10 +82,71 @@
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-creator",
+        "name": "@fused-gaming/skill-skill-creator",
         "version": "1.0.0",
         "published": true
+      },
+      {
+        "name": "@fused-gaming/skill-underworld-writer",
+        "version": "1.0.0",
+        "published": true
+      },
+      {
+        "name": "@fused-gaming/skill-mermaid-terminal",
+        "version": "1.0.0",
+        "published": false
+      },
+      {
+        "name": "@fused-gaming/skill-ux-journeymapper",
+        "version": "1.0.0",
+        "published": false
+      },
+      {
+        "name": "@fused-gaming/skill-svg-generator",
+        "version": "1.0.0",
+        "published": false
+      },
+      {
+        "name": "@fused-gaming/skill-project-manager",
+        "version": "1.0.0",
+        "published": false
+      },
+      {
+        "name": "@fused-gaming/skill-project-status-tool",
+        "version": "1.0.0",
+        "published": false
+      },
+      {
+        "name": "@fused-gaming/skill-daily-review",
+        "version": "1.0.0",
+        "published": false
+      },
+      {
+        "name": "@fused-gaming/multi-account-session-tracking",
+        "version": "1.0.0",
+        "published": false
+      },
+      {
+        "name": "@fused-gaming/skill-linkedin-master-journalist",
+        "version": "1.0.0",
+        "published": false
+      },
+      {
+        "name": "@fused-gaming/skill-agentic-flow-devkit",
+        "version": "1.0.0",
+        "published": false
       }
+    ],
+    "publishingSoon": [
+      "@h4shed/skill-mermaid-terminal",
+      "@h4shed/skill-ux-journeymapper",
+      "@h4shed/skill-svg-generator",
+      "@h4shed/skill-project-manager",
+      "@h4shed/skill-project-status-tool",
+      "@h4shed/skill-daily-review",
+      "@h4shed/multi-account-session-tracking",
+      "@h4shed/skill-linkedin-master-journalist",
+      "@h4shed/skill-agentic-flow-devkit"
     ]
   },
   "versioningStrategy": {

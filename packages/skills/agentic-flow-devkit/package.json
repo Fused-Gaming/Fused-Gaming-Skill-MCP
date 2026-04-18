@@ -1,0 +1,31 @@
+{
+  "name": "@fused-gaming/skill-agentic-flow-devkit",
+  "version": "1.0.0",
+  "description": "Design and visualize agentic orchestration flows with trailer A/B-roll planning support.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "@fused-gaming/mcp-core": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "typescript": "^5.3.2"
+  },
+  "keywords": [
+    "mcp",
+    "skill",
+    "agentic-flow",
+    "orchestration",
+    "trailer"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

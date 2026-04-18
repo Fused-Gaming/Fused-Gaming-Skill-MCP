@@ -1,61 +1,107 @@
 #!/usr/bin/env node
 
-/**
- * Fused Gaming MCP CLI
- * Command-line interface for skill management
- */
-
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import type { Argv } from "yargs";
+
 import { init } from "./init.js";
 import { list } from "./list.js";
 import { add } from "./add.js";
 import { remove } from "./remove.js";
 
-yargs(hideBin(process.argv))
-  .command(
-    "init",
-    "Generate .fused-gaming-mcp.json config file",
-    {},
-    async () => {
+import { runBootSequence } from "./ui/boot.js";
+import { showMainMenu } from "./ui/menu.js";
+import { showSyncPulseDashboard } from "./ui/syncpulse.js";
+
+async function runInteractive() {
+  await runBootSequence();
+
+  let running = true;
+
+  while (running) {
+    const action = await showMainMenu();
+
+    switch (action) {
+      case "🚀 Launch Server":
+        console.log("Launching MCP server...");
+        break;
+
+      case "🧠 Manage Skills":
+        await list();
+        break;
+
+      case "📊 SyncPulse Dashboard":
+        showSyncPulseDashboard();
+        break;
+
+      case "❌ Exit":
+        running = false;
+        break;
+    }
+
+    if (running) {
+      await new Promise((r) => setTimeout(r, 800));
+    }
+  }
+
+  console.log("👋 Goodbye");
+}
+
+async function launchSyncPulsePanel() {
+  await runBootSequence();
+  showSyncPulseDashboard();
+}
+
+// If no command provided → launch UI
+if (hideBin(process.argv).length === 0) {
+  runInteractive();
+} else {
+  yargs(hideBin(process.argv))
+    .command("init", "Generate config", {}, async () => {
       await init();
-    }
-  )
-  .command(
-    "list",
-    "List available and enabled skills",
-    {},
-    async () => {
+    })
+    .command("list", "List skills", {}, async () => {
       await list();
-    }
-  )
-  .command(
-    "add <skill>",
-    "Enable a skill in the configuration",
-    (yargs) =>
-      yargs.positional("skill", {
-        describe: "Skill name to enable",
-        type: "string",
-      }),
-    async (argv) => {
-      await add(argv.skill as string);
-    }
-  )
-  .command(
-    "remove <skill>",
-    "Disable a skill in the configuration",
-    (yargs) =>
-      yargs.positional("skill", {
-        describe: "Skill name to disable",
-        type: "string",
-      }),
-    async (argv) => {
-      await remove(argv.skill as string);
-    }
-  )
-  .alias("h", "help")
-  .alias("v", "version")
-  .strictCommands()
-  .demandCommand(1, "Please provide a command")
-  .wrap(process.stdout.columns || 80)
-  .parse();
+    })
+    .command(
+      "add <skill>",
+      "Enable a skill",
+      (yargs: Argv) =>
+        yargs.positional("skill", {
+          describe: "Skill name",
+          type: "string",
+        }),
+      async (argv: any) => {
+        await add(argv.skill);
+      }
+    )
+    .command(
+      "panel",
+      "Launch the SyncPulse panel directly",
+      {},
+      async () => {
+        await launchSyncPulsePanel();
+      }
+    )
+    .command(
+      "syncpulse",
+      "Alias for launching the SyncPulse panel",
+      {},
+      async () => {
+        await launchSyncPulsePanel();
+      }
+    )
+    .command(
+      "remove <skill>",
+      "Disable a skill",
+      (yargs: Argv) =>
+        yargs.positional("skill", {
+          describe: "Skill name",
+          type: "string",
+        }),
+      async (argv: any) => {
+        await remove(argv.skill);
+      }
+    )
+    .parse();
+}

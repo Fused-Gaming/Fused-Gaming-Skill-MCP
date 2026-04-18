@@ -1,0 +1,30 @@
+{
+  "name": "@fused-gaming/skill-project-status-tool",
+  "version": "1.0.0",
+  "description": "Summarize current project status, risks, and next actions.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "@fused-gaming/mcp-core": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "typescript": "^5.3.2"
+  },
+  "keywords": [
+    "mcp",
+    "skill",
+    "planning",
+    "automation"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}
