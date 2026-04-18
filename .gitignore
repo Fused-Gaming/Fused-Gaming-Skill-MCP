@@ -137,3 +137,41 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Claude Flow & Agent Infrastructure
+.claude-flow/cache
+.claude-flow/logs
+.claude-flow/tmp
+claude-flow.lock
+agent-state.json
+swarm-metrics.db
+
+# MCP & Orchestration Artifacts
+.mcp-cache
+.sync-state
+.agent-memory
+orchestration-state.json
+
+# IDE & Editor Configuration (keep .claude/.claude-flow but ignore cache)
+.claude/cache
+.claude/logs
+.claude-flow/cache
+.claude-flow/logs
+
+# Temporary Files
+*.tmp
+*.bak
+.DS_Store
+*.swp
+*~
+
+# Build Artifacts
+dist/
+build/
+.turbo/
+.eslintcache
+
+# Runtime Configuration (secrets, credentials)
+.env.local
+.env.production.local
+config.local.json
