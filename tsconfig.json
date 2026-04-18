@@ -18,9 +18,9 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@h4shed/mcp-core": ["packages/core/src/index.ts"],
-      "@h4shed/mcp-cli": ["packages/cli/src/index.ts"],
-      "@h4shed/skill-*": ["packages/skills/*/src/index.ts"]
+      "@h4shed/mcp-core": ["packages/core/dist/index.d.ts"],
+      "@h4shed/mcp-cli": ["packages/cli/dist/index.d.ts"],
+      "@h4shed/skill-*": ["packages/skills/*/dist/index.d.ts"]
     }
   },
   "include": ["packages/**/src/**/*.ts"],
