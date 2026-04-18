@@ -63,7 +63,7 @@ export const FirstLoginPasswordChange: React.FC<{ onSuccess?: () => void }> = ({
       const data = await response.json();
       localStorage.setItem('sessionToken', data.sessionToken);
       setStep('change');
-    } catch (err) {
+    } catch {
       setError('Failed to login. Please try again.');
     } finally {
       setLoading(false);
@@ -107,7 +107,7 @@ export const FirstLoginPasswordChange: React.FC<{ onSuccess?: () => void }> = ({
       if (onSuccess) {
         setTimeout(onSuccess, 2000);
       }
-    } catch (err) {
+    } catch {
       setError('Failed to change password. Please try again.');
     } finally {
       setLoading(false);

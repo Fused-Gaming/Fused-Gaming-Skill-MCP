@@ -14,7 +14,7 @@ interface AuthStatus {
 
 export const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>('loading');
-  const [authStatus, setAuthStatus] = useState<AuthStatus | null>(null);
+  const [_authStatus, setAuthStatus] = useState<AuthStatus | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {

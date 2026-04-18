@@ -9,7 +9,6 @@
  */
 
 import { Router, type Request, type Response } from 'express';
-import FirstLoginManager from './first-login-manager.js';
 import AuthMiddleware from './auth-middleware.js';
 import { MetricsCollector } from './metrics.js';
 import { HealthCheckService } from './health.js';
@@ -18,7 +17,6 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
   const router = Router();
 
   // Initialize managers
-  const firstLoginManager = new FirstLoginManager(baseDir);
   const authMiddleware = new AuthMiddleware(baseDir);
   const metricsCollector = new MetricsCollector(baseDir);
   const healthCheckService = new HealthCheckService(baseDir);
@@ -89,7 +87,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
 
       const health = await healthCheckService.checkHealth(agents, systemMetrics);
       res.status(200).json(health);
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Failed to check health' });
     }
   });
@@ -121,7 +119,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
           index: idx
         }))
       });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Failed to collect metrics' });
     }
   });
@@ -143,7 +141,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
           end: metrics[metrics.length - 1]?.timestamp
         }
       });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Failed to retrieve metrics history' });
     }
   });
@@ -205,7 +203,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
         healthyAgents: agents.filter(a => a.status === 'healthy').length,
         agents
       });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Failed to retrieve agents' });
     }
   });
@@ -232,7 +230,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
         targetAgents,
         scalingInProgress: true
       });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Failed to scale swarm' });
     }
   });
@@ -273,7 +271,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
           latencyP99: 7200
         }
       });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Failed to retrieve dashboard overview' });
     }
   });
@@ -298,7 +296,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
           reserveAgents: 10
         }
       });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Failed to retrieve topology configuration' });
     }
   });

@@ -8,15 +8,13 @@
 import { NextFunction, Request, Response } from 'express';
 import FirstLoginManager from './first-login-manager.js';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        id: string;
-        role: 'admin' | 'operator';
-        firstLoginCompleted: boolean;
-      };
-    }
+declare module 'express' {
+  interface Request {
+    user?: {
+      id: string;
+      role: 'admin' | 'operator';
+      firstLoginCompleted: boolean;
+    };
   }
 }
 
