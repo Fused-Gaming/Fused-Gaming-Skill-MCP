@@ -4,7 +4,6 @@ import {
   SwarmConfig,
   SwarmTopology,
   Task,
-  AgentStatus,
 } from "../types/index.js";
 
 export class SwarmOrchestrator {
@@ -58,7 +57,7 @@ export class SwarmOrchestrator {
       agents.push({
         id: `agent-${Date.now()}-${i}`,
         name: `Agent-${i}`,
-        role: role as any,
+        role: role as "coordinator" | "executor" | "reviewer" | "optimizer",
         status: "idle",
         capacity: 10,
         currentLoad: 0,
@@ -70,7 +69,7 @@ export class SwarmOrchestrator {
     return agents;
   }
 
-  assignTask(swarmId: string, task: Task): Agent | null {
+  assignTask(swarmId: string, _task: Task): Agent | null {
     const swarm = this.swarms.get(swarmId);
     if (!swarm) return null;
 
