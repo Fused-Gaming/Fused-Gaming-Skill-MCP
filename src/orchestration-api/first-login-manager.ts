@@ -80,7 +80,7 @@ export class FirstLoginManager {
   /**
    * Initialize first login for new installations
    */
-  initializeFirstLogin(baseDir: string): FirstLoginConfig {
+  initializeFirstLogin(_baseDir?: string): FirstLoginConfig {
     const oneTimePassword = this.generateOneTimePassword();
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours
@@ -284,7 +284,7 @@ export class FirstLoginManager {
   /**
    * Generate a new one-time password (admin reset)
    */
-  generateNewOneTimePassword(baseDir: string): string {
+  generateNewOneTimePassword(_baseDir?: string): string {
     const newPassword = this.generateOneTimePassword();
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000);
@@ -314,7 +314,7 @@ export class FirstLoginManager {
   /**
    * Log security events for audit trail
    */
-  private logSecurityEvent(eventType: string, details: any): void {
+  private logSecurityEvent(eventType: string, details: Record<string, unknown>): void {
     const auditLog = path.join(path.dirname(this.configPath), 'audit.log');
     const logEntry = {
       timestamp: new Date().toISOString(),
@@ -323,7 +323,7 @@ export class FirstLoginManager {
     };
 
     try {
-      let logs: any[] = [];
+      let logs: Array<{ timestamp: string; eventType: string; details: Record<string, unknown> }> = [];
       if (fs.existsSync(auditLog)) {
         const content = fs.readFileSync(auditLog, 'utf-8');
         logs = JSON.parse(content);
