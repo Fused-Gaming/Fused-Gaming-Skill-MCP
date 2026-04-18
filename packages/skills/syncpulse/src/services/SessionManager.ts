@@ -1,26 +1,107 @@
 import { CacheService } from "./CacheService.js";
-import { Session } from "../types/Session.js";
+import { Session, SessionStatus, Task } from "../types/index.js";
 
 export class SessionManager {
-  constructor(private cache: CacheService<Session>) {}
+  private sessions = new Map<string, Session>();
 
-  createSession(): Session {
+  constructor(private cache?: CacheService<Session>) {}
+
+  createSession(id?: string): Session {
+    const sessionId = id || `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const session: Session = {
-      id: Date.now().toString(),
+      id: sessionId,
       startedAt: Date.now(),
-      status: "active",
+      status: "active" as SessionStatus,
       tasks: [],
     };
 
-    this.cache.set(`session-${session.id}`, session);
+    this.sessions.set(sessionId, session);
+    if (this.cache) {
+      this.cache.set(`session-${sessionId}`, session);
+    }
+
     return session;
   }
 
-  getSession(id: string): Session | null {
-    return this.cache.get(`session-${id}`);
+  addTask(sessionId: string, task: Task): boolean {
+    const session = this.sessions.get(sessionId);
+    if (!session && this.cache) {
+      const cached = this.cache.get(`session-${sessionId}`);
+      if (!cached) return false;
+      this.sessions.set(sessionId, cached as Session);
+    }
+
+    const finalSession = this.sessions.get(sessionId);
+    if (!finalSession) return false;
+
+    finalSession.tasks.push(task);
+    if (this.cache) {
+      this.cache.set(`session-${sessionId}`, finalSession);
+    }
+
+    return true;
   }
 
-  saveSession(session: Session) {
-    this.cache.set(`session-${session.id}`, session);
+  completeSession(sessionId: string): Session | null {
+    const session = this.getSession(sessionId);
+    if (!session) return null;
+
+    session.status = "completed";
+    if (this.cache) {
+      this.cache.set(`session-${sessionId}`, session);
+    }
+
+    return session;
+  }
+
+  pauseSession(sessionId: string): Session | null {
+    const session = this.getSession(sessionId);
+    if (!session) return null;
+
+    session.status = "paused";
+    if (this.cache) {
+      this.cache.set(`session-${sessionId}`, session);
+    }
+
+    return session;
+  }
+
+  resumeSession(sessionId: string): Session | null {
+    const session = this.getSession(sessionId);
+    if (!session) return null;
+
+    session.status = "active";
+    if (this.cache) {
+      this.cache.set(`session-${sessionId}`, session);
+    }
+
+    return session;
+  }
+
+  getSession(sessionId: string): Session | undefined {
+    let session = this.sessions.get(sessionId);
+
+    if (!session && this.cache) {
+      const cached = this.cache.get(`session-${sessionId}`);
+      if (cached) {
+        session = cached as Session;
+        this.sessions.set(sessionId, session);
+      }
+    }
+
+    return session;
+  }
+
+  listSessions(status?: SessionStatus): Session[] {
+    return Array.from(this.sessions.values()).filter(
+      (s) => !status || s.status === status
+    );
+  }
+
+  saveSession(session: Session): void {
+    this.sessions.set(session.id, session);
+    if (this.cache) {
+      this.cache.set(`session-${session.id}`, session);
+    }
   }
 }
