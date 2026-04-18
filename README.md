@@ -21,7 +21,7 @@
 
 ## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **10 published-ready skills in-repo** plus core infrastructure packages.
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **12 published skills** plus core infrastructure packages.
 
 ### 🎯 Your Creative Arsenal Includes:
 

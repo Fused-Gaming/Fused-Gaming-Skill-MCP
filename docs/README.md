@@ -12,6 +12,7 @@
 
 ## Skills (Proposed / In Development)
 - [`skills/SYNCPULSE.md`](./skills/SYNCPULSE.md)
+- [`skills/LIMJ.md`](./skills/LIMJ.md)
 
 ## Release & Planning
 - [`ROADMAP.md`](./ROADMAP.md)
