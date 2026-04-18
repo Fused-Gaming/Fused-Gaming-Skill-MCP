@@ -8,7 +8,7 @@
  * - Swarm agent management
  */
 
-import express, { Router, Request, Response } from 'express';
+import { Router, type Request, type Response } from 'express';
 import FirstLoginManager from './first-login-manager.js';
 import AuthMiddleware from './auth-middleware.js';
 import { MetricsCollector } from './metrics.js';
