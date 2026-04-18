@@ -3,7 +3,7 @@
  * Frontend component design and HTML/CSS generation for modern web applications
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { generateComponentTool } from "./tools/generate-component.js";
 
 export const frontendDesignSkill: Skill = {

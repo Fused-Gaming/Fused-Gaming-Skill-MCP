@@ -3,7 +3,7 @@
  * Generates boilerplate for new MCP skills
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const scaffoldSkillTool: ToolDefinition = {
   name: "scaffold-skill",

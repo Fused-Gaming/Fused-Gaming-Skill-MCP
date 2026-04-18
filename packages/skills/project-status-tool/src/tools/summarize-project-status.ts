@@ -3,7 +3,7 @@
  * Summarize current project status, risks, and next actions.
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const SummarizeProjectStatusTool: ToolDefinition = {
   name: "summarize-project-status",

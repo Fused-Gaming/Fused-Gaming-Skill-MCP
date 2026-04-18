@@ -3,7 +3,7 @@
  * Draft polished LinkedIn release and thought-leadership posts.
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { DraftLinkedinPostTool } from "./tools/draft-linkedin-post.js";
 
 export const LinkedinMasterJournalistSkill: Skill = {

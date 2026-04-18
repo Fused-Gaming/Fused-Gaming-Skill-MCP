@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-mermaid-terminal",
+  "name": "@h4shed/skill-mermaid-terminal",
   "version": "1.0.0",
   "description": "Generate terminal-friendly Mermaid diagrams and flowcharts.",
   "type": "module",
@@ -14,7 +14,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "*"
+    "@h4shed/mcp-core": "*"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

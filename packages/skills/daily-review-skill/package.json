@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-daily-review",
+  "name": "@h4shed/skill-daily-review",
   "version": "1.0.0",
   "description": "Productivity tracking and daily review skill for session aggregation, metrics analysis, and multi-account reporting",
   "type": "module",
@@ -13,7 +13,7 @@
     "test": "echo \"Tests coming soon\""
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "*"
+    "@h4shed/mcp-core": "*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
