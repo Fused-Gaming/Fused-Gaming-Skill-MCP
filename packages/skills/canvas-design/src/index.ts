@@ -3,7 +3,7 @@
  * Visual design generation for web with SVG and canvas rendering
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { generateSVGDesignTool } from "./tools/generate-svg.js";
 
 export const canvasDesignSkill: Skill = {

@@ -3,7 +3,7 @@
  * Generate terminal-friendly Mermaid diagrams and flowcharts.
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 interface DiagramGenerationResult extends Record<string, unknown> {
   success: boolean;

@@ -1,5 +1,13 @@
 # Release Notes - Node Workflow Stabilization 2026-04-16
 
+## Overview
+This patch release (`v1.0.3`) stabilizes GitHub Actions Node.js runtime usage for testing and release automation documentation consistency.
+
+## Highlights
+- Updated test workflow matrix from `20.x/24.x` to `20.x/22.x` for active LTS compatibility.
+- Updated GitHub release workflow to `actions/checkout@v5` and added explicit Node setup (`actions/setup-node@v5`, `22.x`).
+- Synchronized release-facing docs and metadata with `v1.0.3`.
+
 ## 1.0.3 - 2026-04-16 (Lockfile + Issue Specification Sync)
 
 ### Overview

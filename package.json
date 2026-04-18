@@ -1,10 +1,10 @@
 {
-  "name": "@fused-gaming/mcp",
+  "name": "@h4shed/mcp",
   "version": "1.0.4",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
   "license": "Apache-2.0",
-  "author": "Fused Gaming <info@fused-gaming.io>",
+  "author": "Fused Gaming <info@h4shed.io>",
   "keywords": [
     "mcp",
     "claude",
@@ -23,7 +23,7 @@
   "homepage": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
   "bugs": {
     "url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/issues",
-    "email": "support@fused-gaming.io"
+    "email": "support@h4shed.io"
   },
   "workspaces": [
     "packages/core",
@@ -65,5 +65,14 @@
     "LICENSE",
     "VERSION.json",
     "docs/"
-  ]
+  ],
+  "dependencies": {
+    "boxen": "^8.0.1",
+    "chalk": "^5.3.0",
+    "figlet": "^1.8.2",
+    "gradient-string": "^3.0.0",
+    "inquirer": "^12.9.4",
+    "ora": "^8.2.0",
+    "yargs": "^17.7.2"
+  }
 }

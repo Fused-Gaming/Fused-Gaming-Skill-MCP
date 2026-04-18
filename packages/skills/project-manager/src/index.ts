@@ -3,7 +3,7 @@
  * Plan projects with milestones, dependencies, and delivery phases.
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { PlanProjectTool } from "./tools/plan-project.js";
 
 export const ProjectManagerSkill: Skill = {

@@ -3,7 +3,7 @@
  * Generate SVG assets and icon concepts from structured prompts.
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { GenerateSvgAssetTool } from "./tools/generate-svg-asset.js";
 
 export const SvgGeneratorSkill: Skill = {

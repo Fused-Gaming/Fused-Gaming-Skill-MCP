@@ -1,4 +1,4 @@
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { VisualizeAgenticFlowTool } from "./tools/visualize-agentic-flow.js";
 import { PlanTrailerRollsTool } from "./tools/plan-trailer-rolls.js";
 

@@ -3,7 +3,7 @@
  * Creates React/Vue components with HTML/CSS
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const generateComponentTool: ToolDefinition = {
   name: "generate-component",

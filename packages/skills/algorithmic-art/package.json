@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-algorithmic-art",
+  "name": "@h4shed/skill-algorithmic-art",
   "version": "1.0.0",
   "description": "Generative art using p5.js with seeded randomness, flow fields, and particle systems",
   "type": "module",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "*"
+    "@h4shed/mcp-core": "*"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

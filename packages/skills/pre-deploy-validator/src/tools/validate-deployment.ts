@@ -3,7 +3,7 @@
  * Checks application readiness for production deployment
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const validateDeploymentTool: ToolDefinition = {
   name: "validate-deployment",

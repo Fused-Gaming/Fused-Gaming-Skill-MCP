@@ -3,7 +3,7 @@
  * Mobile-first ASCII wireframe mockup generator for rapid UI prototyping
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { generateMockupTool } from "./tools/generate-mockup.js";
 
 export const asciiMockupSkill: Skill = {

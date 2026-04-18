@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/mcp-core",
+  "name": "@h4shed/mcp-core",
   "version": "1.0.0",
   "description": "Core MCP server and skill registry for Fused Gaming",
   "type": "module",

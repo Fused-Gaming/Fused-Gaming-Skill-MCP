@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-linkedin-master-journalist",
+  "name": "@h4shed/skill-linkedin-master-journalist",
   "version": "1.0.0",
   "description": "Draft polished LinkedIn release and thought-leadership posts.",
   "type": "module",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "*"
+    "@h4shed/mcp-core": "*"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

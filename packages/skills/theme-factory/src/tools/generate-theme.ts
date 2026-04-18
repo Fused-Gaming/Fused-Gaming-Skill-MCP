@@ -3,7 +3,7 @@
  * Creates design system themes with colors, typography, and spacing
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const generateThemeTool: ToolDefinition = {
   name: "generate-theme",
