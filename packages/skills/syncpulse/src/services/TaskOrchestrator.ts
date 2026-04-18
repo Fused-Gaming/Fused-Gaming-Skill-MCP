@@ -11,9 +11,9 @@ export class TaskOrchestrator {
       try {
         task.result = {};
         task.status = "completed";
-      } catch (e: any) {
+      } catch (e: unknown) {
         task.status = "failed";
-        task.error = e.message;
+        task.error = e instanceof Error ? e.message : String(e);
       }
 
       task.completedAt = Date.now();

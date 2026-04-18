@@ -1,25 +1,25 @@
 import fs from "fs/promises";
 import path from "path";
 
-export class CacheService {
-  private cache = new Map<string, any>();
+export class CacheService<T = unknown> {
+  private cache = new Map<string, T>();
   private ttlMap = new Map<string, number>();
 
   constructor(private dir = ".cache") {}
 
-  set(key: string, value: any, ttl?: number) {
+  set(key: string, value: T, ttl?: number) {
     this.cache.set(key, value);
     if (ttl) this.ttlMap.set(key, Date.now() + ttl);
   }
 
-  get(key: string) {
+  get(key: string): T | null {
     const expiry = this.ttlMap.get(key);
     if (expiry && Date.now() > expiry) {
       this.cache.delete(key);
       this.ttlMap.delete(key);
       return null;
     }
-    return this.cache.get(key);
+    return this.cache.get(key) ?? null;
   }
 
   async persist() {
