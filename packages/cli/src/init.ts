@@ -3,7 +3,7 @@
  * Generates .fused-gaming-mcp.json config file
  */
 
-import { getDefaultConfig, saveConfig } from "@fused-gaming/mcp-core";
+import { getDefaultConfig, saveConfig } from "@h4shed/mcp-core";
 
 export async function init(): Promise<void> {
   const config = getDefaultConfig();

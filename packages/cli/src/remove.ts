@@ -3,7 +3,7 @@
  * Disables a skill in the configuration
  */
 
-import { loadConfig, saveConfig } from "@fused-gaming/mcp-core";
+import { loadConfig, saveConfig } from "@h4shed/mcp-core";
 
 export async function remove(skill: string): Promise<void> {
   const config = loadConfig();
@@ -14,7 +14,7 @@ export async function remove(skill: string): Promise<void> {
   }
 
   // Remove from enabled
-  config.skills.enabled = config.skills.enabled.filter((s) => s !== skill);
+  config.skills.enabled = config.skills.enabled.filter((s: string) => s !== skill);
 
   // Add to disabled if not already there
   if (!config.skills.disabled.includes(skill)) {

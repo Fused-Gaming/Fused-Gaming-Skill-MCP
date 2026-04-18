@@ -3,7 +3,7 @@
  * Build and scaffold MCP servers and skills with best practices
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { scaffoldSkillTool } from "./tools/scaffold-skill.js";
 
 export const mcpBuilderSkill: Skill = {

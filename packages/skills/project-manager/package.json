@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-project-manager",
+  "name": "@h4shed/skill-project-manager",
   "version": "1.0.0",
   "description": "Plan projects with milestones, dependencies, and delivery phases.",
   "type": "module",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "*"
+    "@h4shed/mcp-core": "*"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

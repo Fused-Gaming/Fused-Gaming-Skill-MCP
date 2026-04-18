@@ -3,7 +3,7 @@
  * Creates SVG designs for web applications
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const generateSVGDesignTool: ToolDefinition = {
   name: "generate-svg-design",

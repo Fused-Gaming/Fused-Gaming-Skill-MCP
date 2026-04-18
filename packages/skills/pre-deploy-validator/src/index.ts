@@ -3,7 +3,7 @@
  * Pre-deployment validation and quality checks for production readiness
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { validateDeploymentTool } from "./tools/validate-deployment.js";
 
 export const preDeployValidatorSkill: Skill = {
