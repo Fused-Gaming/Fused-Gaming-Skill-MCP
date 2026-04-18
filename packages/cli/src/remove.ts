@@ -14,7 +14,7 @@ export async function remove(skill: string): Promise<void> {
   }
 
   // Remove from enabled
-  config.skills.enabled = config.skills.enabled.filter((s) => s !== skill);
+  config.skills.enabled = config.skills.enabled.filter((s: string) => s !== skill);
 
   // Add to disabled if not already there
   if (!config.skills.disabled.includes(skill)) {
