@@ -7,7 +7,7 @@ export default [
       'node_modules/**',
       'dist/**',
       'build/**',
-      '.next/**',
+      '**/.next/**',
       '*.config.js',
       '**/*.d.ts',
       '.claude/**',
