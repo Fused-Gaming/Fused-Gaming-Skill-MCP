@@ -21,7 +21,7 @@
 
 ## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **9 published skills** plus core infrastructure packages.
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **10 published-ready skills in-repo** plus core infrastructure packages.
 
 ### 🎯 Your Creative Arsenal Includes:
 
@@ -36,6 +36,7 @@
 | **pre-deploy-validator** | Deployment validation | ✅ |
 | **skill-creator** | Custom skill builder | ✅ |
 | **underworld-writer** | Character/world narrative generation | ✅ |
+| **agentic-flow-devkit** | Agentic orchestration GUI + trailer A/B-roll planning | 🆕 |
 
 **All skills are production-ready and actively maintained** ✨
 
@@ -113,6 +114,7 @@ fused-gaming-mcp init              # Initialize config
 fused-gaming-mcp list              # Show available skills
 fused-gaming-mcp add <skill>       # Enable a skill
 fused-gaming-mcp remove <skill>    # Disable a skill
+fused-gaming-mcp panel             # Launch SyncPulse panel directly
 fused-gaming-mcp config            # View current config
 ```
 
@@ -172,7 +174,7 @@ npm run dev         # Start dev server
 
 ## 🗺️ Roadmap Snapshot (Existing + Planned)
 
-### Existing (v1.0.3)
+### Existing (v1.0.4)
 - ✅ 11 published `@h4shed/*` packages (core + CLI + 9 skills)
 - ✅ npm workspace publishing pipeline active on `main` and tags
 - ✅ Security baseline hardened (0 known vulnerabilities at last audit)
@@ -182,6 +184,7 @@ npm run dev         # Start dev server
 - 🔄 Expand deployment verification for npm + GitHub release parity
 - 🔄 Add richer release announcement templates for community launch posts
 - 🔄 Merge and publish `daily-review` with release-quality docs and examples (PR #51 target)
+- 🔄 Publish and harden `agentic-flow-devkit` with tests + release workflow verification
 - 🔄 Implement tool logic + tests for `project-status-tool` and `project-manager`
 - 🔄 Formalize planned-tool milestones into trackable issue groups for weekly triage
 
@@ -248,7 +251,7 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 
 ---
 
-[![Version 1.0.3](https://img.shields.io/badge/version-1.0.3-blue)](./VERSION.json)
-[![Released April 16, 2026](https://img.shields.io/badge/released-april%2016%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
+[![Version 1.0.4](https://img.shields.io/badge/version-1.0.4-blue)](./VERSION.json)
+[![Released April 17, 2026](https://img.shields.io/badge/released-april%2017%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
 [![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
 [![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)

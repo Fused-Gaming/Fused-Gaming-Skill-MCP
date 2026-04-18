@@ -241,3 +241,48 @@
 ### Next-Agent Guardrail
 1. If CLI build fails with `TS2307` module errors, verify dependency declarations in `packages/cli/package.json` before debugging TypeScript config.
 2. In restricted environments, lockfile refresh may fail with npm `403`; validate dependency graph in CI with registry access.
+
+## Agent Notes (2026-04-17, GitHub MCP Agents Orientation Branch)
+
+### Session Output
+- Created branch `feat/github-agents` and added `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md`.
+- Captured blockers, current steps, immediate next 3 steps, open-issue execution plan, top-3 priorities, and role-based agent directives.
+
+### Blocking Constraint
+- GitHub check/deployment verification remains blocked in this environment due unavailable authenticated GitHub CLI/API access.
+
+### Next-Agent Starter
+1. Run authenticated GitHub PR/check/deployment inspection first; fix any failing checks before starting new feature implementation.
+2. Keep `CHANGELOG.md`, `docs/ROADMAP.md`, and `CLAUDE.md` synchronized after each merge.
+
+## Agent Notes (2026-04-17, Vercel Project Directory + Preset Guidance)
+
+### What Was Added
+- Added `docs/process/VERCEL_PROJECT_SETUP.md` with concrete Vercel settings for:
+  - `skills.vln.gg` (API project from repo root, framework preset `Other`)
+  - `sync.vln.gg` (separate augmented agents app project, recommended `Next.js` rooted at `apps/sync`)
+- Linked the new Vercel guide from `docs/README.md` and referenced it in the GitHub agents orientation doc.
+
+### Constraint Still Present
+- Live PR comments/check/deployment status still cannot be queried in this environment due missing authenticated GitHub CLI/API access.
+
+### Next-Agent Action
+1. Apply these Vercel project settings in the Vercel dashboard.
+2. If `sync.vln.gg` app does not yet exist, scaffold `apps/sync` before enabling the project.
+
+## Agent Notes (2026-04-17, Agentic Flow Devkit + Trailer Sourcing)
+
+### Delivered
+- Added new workspace skill `@fused-gaming/skill-agentic-flow-devkit`.
+- Introduced tools:
+  - `visualize-agentic-flow` for Mermaid + GUI layout output of multi-agent orchestration.
+  - `plan-trailer-rolls` for A-roll/B-roll source planning and search prompts.
+
+### Blockers Observed
+1. Local clone has no configured git remotes, so PR lineage against parent origin cannot be checked here.
+2. Unauthenticated environment still blocks live PR comments/check/deployment inspection.
+
+### Next-Agent Guardrails
+1. Verify authenticated PR checks/deployments before adding additional skills.
+2. Add tests for the new devkit tools before publish.
+3. Keep docs + version metadata synchronized in the same commit to avoid release drift.
