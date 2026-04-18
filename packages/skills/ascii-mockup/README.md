@@ -1,11 +1,11 @@
-# @fused-gaming/skill-ascii-mockup
+# @h4shed/skill-ascii-mockup
 
 Mobile-first ASCII wireframe mockup generator for rapid UI prototyping.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-ascii-mockup
+npm install @h4shed/skill-ascii-mockup
 ```
 
 ## Tools
@@ -33,7 +33,7 @@ Generate ASCII wireframe mockups for rapid prototyping.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

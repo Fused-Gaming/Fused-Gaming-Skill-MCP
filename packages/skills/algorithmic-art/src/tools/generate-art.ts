@@ -3,7 +3,7 @@
  * Creates algorithmic art using p5.js patterns
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const generateArtTool: ToolDefinition = {
   name: "generate-art",

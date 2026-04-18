@@ -3,7 +3,7 @@
  * Creates particle flow field visualizations
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const createFlowFieldTool: ToolDefinition = {
   name: "create-flow-field",

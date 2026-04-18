@@ -252,7 +252,7 @@ packages/skills/underworld-writer-skill/
 
 ✅ **Robust Testing** - 16 test cases covering all validation scenarios
 
-✅ **Zero External Dependencies** - Uses only @fused-gaming/mcp-core
+✅ **Zero External Dependencies** - Uses only @h4shed/mcp-core
 
 ✅ **Full Documentation** - README, SKILL.md, SAMPLE_DATA.md, and inline comments
 

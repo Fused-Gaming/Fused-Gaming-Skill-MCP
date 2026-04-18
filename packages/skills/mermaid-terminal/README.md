@@ -1,11 +1,11 @@
-# @fused-gaming/skill-mermaid-terminal
+# @h4shed/skill-mermaid-terminal
 
 Generate terminal-friendly Mermaid diagrams and flowcharts.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-mermaid-terminal
+npm install @h4shed/skill-mermaid-terminal
 ```
 
 ## Tools
@@ -55,7 +55,7 @@ Generate terminal-friendly Mermaid diagrams and flowcharts.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

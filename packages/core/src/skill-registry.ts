@@ -16,7 +16,7 @@ export class SkillRegistry {
 
   /**
    * Dynamically load a skill by name
-   * Expects package name: @fused-gaming/skill-{skillName}
+   * Expects package name: @h4shed/skill-{skillName}
    */
   async loadSkill(skillName: string, config?: SkillConfig): Promise<Skill | null> {
     if (this.loaded.has(skillName)) {
@@ -27,7 +27,7 @@ export class SkillRegistry {
     }
 
     try {
-      const packageName = `@fused-gaming/skill-${skillName}`;
+      const packageName = `@h4shed/skill-${skillName}`;
       this.logger(`[SkillRegistry] Loading ${packageName}...`);
 
       // Dynamic import for skill packages

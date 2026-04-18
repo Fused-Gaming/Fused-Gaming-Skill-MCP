@@ -1,11 +1,11 @@
-# @fused-gaming/skill-mcp-builder
+# @h4shed/skill-mcp-builder
 
 Build and scaffold MCP servers and skills with best practices.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-mcp-builder
+npm install @h4shed/skill-mcp-builder
 ```
 
 ## Tools
@@ -28,7 +28,7 @@ Scaffold a new MCP skill with complete project structure and templates.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

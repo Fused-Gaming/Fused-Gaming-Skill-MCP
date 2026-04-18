@@ -109,12 +109,12 @@
 ## Agent Notes (2026-04-16, Workspace Install Blocker Fix)
 
 ### What Broke
-- Root workspace install (`npm install --package-lock-only --ignore-scripts`) failed with `EDUPLICATEWORKSPACE` because two workspaces shared `@fused-gaming/skill-mermaid-terminal`:
+- Root workspace install (`npm install --package-lock-only --ignore-scripts`) failed with `EDUPLICATEWORKSPACE` because two workspaces shared `@h4shed/skill-mermaid-terminal`:
   - `packages/skills/mermaid-terminal`
   - `packages/skills/mermaid-terminal-skill`
 
 ### What Was Changed
-- Renamed `packages/skills/mermaid-terminal-skill/package.json` package name to `@fused-gaming/skill-mermaid-terminal-skill` to restore unique workspace naming.
+- Renamed `packages/skills/mermaid-terminal-skill/package.json` package name to `@h4shed/skill-mermaid-terminal-skill` to restore unique workspace naming.
 - Updated release metadata/docs to align on Node.js `>=20.0.0` and patch release `1.0.1`.
 
 ### Next-Agent Guardrail
@@ -130,7 +130,7 @@
   - `Installation` with explicit `npm install <package-name>`
   - `Development` workspace build/test commands
   - `License`
-- Replaced the legacy `packages/skills/mermaid-terminal-skill/README.md` with a corrected package-name-aware README (`@fused-gaming/skill-mermaid-terminal-skill`).
+- Replaced the legacy `packages/skills/mermaid-terminal-skill/README.md` with a corrected package-name-aware README (`@h4shed/skill-mermaid-terminal-skill`).
 
 ### Validation Notes
 1. Workspace tests still execute (`npm run test --workspaces --if-present`), but are mostly placeholder scripts.
@@ -258,7 +258,7 @@
 ## Agent Notes (2026-04-17, Agentic Flow Devkit + Trailer Sourcing)
 
 ### Delivered
-- Added new workspace skill `@fused-gaming/skill-agentic-flow-devkit`.
+- Added new workspace skill `@h4shed/skill-agentic-flow-devkit`.
 - Introduced tools:
   - `visualize-agentic-flow` for Mermaid + GUI layout output of multi-agent orchestration.
   - `plan-trailer-rolls` for A-roll/B-roll source planning and search prompts.

@@ -1,11 +1,11 @@
-# @fused-gaming/skill-linkedin-master-journalist
+# @h4shed/skill-linkedin-master-journalist
 
 Draft polished LinkedIn release and thought-leadership posts.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-linkedin-master-journalist
+npm install @h4shed/skill-linkedin-master-journalist
 ```
 
 ## Tools
@@ -22,7 +22,7 @@ Draft polished LinkedIn release and thought-leadership posts.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

@@ -1,11 +1,11 @@
-# @fused-gaming/skill-svg-generator
+# @h4shed/skill-svg-generator
 
 Generate SVG assets and icon concepts from structured prompts.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-svg-generator
+npm install @h4shed/skill-svg-generator
 ```
 
 ## Tools
@@ -78,7 +78,7 @@ Generate SVG assets and icon concepts from structured prompts.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

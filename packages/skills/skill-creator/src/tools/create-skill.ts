@@ -3,7 +3,7 @@
  * Generates new custom skills for the Fused Gaming ecosystem
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const createSkillTool: ToolDefinition = {
   name: "create-skill",

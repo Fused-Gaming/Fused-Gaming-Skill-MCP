@@ -1,4 +1,4 @@
-# @fused-gaming/skill-daily-review
+# @h4shed/skill-daily-review
 
 Comprehensive session tracking and productivity metrics skill for Fused Gaming MCP.
 
@@ -21,7 +21,7 @@ The Daily Review Skill enables tracking Claude sessions across multiple accounts
 
 Install via npm workspace:
 ```bash
-npm install @fused-gaming/skill-daily-review
+npm install @h4shed/skill-daily-review
 ```
 
 Build the skill:
@@ -34,7 +34,7 @@ npm run build
 ### Log a Session
 
 ```typescript
-import { logSession } from '@fused-gaming/skill-daily-review';
+import { logSession } from '@h4shed/skill-daily-review';
 
 const session = logSession({
   account: 'primary',
@@ -53,7 +53,7 @@ const session = logSession({
 ### Generate Daily Review
 
 ```typescript
-import { generateDailyReview, formatDailyReview } from '@fused-gaming/skill-daily-review';
+import { generateDailyReview, formatDailyReview } from '@h4shed/skill-daily-review';
 
 const review = generateDailyReview({
   date: '2026-04-04',
@@ -84,7 +84,7 @@ console.log(formatDailyReview(review));
 ### Analyze Weekly Trends
 
 ```typescript
-import { analyzeWeekly, formatWeeklyMetrics } from '@fused-gaming/skill-daily-review';
+import { analyzeWeekly, formatWeeklyMetrics } from '@h4shed/skill-daily-review';
 
 const weekly = analyzeWeekly({
   weekStart: '2026-03-31',

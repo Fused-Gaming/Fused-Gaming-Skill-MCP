@@ -3,7 +3,7 @@
  * Track session activity across multiple accounts and workstreams.
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { TrackSessionActivityTool } from "./tools/track-session-activity.js";
 
 export const MultiAccountSessionTrackingSkill: Skill = {

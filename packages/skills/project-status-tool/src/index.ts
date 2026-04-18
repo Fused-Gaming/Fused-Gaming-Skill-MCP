@@ -3,7 +3,7 @@
  * Summarize current project status, risks, and next actions.
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { SummarizeProjectStatusTool } from "./tools/summarize-project-status.js";
 
 export const ProjectStatusToolSkill: Skill = {

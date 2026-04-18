@@ -1,11 +1,11 @@
-# @fused-gaming/skill-agentic-flow-devkit
+# @h4shed/skill-agentic-flow-devkit
 
 Design and visualize agentic orchestration flows, then generate A-roll/B-roll sourcing plans for trailer promo elevator content.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-agentic-flow-devkit
+npm install @h4shed/skill-agentic-flow-devkit
 ```
 
 ## Included Tools

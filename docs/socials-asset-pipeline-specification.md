@@ -399,7 +399,7 @@ Every asset must pass validation before approval.
 
 - **Issue #55**: Fully Automated Socials Skill Prompt (parent issue)
 - **Issues #56-66**: Platform-specific asset generation tasks (blocked until Phase 2)
-- **Skill**: `@fused-gaming/skill-socials-automation` (to be created)
+- **Skill**: `@h4shed/skill-socials-automation` (to be created)
 
 ---
 

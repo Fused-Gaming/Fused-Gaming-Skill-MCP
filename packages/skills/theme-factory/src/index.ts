@@ -3,7 +3,7 @@
  * Design system and theme generation for consistent UI/UX across applications
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { generateThemeTool } from "./tools/generate-theme.js";
 
 export const themeFactorySkill: Skill = {

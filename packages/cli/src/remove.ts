@@ -3,7 +3,7 @@
  * Disables a skill in the configuration
  */
 
-import { loadConfig, saveConfig } from "@fused-gaming/mcp-core";
+import { loadConfig, saveConfig } from "@h4shed/mcp-core";
 
 export async function remove(skill: string): Promise<void> {
   const config = loadConfig();

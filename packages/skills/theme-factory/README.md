@@ -1,11 +1,11 @@
-# @fused-gaming/skill-theme-factory
+# @h4shed/skill-theme-factory
 
 Design system and theme generation for consistent UI/UX across applications.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-theme-factory
+npm install @h4shed/skill-theme-factory
 ```
 
 ## Tools
@@ -28,7 +28,7 @@ Generate design system themes with colors, typography, and spacing.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

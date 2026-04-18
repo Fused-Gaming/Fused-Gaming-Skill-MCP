@@ -3,7 +3,7 @@
  * Draft polished LinkedIn release and thought-leadership posts.
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const DraftLinkedinPostTool: ToolDefinition = {
   name: "draft-linkedin-post",

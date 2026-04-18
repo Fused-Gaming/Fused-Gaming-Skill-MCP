@@ -1,4 +1,4 @@
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 const buildABRollPlan = (campaign: string, tone: string, beats: string[]) => {
   const aRoll = [

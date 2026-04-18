@@ -1,4 +1,4 @@
-# @fused-gaming/mcp-core
+# @h4shed/mcp-core
 
 Core MCP server and skill registry for Fused Gaming.
 
@@ -11,7 +11,7 @@ This package provides:
 ## Installation
 
 ```bash
-npm install @fused-gaming/mcp-core
+npm install @h4shed/mcp-core
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ npm install @fused-gaming/mcp-core
 ### As a library
 
 ```typescript
-import { SkillRegistry } from "@fused-gaming/mcp-core";
+import { SkillRegistry } from "@h4shed/mcp-core";
 
 const registry = new SkillRegistry();
 const skill = await registry.loadSkill("algorithmic-art");
@@ -28,7 +28,7 @@ console.log(skill?.tools);
 
 ### As an MCP server
 
-See parent package `@fused-gaming/mcp` for instructions.
+See parent package `@h4shed/mcp` for instructions.
 
 ## API Reference
 

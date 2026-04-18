@@ -1,7 +1,7 @@
 # 🗺️ Socials Automation Skill - Execution Roadmap
 
 **Project:** Fully Automated Social Media Asset Pipeline  
-**Skill Name:** `@fused-gaming/skill-socials-automation`  
+**Skill Name:** `@h4shed/skill-socials-automation`  
 **Timeline:** 4 phases over 4 sessions (estimated 240 minutes)  
 **Status:** Phase 1 ✅ Complete, Phase 2-5 📋 Scheduled
 
@@ -163,7 +163,7 @@ describe('SocialsAssetGenerator', () => {
 
 ### 2.5 Deliverables
 
-- [ ] Skill package: `@fused-gaming/skill-socials-automation@1.0.0`
+- [ ] Skill package: `@h4shed/skill-socials-automation@1.0.0`
 - [ ] Generator class with asset generation methods
 - [ ] 20+ sample assets (avatars + headers + favicons)
 - [ ] Manifest generation

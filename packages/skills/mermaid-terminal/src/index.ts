@@ -3,7 +3,7 @@
  * Generate terminal-friendly Mermaid diagrams and flowcharts.
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { GenerateMermaidDiagramTool } from "./tools/generate-mermaid-diagram.js";
 
 export const MermaidTerminalSkill: Skill = {

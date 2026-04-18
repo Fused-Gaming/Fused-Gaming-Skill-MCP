@@ -3,7 +3,7 @@
  * Track session activity across multiple accounts and workstreams.
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const TrackSessionActivityTool: ToolDefinition = {
   name: "track-session-activity",

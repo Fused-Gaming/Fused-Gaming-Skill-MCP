@@ -1,11 +1,11 @@
-# @fused-gaming/skill-underworld-writer
+# @h4shed/skill-underworld-writer
 
 A creative skill for developing characters and narratives in underworld-themed fiction. Provides a three-phase structured methodology for character and narrative development.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-underworld-writer
+npm install @h4shed/skill-underworld-writer
 ```
 
 ## Tools
@@ -33,7 +33,7 @@ Create detailed character profiles using the three-phase methodology:
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

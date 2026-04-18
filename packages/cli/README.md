@@ -1,11 +1,11 @@
-# @fused-gaming/mcp-cli
+# @h4shed/mcp-cli
 
 CLI tool for managing Fused Gaming MCP skills and configuration
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/mcp-cli
+npm install @h4shed/mcp-cli
 ```
 
 ## Development

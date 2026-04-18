@@ -46,7 +46,7 @@ class SkillRegistry {
 
 **How it works:**
 1. User enables skill in config (e.g., `"algorithmic-art"`)
-2. Registry attempts dynamic import: `@fused-gaming/skill-algorithmic-art`
+2. Registry attempts dynamic import: `@h4shed/skill-algorithmic-art`
 3. Skill's `initialize()` is called with config
 4. Skill's tools are extracted and registered with MCP server
 
@@ -115,7 +115,7 @@ packages/skills/my-skill/
 │   └── tools/
 │       ├── index.ts          # Aggregates tools
 │       └── tool-name.ts      # Individual tool
-├── package.json              # @fused-gaming/skill-my-skill
+├── package.json              # @h4shed/skill-my-skill
 ├── tsconfig.json
 └── README.md
 ```
@@ -175,7 +175,7 @@ export const myTool: ToolDefinition = {
    ↓
 3. For each enabled skill in config:
    ├─ SkillRegistry.loadSkill(skillName)
-   ├─ Dynamic import: @fused-gaming/skill-{skillName}
+   ├─ Dynamic import: @h4shed/skill-{skillName}
    ├─ skill.initialize(config)
    └─ registerSkillTools(skill)
    ↓

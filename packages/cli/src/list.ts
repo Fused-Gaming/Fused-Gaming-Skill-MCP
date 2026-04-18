@@ -3,7 +3,7 @@
  * Shows available and enabled skills
  */
 
-import { loadConfig } from "@fused-gaming/mcp-core";
+import { loadConfig } from "@h4shed/mcp-core";
 
 const AVAILABLE_SKILLS = [
   "algorithmic-art",

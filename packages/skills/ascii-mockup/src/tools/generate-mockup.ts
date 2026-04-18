@@ -3,7 +3,7 @@
  * Creates ASCII wireframe mockups for rapid prototyping
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const generateMockupTool: ToolDefinition = {
   name: "generate-mockup",
