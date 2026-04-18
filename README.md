@@ -37,6 +37,7 @@
 | **skill-creator** | Custom skill builder | ✅ |
 | **underworld-writer** | Character/world narrative generation | ✅ |
 | **agentic-flow-devkit** | Agentic orchestration GUI + trailer A/B-roll planning | 🆕 |
+| **linkedin-master-journalist** | LinkedIn article + dual posts + branded covers | 🆕 |
 
 **All skills are production-ready and actively maintained** ✨
 
@@ -47,6 +48,7 @@
 - `skill-algorithmic-art`, `skill-ascii-mockup`, `skill-canvas-design`
 - `skill-frontend-design`, `skill-mcp-builder`, `skill-pre-deploy-validator`
 - `skill-skill-creator`, `skill-theme-factory`, `skill-underworld-writer`
+- `skill-linkedin-master-journalist`
 
 **Scaffolded and queued for publish (`@h4shed`)**
 - `skill-mermaid-terminal`
@@ -56,7 +58,6 @@
 - `skill-project-status-tool`
 - `skill-daily-review`
 - `multi-account-session-tracking`
-- `skill-linkedin-master-journalist`
 
 ---
 
@@ -71,6 +72,40 @@ Transform your Claude workflow with meticulously crafted tools designed for:
 ✔️ **AI Automation** — Streamline creative and technical workflows  
 
 **Trusted by:** Fused Gaming • VLN Security • Design Studios • AI Development Teams
+
+---
+
+## 💼 LinkedIn Master Journalist (LIMJ) Skill
+
+**Transform briefs into publication-ready LinkedIn content with autonomous article generation, social posts, and branded cover images.**
+
+### What LIMJ Does
+
+- **Article.md**: 1,200–1,800 word articles optimized for C-suite engagement
+- **Posts.md**: Dual social variants (personal + company) with hashtag research and engagement strategy
+- **Cover.html**: Self-contained 1200×627px LinkedIn OpenGraph covers with PNG export
+
+### Quick Trigger
+
+```bash
+# Copy the system prompt
+cat LIMJ/LIMJ_System_Prompt.md
+
+# Paste into Claude with your content brief:
+# Topic: [your topic]
+# Angle: [contrarian/educational/case-study]
+# Audience: [founder/CEO/CTO]
+
+# Get: Article.md + Posts.md + Cover.html (publication-ready)
+```
+
+### Learn More
+
+- **Full Documentation**: [LIMJ/README.md](./LIMJ/README.md)
+- **Quick Start Guide**: [LIMJ/quickstart.md](./LIMJ/quickstart.md)
+- **System Prompt**: [LIMJ/LIMJ_System_Prompt.md](./LIMJ/LIMJ_System_Prompt.md)
+- **Guidelines**: [LIMJ/guidelines/](./LIMJ/guidelines/) (vocabulary, colors, typography, hashtags)
+- **Templates**: [LIMJ/templates/](./LIMJ/templates/) (examples + blanks)
 
 ---
 
