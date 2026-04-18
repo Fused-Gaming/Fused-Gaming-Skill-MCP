@@ -1,0 +1,42 @@
+BANNED VOCABULARY (Hard Stop)
+=============================
+
+DO NOT USE under any circumstances. These are AI-detectable patterns.
+
+- In today's [adjective] world/landscape/era
+- It's important to note that
+- This begs the question
+- At the end of the day
+- Moving forward / Going forward
+- Utilize (use "use" instead)
+- Implement (overused—find alternatives: deploy, launch, adopt, build, create)
+- Robust
+- Seamless
+- Cutting-edge
+- Game-changing
+- Groundbreaking
+- Synergy
+- Leverage (as verb, not finance context)
+- Ecosystem
+- Disrupt/Disruption (except when used ironically)
+- Stakeholders (say specifically: founders, executives, engineers, customers)
+- Best practices (too vague—specify whose and when)
+
+REQUIRED VOCABULARY (Actively Use)
+==================================
+
+- Industry-specific terminology (shows expertise)
+- Colloquialisms and idioms (shows humanity)
+- Precise technical language (where warranted)
+- Regional expressions (if authentic to author)
+- Sentence fragments. (For emphasis.)
+
+STRUCTURE RULES
+===============
+
+- Never start consecutive paragraphs with the same word
+- Never exceed 4 sentences per paragraph
+- Use bold sparingly (2-3 phrases per section maximum)
+- Numbered lists for sequential steps
+- Bullet points for non-sequential items (limit to 5-7)
+- Pull quotes as standalone paragraphs

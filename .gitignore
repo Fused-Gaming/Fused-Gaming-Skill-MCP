@@ -137,3 +137,7 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# LIMJ Generated Outputs
+LIMJ/**/*-cover-*.png
+LIMJ/**/linkedin-cover-*.png
