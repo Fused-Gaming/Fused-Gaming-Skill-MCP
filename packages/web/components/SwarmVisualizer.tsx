@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useSwarmStore } from '@/store/swarmStore';
-import { Activity, Zap } from 'lucide-react';
+import { Activity } from 'lucide-react';
 
 export default function SwarmVisualizer() {
   const { swarms, selectedSwarm } = useSwarmStore();
