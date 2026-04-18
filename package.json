@@ -28,7 +28,8 @@
   "workspaces": [
     "packages/core",
     "packages/skills/*",
-    "packages/cli"
+    "packages/cli",
+    "packages/web"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
