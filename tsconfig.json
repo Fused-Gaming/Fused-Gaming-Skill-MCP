@@ -15,7 +15,13 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "types": ["node"],
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@h4shed/mcp-core": ["packages/core/src/index.ts"],
+      "@h4shed/mcp-cli": ["packages/cli/src/index.ts"],
+      "@h4shed/skill-*": ["packages/skills/*/src/index.ts"]
+    }
   },
   "include": ["packages/**/src/**/*.ts"],
   "exclude": ["node_modules", "dist", "api"]

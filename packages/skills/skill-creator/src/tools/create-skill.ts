@@ -25,14 +25,14 @@ export const createSkillTool: ToolDefinition = {
       },
       scope: {
         type: "string",
-        description: "Scope: public (@fused-gaming) or custom namespace",
+        description: "Scope: public (@h4shed) or custom namespace",
       },
     },
     required: ["skillName"],
   },
 
   async handler(input: Record<string, unknown>): Promise<Record<string, unknown>> {
-    const { skillName, description = "", toolCount = 1, scope = "fused-gaming" } = input as {
+    const { skillName, description = "", toolCount = 1, scope = "h4shed" } = input as {
       skillName: string;
       description?: string;
       toolCount?: number;

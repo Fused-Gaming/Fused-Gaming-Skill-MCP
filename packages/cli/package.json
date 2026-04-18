@@ -23,6 +23,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@types/boxen": "^2.0.5",
     "@types/figlet": "^1.7.0",
     "@types/inquirer": "^9.0.9",
     "@types/node": "^20.12.0",

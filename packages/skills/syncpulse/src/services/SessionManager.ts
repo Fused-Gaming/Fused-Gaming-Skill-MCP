@@ -2,7 +2,7 @@ import { CacheService } from "./CacheService.js";
 import { Session } from "../types/Session.js";
 
 export class SessionManager {
-  constructor(private cache: CacheService) {}
+  constructor(private cache: CacheService<Session>) {}
 
   createSession(): Session {
     const session: Session = {
