@@ -135,21 +135,6 @@
 1. Workspace tests still execute (`npm run test --workspaces --if-present`), but are mostly placeholder scripts.
 2. Lockfile/dependency sync remains blocked in this environment by npm registry HTTP 403 on `mermaid` (`npm install --package-lock-only --ignore-scripts`).
 
-## Agent Notes (2026-04-16, v1.0.3 Lockfile + Issue Specification Sync)
-
-### What Was Updated
-- Executed `npm install --package-lock-only --ignore-scripts` successfully to ensure lock metadata aligns with workspace manifests.
-- Expanded `docs/ROADMAP.md` milestone issue buckets to include issue-by-issue specification criteria.
-- Converted PR #51 checklist document into explicit checklist format and added required evidence fields.
-- Bumped repository metadata from `1.0.2` to `1.0.3` (`package.json`, `VERSION.json`, README badge, changelog/release notes).
-
-### Remaining Constraints
-1. `npm ci` can remain long-running/stalled in this runtime due proxy/network behavior, so dependency-install completion should be revalidated in unrestricted CI or local network.
-2. GitHub PR comments/check-runs/deployment details are still not directly queryable here without authenticated remote access.
-
-### Next-Agent Follow-up
-1. Re-run `npm ci`, `npm run lint`, `npm run typecheck`, and `npm run build` in a network-stable environment and attach logs to the active PR.
-2. Verify PR #51 and latest branch-related PR checks/deployments directly in GitHub UI, then update checklist evidence entries.
 
 ## Agent Notes (2026-04-16, Node Workflow Test Lane Stabilization)
 
@@ -222,67 +207,6 @@
 ### Fix Applied
 - Added the missing CLI runtime dependencies and associated type packages to `packages/cli/package.json`.
 
-### Next Agent Priority Sequence
-1. Verify PR #51 and related recent PR workflow/deployment states in GitHub UI.
-2. If any checks fail, fix those errors first and rerun workflows before additional feature work.
-3. Continue next-wave skill implementation (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`) after CI/deployment stability is confirmed.
-
-## Agent Notes (2026-04-16, Deployment Build Resolution)
-
-### What Changed
-- Promoted CLI runtime dependencies (`boxen`, `chalk`, `figlet`, `gradient-string`, `inquirer`, `ora`, `yargs`) to the root `package.json` `dependencies` block so monorepo root installs include modules needed by `packages/cli` TypeScript builds in deployment runtimes.
-
-### Why
-- Deployment logs showed `TS2307` module-resolution failures during workspace builds for `packages/cli` when these modules were not present at the root install boundary.
-
-### Next Agent Check
-1. In CI/Vercel with full registry access, run a clean install and `npm run build` to confirm CLI module-resolution errors are resolved.
-2. If remaining failures are type-only, verify whether the install mode omits dev dependencies and adjust compile pipeline accordingly.
 ### Next-Agent Guardrail
 1. If CLI build fails with `TS2307` module errors, verify dependency declarations in `packages/cli/package.json` before debugging TypeScript config.
 2. In restricted environments, lockfile refresh may fail with npm `403`; validate dependency graph in CI with registry access.
-
-## Agent Notes (2026-04-17, GitHub MCP Agents Orientation Branch)
-
-### Session Output
-- Created branch `feat/github-agents` and added `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md`.
-- Captured blockers, current steps, immediate next 3 steps, open-issue execution plan, top-3 priorities, and role-based agent directives.
-
-### Blocking Constraint
-- GitHub check/deployment verification remains blocked in this environment due unavailable authenticated GitHub CLI/API access.
-
-### Next-Agent Starter
-1. Run authenticated GitHub PR/check/deployment inspection first; fix any failing checks before starting new feature implementation.
-2. Keep `CHANGELOG.md`, `docs/ROADMAP.md`, and `CLAUDE.md` synchronized after each merge.
-
-## Agent Notes (2026-04-17, Vercel Project Directory + Preset Guidance)
-
-### What Was Added
-- Added `docs/process/VERCEL_PROJECT_SETUP.md` with concrete Vercel settings for:
-  - `skills.vln.gg` (API project from repo root, framework preset `Other`)
-  - `sync.vln.gg` (separate augmented agents app project, recommended `Next.js` rooted at `apps/sync`)
-- Linked the new Vercel guide from `docs/README.md` and referenced it in the GitHub agents orientation doc.
-
-### Constraint Still Present
-- Live PR comments/check/deployment status still cannot be queried in this environment due missing authenticated GitHub CLI/API access.
-
-### Next-Agent Action
-1. Apply these Vercel project settings in the Vercel dashboard.
-2. If `sync.vln.gg` app does not yet exist, scaffold `apps/sync` before enabling the project.
-
-## Agent Notes (2026-04-17, Agentic Flow Devkit + Trailer Sourcing)
-
-### Delivered
-- Added new workspace skill `@fused-gaming/skill-agentic-flow-devkit`.
-- Introduced tools:
-  - `visualize-agentic-flow` for Mermaid + GUI layout output of multi-agent orchestration.
-  - `plan-trailer-rolls` for A-roll/B-roll source planning and search prompts.
-
-### Blockers Observed
-1. Local clone has no configured git remotes, so PR lineage against parent origin cannot be checked here.
-2. Unauthenticated environment still blocks live PR comments/check/deployment inspection.
-
-### Next-Agent Guardrails
-1. Verify authenticated PR checks/deployments before adding additional skills.
-2. Add tests for the new devkit tools before publish.
-3. Keep docs + version metadata synchronized in the same commit to avoid release drift.

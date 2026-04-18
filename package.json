@@ -36,7 +36,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
     "dev": "npm run dev --workspace=packages/core",
-    "prepare": "node -e \"console.log('Prepare hook skipped: run `npm run build` explicitly when needed.')\"",
+    "prepare": "echo 'Prepare hook skipped: run npm run build explicitly when needed.'",
     "version": "node scripts/update-version.js && git add VERSION.json",
     "publish:packages": "npm publish --workspaces",
     "prerelease": "npm run build && npm run typecheck && npm run lint",

@@ -15,18 +15,6 @@
   "dependencies": {
     "@fused-gaming/mcp-core": "*",
     "boxen": "^8.0.1",
-    "chalk": "^5.3.0",
-    "figlet": "^1.8.2",
-    "gradient-string": "^3.0.0",
-    "inquirer": "^12.9.4",
-    "ora": "^8.2.0",
-    "yargs": "^17.7.2"
-  },
-  "devDependencies": {
-    "@types/boxen": "^2.0.5",
-    "@types/figlet": "^1.7.0",
-    "@types/gradient-string": "^1.1.5",
-    "@types/inquirer": "^9.0.7",
     "chalk": "^5.6.2",
     "figlet": "^1.9.2",
     "gradient-string": "^3.0.0",
@@ -35,6 +23,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@types/boxen": "^2.0.5",
     "@types/figlet": "^1.7.0",
     "@types/inquirer": "^9.0.9",
     "@types/node": "^20.12.0",

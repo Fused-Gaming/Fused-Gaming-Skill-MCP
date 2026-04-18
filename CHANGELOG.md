@@ -22,8 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
 
 ### Changed
-- Updated CLI and root README command references to document the new one-command SyncPulse panel launcher.
-- Bumped root release metadata to `1.0.4` to capture the new agentic-flow-devkit delivery and session-orientation updates.
 - Added a validated update standard to `docs/NPM_PUBLISHING.md` requiring typecheck/lint/build/tests/publish-prepare before version bumps or release tagging.
 - Updated `.github/workflows/test.yml` Node matrix from `20.x`/`24.x` to active LTS lanes `20.x`/`22.x` to resolve Actions Node-version failures in CI testing.
 - Updated `.github/workflows/github-release.yml` to `actions/checkout@v5` and added an explicit `actions/setup-node@v5` (`22.x`) runtime step for consistent release-job Node behavior.
@@ -44,10 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TBD for next release
 
 ### Fixed
-- Normalized `packages/skills/daily-review-skill/tsconfig.json` and `packages/skills/underworld-writer-skill/tsconfig.json` to extend the workspace root TypeScript config so build environments (including Vercel) no longer attempt to load unrelated ambient `@types/*` libraries and fail with TS2688 during workspace builds.
-- Publish workflow now runs workspace version preparation and lockfile synchronization before `npm ci`/publish to prevent merge-order CI publish conflicts.
-- Updated GitHub Actions references to Node 24-compatible major versions (`actions/checkout@v5`, `actions/setup-node@v5`) across workflow docs and execution guides to prevent deprecation drift.
-- Regenerated `package-lock.json` to include newly scaffolded workspace packages so `npm ci` no longer fails after development→main merges.
 - Added missing CLI dependency declarations (`boxen`, `chalk`, `figlet`, `gradient-string`, `inquirer`, `ora`) plus type packages for `figlet`/`inquirer` to prevent TypeScript module resolution failures during workspace CLI builds in child branches/deploy environments.
 - Fixed `packages/skills/svg-generator/src/tools/generate-svg-asset.ts` to define `width` in `generateButton`, resolving CI TypeScript failures (`Cannot find name 'width'`) reported in PR #73 workflow annotations.
 - Updated publish version bump automation to only consider changed workspace packages when checking for already-published npm versions, preventing unrelated packages from being patch-bumped without source changes.
