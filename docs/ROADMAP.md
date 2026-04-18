@@ -16,6 +16,7 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 9. `@h4shed/skill-skill-creator`
 10. `@h4shed/skill-theme-factory`
 11. `@h4shed/skill-underworld-writer`
+12. `@h4shed/skill-agentic-flow-devkit` *(newly scaffolded locally; pending publish)*
 
 ---
 
@@ -33,6 +34,7 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 - `@h4shed/skill-daily-review`
 - `@h4shed/multi-account-session-tracking`
 - `@h4shed/skill-linkedin-master-journalist`
+- `@h4shed/skill-agentic-flow-devkit`
 
 ---
 
@@ -123,7 +125,8 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 1. GitHub CLI/API visibility is required to inspect live PR comments/check-runs from this environment.
 2. Newly scaffolded skills still need full tool logic, tests, and release tags before npm publication.
 3. Planned backlog is not yet mapped into implementation-ready milestones (owners, dates, dependencies).
-4. **Resolved (2026-04-16):** Node `24.x` `test` workflow duplicate workspace failure caused by two Mermaid workspaces sharing the same package name.
+4. Full dependency installation (`npm ci`) can hang in this runtime due network/proxy constraints, so clean install validation is partially blocked.
+5. **Resolved (2026-04-16):** Node `24.x` `test` workflow duplicate workspace failure caused by two Mermaid workspaces sharing the same package name.
 
 ## PR #51 Merge Readiness (Daily Review + Follow-on Skills)
 
@@ -140,6 +143,17 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 
 ## Current Steps
 
+1. Resolve lockfile/dependency installation conflicts and re-confirm reproducible install path.
+2. Keep release-facing docs synchronized with actual `@h4shed` package publication.
+3. Finalize PR #51 merge-readiness docs/version/changelog updates.
+4. Complete implementation for newly scaffolded skills (after workspace collision fix validation).
+5. Keep release workflow docs synchronized with CI workflows.
+
+## Immediate Next 3 Steps
+
+1. Verify PR #51 checks/deployments in GitHub UI and resolve any failing workflows before merge.
+2. Re-run `npm ci` in a full-network runtime and capture completion telemetry/log artifacts.
+3. Add CI validation to ensure docs package names stay aligned with published scope metadata.
 1. Keep release-facing docs synchronized with actual `@h4shed` package publication.
 2. Keep CI test/runtime lanes aligned to active Node LTS versions (20.x/22.x) across all workflows.
 3. Complete implementation for newly scaffolded skills.
@@ -157,19 +171,29 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 
 ### Milestone M1 — PR #51 Daily Review Merge Stabilization (target: immediate)
 - **Issue A:** Validate and document PR #51 check-run and deployment outcomes.
+  - **Specification:** record workflow URL, run ID, commit SHA, final conclusion, failing step (if any), and remediation commit reference.
 - **Issue B:** Keep changelog/version/docs synchronized in same merge window.
+  - **Specification:** `package.json`, `VERSION.json`, `README` version badge, and `CHANGELOG` release section must resolve to the same semantic version.
 - **Issue C:** Capture blocker/handoff notes for next agent to avoid duplicate triage.
+  - **Specification:** blockers list must include environment limits, attempted commands, and exact next owner action.
 
 ### Milestone M2 — Next-Wave Skill Completion (target: next release cycle)
 - **Issue A:** `skill-mermaid-terminal` implementation + tests.
+  - **Specification:** include at least one rendering command, one validation path, and one deterministic test fixture.
 - **Issue B:** `skill-ux-journeymapper` implementation + tests.
+  - **Specification:** include persona input schema validation, output structure contract, and snapshot coverage for default template output.
 - **Issue C:** `skill-svg-generator` implementation + tests.
+  - **Specification:** include strict dimension/color validation, deterministic SVG serialization, and fixture-driven regression checks.
 - **Issue D:** `skill-project-manager` and `skill-project-status-tool` MVP command sets.
+  - **Specification:** each package must expose typed input/output contracts and at least one CLI-usable command with unit tests.
 
 ### Milestone M3 — Planned Tooling and Release Observability (target: subsequent cycle)
 - **Issue A:** Unified PR release checklist with test/deploy evidence links.
+  - **Specification:** checklist entries must require a direct link to Actions run and pass/fail evidence timestamp.
 - **Issue B:** CI guardrails to detect docs/package/version drift.
+  - **Specification:** CI must fail when scope, version, or package inventory in docs diverges from workspace manifests.
 - **Issue C:** Automation for milestone issue template generation from roadmap backlog.
+  - **Specification:** script must parse roadmap issue bullets and emit prefilled issue templates including owner, target date, and dependencies.
 
 ---
 
@@ -180,3 +204,37 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 - `#14` merge for underworld writer feature delivery
 
 CI/deployment status for these PRs must be verified in GitHub UI/API.
+
+---
+
+## GitHub MCP Agents Branch Snapshot (2026-04-17)
+
+- Active planning branch: `feat/github-agents`.
+- Orientation/runbook added at `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md`.
+- Priority focus remains:
+  1. Authenticated visibility for PR checks/deployments.
+  2. Failing-check-first remediation policy.
+  3. Queued skill implementation with full validation and handoff discipline.
+- Vercel setup guidance documented for `skills.vln.gg` and `sync.vln.gg` in `docs/process/VERCEL_PROJECT_SETUP.md`.
+
+
+## Session Update (2026-04-17, Agentic Flow Devkit)
+
+### Blockers
+1. GitHub PR comments/checks/deployments cannot be queried from this runtime due missing authenticated remote/API access.
+2. No configured git remotes in this local clone, so parent-origin PR comparison is blocked locally.
+
+### Current Steps
+1. Scaffold and wire `skill-agentic-flow-devkit` tools for orchestration visualization and trailer shot planning.
+2. Keep release docs (roadmap/changelog/version/CLAUDE) synchronized in the same change set.
+3. Preserve a failing-check-first policy when authenticated PR telemetry becomes available.
+
+### Immediate Next 3 Steps
+1. Add tests for `visualize-agentic-flow` and `plan-trailer-rolls` response contracts.
+2. Verify branch PR checks/deployments in authenticated GitHub UI/API and remediate any failures first.
+3. Publish `@h4shed/skill-agentic-flow-devkit` after lockfile refresh and release-tag validation.
+
+### Top 3 Priorities and Agent Directives
+1. **Reliability first**: resolve any failing CI/deployment checks before new feature expansion.
+2. **Shipping value**: finish production-grade orchestration GUI payloads + trailer sourcing playbooks.
+3. **Release hygiene**: keep version/changelog/README/CLAUDE in sync on every merge-ready branch.

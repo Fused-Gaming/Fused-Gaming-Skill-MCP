@@ -23,6 +23,7 @@
 - [`../CONTRIBUTING.md`](../CONTRIBUTING.md)
 - [`process/BRANCHING_STRATEGY.md`](./process/BRANCHING_STRATEGY.md)
 - [`process/PR_51_MERGE_CHECKLIST.md`](./process/PR_51_MERGE_CHECKLIST.md)
+- [`process/VERCEL_PROJECT_SETUP.md`](./process/VERCEL_PROJECT_SETUP.md)
 
 ## Archived Historical Material
 - [`archive/session-artifacts/`](./archive/session-artifacts/)

@@ -1,5 +1,19 @@
 # CLAUDE.md
 
+## Agent Notes (2026-04-17, Vercel TypeScript ambient types failure fix)
+
+### Root Cause
+- `packages/skills/daily-review-skill/tsconfig.json` and `packages/skills/underworld-writer-skill/tsconfig.json` were standalone and did not inherit root compiler settings (`types: ["node"]`).
+- During monorepo workspace builds, TypeScript attempted to include ambient `@types/*` entries from transitive dependencies, producing TS2688 missing-type-library errors in CI/Vercel.
+
+### What Was Changed
+- Updated `packages/skills/daily-review-skill/tsconfig.json` and `packages/skills/underworld-writer-skill/tsconfig.json` to extend `../../../tsconfig.json` and keep only package-local `rootDir`/`outDir` overrides.
+- This aligns the package with the other workspace tsconfig patterns and constrains default ambient type loading.
+
+### Next Agent Checks
+1. Re-run Vercel deployment for the branch and confirm build no longer fails with TS2688 type-definition lookup errors.
+2. Keep new package tsconfigs aligned with the workspace-extends pattern to prevent ambient type drift regressions.
+
 ## Agent Notes (2026-04-16, Vercel install failure fix)
 
 ### Root Cause
