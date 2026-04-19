@@ -30,14 +30,15 @@ An artistic, interactive Next.js + React dashboard for controlling and monitorin
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 with App Router
-- **UI Library**: React 19
+- **Framework**: Next.js 14 with App Router
+- **UI Library**: React 18
 - **Animation**: Framer Motion for smooth, physics-based animations
 - **State Management**: Zustand for lightweight global state
 - **Styling**: Tailwind CSS + custom CSS for artsy effects
 - **Icons**: Lucide React
 - **HTTP Client**: Axios for API calls
-- **Charts**: Recharts for data visualization (ready to integrate)
+- **Charts**: Recharts for data visualization
+- **Deployment**: Vercel with GitHub Actions CI/CD
 
 ## Installation
 
@@ -128,17 +129,27 @@ POST /swarms/:id/execute  // Execute tasks
 
 ## Deployment
 
-### Vercel Deployment
-
+### Quick Start
 ```bash
-# Update root vercel.json to serve the web app
-vercel deploy packages/web
+# Deploy to Vercel with one command
+vercel --prod
 ```
+
+### Full Deployment Guide
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for comprehensive deployment instructions including:
+- One-click Vercel deployment
+- GitHub Actions CI/CD setup
+- Environment variable configuration
+- Custom domain setup
+- Monitoring and troubleshooting
 
 ### Environment Variables
 
 ```bash
-NEXT_PUBLIC_API_URL=https://skill.vln.gg
+NEXT_PUBLIC_API_URL=https://api.example.com      # Backend API endpoint
+NEXT_PUBLIC_WS_URL=wss://api.example.com         # WebSocket URL
+NEXT_PUBLIC_ENABLE_LIVE_MODE=true                # Enable live features
+NEXT_PUBLIC_ENABLE_ANALYTICS=false               # Analytics tracking
 ```
 
 ## Future Enhancements
