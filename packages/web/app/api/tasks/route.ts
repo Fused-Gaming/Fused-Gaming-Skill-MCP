@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const tasks = [
       {
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     ];
 
     return NextResponse.json(tasks);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to fetch tasks' },
       { status: 500 }
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
         swarmId: body.swarmId,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to create task' },
       { status: 400 }

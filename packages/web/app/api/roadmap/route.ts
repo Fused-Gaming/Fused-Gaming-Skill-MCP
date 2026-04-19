@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const roadmap = [
       {
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     ];
 
     return NextResponse.json(roadmap);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to fetch roadmap' },
       { status: 500 }
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
         completedAt: null,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to create roadmap item' },
       { status: 400 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const swarms = [
       {
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     ];
 
     return NextResponse.json(swarms);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to fetch swarms' },
       { status: 500 }
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       message: 'Swarm action executed',
       action: body.action,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to process swarm action' },
       { status: 400 }
