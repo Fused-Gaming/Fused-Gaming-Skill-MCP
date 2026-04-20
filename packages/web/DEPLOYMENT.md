@@ -80,18 +80,27 @@ The `.github/workflows/deploy-vercel.yml` workflow automatically:
 
 ### Required Secrets
 
-Add these to your GitHub repository settings:
+Add these to your GitHub repository settings at `https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/settings/secrets/actions`:
 
-```
-VERCEL_TOKEN       - Vercel API token
-VERCEL_ORG_ID      - Vercel organization ID (optional)
-VERCEL_PROJECT_ID  - Vercel project ID (optional)
-```
+| Secret | Required | Description |
+|--------|----------|-------------|
+| `VERCEL_TOKEN` | Yes | Vercel API token for authentication |
+| `VERCEL_ORG_ID` | No | Vercel organization ID (speeds up deployment) |
+| `VERCEL_PROJECT_ID` | No | Vercel project ID (speeds up deployment) |
 
 **Getting Your Vercel Token:**
 1. Go to https://vercel.com/account/tokens
-2. Create a new token
-3. Add it to GitHub Secrets as `VERCEL_TOKEN`
+2. Create a new token with appropriate scopes
+3. Copy the token
+4. Go to GitHub repository Settings → Secrets and variables → Actions
+5. Add new secret named `VERCEL_TOKEN` with the token value
+
+**Getting Your Org and Project IDs (Optional):**
+1. After linking to Vercel, go to your project's `.vercel/project.json`
+2. Copy `orgId` → `VERCEL_ORG_ID`
+3. Copy `projectId` → `VERCEL_PROJECT_ID`
+
+**Note:** If `VERCEL_TOKEN` is not configured, the deployment workflow will skip gracefully with instructions in the CI logs.
 
 ## API Routes
 

@@ -12,8 +12,24 @@ on:
       - 'packages/web/**'
 
 jobs:
-  deploy:
+  check-secrets:
     runs-on: ubuntu-latest
+    outputs:
+      has-token: ${{ steps.check.outputs.has-token }}
+    steps:
+      - id: check
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "has-token=false" >> $GITHUB_OUTPUT
+            echo "⚠️ VERCEL_TOKEN not configured. To enable deployments, add VERCEL_TOKEN to repository secrets."
+          else
+            echo "has-token=true" >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    needs: check-secrets
+    runs-on: ubuntu-latest
+    if: needs.check-secrets.outputs.has-token == 'true'
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -63,3 +79,16 @@ jobs:
               repo: context.repo.repo,
               body: '🚀 Vercel deployment preview is ready!\n\nVisit the deployment preview to review changes.'
             })
+
+  skip-deploy:
+    needs: check-secrets
+    runs-on: ubuntu-latest
+    if: needs.check-secrets.outputs.has-token != 'true'
+    steps:
+      - name: Notify about missing secrets
+        run: |
+          echo "⚠️ Deployment skipped: VERCEL_TOKEN is not configured"
+          echo "To enable Vercel deployments:"
+          echo "1. Create a Vercel API token at https://vercel.com/account/tokens"
+          echo "2. Add it as VERCEL_TOKEN in GitHub repository secrets"
+          echo "3. (Optional) Add VERCEL_ORG_ID and VERCEL_PROJECT_ID for faster deployments"
