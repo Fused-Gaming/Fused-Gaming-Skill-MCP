@@ -12,6 +12,8 @@ import { Router, type Request, type Response } from 'express';
 import AuthMiddleware from './auth-middleware.js';
 import { MetricsCollector } from './metrics.js';
 import { HealthCheckService } from './health.js';
+import { AgentBootstrapManager } from './agent-bootstrap.js';
+import { HNSWMemorySynchronizer } from './hnsw-memory-sync.js';
 
 export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
   const router = Router();
@@ -20,6 +22,8 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
   const authMiddleware = new AuthMiddleware(baseDir);
   const metricsCollector = new MetricsCollector(baseDir);
   const healthCheckService = new HealthCheckService(baseDir);
+  const agentBootstrap = new AgentBootstrapManager(baseDir);
+  const memorySync = new HNSWMemorySynchronizer(baseDir);
 
   // ─── Authentication Routes ───────────────────────────────────
 
@@ -298,6 +302,171 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
       });
     } catch {
       res.status(500).json({ error: 'Failed to retrieve topology configuration' });
+    }
+  });
+
+  // ─── Agent Bootstrap Routes ─────────────────────────────────
+
+  /**
+   * POST /api/agents/bootstrap
+   * Bootstrap 60+ agents for the swarm
+   */
+  router.post('/agents/bootstrap', authMiddleware.enforceFirstLoginPasswordChange, async (req: Request, res: Response) => {
+    try {
+      const agents = await agentBootstrap.bootstrapAgents();
+      res.status(200).json({
+        success: true,
+        message: `Bootstrapped ${agents.length} agents`,
+        agents,
+        metrics: agentBootstrap.getMetricsSnapshot()
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to bootstrap agents',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  /**
+   * GET /api/agents/status
+   * Get current agent swarm status
+   */
+  router.get('/agents/status', (req: Request, res: Response) => {
+    try {
+      const agents = agentBootstrap.getAllAgents();
+      const health = agentBootstrap.getAgentHealth();
+
+      res.status(200).json({
+        health,
+        agents: agents.map(a => ({
+          id: a.id,
+          role: a.role,
+          group: a.group,
+          status: a.status,
+          tasksCompleted: a.tasksCompleted,
+          memoryUsageMB: a.memoryUsageMB,
+          lastHeartbeat: new Date(a.lastHeartbeat).toISOString()
+        })),
+        totalMemoryMB: agentBootstrap.getTotalMemoryUsage(),
+        metricsSnapshot: agentBootstrap.getMetricsSnapshot()
+      });
+    } catch {
+      res.status(500).json({ error: 'Failed to retrieve agent status' });
+    }
+  });
+
+  /**
+   * GET /api/agents/:agentId
+   * Get specific agent details
+   */
+  router.get('/agents/:agentId', (req: Request, res: Response) => {
+    try {
+      const agent = agentBootstrap.getAgent(req.params.agentId);
+
+      if (!agent) {
+        return res.status(404).json({ error: 'Agent not found' });
+      }
+
+      res.status(200).json(agent);
+    } catch {
+      res.status(500).json({ error: 'Failed to retrieve agent details' });
+    }
+  });
+
+  // ─── Memory Synchronization Routes ──────────────────────────
+
+  /**
+   * POST /api/memory/vector
+   * Add a memory vector to the HNSW index
+   */
+  router.post('/memory/vector', authMiddleware.enforceFirstLoginPasswordChange, (req: Request, res: Response) => {
+    try {
+      const { agentId, embedding, contextSize } = req.body;
+
+      if (!agentId || !embedding || !Array.isArray(embedding)) {
+        return res.status(400).json({
+          error: 'Invalid request',
+          message: 'agentId and embedding array are required'
+        });
+      }
+
+      const vectorId = memorySync.addMemoryVector(agentId, embedding, contextSize || 1);
+
+      res.status(201).json({
+        success: true,
+        vectorId,
+        indexStatus: memorySync.getIndexStatus()
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to add memory vector',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  /**
+   * POST /api/memory/search
+   * Search for nearest memory vectors
+   */
+  router.post('/memory/search', (req: Request, res: Response) => {
+    try {
+      const { embedding, k, maxDistance } = req.body;
+
+      if (!embedding || !Array.isArray(embedding)) {
+        return res.status(400).json({
+          error: 'Invalid request',
+          message: 'embedding array is required'
+        });
+      }
+
+      const results = memorySync.searchNearest(embedding, k || 5, maxDistance || 2.0);
+
+      res.status(200).json({
+        resultsCount: results.length,
+        results,
+        indexStatus: memorySync.getIndexStatus()
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to search memory vectors',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  /**
+   * GET /api/memory/index
+   * Get HNSW index statistics
+   */
+  router.get('/memory/index', (req: Request, res: Response) => {
+    try {
+      const status = memorySync.getIndexStatus();
+      res.status(200).json({
+        status,
+        message: 'HNSW index is operational'
+      });
+    } catch {
+      res.status(500).json({ error: 'Failed to retrieve index status' });
+    }
+  });
+
+  /**
+   * GET /api/memory/agent/:agentId
+   * Get memory profile for a specific agent
+   */
+  router.get('/memory/agent/:agentId', (req: Request, res: Response) => {
+    try {
+      const profile = memorySync.getAgentMemoryProfile(req.params.agentId);
+
+      res.status(200).json({
+        agentId: req.params.agentId,
+        profile,
+        indexStatus: memorySync.getIndexStatus()
+      });
+    } catch {
+      res.status(500).json({ error: 'Failed to retrieve agent memory profile' });
     }
   });
 
