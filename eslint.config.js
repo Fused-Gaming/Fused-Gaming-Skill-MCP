@@ -7,8 +7,11 @@ export default [
       'node_modules/**',
       'dist/**',
       'build/**',
+      '**/.next/**',
       '*.config.js',
       '**/*.d.ts',
+      '.claude/**',
+      '.claude-flow/**',
     ],
   },
   {

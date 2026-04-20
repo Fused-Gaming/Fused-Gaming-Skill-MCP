@@ -4,6 +4,7 @@ import {
   SwarmConfig,
   SwarmTopology,
   Task,
+  AgentRole,
 } from "../types/index.js";
 
 export class SwarmOrchestrator {
@@ -47,17 +48,17 @@ export class SwarmOrchestrator {
   }
 
   private createAgents(count: number, topology: SwarmTopology): Agent[] {
-    const roles = ["coordinator", "executor", "reviewer", "optimizer"];
+    const roles: AgentRole[] = ["coordinator", "executor", "reviewer", "optimizer"];
     const agents: Agent[] = [];
 
     for (let i = 0; i < count; i++) {
-      const role =
-        topology === "hierarchical" && i === 0 ? "coordinator" : roles[i % roles.length];
+      const role: AgentRole =
+        topology === "hierarchical" && i === 0 ? "coordinator" : (roles[i % roles.length]);
 
       agents.push({
         id: `agent-${Date.now()}-${i}`,
         name: `Agent-${i}`,
-        role: role as "coordinator" | "executor" | "reviewer" | "optimizer",
+        role,
         status: "idle",
         capacity: 10,
         currentLoad: 0,

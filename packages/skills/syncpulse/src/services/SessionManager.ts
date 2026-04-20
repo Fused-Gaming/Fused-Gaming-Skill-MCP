@@ -6,8 +6,20 @@ export class SessionManager {
 
   constructor(private cache?: CacheService<Session>) {}
 
+  private generateSecureId(): string {
+    const array = new Uint8Array(16);
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      crypto.getRandomValues(array);
+    } else {
+      for (let i = 0; i < array.length; i++) {
+        array[i] = Math.floor(Math.random() * 256);
+      }
+    }
+    return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+  }
+
   createSession(id?: string): Session {
-    const sessionId = id || `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const sessionId = id || `session-${Date.now()}-${this.generateSecureId()}`;
     const session: Session = {
       id: sessionId,
       startedAt: Date.now(),
