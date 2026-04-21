@@ -40,8 +40,54 @@ export const generateSVGDesignTool: ToolDefinition = {
     };
 
     try {
-      // TODO: Implement SVG generation
-      const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><!-- ${shape} placeholder --></svg>`;
+      let svgContent = "";
+
+      const cx = width / 2;
+      const cy = height / 2;
+
+      switch (shape.toLowerCase()) {
+        case "circle": {
+          const radius = Math.min(width, height) / 2 - 10;
+          svgContent = `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${color}" />`;
+          break;
+        }
+        case "rectangle": {
+          const padding = 10;
+          const rectWidth = width - 2 * padding;
+          const rectHeight = height - 2 * padding;
+          svgContent = `<rect x="${padding}" y="${padding}" width="${rectWidth}" height="${rectHeight}" fill="${color}" />`;
+          break;
+        }
+        case "triangle": {
+          const padding = 20;
+          const points = `${cx},${padding} ${width - padding},${height - padding} ${padding},${height - padding}`;
+          svgContent = `<polygon points="${points}" fill="${color}" />`;
+          break;
+        }
+        case "polygon": {
+          // Generate a 6-sided polygon (hexagon)
+          const radius = Math.min(width, height) / 2 - 10;
+          const points = Array.from({ length: 6 }, (_, i) => {
+            const angle = (i * Math.PI) / 3;
+            const x = cx + radius * Math.cos(angle);
+            const y = cy + radius * Math.sin(angle);
+            return `${x},${y}`;
+          }).join(" ");
+          svgContent = `<polygon points="${points}" fill="${color}" />`;
+          break;
+        }
+        case "custom":
+        default: {
+          // Default to a rounded rectangle (custom shape)
+          const padding = 10;
+          const rectWidth = width - 2 * padding;
+          const rectHeight = height - 2 * padding;
+          svgContent = `<rect x="${padding}" y="${padding}" width="${rectWidth}" height="${rectHeight}" rx="10" fill="${color}" />`;
+          break;
+        }
+      }
+
+      const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">${svgContent}</svg>`;
 
       return {
         success: true,
