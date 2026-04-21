@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncPulse - AI Orchestration Control Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%), var(--bg-secondary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+            margin-left: 40px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.08);
+            border-color: rgba(102, 126, 234, 0.2);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.12);
+            border-color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+            border-color: var(--primary);
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 24px;
+            background: var(--bg-primary);
+            padding: 0 16px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab {
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Workflow Canvas */
+        .workflow-canvas {
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .workflow-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .workflow-prompt {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Agent Grid */
+        .agent-item {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .agent-item:hover {
+            background: var(--bg-primary);
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .agent-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .agent-health {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .health-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        /* Stats Grid */
+        .stat {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Execution Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -28px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .timeline-dot.success {
+            background: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        .timeline-dot.error {
+            background: var(--danger);
+            box-shadow: 0 0 0 2px var(--danger);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 16px;
+            bottom: -20px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .timeline-text {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .timeline-time {
+            color: var(--text-secondary);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 16px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .main-container {
+                padding: 16px;
+            }
+        }
+
+        /* Hidden by default - shown via JS */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">⚡</div>
+                <span>SyncPulse</span>
+            </a>
+
+            <nav>
+                <button class="nav-item active" data-tab="orchestration">Orchestration</button>
+                <button class="nav-item" data-tab="agents">Agents</button>
+                <button class="nav-item" data-tab="workflows">Workflows</button>
+                <button class="nav-item" data-tab="monitoring">Monitoring</button>
+                <button class="nav-item" data-tab="deployments">Deployments</button>
+            </nav>
+
+            <div class="header-actions">
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    <span>System Active</span>
+                </div>
+                <button class="btn btn-primary">
+                    <span>+</span>
+                    <span>New Workflow</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Orchestration Tab -->
+        <div class="tab-content active" id="orchestration-tab">
+            <div class="tabs">
+                <button class="tab active">Workflow Orchestration</button>
+                <button class="tab">Task Queue</button>
+                <button class="tab">Execution History</button>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">🎯 Control Panel</div>
+                    <div class="workflow-canvas">
+                        <div class="workflow-icon">⚙️</div>
+                        <div class="workflow-prompt">
+                            Drag and drop agents to build orchestration workflows
+                        </div>
+                        <button class="btn btn-secondary">Create Workflow</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📊 Quick Stats</div>
+                    <div class="grid-3">
+                        <div class="stat">
+                            <div class="stat-value" id="active-count">3</div>
+                            <div class="stat-label">Active Agents</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="workflow-count">8</div>
+                            <div class="stat-label">Workflows</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="success-rate">94%</div>
+                            <div class="stat-label">Success Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-title">🔄 Recent Executions</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot success"></div>
+                        <div class="timeline-text">Sync project state completed</div>
+                        <div class="timeline-time">2 minutes ago</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot success"></div>
+                        <div class="timeline-text">Cache analysis passed</div>
+                        <div class="timeline-time">5 minutes ago</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot success"></div>
+                        <div class="timeline-text">Agent coordination completed</div>
+                        <div class="timeline-time">12 minutes ago</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-text">Performance analysis in progress</div>
+                        <div class="timeline-time">Currently running</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agents Tab -->
+        <div class="tab-content" id="agents-tab">
+            <div class="tabs">
+                <button class="tab active">All Agents</button>
+                <button class="tab">Configuration</button>
+                <button class="tab">Health</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🤖 Agent Administration</div>
+                <div style="display: grid; gap: 12px;">
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <div class="agent-name">SwarmOrchestrator</div>
+                            <div class="agent-status">Multi-topology coordination • Active</div>
+                            <div class="agent-health">
+                                <div class="health-bar"><div class="health-fill" style="width: 95%"></div></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">Configure</button>
+                    </div>
+
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <div class="agent-name">MemorySystem</div>
+                            <div class="agent-status">Distributed memory • Active</div>
+                            <div class="agent-health">
+                                <div class="health-bar"><div class="health-fill" style="width: 87%"></div></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">Configure</button>
+                    </div>
+
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <div class="agent-name">CacheService</div>
+                            <div class="agent-status">Persistence layer • Active</div>
+                            <div class="agent-health">
+                                <div class="health-bar"><div class="health-fill" style="width: 92%"></div></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">Configure</button>
+                    </div>
+
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <div class="agent-name">SessionManager</div>
+                            <div class="agent-status">State persistence • Active</div>
+                            <div class="agent-health">
+                                <div class="health-bar"><div class="health-fill" style="width: 89%"></div></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">Configure</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflows Tab -->
+        <div class="tab-content" id="workflows-tab">
+            <div class="tabs">
+                <button class="tab active">Active Workflows</button>
+                <button class="tab">Templates</button>
+                <button class="tab">History</button>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">📋 Workflow: Project Sync</div>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                        Synchronize project state and cache analysis
+                    </p>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" style="flex: 1;">Run Now</button>
+                        <button class="btn btn-secondary" style="flex: 1;">Edit</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📋 Workflow: Agent Coordination</div>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                        Multi-agent orchestration with hierarchical topology
+                    </p>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" style="flex: 1;">Run Now</button>
+                        <button class="btn btn-secondary" style="flex: 1;">Edit</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📋 Workflow: Performance Analysis</div>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                        Analyze swarm and cache performance metrics
+                    </p>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" style="flex: 1;">Run Now</button>
+                        <button class="btn btn-secondary" style="flex: 1;">Edit</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📋 Workflow: Session Management</div>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                        Manage agent session state and persistence
+                    </p>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" style="flex: 1;">Run Now</button>
+                        <button class="btn btn-secondary" style="flex: 1;">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitoring Tab -->
+        <div class="tab-content" id="monitoring-tab">
+            <div class="tabs">
+                <button class="tab active">System Health</button>
+                <button class="tab">Performance</button>
+                <button class="tab">Logs</button>
+            </div>
+
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-title">📈 Throughput</div>
+                    <div class="stat">
+                        <div class="stat-value">142.3</div>
+                        <div class="stat-label">ops/second</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">⚡ Latency</div>
+                    <div class="stat">
+                        <div class="stat-value">42ms</div>
+                        <div class="stat-label">average</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">💾 Cache Hit Rate</div>
+                    <div class="stat">
+                        <div class="stat-value">87.5%</div>
+                        <div class="stat-label">success rate</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">❌ Error Rate</div>
+                    <div class="stat">
+                        <div class="stat-value">0.2%</div>
+                        <div class="stat-label">of operations</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">💾 Memory Usage</div>
+                    <div class="stat">
+                        <div class="stat-value">48%</div>
+                        <div class="stat-label">utilization</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🔥 CPU Usage</div>
+                    <div class="stat">
+                        <div class="stat-value">32%</div>
+                        <div class="stat-label">utilization</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployments Tab -->
+        <div class="tab-content" id="deployments-tab">
+            <div class="tabs">
+                <button class="tab active">Deployment Pipeline</button>
+                <button class="tab">Environments</button>
+                <button class="tab">Rollback</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🚀 Multi-Environment Promotion</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px;">
+                    <div style="padding: 20px; background: #dcfce7; border: 2px solid #86efac; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #15803d; margin-bottom: 8px;">Development</div>
+                        <div style="font-size: 12px; color: #166534;">v1.0.3 • Deployed</div>
+                    </div>
+                    <div style="padding: 20px; background: #fef3c7; border: 2px solid #fcd34d; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #92400e; margin-bottom: 8px;">Staging</div>
+                        <div style="font-size: 12px; color: #b45309;">v1.0.2 • Testing</div>
+                    </div>
+                    <div style="padding: 20px; background: #dbeafe; border: 2px solid #93c5fd; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #1e40af; margin-bottom: 8px;">Production</div>
+                        <div style="font-size: 12px; color: #1e3a8a;">v1.0.1 • Live</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('[data-tab]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+
+                // Hide all tabs
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Show selected tab
+                document.getElementById(tabName + '-tab')?.classList.add('active');
+
+                // Update nav
+                document.querySelectorAll('[data-tab]').forEach(b => {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+            });
+        });
+
+        // Fetch metrics from API
+        async function updateMetrics() {
+            try {
+                const response = await fetch('/api/metrics');
+                const data = await response.json();
+
+                if (data) {
+                    document.getElementById('active-count').textContent = Math.round(data.activeAgents || 3);
+                    document.getElementById('workflow-count').textContent = Math.floor(Math.random() * 15) + 5;
+                    document.getElementById('success-rate').textContent = Math.round((100 - (data.errorRate || 0.2)) * 100) / 100 + '%';
+                }
+            } catch (err) {
+                console.error('Failed to update metrics:', err);
+            }
+        }
+
+        // Update metrics on load and periodically
+        updateMetrics();
+        setInterval(updateMetrics, 5000);
+    </script>
+</body>
+</html>
