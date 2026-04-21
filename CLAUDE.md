@@ -1,5 +1,21 @@
 # CLAUDE.md
 
+## Agent Notes (2026-04-21, README roadmap + open PR/milestone reindex)
+
+### What Was Updated
+- Re-indexed public GitHub open PR and milestone state and synchronized root `README.md` roadmap snapshot with current April 2026 queue.
+- Added explicit lists for blockers, current execution steps, and immediate next 3 steps for next-agent orientation.
+- Updated `CHANGELOG.md` (`Unreleased`) to record this docs/triage refresh.
+
+### Constraints Encountered
+1. This environment has no git remote configured locally (`git remote -v` empty), so branch/PR linkage must be read from GitHub web pages rather than local remote refs.
+2. Unauthenticated GitHub page sections intermittently show `Uh oh!` loading errors for filters/check-run widgets; deployment/check conclusions should be re-verified in an authenticated session.
+
+### Next-Agent Focus
+1. Start with failing open PR checks/deployments (notably PR #101/#109 threads) and remediate before merging additional feature PRs.
+2. Keep root docs synchronized with GitHub milestone scope if milestone titles/descriptions are edited.
+3. Preserve changelog + README + version metadata update discipline on each merge-ready branch.
+
 ## Agent Notes (2026-04-17, Vercel TypeScript ambient types failure fix)
 
 ### Root Cause
