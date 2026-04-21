@@ -137,3 +137,24 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Claude Flow runtime data and cache
+.claude-flow/
+.claude-flow-cache/
+.claude-flow-sessions/
+
+# Deployment and build artifacts
+.vercel/
+.vercel-build/
+.deployment/
+*.deployment.log
+deploy.lock
+
+# Web server artifacts
+.next-server/
+server-dist/
+public/dist/
+
+# Environment and secrets
+.env.local
+.env.*.local

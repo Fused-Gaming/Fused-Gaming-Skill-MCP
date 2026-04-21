@@ -5,6 +5,7 @@
     "NODE_ENV": "production"
   },
   "regions": ["sfo1"],
+  "buildCommand": "npm run build",
   "builds": [
     {
       "src": "api/index.ts",
@@ -13,8 +14,14 @@
   ],
   "routes": [
     {
+      "src": "/public/(.*)",
+      "dest": "/public/$1"
+    },
+    {
       "src": "^/(.*)",
       "dest": "api/index.ts"
     }
-  ]
+  ],
+  "publicDir": "public",
+  "cleanUrls": true
 }
