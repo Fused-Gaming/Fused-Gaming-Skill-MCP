@@ -13,7 +13,7 @@
     "buildNumber": 1006
   },
   "packageInfo": {
-    "name": "@fused-gaming/mcp",
+    "name": "@h4shed/mcp",
     "scope": "fused-gaming",
     "publishedScope": "h4shed",
     "description": "Modular MCP server with scalable Claude skills",
@@ -22,11 +22,11 @@
   },
   "workspaces": {
     "core": {
-      "name": "@fused-gaming/mcp-core",
+      "name": "@h4shed/mcp-core",
       "version": "1.0.0"
     },
     "cli": {
-      "name": "@fused-gaming/mcp-cli",
+      "name": "@h4shed/mcp-cli",
       "version": "1.0.0",
       "binaries": {
         "fused-gaming-mcp": "dist/index.js"
@@ -47,92 +47,92 @@
     ],
     "skills": [
       {
-        "name": "@fused-gaming/skill-algorithmic-art",
+        "name": "@h4shed/skill-algorithmic-art",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-ascii-mockup",
+        "name": "@h4shed/skill-ascii-mockup",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-canvas-design",
+        "name": "@h4shed/skill-canvas-design",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-frontend-design",
+        "name": "@h4shed/skill-frontend-design",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-theme-factory",
+        "name": "@h4shed/skill-theme-factory",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-mcp-builder",
+        "name": "@h4shed/skill-mcp-builder",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-pre-deploy-validator",
+        "name": "@h4shed/skill-pre-deploy-validator",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-skill-creator",
+        "name": "@h4shed/skill-skill-creator",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-underworld-writer",
+        "name": "@h4shed/skill-underworld-writer",
         "version": "1.0.0",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-mermaid-terminal",
+        "name": "@h4shed/skill-mermaid-terminal",
         "version": "1.0.0",
         "published": false
       },
       {
-        "name": "@fused-gaming/skill-ux-journeymapper",
+        "name": "@h4shed/skill-ux-journeymapper",
         "version": "1.0.0",
         "published": false
       },
       {
-        "name": "@fused-gaming/skill-svg-generator",
+        "name": "@h4shed/skill-svg-generator",
         "version": "1.0.0",
         "published": false
       },
       {
-        "name": "@fused-gaming/skill-project-manager",
+        "name": "@h4shed/skill-project-manager",
         "version": "1.0.0",
         "published": false
       },
       {
-        "name": "@fused-gaming/skill-project-status-tool",
+        "name": "@h4shed/skill-project-status-tool",
         "version": "1.0.0",
         "published": false
       },
       {
-        "name": "@fused-gaming/skill-daily-review",
+        "name": "@h4shed/skill-daily-review",
         "version": "1.0.0",
         "published": false
       },
       {
-        "name": "@fused-gaming/multi-account-session-tracking",
+        "name": "@h4shed/multi-account-session-tracking",
         "version": "1.0.0",
         "published": false
       },
       {
-        "name": "@fused-gaming/skill-linkedin-master-journalist",
+        "name": "@h4shed/skill-linkedin-master-journalist",
         "version": "1.0.0",
         "published": false
       },
       {
-        "name": "@fused-gaming/skill-agentic-flow-devkit",
+        "name": "@h4shed/skill-agentic-flow-devkit",
         "version": "1.0.0",
         "published": false
       }

@@ -3,7 +3,7 @@
  * Create UX journey maps with pain points, touchpoints, and opportunities.
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { MapUserJourneyTool } from "./tools/map-user-journey.js";
 
 export const UxJourneymapperSkill: Skill = {

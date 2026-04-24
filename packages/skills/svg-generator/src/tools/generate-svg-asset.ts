@@ -3,7 +3,7 @@
  * Generate SVG assets and icon concepts from structured prompts.
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 interface SvgAsset extends Record<string, unknown> {
   success: boolean;

@@ -3,7 +3,7 @@
  * Plan projects with milestones, dependencies, and delivery phases.
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const PlanProjectTool: ToolDefinition = {
   name: "plan-project",

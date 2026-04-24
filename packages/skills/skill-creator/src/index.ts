@@ -3,7 +3,7 @@
  * Create custom skills and tools for the Fused Gaming MCP ecosystem
  */
 
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { createSkillTool } from "./tools/create-skill.js";
 
 export const skillCreatorSkill: Skill = {

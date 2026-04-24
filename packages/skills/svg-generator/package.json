@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-svg-generator",
+  "name": "@h4shed/skill-svg-generator",
   "version": "1.0.0",
   "description": "Generate SVG assets and icon concepts from structured prompts.",
   "type": "module",
@@ -14,7 +14,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "*"
+    "@h4shed/mcp-core": "*"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

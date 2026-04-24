@@ -1,10 +1,10 @@
 {
-  "name": "@fused-gaming/mcp",
+  "name": "@h4shed/mcp",
   "version": "1.0.4",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
   "license": "Apache-2.0",
-  "author": "Fused Gaming <info@fused-gaming.io>",
+  "author": "Fused Gaming <info@h4shed.io>",
   "keywords": [
     "mcp",
     "claude",
@@ -23,12 +23,13 @@
   "homepage": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
   "bugs": {
     "url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/issues",
-    "email": "support@fused-gaming.io"
+    "email": "support@h4shed.io"
   },
   "workspaces": [
     "packages/core",
     "packages/skills/*",
-    "packages/cli"
+    "packages/cli",
+    "packages/web"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
@@ -40,7 +41,11 @@
     "version": "node scripts/update-version.js && git add VERSION.json",
     "publish:packages": "npm publish --workspaces",
     "prerelease": "npm run build && npm run typecheck && npm run lint",
-    "publish:prepare": "node scripts/prepare-publish-versions.cjs && npm install --package-lock-only --ignore-scripts"
+    "publish:prepare": "node scripts/prepare-publish-versions.cjs && npm install --package-lock-only --ignore-scripts",
+    "orchestration:init": "bash scripts/install-orchestration.sh",
+    "orchestration:init:simple": "bash scripts/install-orchestration.sh simple",
+    "orchestration:init:balanced": "bash scripts/install-orchestration.sh balanced",
+    "orchestration:init:advanced": "bash scripts/install-orchestration.sh advanced"
   },
   "engines": {
     "node": ">=20.0.0",
@@ -65,5 +70,15 @@
     "LICENSE",
     "VERSION.json",
     "docs/"
-  ]
+  ],
+  "dependencies": {
+    "boxen": "^8.0.1",
+    "chalk": "^5.3.0",
+    "claude-flow": "^3.5.80",
+    "figlet": "^1.8.2",
+    "gradient-string": "^3.0.0",
+    "inquirer": "^12.9.4",
+    "ora": "^8.2.0",
+    "yargs": "^17.7.2"
+  }
 }

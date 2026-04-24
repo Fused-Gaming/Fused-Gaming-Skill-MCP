@@ -3,7 +3,7 @@
  * Create UX journey maps with pain points, touchpoints, and opportunities.
  */
 
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 interface JourneyStage {
   stage: string;

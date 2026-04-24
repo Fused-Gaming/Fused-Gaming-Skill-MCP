@@ -2,7 +2,7 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import type { Argv } from "yargs";
+import type { Argv, Arguments } from "yargs";
 
 import { init } from "./init.js";
 import { list } from "./list.js";
@@ -71,8 +71,8 @@ if (hideBin(process.argv).length === 0) {
           describe: "Skill name",
           type: "string",
         }),
-      async (argv: any) => {
-        await add(argv.skill);
+      async (argv: Arguments) => {
+        await add(argv.skill as string);
       }
     )
     .command(
@@ -99,8 +99,8 @@ if (hideBin(process.argv).length === 0) {
           describe: "Skill name",
           type: "string",
         }),
-      async (argv: any) => {
-        await remove(argv.skill);
+      async (argv: Arguments) => {
+        await remove(argv.skill as string);
       }
     )
     .parse();

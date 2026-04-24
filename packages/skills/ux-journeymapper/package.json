@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-ux-journeymapper",
+  "name": "@h4shed/skill-ux-journeymapper",
   "version": "1.0.0",
   "description": "Create UX journey maps with pain points, touchpoints, and opportunities.",
   "type": "module",
@@ -14,7 +14,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "*"
+    "@h4shed/mcp-core": "*"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
