@@ -1,16 +1,16 @@
 {
-  "version": "1.0.4",
-  "releaseDate": "2026-04-17",
+  "version": "1.0.5",
+  "releaseDate": "2026-04-24",
   "status": "stable",
   "majorVersion": 1,
   "minorVersion": 0,
-  "patchVersion": 4,
+  "patchVersion": 5,
   "prerelease": null,
   "metadata": {
     "nodeMinimum": "20.0.0",
     "npmMinimum": "8.0.0",
     "typescriptVersion": "5.3.2",
-    "buildNumber": 1005
+    "buildNumber": 1006
   },
   "packageInfo": {
     "name": "@fused-gaming/mcp",
