@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-pre-deploy-validator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pre-deployment validation and quality checks for production readiness",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@h4shed/mcp-core": "*"
+    "@h4shed/mcp-core": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",
