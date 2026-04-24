@@ -174,30 +174,56 @@ npm run dev         # Start dev server
 
 ## 🗺️ Roadmap Snapshot (Existing + Planned)
 
-### Existing (v1.0.4)
-- ✅ 11 published `@h4shed/*` packages (core + CLI + 9 skills)
-- ✅ npm workspace publishing pipeline active on `main` and tags
-- ✅ Security baseline hardened (0 known vulnerabilities at last audit)
+### Current repository state (as of April 21, 2026)
+- ✅ `VERSION.json` is `1.0.4` and marks the project `stable`.
+- ✅ 11 `@h4shed/*` packages are listed as published, with 9 additional skill packages queued for publish.
+- ✅ Core docs exist for roadmap/changelog/release orientation and package publishing workflow.
 
-### Planned (next release cycle)
-- 🔄 Promote release checklist automation from docs into CI validation gates
-- 🔄 Expand deployment verification for npm + GitHub release parity
-- 🔄 Add richer release announcement templates for community launch posts
-- 🔄 Merge and publish `daily-review` with release-quality docs and examples (PR #51 target)
-- 🔄 Publish and harden `agentic-flow-devkit` with tests + release workflow verification
-- 🔄 Implement tool logic + tests for `project-status-tool` and `project-manager`
-- 🔄 Formalize planned-tool milestones into trackable issue groups for weekly triage
+### Open PR queue (GitHub currently shows 8 open)
+> Source: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/pulls?q=is%3Apr+is%3Aopen
 
-### Current blockers to watch
-- GitHub PR/status triage currently depends on repository API/CLI availability in the execution environment.
-- Scope configuration (`NPM_SCOPE`) must be set in GitHub Actions variables for organization-owned publishing.
-- Without GitHub CLI/API credentials in the runtime, PR #51 check-run and deployment state must be confirmed directly in GitHub UI.
+1. `#109` Add LinkedIn Master Journalist (LIMJ) skill (base: `main`)
+2. `#101` ux-journeymapper implementation/docs refresh (base: `feature/syncpulse-skill-docs`)
+3. `#81` Feat/socials automation phase1
+4. `#79` Socials Automation Asset Pipeline - Phase 1
+5. `#19` SVG generation for canvas-design skill
+6. `#18` project status tool skill
+7. `#17` project manager skill
+8. `#16` multi-account session tracking skill
+
+### MVP milestone snapshot (GitHub milestones page)
+> Source: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/milestones
+
+- 14 milestones are open, including:
+  - `Syncpulse - AI Orchestration & Developer Control Plane`
+  - `Social Media Brand Asset Skill`
+  - `NPM Package Release` (closed issues complete)
+  - `SVG generation for Canvas Design Skill`
+  - `Project Manager Skill`
+  - `UX Journeymapper Skill`
+  - `Mermaid Terminal Skill`
+  - `Daily Review Skill`
+  - `Multi Account Session Tracking Skill`
+
+### Current blockers
+1. GitHub page/API content is partially degraded when unauthenticated (`Uh oh!` load failures on filters/check details), so some check-run evidence must be validated in an authenticated browser session.
+2. Open PR queue includes older April 2026 feature branches that need rebase/conflict/testing passes before merge sequencing.
+3. At least one open PR (`#101`) still shows a failed Vercel preview deployment signal in visible thread events.
+
+### Current steps
+1. Keep README/roadmap/changelog aligned with live GitHub PR + milestone state.
+2. Prioritize failing-deployment PR remediation before feature merges.
+3. Merge or close stale feature PRs with explicit branch strategy (stacked branch vs `main` direct).
+
+### Immediate next 3 steps
+1. Triage and fix failing deployment(s) on open PRs, starting with `#101`.
+2. Normalize open feature branches (`#16/#17/#18/#19/#79/#81/#101/#109`) against current `main`.
+3. Add/refresh a single merge checklist for each PR with test + deployment evidence links.
 
 ### Top 3 priorities now
-1. Ship missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`).
-2. Add automated docs/package consistency checks for published scope metadata.
-3. Track deployment/test status per release PR in a single release checklist.
-4. Keep Actions test matrix pinned to active LTS lanes (20.x, 22.x) to avoid Node-version runtime drift.
+1. Resolve failing open PR checks/deployments first (do not merge while red).
+2. Finish publish-ready implementation for missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`, `project-*`).
+3. Automate docs/version/package drift checks in CI so release metadata stays accurate.
 
 ---
 
