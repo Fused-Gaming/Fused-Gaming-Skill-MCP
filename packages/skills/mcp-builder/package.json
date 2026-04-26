@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-mcp-builder",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Build and scaffold MCP servers and skills with best practices",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@h4shed/mcp-core": "^1.0.1"
+    "@h4shed/mcp-core": "^1.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",
