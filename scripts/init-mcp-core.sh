@@ -95,7 +95,7 @@ setup_gitignores() {
   log_info "Checking root .gitignore..."
   for entry in "${mcp_ignore_entries[@]}"; do
     if [[ -n "$entry" ]]; then
-      if ! grep -q "^${entry}$" "$root_gitignore" 2>/dev/null; then
+      if ! grep -Fxq "$entry" "$root_gitignore" 2>/dev/null; then
         echo "$entry" >> "$root_gitignore"
         log_success "Added to .gitignore: $entry"
       fi
