@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-project-status-tool",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Summarize current project status, risks, and next actions.",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@h4shed/mcp-core": "^1.0.1"
+    "@h4shed/mcp-core": "^1.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

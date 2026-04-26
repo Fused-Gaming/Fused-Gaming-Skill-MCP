@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/mcp-cli",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "CLI tool for managing Fused Gaming MCP skills and configuration",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@h4shed/mcp-core": "^1.0.1",
+    "@h4shed/mcp-core": "^1.0.4",
     "boxen": "^8.0.1",
     "chalk": "^5.6.2",
     "figlet": "^1.9.2",

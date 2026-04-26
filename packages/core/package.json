@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/mcp-core",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Core MCP server and skill registry for Fused Gaming",
   "type": "module",
   "main": "./dist/index.js",

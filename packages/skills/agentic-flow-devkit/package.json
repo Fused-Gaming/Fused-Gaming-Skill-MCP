@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-agentic-flow-devkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Design and visualize agentic orchestration flows with trailer A/B-roll planning support.",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@h4shed/mcp-core": "^1.0.1"
+    "@h4shed/mcp-core": "^1.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",
