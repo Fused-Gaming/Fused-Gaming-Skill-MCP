@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-syncpulse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SyncPulse - intelligent project state caching and coordination",
   "type": "module",
   "main": "dist/index.js",

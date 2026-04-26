@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-mermaid-terminal",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Generate terminal-friendly Mermaid diagrams and flowcharts.",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@h4shed/mcp-core": "^1.0.1"
+    "@h4shed/mcp-core": "^1.0.4"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
