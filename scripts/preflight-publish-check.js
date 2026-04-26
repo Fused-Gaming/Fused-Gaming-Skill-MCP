@@ -83,15 +83,47 @@ if (noBump) {
 
 console.log(`🔧 Found ${alreadyPublished.length} published version(s). Auto-bumping...`);
 
-const versionMap = new Map(packageRecords.map((r) => [r.pkg.name, r.pkg.version]));
+const maxBumps = 20;
+const targetRecords = alreadyPublished.map((item) => item.record);
+let bumps = 0;
+let remainingConflicts = alreadyPublished;
 
-for (const item of alreadyPublished) {
-  const { record } = item;
-  const nextVersion = bumpPatch(record.pkg.version);
-  console.log(` - ${record.pkg.name}: ${record.pkg.version} → ${nextVersion}`);
-  record.pkg.version = nextVersion;
-  versionMap.set(record.pkg.name, nextVersion);
+while (remainingConflicts.length && bumps < maxBumps) {
+  const snapshot = targetRecords.map((r) => `${r.pkg.name}@${r.pkg.version}`).join(', ');
+
+  for (const item of remainingConflicts) {
+    const { record } = item;
+    const nextVersion = bumpPatch(record.pkg.version);
+    if (bumps === 0) {
+      console.log(` - ${record.pkg.name}: ${record.pkg.version} → ${nextVersion}`);
+    }
+    record.pkg.version = nextVersion;
+  }
+  bumps += 1;
+
+  const nextSnapshot = targetRecords.map((r) => `${r.pkg.name}@${r.pkg.version}`).join(', ');
+  if (bumps > 1) {
+    console.log(`Verify attempt ${bumps}: ${snapshot} → ${nextSnapshot}`);
+  }
+
+  remainingConflicts = [];
+  for (const record of targetRecords) {
+    const { name, version } = record.pkg;
+    if (npmVersionExists(name, version)) {
+      remainingConflicts.push({ name, version, record });
+    }
+  }
 }
+
+if (remainingConflicts.length) {
+  console.error(`\n❌ Failed: Reached max bump attempts (${maxBumps}) but versions still exist on npm:`);
+  for (const item of remainingConflicts) {
+    console.error(` - ${item.name}@${item.version}`);
+  }
+  process.exit(1);
+}
+
+const versionMap = new Map(packageRecords.map((r) => [r.pkg.name, r.pkg.version]));
 
 for (const record of packageRecords) {
   for (const field of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
