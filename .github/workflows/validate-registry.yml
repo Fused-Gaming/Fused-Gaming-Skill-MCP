@@ -155,8 +155,9 @@ jobs:
             });
 
             if (missing > 0) {
-              console.warn(\`Found \${missing} unregistered skill(s)\`);
-              console.warn('Run: npm run registry:generate');
+              console.error(\`❌ Found \${missing} unregistered skill(s)\`);
+              console.error('Run: npm run registry:generate');
+              process.exit(1);
             } else {
               console.log('✅ Registry is complete and up-to-date');
             }

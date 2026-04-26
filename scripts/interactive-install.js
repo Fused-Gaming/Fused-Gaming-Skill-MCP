@@ -177,7 +177,7 @@ async function executeSetup(preferences) {
 
     try {
       execSync(step.command, {
-        stdio: ['pipe', 'pipe', 'pipe'],
+        stdio: 'inherit',
       });
       spinner.succeed(chalk.green(step.name));
       successCount++;
