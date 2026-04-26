@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fused Gaming Skill Registry</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 2.5rem;
+    }
+    .stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #764ba2;
+    }
+    .stat-label {
+      font-size: 0.875rem;
+      color: #666;
+    }
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .category-section {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .category-title {
+      color: #667eea;
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #667eea;
+    }
+    .skill {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 4px;
+      border-left: 3px solid #667eea;
+    }
+    .skill-name {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.25rem;
+    }
+    .skill-description {
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .skill-tools {
+      font-size: 0.75rem;
+      color: #999;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .tool-badge {
+      background: #667eea;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.7rem;
+    }
+    footer {
+      text-align: center;
+      color: white;
+      margin-top: 2rem;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎮 Fused Gaming Skill Registry</h1>
+      <p>Complete inventory of available MCP skills and tools</p>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-value">19</span>
+          <span class="stat-label">Total Skills</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">22</span>
+          <span class="stat-label">Total Tools</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">11</span>
+          <span class="stat-label">Categories</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="categories">
+
+      <div class="category-section">
+        <div class="category-title">Design (5)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 agentic-flow-devkit</div>
+          <div class="skill-description">Design and visualize agentic orchestration flows with trailer A/B-roll planning support.</div>
+          <div class="skill-tools">
+            <span class="tool-badge">plan_trailer_rolls</span><span class="tool-badge">visualize_agentic_flow</span>
+          </div>
+        </div>
+
+        <div class="skill">
+          <div class="skill-name">📦 canvas-design</div>
+          <div class="skill-description">Visual design generation for web with SVG and canvas rendering</div>
+          <div class="skill-tools">
+            <span class="tool-badge">generate_svg</span>
+          </div>
+        </div>
+
+        <div class="skill">
+          <div class="skill-name">📦 frontend-design</div>
+          <div class="skill-description">Frontend component design and HTML/CSS generation for modern web applications</div>
+          <div class="skill-tools">
+            <span class="tool-badge">generate_component</span>
+          </div>
+        </div>
+
+        <div class="skill">
+          <div class="skill-name">📦 svg-generator</div>
+          <div class="skill-description">Generate SVG assets and icon concepts from structured prompts.</div>
+          <div class="skill-tools">
+            <span class="tool-badge">generate_svg_asset</span>
+          </div>
+        </div>
+
+        <div class="skill">
+          <div class="skill-name">📦 theme-factory</div>
+          <div class="skill-description">Design system and theme generation for consistent UI/UX across applications</div>
+          <div class="skill-tools">
+            <span class="tool-badge">generate_theme</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">Generative Art (1)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 algorithmic-art</div>
+          <div class="skill-description">Generative art using p5.js with seeded randomness, flow fields, and particle systems</div>
+          <div class="skill-tools">
+            <span class="tool-badge">flow_field</span><span class="tool-badge">generate_art</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">General (2)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 ascii-mockup</div>
+          <div class="skill-description">Mobile-first ASCII wireframe mockup generator for rapid UI prototyping</div>
+          <div class="skill-tools">
+            <span class="tool-badge">generate_mockup</span>
+          </div>
+        </div>
+
+        <div class="skill">
+          <div class="skill-name">📦 syncpulse</div>
+          <div class="skill-description">SyncPulse - intelligent project state caching and coordination</div>
+          <div class="skill-tools">
+            <span class="tool-badge">index</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">Mcp Tools (2)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 creator</div>
+          <div class="skill-description">Create custom skills and tools for the Fused Gaming MCP ecosystem</div>
+          <div class="skill-tools">
+            <span class="tool-badge">create_skill</span>
+          </div>
+        </div>
+
+        <div class="skill">
+          <div class="skill-name">📦 mcp-builder</div>
+          <div class="skill-description">Build and scaffold MCP servers and skills with best practices</div>
+          <div class="skill-tools">
+            <span class="tool-badge">scaffold_skill</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">Productivity (1)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 daily-review</div>
+          <div class="skill-description">Productivity tracking and daily review skill for session aggregation, metrics analysis, and multi-account reporting</div>
+          <div class="skill-tools">
+            <span class="tool-badge">analyze_weekly</span><span class="tool-badge">generate_daily_review</span><span class="tool-badge">log_session</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">Content Creation (2)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 linkedin-master-journalist</div>
+          <div class="skill-description">Draft polished LinkedIn release and thought-leadership posts.</div>
+          <div class="skill-tools">
+            <span class="tool-badge">draft_linkedin_post</span>
+          </div>
+        </div>
+
+        <div class="skill">
+          <div class="skill-name">📦 underworld-writer</div>
+          <div class="skill-description">Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories</div>
+          <div class="skill-tools">
+            
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">Visualization (1)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 mermaid-terminal</div>
+          <div class="skill-description">Generate terminal-friendly Mermaid diagrams and flowcharts.</div>
+          <div class="skill-tools">
+            <span class="tool-badge">generate_mermaid_diagram</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">Session Management (1)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 multi-account-session-tracking</div>
+          <div class="skill-description">Track session activity across multiple accounts and workstreams.</div>
+          <div class="skill-tools">
+            <span class="tool-badge">track_session_activity</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">Development (1)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 pre-deploy-validator</div>
+          <div class="skill-description">Pre-deployment validation and quality checks for production readiness</div>
+          <div class="skill-tools">
+            <span class="tool-badge">validate_deployment</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">Project Management (2)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 project-manager</div>
+          <div class="skill-description">Plan projects with milestones, dependencies, and delivery phases.</div>
+          <div class="skill-tools">
+            <span class="tool-badge">plan_project</span>
+          </div>
+        </div>
+
+        <div class="skill">
+          <div class="skill-name">📦 project-status-tool</div>
+          <div class="skill-description">Summarize current project status, risks, and next actions.</div>
+          <div class="skill-tools">
+            <span class="tool-badge">summarize_project_status</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">User Experience (1)</div>
+
+        <div class="skill">
+          <div class="skill-name">📦 ux-journeymapper</div>
+          <div class="skill-description">Create UX journey maps with pain points, touchpoints, and opportunities.</div>
+          <div class="skill-tools">
+            <span class="tool-badge">map_user_journey</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <footer>
+      <p>Generated on 4/26/2026, 4:37:45 AM | Fused Gaming MCP v1.0.0</p>
+    </footer>
+  </div>
+</body>
+</html>

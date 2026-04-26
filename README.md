@@ -74,9 +74,46 @@ Transform your Claude workflow with meticulously crafted tools designed for:
 
 ---
 
-## 🎬 Quick Start (2 Minutes)
+## 🎬 Quick Start
 
-### Install
+### Option 1: Interactive Installation (Recommended)
+
+```bash
+# Clone and navigate to the repo
+git clone https://github.com/fused-gaming/fused-gaming-skill-mcp.git
+cd fused-gaming-skill-mcp
+
+# Run the interactive installer
+npm run mcp:install
+```
+
+This will guide you through:
+- ✅ Selecting installation mode (full, minimal, or custom)
+- ✅ Choosing your environment (development or production)
+- ✅ Generating the skill registry
+- ✅ Installing dependencies
+- ✅ Building all packages
+
+### Option 2: Manual Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Initialize MCP core
+npm run mcp:init
+
+# Generate skill registry
+npm run registry:generate
+
+# Build all packages
+npm run build
+
+# Start development server
+npm run dev
+```
+
+### Option 3: Published Packages Only
 
 ```bash
 # Install published packages (active scope: @h4shed)
@@ -89,25 +126,33 @@ npm install \
   @h4shed/skill-underworld-writer
 ```
 
-### Initialize & Run
-
-```bash
-# Run CLI
-npx @h4shed/mcp-cli init
-
-# Add more skills anytime
-npx @h4shed/mcp-cli add frontend-design
-npx @h4shed/mcp-cli add pre-deploy-validator
-
-# Start the MCP server
-npm run dev
-```
-
 Done! You're now ready to supercharge Claude. 🔋
 
 ---
 
 ## 📋 Essential Commands
+
+### MCP Core Commands
+
+```bash
+npm run mcp:init                   # Initialize MCP core framework
+npm run mcp:install                # Run interactive installer
+npm run registry:generate          # Generate/update skill registry
+npm run registry:validate          # Validate registry & code quality
+npm run registry:view              # View full skill registry
+```
+
+### Development Commands
+
+```bash
+npm run build                      # Build all packages
+npm run dev                        # Start development server
+npm run lint                       # Check code quality
+npm run typecheck                  # Validate TypeScript
+npm run test                       # Run test suites
+```
+
+### CLI Commands (when using @h4shed/mcp-cli)
 
 ```bash
 fused-gaming-mcp init              # Initialize config
@@ -120,7 +165,64 @@ fused-gaming-mcp config            # View current config
 
 ---
 
+## 📚 Skill Registry
+
+The Fused Gaming MCP includes a **comprehensive skill registry** that automatically discovers and catalogs all available skills and tools.
+
+### View Available Skills
+
+```bash
+# View the Markdown registry
+npm run registry:view
+
+# Or open the HTML registry in your browser
+open registry/registry.html
+```
+
+### Current Registry Status
+
+📊 **19 Skills** | 🛠️ **22 Tools** | 🏷️ **11 Categories**
+
+**Categories:**
+- 🎨 Design (5 skills)
+- 🎭 Generative Art (1 skill)
+- 📖 Content Creation (2 skills)
+- 💼 Project Management (2 skills)
+- 🔧 MCP Tools (2 skills)
+- 🎯 User Experience (1 skill)
+- 📊 Session Management (1 skill)
+- 🎬 Visualization (1 skill)
+- 💻 Development (1 skill)
+- 📈 Productivity (1 skill)
+- 📋 General (2 skills)
+
+See **[registry/REGISTRY.md](./registry/REGISTRY.md)** for the complete skill inventory.
+
 ## ⚙️ Configuration
+
+### MCP Core Configuration
+
+Edit `.mcp/config.json`:
+
+```json
+{
+  "version": "1.0.0",
+  "server": {
+    "name": "Fused Gaming MCP",
+    "environment": "development",
+    "debug": false
+  },
+  "skills": {
+    "enabled": [],
+    "auto_discover": true
+  },
+  "logging": {
+    "level": "info"
+  }
+}
+```
+
+### CLI Configuration
 
 Customize via `.fused-gaming-mcp.json`:
 
