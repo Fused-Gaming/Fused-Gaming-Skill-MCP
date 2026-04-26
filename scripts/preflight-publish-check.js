@@ -3,12 +3,16 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
+const args = new Set(process.argv.slice(2));
+const noBump = args.has('--no-bump');
+const dryRun = args.has('--dry-run');
+
 const rootDir = process.cwd();
 const rootPkgPath = path.join(rootDir, 'package.json');
 const rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, 'utf8'));
 const workspacePatterns = Array.isArray(rootPkg.workspaces) ? rootPkg.workspaces : [];
 
-const packageFiles = [];
+const packageRecords = [];
 for (const pattern of workspacePatterns) {
   if (pattern.endsWith('/*')) {
     const dir = path.join(rootDir, pattern.slice(0, -2));
@@ -17,46 +21,130 @@ for (const pattern of workspacePatterns) {
     for (const entry of fs.readdirSync(dir)) {
       const pkgPath = path.join(dir, entry, 'package.json');
       if (fs.existsSync(pkgPath)) {
-        packageFiles.push(pkgPath);
+        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+        packageRecords.push({ pkgPath, pkg, packageDir: path.relative(rootDir, path.dirname(pkgPath)).replace(/\\/g, '/') });
       }
     }
   } else {
     const pkgPath = path.join(rootDir, pattern, 'package.json');
     if (fs.existsSync(pkgPath)) {
-      packageFiles.push(pkgPath);
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+      packageRecords.push({ pkgPath, pkg, packageDir: path.relative(rootDir, path.dirname(pkgPath)).replace(/\\/g, '/') });
     }
   }
 }
 
-if (!packageFiles.length) {
+if (!packageRecords.length) {
   console.error('No workspace package.json files found for preflight publish check.');
   process.exit(1);
 }
 
-const alreadyPublished = [];
-for (const pkgPath of packageFiles) {
-  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-  if (!pkg.name || !pkg.version) continue;
-
-  const spec = `${pkg.name}@${pkg.version}`;
+function npmVersionExists(name, version) {
   try {
-    execSync(`npm view ${JSON.stringify(spec)} version`, {
+    execSync(`npm view ${JSON.stringify(`${name}@${version}`)} version`, {
       stdio: 'pipe',
       encoding: 'utf8'
     });
-    alreadyPublished.push(spec);
+    return true;
   } catch {
-    // npm view returns non-zero when the version does not exist, which is expected.
+    return false;
   }
 }
 
-if (alreadyPublished.length) {
-  console.error('Preflight publish check failed. These versions already exist on npm:');
-  for (const spec of alreadyPublished) {
-    console.error(` - ${spec}`);
+function bumpPatch(version) {
+  const [core] = version.split('-');
+  const [major, minor, patch] = core.split('.').map((n) => parseInt(n, 10));
+  return `${major}.${minor}.${patch + 1}`;
+}
+
+const alreadyPublished = [];
+for (const record of packageRecords) {
+  const { name, version } = record.pkg;
+  if (!name || !version) continue;
+
+  if (npmVersionExists(name, version)) {
+    alreadyPublished.push({ name, version, record });
   }
-  console.error('\nBump versions before publishing to avoid E403 publish failures.');
+}
+
+if (!alreadyPublished.length) {
+  console.log(`✅ Preflight publish check passed for ${packageRecords.length} workspace package(s).`);
+  process.exit(0);
+}
+
+if (noBump) {
+  console.error('Preflight publish check failed. These versions already exist on npm:');
+  for (const item of alreadyPublished) {
+    console.error(` - ${item.name}@${item.version}`);
+  }
+  console.error('\nRun without --no-bump to automatically fix versions.');
   process.exit(1);
 }
 
-console.log(`Preflight publish check passed for ${packageFiles.length} workspace package(s).`);
+console.log(`🔧 Found ${alreadyPublished.length} published version(s). Auto-bumping...`);
+
+const maxBumps = 20;
+const targetRecords = alreadyPublished.map((item) => item.record);
+let bumps = 0;
+let remainingConflicts = alreadyPublished;
+
+while (remainingConflicts.length && bumps < maxBumps) {
+  const snapshot = targetRecords.map((r) => `${r.pkg.name}@${r.pkg.version}`).join(', ');
+
+  for (const item of remainingConflicts) {
+    const { record } = item;
+    const nextVersion = bumpPatch(record.pkg.version);
+    if (bumps === 0) {
+      console.log(` - ${record.pkg.name}: ${record.pkg.version} → ${nextVersion}`);
+    }
+    record.pkg.version = nextVersion;
+  }
+  bumps += 1;
+
+  const nextSnapshot = targetRecords.map((r) => `${r.pkg.name}@${r.pkg.version}`).join(', ');
+  if (bumps > 1) {
+    console.log(`Verify attempt ${bumps}: ${snapshot} → ${nextSnapshot}`);
+  }
+
+  remainingConflicts = [];
+  for (const record of targetRecords) {
+    const { name, version } = record.pkg;
+    if (npmVersionExists(name, version)) {
+      remainingConflicts.push({ name, version, record });
+    }
+  }
+}
+
+if (remainingConflicts.length) {
+  console.error(`\n❌ Failed: Reached max bump attempts (${maxBumps}) but versions still exist on npm:`);
+  for (const item of remainingConflicts) {
+    console.error(` - ${item.name}@${item.version}`);
+  }
+  process.exit(1);
+}
+
+const versionMap = new Map(packageRecords.map((r) => [r.pkg.name, r.pkg.version]));
+
+for (const record of packageRecords) {
+  for (const field of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
+    const deps = record.pkg[field];
+    if (!deps) continue;
+
+    for (const depName of Object.keys(deps)) {
+      if (versionMap.has(depName)) {
+        deps[depName] = `^${versionMap.get(depName)}`;
+      }
+    }
+  }
+}
+
+if (!dryRun) {
+  for (const record of packageRecords) {
+    fs.writeFileSync(record.pkgPath, `${JSON.stringify(record.pkg, null, 2)}\n`);
+  }
+}
+
+console.log(`\n✅ Workspace packages ready for publish.`);
+if (dryRun) {
+  console.log('(Dry run: no files were modified)');
+}

@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-skill-creator",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Create custom skills and tools for the Fused Gaming MCP ecosystem",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@h4shed/mcp-core": "^1.0.1"
+    "@h4shed/mcp-core": "^1.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",
