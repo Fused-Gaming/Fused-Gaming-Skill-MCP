@@ -1,0 +1,252 @@
+name: Registry Validation
+
+on:
+  push:
+    branches: [main, claude/**]
+    paths:
+      - 'packages/skills/**/package.json'
+      - 'packages/skills/**/src/tools/**'
+      - 'scripts/generate-skill-registry.js'
+      - '.github/workflows/validate-registry.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/skills/**/package.json'
+      - 'packages/skills/**/src/tools/**'
+      - 'scripts/generate-skill-registry.js'
+  workflow_dispatch:
+
+jobs:
+  validate-registry:
+    name: Validate Skill Registry
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Generate skill registry
+        run: node scripts/generate-skill-registry.js
+
+      - name: Validate registry structure
+        run: |
+          echo "Checking registry files..."
+
+          # Check that registry files exist
+          if [ ! -f "registry/skills.json" ]; then
+            echo "❌ Error: registry/skills.json not found"
+            exit 1
+          fi
+
+          if [ ! -f "registry/REGISTRY.md" ]; then
+            echo "❌ Error: registry/REGISTRY.md not found"
+            exit 1
+          fi
+
+          if [ ! -f "registry/registry.html" ]; then
+            echo "❌ Error: registry/registry.html not found"
+            exit 1
+          fi
+
+          echo "✅ All registry files present"
+
+      - name: Validate registry JSON
+        run: |
+          echo "Validating registry JSON structure..."
+
+          # Validate JSON
+          node -e "
+            const fs = require('fs');
+            const registry = JSON.parse(fs.readFileSync('registry/skills.json', 'utf-8'));
+
+            // Check required fields
+            if (!registry.version) throw new Error('Missing version field');
+            if (!registry.timestamp) throw new Error('Missing timestamp field');
+            if (!Array.isArray(registry.skills)) throw new Error('Missing skills array');
+            if (typeof registry.totalSkills !== 'number') throw new Error('Missing totalSkills');
+            if (typeof registry.totalTools !== 'number') throw new Error('Missing totalTools');
+
+            // Check each skill
+            registry.skills.forEach((skill, index) => {
+              if (!skill.name) throw new Error(\`Skill \${index} missing name\`);
+              if (!skill.id) throw new Error(\`Skill \${index} missing id\`);
+              if (!skill.package) throw new Error(\`Skill \${index} missing package\`);
+              if (!Array.isArray(skill.tools)) throw new Error(\`Skill \${index} missing tools array\`);
+              if (!skill.category) throw new Error(\`Skill \${index} missing category\`);
+            });
+
+            console.log('✅ Registry JSON is valid');
+            console.log(\`   Total Skills: \${registry.totalSkills}\`);
+            console.log(\`   Total Tools: \${registry.totalTools}\`);
+            console.log(\`   Categories: \${Object.keys(registry.categories).length}\`);
+          "
+
+      - name: Check skill consistency
+        run: |
+          echo "Checking skill package consistency..."
+
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const registry = JSON.parse(fs.readFileSync('registry/skills.json', 'utf-8'));
+
+            let errors = 0;
+
+            // Check that each skill has a package.json
+            registry.skills.forEach(skill => {
+              const skillDirs = [
+                path.join('packages/skills', skill.name),
+                path.join('packages/skills', 'skill-' + skill.name),
+              ];
+
+              let found = false;
+              for (const dir of skillDirs) {
+                const pkgFile = path.join(dir, 'package.json');
+                if (fs.existsSync(pkgFile)) {
+                  found = true;
+                  break;
+                }
+              }
+
+              if (!found) {
+                console.error(\`❌ Skill not found on disk: \${skill.name}\`);
+                errors++;
+              }
+            });
+
+            if (errors > 0) {
+              console.error(\`\nFound \${errors} inconsistencies\`);
+              process.exit(1);
+            }
+
+            console.log('✅ All skills found on disk');
+          "
+
+      - name: Check registry completeness
+        run: |
+          echo "Checking registry completeness..."
+
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+
+            const skillsDir = 'packages/skills';
+            const registry = JSON.parse(fs.readFileSync('registry/skills.json', 'utf-8'));
+
+            const diskSkills = new Set(
+              fs.readdirSync(skillsDir)
+                .filter(f => fs.statSync(path.join(skillsDir, f)).isDirectory())
+            );
+
+            const registeredSkills = new Set(registry.skills.map(s => s.name));
+
+            let missing = 0;
+            diskSkills.forEach(skill => {
+              if (!registeredSkills.has(skill)) {
+                console.error(\`⚠️  Unregistered skill on disk: \${skill}\`);
+                missing++;
+              }
+            });
+
+            if (missing > 0) {
+              console.warn(\`Found \${missing} unregistered skill(s)\`);
+              console.warn('Run: npm run registry:generate');
+            } else {
+              console.log('✅ Registry is complete and up-to-date');
+            }
+          "
+
+      - name: Generate coverage report
+        if: always()
+        run: |
+          echo "Generating registry coverage report..."
+
+          node -e "
+            const fs = require('fs');
+            const registry = JSON.parse(fs.readFileSync('registry/skills.json', 'utf-8'));
+
+            console.log('\n📊 Registry Coverage Report\n');
+            console.log(\`Skills: \${registry.totalSkills}\`);
+            console.log(\`Tools: \${registry.totalTools}\`);
+            console.log(\`Avg Tools/Skill: \${(registry.totalTools / registry.totalSkills).toFixed(2)}\`);
+            console.log(\`\nCategories:\`);
+            Object.entries(registry.categories)
+              .sort(([,a], [,b]) => b - a)
+              .forEach(([cat, count]) => {
+                console.log(\`  \${cat}: \${count}\`);
+              });
+          "
+
+      - name: Comment on PR with registry status
+        if: github.event_name == 'pull_request' && failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `❌ **Registry Validation Failed**
+
+Please ensure:
+1. All skill packages are properly registered
+2. All tools are discoverable in \`packages/skills/*/src/tools/\`
+3. Registry is generated with: \`npm run registry:generate\`
+4. No duplicate or invalid package names exist
+
+Run locally:
+\`\`\`bash
+npm run registry:generate
+npm run registry:validate
+\`\`\``
+            })
+
+      - name: Upload registry artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-registry
+          path: |
+            registry/skills.json
+            registry/REGISTRY.md
+            registry/registry.html
+          retention-days: 30
+
+  generate-docs:
+    name: Generate Registry Documentation
+    runs-on: ubuntu-latest
+    needs: validate-registry
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22.x'
+
+      - name: Generate registry
+        run: node scripts/generate-skill-registry.js
+
+      - name: Commit registry updates
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          if git diff --quiet registry/; then
+            echo "No changes to registry"
+          else
+            git add registry/
+            git commit -m "chore: update skill registry [skip ci]" || true
+            git push
+          fi
