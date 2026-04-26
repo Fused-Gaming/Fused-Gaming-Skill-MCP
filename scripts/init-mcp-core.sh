@@ -112,16 +112,17 @@ create_mcp_config() {
   log_section "Creating MCP Configuration"
 
   local config_file="${CONFIG_DIR}/config.json"
+  local environment="${1:-development}"
 
   if [[ ! -f "$config_file" ]]; then
-    cat > "$config_file" << 'EOF'
+    cat > "$config_file" << EOF
 {
   "version": "1.0.0",
   "server": {
     "name": "Fused Gaming MCP",
     "description": "Modular MCP server with scalable Claude skills",
     "version": "1.0.4",
-    "environment": "development",
+    "environment": "$environment",
     "debug": false
   },
   "skills": {
@@ -147,7 +148,7 @@ create_mcp_config() {
   }
 }
 EOF
-    log_success "Created MCP config: $config_file"
+    log_success "Created MCP config: $config_file (environment: $environment)"
   else
     log_info "MCP config already exists: $config_file"
   fi
@@ -286,10 +287,13 @@ main() {
   # Run initialization steps
   init_directories
   setup_gitignores
-  create_mcp_config
+  create_mcp_config "$@"
   create_readme_mcp
   create_initialization_state
-  generate_skill_registry
+  # Only generate registry if explicitly requested or when run standalone
+  if [[ "${GENERATE_REGISTRY:-true}" == "true" ]]; then
+    generate_skill_registry
+  fi
 
   # Validate
   if validate_installation; then

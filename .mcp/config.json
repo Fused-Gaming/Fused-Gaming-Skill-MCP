@@ -4,7 +4,7 @@
     "name": "Fused Gaming MCP",
     "description": "Modular MCP server with scalable Claude skills",
     "version": "1.0.4",
-    "environment": "development",
+    "environment": "production",
     "debug": false
   },
   "skills": {
