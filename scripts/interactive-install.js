@@ -155,10 +155,13 @@ async function executeSetup(preferences) {
     });
   }
 
-  steps.push({
-    name: 'Build packages',
-    command: 'npm run build',
-  });
+  // Only build for full or custom installations, skip for minimal
+  if (preferences.installMode !== 'minimal') {
+    steps.push({
+      name: 'Build packages',
+      command: 'npm run build',
+    });
+  }
 
   setupSpinner.succeed(`Prepared ${steps.length} setup steps`);
 
@@ -193,7 +196,7 @@ function showSummary(preferences, results) {
   console.log('\n');
 
   const successRate = ((results.successCount / results.total) * 100).toFixed(0);
-  const statusColor = failureCount === 0 ? 'green' : 'yellow';
+  const statusColor = results.failureCount === 0 ? 'green' : 'yellow';
 
   const summary = chalk[statusColor](
     `Setup Complete: ${results.successCount}/${results.total} steps succeeded (${successRate}%)\n\n` +
