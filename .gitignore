@@ -172,6 +172,9 @@ build/
 .eslintcache
 
 # Runtime Configuration (secrets, credentials)
+.env.local
+.env.production.local
+config.local.json
 
 # MCP Core Runtime & Cache
 .mcp/cache/**

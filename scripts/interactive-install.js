@@ -136,9 +136,11 @@ async function executeSetup(preferences) {
   const setupSpinner = ora('Preparing setup steps...').start();
 
   // Base steps - use hardcoded relative paths to avoid injection
+  // Only generate registry from init if not handled separately
+  const registryEnv = preferences.setupRegistry ? 'true' : 'false';
   steps.push({
     name: 'Initialize directories',
-    command: 'bash ./scripts/init-mcp-core.sh',
+    command: `GENERATE_REGISTRY=${registryEnv} bash ./scripts/init-mcp-core.sh ${preferences.environment}`,
   });
 
   if (preferences.setupRegistry) {
