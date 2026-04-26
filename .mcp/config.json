@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0",
+  "server": {
+    "name": "Fused Gaming MCP",
+    "description": "Modular MCP server with scalable Claude skills",
+    "version": "1.0.4",
+    "environment": "production",
+    "debug": false
+  },
+  "skills": {
+    "enabled": [],
+    "disabled": [],
+    "auto_discover": true
+  },
+  "registry": {
+    "auto_generate": true,
+    "path": "./registry"
+  },
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "file": ".mcp/logs/mcp.log",
+    "max_size": "10MB",
+    "max_files": 5
+  },
+  "performance": {
+    "cache_enabled": true,
+    "cache_ttl": 3600,
+    "max_workers": 4
+  }
+}

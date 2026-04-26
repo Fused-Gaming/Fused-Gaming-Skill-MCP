@@ -175,3 +175,13 @@ build/
 .env.local
 .env.production.local
 config.local.json
+
+# MCP Core Runtime & Cache
+.mcp/cache/**
+.mcp/logs/**
+.mcp/state/**
+*.mcp-state
+
+# MCP Tool Registry
+registry/*.tmp
+registry/*.log
