@@ -435,7 +435,7 @@ function formatCategoryName(category) {
 
 // Run generator
 try {
-  const registry = generateRegistry();
+  generateRegistry();
   console.log('\n✨ Skill registry generation complete!');
   process.exit(0);
 } catch (error) {
