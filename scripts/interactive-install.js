@@ -11,12 +11,6 @@ import boxen from 'boxen';
 import ora from 'ora';
 import figlet from 'figlet';
 import { execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.dirname(__dirname);
 
 /**
  * Display Fused Gaming banner
@@ -141,16 +135,16 @@ async function executeSetup(preferences) {
   console.log('\n');
   const setupSpinner = ora('Preparing setup steps...').start();
 
-  // Base steps
+  // Base steps - use hardcoded relative paths to avoid injection
   steps.push({
     name: 'Initialize directories',
-    command: `bash ${path.join(__dirname, 'init-mcp-core.sh')}`,
+    command: 'bash ./scripts/init-mcp-core.sh',
   });
 
   if (preferences.setupRegistry) {
     steps.push({
       name: 'Generate skill registry',
-      command: `node ${path.join(__dirname, 'generate-skill-registry.js')}`,
+      command: 'node ./scripts/generate-skill-registry.js',
     });
   }
 
@@ -178,7 +172,6 @@ async function executeSetup(preferences) {
 
     try {
       execSync(step.command, {
-        cwd: rootDir,
         stdio: ['pipe', 'pipe', 'pipe'],
       });
       spinner.succeed(chalk.green(step.name));
