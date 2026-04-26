@@ -106,12 +106,12 @@ function generateRegistry() {
   fs.writeFileSync(registryJson, JSON.stringify(registry, null, 2));
   console.log(`✅ Generated skill registry: ${registryJson}`);
 
-  // Generate CommonJS module
+  // Generate CommonJS module (use .cjs extension for ESM projects)
   fs.writeFileSync(
-    registryJs,
+    registryJs.replace(/\.js$/, '.cjs'),
     `module.exports = ${JSON.stringify(registry, null, 2)};`
   );
-  console.log(`✅ Generated CommonJS registry: ${registryJs}`);
+  console.log(`✅ Generated CommonJS registry: ${registryJs.replace(/\.js$/, '.cjs')}`);
 
   // Generate TypeScript module
   const tsContent = `export interface Tool {
