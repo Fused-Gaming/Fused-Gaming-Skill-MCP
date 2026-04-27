@@ -45,21 +45,17 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
   const [isLive, setIsLive] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const nextLogIndexRef = useRef(0);
-  const frozenLastLogIdRef = useRef<string | null>(null);
+  const frozenSnapshotRef = useRef<LogEntry[] | null>(null);
 
   const logs = externalLogs ?? internalLogs;
-  const displayedLogs = isLive || !externalLogs ? logs : logs.filter(log => {
-    if (!frozenLastLogIdRef.current) return true;
-    const lastIndex = logs.findIndex(l => l.id === frozenLastLogIdRef.current);
-    return logs.indexOf(log) <= lastIndex;
-  });
+  const displayedLogs = isLive || !externalLogs ? logs : frozenSnapshotRef.current ?? logs;
 
-  // Track frozen log snapshot by ID when Live is toggled and manage auto-scroll
+  // Track frozen log snapshot when Live is toggled and manage auto-scroll
   useEffect(() => {
-    if (externalLogs && !isLive && frozenLastLogIdRef.current === null) {
-      frozenLastLogIdRef.current = externalLogs[externalLogs.length - 1]?.id ?? null;
+    if (externalLogs && !isLive && frozenSnapshotRef.current === null) {
+      frozenSnapshotRef.current = [...externalLogs];
     } else if (isLive) {
-      frozenLastLogIdRef.current = null;
+      frozenSnapshotRef.current = null;
     }
 
     if (scrollRef.current && isLive) {
