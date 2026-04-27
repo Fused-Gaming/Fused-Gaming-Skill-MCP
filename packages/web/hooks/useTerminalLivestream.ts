@@ -96,9 +96,11 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
         if (wsRef.current === socket && isLiveRef.current) {
           try {
             const data = JSON.parse(event.data);
-            addLog(data.message, data.level || 'info', data.category);
+            const message = typeof data.message === 'string' ? data.message : String(data.message);
+            addLog(message, data.level || 'info', data.category);
           } catch {
-            addLog(event.data, 'info');
+            const message = typeof event.data === 'string' ? event.data : String(event.data);
+            addLog(message, 'info');
           }
         }
       };
