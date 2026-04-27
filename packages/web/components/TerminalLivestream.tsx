@@ -158,7 +158,7 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
     return () => {
       timeouts.forEach(timeout => clearTimeout(timeout));
     };
-  }, [isOpen, isLive]);
+  }, [isOpen, isLive, externalLogs]);
 
   const getLevelColor = (level: string) => {
     switch (level) {
