@@ -260,35 +260,36 @@ For real-time log streaming:
 
 ```javascript
 import express from 'express';
+import http from 'http';
 import WebSocket from 'ws';
 
 const app = express();
+const server = http.createServer(app);
 const wss = new WebSocket.Server({ noServer: true });
 
-// Handle upgrade
-app.get('/logs', (req, res, next) => {
-  const server = req.socket.server;
-  if (!server.ws) {
-    server.ws = new WebSocket.Server({ noServer: true });
+// Handle WebSocket upgrade requests
+server.on('upgrade', (req, socket, head) => {
+  if (req.url === '/logs') {
+    wss.handleUpgrade(req, socket, head, (ws) => {
+      // Stream logs
+      const logInterval = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({
+            message: `Log entry at ${new Date().toISOString()}`,
+            level: 'info',
+            category: 'system',
+          }));
+        }
+      }, 1000);
+
+      ws.on('close', () => clearInterval(logInterval));
+    });
+  } else {
+    socket.destroy();
   }
-
-  server.ws.handleUpgrade(req, req.socket, Buffer.alloc(0), (ws) => {
-    // Stream logs
-    const logInterval = setInterval(() => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({
-          message: `Log entry at ${new Date().toISOString()}`,
-          level: 'info',
-          category: 'system',
-        }));
-      }
-    }, 1000);
-
-    ws.on('close', () => clearInterval(logInterval));
-  });
 });
 
-app.listen(3000);
+server.listen(3000);
 ```
 
 ### Python + FastAPI

@@ -45,15 +45,23 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
   const [isLive, setIsLive] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const nextLogIndexRef = useRef(0);
+  const frozenLogCountRef = useRef<number | null>(null);
 
   const logs = externalLogs ?? internalLogs;
+  const displayedLogs = isLive || !externalLogs ? logs : logs.slice(0, frozenLogCountRef.current ?? logs.length);
 
-  // Auto-scroll to bottom when new logs arrive
+  // Track frozen log count when Live is toggled and manage auto-scroll
   useEffect(() => {
+    if (externalLogs && !isLive && frozenLogCountRef.current === null) {
+      frozenLogCountRef.current = externalLogs.length;
+    } else if (isLive) {
+      frozenLogCountRef.current = null;
+    }
+
     if (scrollRef.current && isLive) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [logs, isLive]);
+  }, [logs, isLive, externalLogs]);
 
   // Simulate real-time log streaming
   useEffect(() => {
@@ -267,12 +275,12 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
               ref={scrollRef}
               className="h-64 overflow-y-auto bg-slate-950 px-4 py-3 space-y-1 text-xs scrollbar-thin scrollbar-thumb-magenta-500/30 scrollbar-track-slate-900"
             >
-              {logs.length === 0 ? (
+              {displayedLogs.length === 0 ? (
                 <div className="text-slate-500 italic">
                   Terminal ready for livestream output...
                 </div>
               ) : (
-                logs.map((log) => (
+                displayedLogs.map((log) => (
                   <motion.div
                     key={log.id}
                     initial={{ opacity: 0, x: -10 }}
@@ -298,7 +306,7 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
             <div className="bg-slate-900/50 px-4 py-3 border-t border-magenta-500/20 flex gap-2">
               <motion.button
                 onClick={handleCopyLogs}
-                disabled={logs.length === 0}
+                disabled={displayedLogs.length === 0}
                 className="flex items-center gap-1 px-2 py-1 text-xs bg-slate-800 text-slate-300 rounded hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -308,7 +316,7 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
 
               <motion.button
                 onClick={handleDownloadLogs}
-                disabled={logs.length === 0}
+                disabled={displayedLogs.length === 0}
                 className="flex items-center gap-1 px-2 py-1 text-xs bg-slate-800 text-slate-300 rounded hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
