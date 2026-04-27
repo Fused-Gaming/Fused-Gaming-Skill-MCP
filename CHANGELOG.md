@@ -8,19 +8,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added a 2026-04-21 PR/milestone triage snapshot in `README.md` covering current blockers, current steps, immediate next three steps, and active open PR queue.
-- Added `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md` with blockers, current steps, immediate next actions, PR-context triage, and agent directives for the `feat/github-agents` branch.
-- Added `docs/process/VERCEL_PROJECT_SETUP.md` with explicit Vercel project directory and framework preset guidance for `skills.vln.gg` (skills API) and `sync.vln.gg` (augmented agents app).
-- Added one-command SyncPulse panel launcher commands to the CLI: `fused-gaming-mcp panel` and `fused-gaming-mcp syncpulse` (alias).
-- Added `@fused-gaming/skill-agentic-flow-devkit` workspace with `visualize-agentic-flow` and `plan-trailer-rolls` tools to support orchestration GUI planning and trailer A/B-roll sourcing.
-- Added `docs/process/GITHUB_MCP_AGENTS_ORIENTATION.md` with blockers, current steps, immediate next actions, PR-context triage, and agent directives for the `feat/github-agents` branch.
-- Added `docs/process/PR_51_MERGE_CHECKLIST.md` with explicit PR #51 deliverables, success metrics, blockers, execution order, and next-agent handoff directives.
-- Added `scripts/auto-bump-publish-versions.js` to automatically patch-bump root/workspace package versions until npm reports they are publishable.
-- Added `scripts/preflight-publish-check.js` and wired it into publish CI to fail fast when any workspace package version is already published on npm.
-- Added a documentation index (`docs/README.md`) and reorganized root-level docs into categorized directories (`docs/getting-started`, `docs/process`, `docs/releases`, `docs/archive`).
-- Added a dedicated GitHub release workflow (`.github/workflows/github-release.yml`) that triggers on release tags (`v*`, `skill-*`) and can also be started manually.
-- Added a roadmap document (`docs/ROADMAP.md`) with published/missing/planned skill inventories, blockers, and immediate next steps.
-- Added scaffold packages for upcoming skills: mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-status-tool, daily-review, multi-account-session-tracking, and linkedin-master-journalist.
+- TBD for next release
+
+## [1.0.5] - 2026-04-27
+
+### Added
+- **Claude Code Terminal Livestream Component** — Real-time terminal output visualization for MCP setup and skill registry generation in Claude Code's web interface
+  - Interactive toggle widget with smooth animations (Framer Motion)
+  - Live log streaming with color-coded output (info, success, warning, error, command)
+  - Copy, download, and clear functionality for logs
+  - WebSocket support for real-time log streaming from backend
+  - Educational-use-only licensing enforcement with UI badge
+  - WCAG AA accessibility compliance and keyboard navigation
+  - Responsive mobile design (works on narrow screens)
+  - Controlled component mode for external log management
+  - Live/pause toggle to freeze log snapshots by ID (preserves true snapshot on parent array rotation)
+- **Complete MCP Core Initialization System** with automated setup and skill discovery
+  - `scripts/init-mcp-core.sh` — Bash initialization script with comprehensive validation
+  - `scripts/generate-skill-registry.js` — Automatic skill discovery with registry generation (JSON, TypeScript, CommonJS, Markdown, HTML formats)
+  - `scripts/interactive-install.js` — Interactive setup wizard with Fused Gaming branding
+  - `.github/workflows/validate-registry.yml` — CI/CD validation workflow
+  - `.mcp/config.json` — Default MCP configuration with dev/prod environment support
+- **Comprehensive integration and deployment documentation**
+  - `docs/CLAUDE_CODE_INTEGRATION.md` (420 lines) — Complete integration guide for developers
+  - `docs/TERMINAL_LIVESTREAM_DEPLOYMENT.md` (520 lines) — Deployment instructions for Vercel, Docker, AWS, and WebSocket servers
+  - `packages/web/CLAUDE_CODE_LICENSE.md` — Educational licensing terms and restrictions
+  - `packages/web/examples/TerminalLivestream.example.tsx` — 10 complete working examples
+- Added a 2026-04-27 PR/milestone triage snapshot in `README.md` covering PR #118 (Terminal Livestream integration)
+- Added Terminal Livestream section to root README with quick integration guide
+- Updated release metadata to `1.0.5` with `releaseDate` set to 2026-04-27
+
+### Changed
+- Updated `README.md` to document Terminal Livestream component features and deployment options
+- Updated version badge and release date in README footer to reflect 1.0.5
+- Updated `VERSION.json` `releaseDate` from 2026-04-24 to 2026-04-27
+- Moved PR #118 to top of open PR queue as "READY TO MERGE"
+- Updated roadmap notes to include Terminal Livestream component status and MCP Core initialization system
+
+### Fixed
+- Fixed Terminal Livestream freeze logic to use log ID snapshots instead of array length (preserves view when parent array is rotated/trimmed)
+- Fixed FastAPI WebSocket route from `/ws/logs` to `/logs` to match client default configuration
+- Fixed 29+ Codex P1/P2 quality issues including:
+  - Prevented duplicate WebSocket connections and stale closures
+  - Fixed React hook dependency arrays and effect cleanup
+  - Made component responsive for mobile devices (max-w-[calc(100vw-3rem)])
+  - Added payload validation and type coercion for WebSocket messages
+  - Implemented controlled component mode with external log management
+  - Corrected documentation references to non-existent npm packages and build commands
+  - Fixed example code to demonstrate actual working patterns
+
+## [1.0.4] - 2026-04-24
 
 ### Changed
 - Updated roadmap summary messaging in `README.md` to align with live GitHub open PR and milestone inventory instead of stale branch assumptions.
