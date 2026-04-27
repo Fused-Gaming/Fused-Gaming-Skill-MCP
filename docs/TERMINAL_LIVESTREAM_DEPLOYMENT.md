@@ -169,10 +169,10 @@ Click the terminal toggle in bottom-right corner to verify functionality.
 }
 ```
 
-3. **Build extension bundle**:
+3. **Build the bundle**:
 
 ```bash
-npm run build:extension
+npm run build
 ```
 
 4. **Register with Claude Code**:
@@ -336,26 +336,22 @@ NEXT_PUBLIC_LOG_RETENTION=1000
 ### Component Props
 
 ```typescript
-interface TerminalLivestream {
-  // Toggle initial state
-  defaultOpen?: boolean;
+interface TerminalLivestreamProps {
+  // Optional: External logs from useTerminalLivestream hook
+  // If provided, component displays these logs instead of demo simulation
+  logs?: LogEntry[];
   
-  // Position (floating-bottom-right, modal, sidebar)
-  position?: 'floating' | 'modal' | 'sidebar';
-  
-  // Dimensions
-  width?: number;
-  height?: number;
-  
-  // Features
-  showCopyButton?: boolean;
-  showDownloadButton?: boolean;
-  showClearButton?: boolean;
-  
-  // Educational
-  showLicenseNotice?: boolean;
-  showEducationalBadge?: boolean;
-  licenseUrl?: string;
+  // Optional: Callback for clearing logs when using external logs
+  // Required if logs prop is provided for Clear button to work
+  onClearLogs?: () => void;
+}
+
+interface LogEntry {
+  id: string;
+  timestamp: string;
+  level: 'info' | 'success' | 'warning' | 'error' | 'command';
+  message: string;
+  category?: string;
 }
 ```
 
