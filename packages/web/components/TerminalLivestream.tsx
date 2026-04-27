@@ -134,7 +134,7 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
     const timeouts: NodeJS.Timeout[] = [];
 
     const addLogWithDelay = (index: number) => {
-      if (index < sampleLogs.length && isOpen) {
+      if (index < sampleLogs.length && isOpen && isLive) {
         const log = sampleLogs[index];
         setInternalLogs((prev) => [
           ...prev,
@@ -156,7 +156,7 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
     return () => {
       timeouts.forEach(timeout => clearTimeout(timeout));
     };
-  }, [isOpen]);
+  }, [isOpen, isLive]);
 
   const getLevelColor = (level: string) => {
     switch (level) {
