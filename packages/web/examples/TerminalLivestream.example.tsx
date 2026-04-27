@@ -248,8 +248,8 @@ export function SkillRegistryMonitorExample() {
  * Show terminal in multiple locations
  */
 export function MultiTabMonitorExample() {
-  const tab1Logs = useTerminalLivestream({ maxLogs: 500 });
-  const tab2Logs = useTerminalLivestream({ maxLogs: 500 });
+  useTerminalLivestream({ maxLogs: 500 });
+  useTerminalLivestream({ maxLogs: 500 });
 
   return (
     <div className="grid grid-cols-2 gap-4">
