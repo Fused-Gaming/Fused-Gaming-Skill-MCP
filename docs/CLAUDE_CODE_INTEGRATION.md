@@ -35,33 +35,24 @@ For commercial licensing inquiries: **license@fused-gaming.io**
 
 ## 🚀 Installation & Setup
 
-### Option 1: Install from Published Package
+### Option 1: Development Installation (Local)
+
+The Terminal Livestream component is currently under development. For local development and testing:
 
 ```bash
-npm install @fused-gaming/mcp-core-with-claude-integration
+cd packages/web
+npm install
+npm run dev
 ```
 
-Then update your Claude Code configuration:
+The component will be available at `http://localhost:3000`. Components can be imported from the local source:
 
-```json
-{
-  "extensions": [
-    {
-      "id": "fused-gaming-terminal-livestream",
-      "version": "1.0.0",
-      "type": "webview",
-      "enabled": true,
-      "config": {
-        "position": "floating-bottom-right",
-        "autoOpen": false,
-        "educational": true
-      }
-    }
-  ]
-}
+```tsx
+import TerminalLivestream from '@/components/TerminalLivestream';
+import { useTerminalLivestream } from '@/hooks/useTerminalLivestream';
 ```
 
-### Option 2: Build from Source (Development)
+### Option 2: Build from Source
 
 ```bash
 cd packages/web
@@ -69,14 +60,14 @@ npm install
 npm run build
 ```
 
-Then serve the built output to your Claude Code instance.
+The built output will be in the `.next` directory for production deployment.
 
-### Option 3: Web Integration
+### Option 3: Web Integration (Development)
 
-Embed the component directly in your web application:
+Embed the component directly in your web application during development:
 
 ```tsx
-import TerminalLivestream from '@fused-gaming/terminal-livestream';
+import TerminalLivestream from '@/components/TerminalLivestream';
 
 export default function MyApp() {
   return (
@@ -95,7 +86,7 @@ export default function MyApp() {
 The `useTerminalLivestream` hook provides programmatic access to the livestream:
 
 ```tsx
-import { useTerminalLivestream } from '@fused-gaming/terminal-livestream';
+import { useTerminalLivestream } from '@/hooks/useTerminalLivestream';
 
 export function MyComponent() {
   const { addLog, logs, isConnected, connect, disconnect } = useTerminalLivestream({
