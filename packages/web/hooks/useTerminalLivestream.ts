@@ -76,7 +76,10 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
    * Connect to WebSocket stream (for real-time logs)
    */
   const connect = useCallback(() => {
-    if (!wsUrl || (wsRef.current?.readyState !== undefined && wsRef.current.readyState !== WebSocket.CLOSED)) return;
+    if (!wsUrl) return;
+
+    const readyState = wsRef.current?.readyState;
+    if (readyState === WebSocket.CONNECTING || readyState === WebSocket.OPEN) return;
 
     try {
       wsRef.current = new WebSocket(wsUrl);
