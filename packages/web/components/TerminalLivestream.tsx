@@ -149,7 +149,7 @@ export default function TerminalLivestream() {
     return () => {
       timeouts.forEach(timeout => clearTimeout(timeout));
     };
-  }, [isOpen, logs.length]);
+  }, [isOpen]);
 
   const getLevelColor = (level: string) => {
     switch (level) {

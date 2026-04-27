@@ -38,6 +38,7 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
   const [isConnected, setIsConnected] = useState(false);
   const [isLive, setIsLive] = useState(true);
   const wsRef = useRef<WebSocket | null>(null);
+  const isLiveRef = useRef(true);
 
   /**
    * Add a log entry to the stream
@@ -86,7 +87,7 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
       };
 
       wsRef.current.onmessage = (event) => {
-        if (isLive) {
+        if (isLiveRef.current) {
           try {
             const data = JSON.parse(event.data);
             addLog(data.message, data.level || 'info', data.category);
@@ -121,6 +122,13 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
   }, []);
 
   /**
+   * Keep isLive ref in sync with state
+   */
+  useEffect(() => {
+    isLiveRef.current = isLive;
+  }, [isLive]);
+
+  /**
    * Export logs as text
    */
   const exportLogs = useCallback(
@@ -144,9 +152,7 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
     }
 
     return () => {
-      if (autoConnect) {
-        disconnect();
-      }
+      disconnect();
     };
   }, [autoConnect, wsUrl, connect, disconnect]);
 
