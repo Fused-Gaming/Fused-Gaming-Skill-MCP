@@ -34,11 +34,18 @@ interface LogEntry {
   category?: string;
 }
 
-export default function TerminalLivestream() {
+interface TerminalLivestreamProps {
+  logs?: LogEntry[];
+  onClearLogs?: () => void;
+}
+
+export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: TerminalLivestreamProps = {}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [internalLogs, setInternalLogs] = useState<LogEntry[]>([]);
   const [isLive, setIsLive] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const logs = externalLogs ?? internalLogs;
 
   // Auto-scroll to bottom when new logs arrive
   useEffect(() => {
@@ -129,7 +136,7 @@ export default function TerminalLivestream() {
     const addLogWithDelay = (index: number) => {
       if (index < sampleLogs.length && isOpen) {
         const log = sampleLogs[index];
-        setLogs((prev) => [
+        setInternalLogs((prev) => [
           ...prev,
           {
             id: `log-${Date.now()}-${index}`,
@@ -142,7 +149,7 @@ export default function TerminalLivestream() {
       }
     };
 
-    if (logs.length === 0) {
+    if (!externalLogs && internalLogs.length === 0) {
       addLogWithDelay(0);
     }
 
@@ -198,7 +205,11 @@ export default function TerminalLivestream() {
   };
 
   const handleClearLogs = () => {
-    setLogs([]);
+    if (onClearLogs) {
+      onClearLogs();
+    } else {
+      setInternalLogs([]);
+    }
   };
 
   return (
