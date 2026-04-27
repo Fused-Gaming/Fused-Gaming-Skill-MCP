@@ -115,7 +115,7 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
    * Disconnect from WebSocket stream
    */
   const disconnect = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
+    if (wsRef.current && wsRef.current.readyState !== WebSocket.CLOSED && wsRef.current.readyState !== WebSocket.CLOSING) {
       wsRef.current.close();
       setIsConnected(false);
     }
