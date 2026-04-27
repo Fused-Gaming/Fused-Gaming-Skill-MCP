@@ -75,7 +75,7 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
    * Connect to WebSocket stream (for real-time logs)
    */
   const connect = useCallback(() => {
-    if (!wsUrl || wsRef.current?.readyState === WebSocket.OPEN) return;
+    if (!wsUrl || (wsRef.current?.readyState !== undefined && wsRef.current.readyState !== WebSocket.CLOSED)) return;
 
     try {
       wsRef.current = new WebSocket(wsUrl);
@@ -108,7 +108,7 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
     } catch (error) {
       addLog(`Connection failed: ${error}`, 'error', 'connection');
     }
-  }, [wsUrl, isLive, addLog]);
+  }, [wsUrl, addLog]);
 
   /**
    * Disconnect from WebSocket stream
