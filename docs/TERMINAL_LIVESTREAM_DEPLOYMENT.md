@@ -302,7 +302,7 @@ import json
 
 app = FastAPI()
 
-@app.websocket("/ws/logs")
+@app.websocket("/logs")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     try:
