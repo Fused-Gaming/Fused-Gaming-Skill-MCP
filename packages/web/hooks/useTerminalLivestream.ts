@@ -30,7 +30,6 @@ export interface TerminalConfig {
 export function useTerminalLivestream(config: TerminalConfig = {}) {
   const {
     maxLogs = 1000,
-    autoScroll = true,
     autoConnect = true,
     wsUrl,
   } = config;
