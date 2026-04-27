@@ -44,6 +44,7 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
   const [internalLogs, setInternalLogs] = useState<LogEntry[]>([]);
   const [isLive, setIsLive] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const nextLogIndexRef = useRef(0);
 
   const logs = externalLogs ?? internalLogs;
 
@@ -144,13 +145,14 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
             ...log,
           },
         ]);
+        nextLogIndexRef.current = index + 1;
         const timeout = setTimeout(() => addLogWithDelay(index + 1), 300 + Math.random() * 200);
         timeouts.push(timeout);
       }
     };
 
-    if (!externalLogs && internalLogs.length === 0) {
-      addLogWithDelay(0);
+    if (!externalLogs && isLive && nextLogIndexRef.current < sampleLogs.length) {
+      addLogWithDelay(nextLogIndexRef.current);
     }
 
     return () => {
@@ -209,11 +211,12 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
       onClearLogs();
     } else {
       setInternalLogs([]);
+      nextLogIndexRef.current = 0;
     }
   };
 
   return (
-    <div className="fixed bottom-6 right-6 w-96 max-h-96 z-50 font-mono">
+    <div className="fixed bottom-6 right-6 z-50 font-mono max-w-[calc(100vw-3rem)] sm:max-w-none sm:w-96">
       {/* Toggle Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
@@ -241,7 +244,7 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="mt-2 bg-slate-950 rounded-lg border border-magenta-500/30 shadow-2xl overflow-hidden glass"
+            className="mt-2 bg-slate-950 rounded-lg border border-magenta-500/30 shadow-2xl overflow-hidden glass max-h-96"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-slate-900 to-slate-800 px-4 py-3 border-b border-magenta-500/20 flex items-center justify-between">
