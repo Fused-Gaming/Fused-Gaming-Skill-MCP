@@ -124,6 +124,8 @@ export default function TerminalLivestream() {
       },
     ];
 
+    const timeouts: NodeJS.Timeout[] = [];
+
     const addLogWithDelay = (index: number) => {
       if (index < sampleLogs.length && isOpen) {
         const log = sampleLogs[index];
@@ -135,13 +137,18 @@ export default function TerminalLivestream() {
             ...log,
           },
         ]);
-        setTimeout(() => addLogWithDelay(index + 1), 300 + Math.random() * 200);
+        const timeout = setTimeout(() => addLogWithDelay(index + 1), 300 + Math.random() * 200);
+        timeouts.push(timeout);
       }
     };
 
     if (logs.length === 0) {
       addLogWithDelay(0);
     }
+
+    return () => {
+      timeouts.forEach(timeout => clearTimeout(timeout));
+    };
   }, [isOpen, logs.length]);
 
   const getLevelColor = (level: string) => {
