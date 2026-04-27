@@ -82,15 +82,18 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
     if (readyState === WebSocket.CONNECTING || readyState === WebSocket.OPEN) return;
 
     try {
-      wsRef.current = new WebSocket(wsUrl);
+      const socket = new WebSocket(wsUrl);
+      wsRef.current = socket;
 
-      wsRef.current.onopen = () => {
-        setIsConnected(true);
-        addLog('Connected to livestream', 'success', 'connection');
+      socket.onopen = () => {
+        if (wsRef.current === socket) {
+          setIsConnected(true);
+          addLog('Connected to livestream', 'success', 'connection');
+        }
       };
 
-      wsRef.current.onmessage = (event) => {
-        if (isLiveRef.current) {
+      socket.onmessage = (event) => {
+        if (wsRef.current === socket && isLiveRef.current) {
           try {
             const data = JSON.parse(event.data);
             addLog(data.message, data.level || 'info', data.category);
@@ -100,14 +103,18 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
         }
       };
 
-      wsRef.current.onerror = () => {
-        addLog('Livestream connection error', 'error', 'connection');
-        setIsConnected(false);
+      socket.onerror = () => {
+        if (wsRef.current === socket) {
+          addLog('Livestream connection error', 'error', 'connection');
+          setIsConnected(false);
+        }
       };
 
-      wsRef.current.onclose = () => {
-        setIsConnected(false);
-        addLog('Disconnected from livestream', 'warning', 'connection');
+      socket.onclose = () => {
+        if (wsRef.current === socket) {
+          setIsConnected(false);
+          addLog('Disconnected from livestream', 'warning', 'connection');
+        }
       };
     } catch (error) {
       addLog(`Connection failed: ${error}`, 'error', 'connection');
