@@ -67,7 +67,7 @@ export function ProgrammaticLogsExample() {
  * Integration with MCP initialization process
  */
 export function MCPSetupWizardExample() {
-  const { addLog, isLive, setIsLive } = useTerminalLivestream({
+  const { logs, addLog, clearLogs, isLive, setIsLive } = useTerminalLivestream({
     autoConnect: false,
   });
 
@@ -118,7 +118,7 @@ export function MCPSetupWizardExample() {
         />
         Live Updates
       </label>
-      <TerminalLivestream />
+      <TerminalLivestream logs={logs} onClearLogs={clearLogs} />
     </div>
   );
 }
@@ -128,7 +128,7 @@ export function MCPSetupWizardExample() {
  * Connect to a real-time log stream via WebSocket
  */
 export function WebSocketStreamingExample() {
-  const { isConnected, connect, disconnect, logs } = useTerminalLivestream({
+  const { isConnected, connect, disconnect, logs, clearLogs } = useTerminalLivestream({
     wsUrl: 'ws://localhost:8080/logs', // Your WebSocket endpoint
     autoConnect: false,
   });
@@ -155,7 +155,7 @@ export function WebSocketStreamingExample() {
       <p>Status: {isConnected ? '🟢 Connected' : '🔴 Disconnected'}</p>
       <p>Logs: {logs.length}</p>
 
-      <TerminalLivestream />
+      <TerminalLivestream logs={logs} onClearLogs={clearLogs} />
     </div>
   );
 }
@@ -165,7 +165,7 @@ export function WebSocketStreamingExample() {
  * Demonstrate error logging patterns
  */
 export function ErrorHandlingExample() {
-  const { addLog } = useTerminalLivestream();
+  const { logs, addLog, clearLogs } = useTerminalLivestream();
 
   const handleAsync = async () => {
     try {
@@ -192,7 +192,7 @@ export function ErrorHandlingExample() {
       >
         Run Task
       </button>
-      <TerminalLivestream />
+      <TerminalLivestream logs={logs} onClearLogs={clearLogs} />
     </div>
   );
 }
@@ -202,7 +202,7 @@ export function ErrorHandlingExample() {
  * Real-time monitoring of skill registry generation
  */
 export function SkillRegistryMonitorExample() {
-  const { addLog } = useTerminalLivestream();
+  const { logs, addLog, clearLogs } = useTerminalLivestream();
 
   useEffect(() => {
     const monitorRegistry = async () => {
@@ -238,7 +238,7 @@ export function SkillRegistryMonitorExample() {
       <p className="text-sm text-slate-400 mb-4">
         Real-time monitoring of skill discovery and registration
       </p>
-      <TerminalLivestream />
+      <TerminalLivestream logs={logs} onClearLogs={clearLogs} />
     </div>
   );
 }
