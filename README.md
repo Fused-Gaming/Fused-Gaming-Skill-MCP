@@ -130,6 +130,44 @@ Done! You're now ready to supercharge Claude. 🔋
 
 ---
 
+## 🎬 Claude Code Terminal Livestream
+
+**NEW:** Real-time terminal output visualization directly in Claude Code's web interface!
+
+### What It Does
+The Terminal Livestream component displays:
+- ✅ Live MCP installation progress
+- ✅ Real-time skill registry generation
+- ✅ Installation logs with color coding
+- ✅ Copy/download/clear functionality
+- ✅ WebSocket support for remote log streaming
+- ✅ Educational-use-only licensing compliance
+
+### Quick Integration
+```tsx
+import TerminalLivestream from '@/components/TerminalLivestream';
+
+export default function App() {
+  return <TerminalLivestream />;
+}
+```
+
+### Features
+- 🎨 Fused Gaming branding (magenta/purple theme)
+- 📱 Responsive mobile design (works on narrow screens)
+- ♿ WCAG AA accessibility compliant
+- 🔌 WebSocket real-time streaming support
+- 📋 Educational-use-only licensing enforcement
+- 🎯 Toggle widget (bottom-right, z-50)
+
+### Learn More
+- **Integration Guide:** [CLAUDE_CODE_INTEGRATION.md](./docs/CLAUDE_CODE_INTEGRATION.md)
+- **Deployment Guide:** [TERMINAL_LIVESTREAM_DEPLOYMENT.md](./docs/TERMINAL_LIVESTREAM_DEPLOYMENT.md)
+- **Code Examples:** [TerminalLivestream.example.tsx](./packages/web/examples/TerminalLivestream.example.tsx)
+- **License:** [CLAUDE_CODE_LICENSE.md](./packages/web/CLAUDE_CODE_LICENSE.md) (Educational use only)
+
+---
+
 ## 📋 Essential Commands
 
 ### MCP Core Commands
@@ -276,22 +314,25 @@ npm run dev         # Start dev server
 
 ## 🗺️ Roadmap Snapshot (Existing + Planned)
 
-### Current repository state (as of April 21, 2026)
-- ✅ `VERSION.json` is `1.0.4` and marks the project `stable`.
-- ✅ 11 `@h4shed/*` packages are listed as published, with 9 additional skill packages queued for publish.
-- ✅ Core docs exist for roadmap/changelog/release orientation and package publishing workflow.
+### Current repository state (as of April 27, 2026)
+- ✅ `VERSION.json` is `1.0.5` with new Terminal Livestream component and MCP Core setup system
+- ✅ Terminal Livestream: Real-time log visualization for Claude Code (educational-use-only)
+- ✅ MCP Core Initialization: Automated setup with skill discovery & registry generation
+- ✅ 11 `@h4shed/*` packages published, with 9 additional skill packages queued for publish
+- ✅ Core docs include complete integration/deployment guides for Terminal Livestream
 
-### Open PR queue (GitHub currently shows 8 open)
+### Open PR queue (GitHub currently shows 9 open)
 > Source: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/pulls?q=is%3Apr+is%3Aopen
 
-1. `#109` Add LinkedIn Master Journalist (LIMJ) skill (base: `main`)
-2. `#101` ux-journeymapper implementation/docs refresh (base: `feature/syncpulse-skill-docs`)
-3. `#81` Feat/socials automation phase1
-4. `#79` Socials Automation Asset Pipeline - Phase 1
-5. `#19` SVG generation for canvas-design skill
-6. `#18` project status tool skill
-7. `#17` project manager skill
-8. `#16` multi-account session tracking skill
+1. `#118` MCP Core Setup + Claude Code Terminal Livestream Integration (READY TO MERGE)
+2. `#109` Add LinkedIn Master Journalist (LIMJ) skill (base: `main`)
+3. `#101` ux-journeymapper implementation/docs refresh (base: `feature/syncpulse-skill-docs`)
+4. `#81` Feat/socials automation phase1
+5. `#79` Socials Automation Asset Pipeline - Phase 1
+6. `#19` SVG generation for canvas-design skill
+7. `#18` project status tool skill
+8. `#17` project manager skill
+9. `#16` multi-account session tracking skill
 
 ### MVP milestone snapshot (GitHub milestones page)
 > Source: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/milestones
@@ -379,7 +420,7 @@ Apache 2.0 — See [LICENSE](./LICENSE) for details
 
 ---
 
-[![Version 1.0.4](https://img.shields.io/badge/version-1.0.4-blue)](./VERSION.json)
-[![Released April 17, 2026](https://img.shields.io/badge/released-april%2017%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
+[![Version 1.0.5](https://img.shields.io/badge/version-1.0.5-blue)](./VERSION.json)
+[![Released April 27, 2026](https://img.shields.io/badge/released-april%2027%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
 [![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
 [![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)

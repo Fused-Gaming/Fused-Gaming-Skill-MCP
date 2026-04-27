@@ -5,6 +5,7 @@ import SwarmVisualizer from '@/components/SwarmVisualizer';
 import RoadmapEditor from '@/components/RoadmapEditor';
 import TaskMonitor from '@/components/TaskMonitor';
 import ControlPanel from '@/components/ControlPanel';
+import TerminalLivestream from '@/components/TerminalLivestream';
 import { useSwarmStore } from '@/store/swarmStore';
 import { useEffect } from 'react';
 
@@ -79,6 +80,9 @@ export default function Home() {
           <RoadmapEditor />
         </motion.div>
       </div>
+
+      {/* Terminal Livestream Widget */}
+      <TerminalLivestream />
     </main>
   );
 }
