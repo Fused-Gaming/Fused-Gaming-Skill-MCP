@@ -30,12 +30,12 @@ export function BasicTerminalExample() {
 
 /**
  * Example 2: Programmatic Log Control
- * Use the hook to programmatically add logs
+ * Use the hook to programmatically add logs and display them in the terminal
  */
 export function ProgrammaticLogsExample() {
-  const { addLog, clearLogs, exportLogs } = useTerminalLivestream({
+  const { logs, addLog, clearLogs, exportLogs } = useTerminalLivestream({
     maxLogs: 500,
-    autoScroll: true,
+    autoConnect: false,
   });
 
   const handleInstall = () => {
@@ -48,8 +48,8 @@ export function ProgrammaticLogsExample() {
   };
 
   const handleExport = () => {
-    const logs = exportLogs('text');
-    console.log(logs);
+    const text = exportLogs('text');
+    console.log(text);
   };
 
   return (
@@ -57,7 +57,7 @@ export function ProgrammaticLogsExample() {
       <button onClick={handleInstall}>Install</button>
       <button onClick={handleExport}>Export Logs</button>
       <button onClick={clearLogs}>Clear</button>
-      <TerminalLivestream />
+      <TerminalLivestream logs={logs} onClearLogs={clearLogs} />
     </div>
   );
 }
