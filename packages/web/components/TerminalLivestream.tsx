@@ -315,7 +315,7 @@ export default function TerminalLivestream({ logs: externalLogs, onClearLogs }: 
 
               <motion.button
                 onClick={handleClearLogs}
-                disabled={logs.length === 0}
+                disabled={logs.length === 0 || (externalLogs && !onClearLogs)}
                 className="flex items-center gap-1 px-2 py-1 text-xs bg-slate-800 text-slate-300 rounded hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
