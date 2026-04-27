@@ -175,11 +175,7 @@ Click the terminal toggle in bottom-right corner to verify functionality.
 npm run build
 ```
 
-4. **Register with Claude Code**:
-
-```bash
-claude-code extension:register packages/web/dist/terminal-livestream.js
-```
+The built output will be in the `.next` directory.
 
 ---
 
@@ -239,18 +235,20 @@ docker run -p 3000:3000 fused-gaming-terminal
 
 ### Deploy to AWS
 
-**Using CloudFront + S3**:
+**Using Elastic Beanstalk**:
 
 ```bash
-# Build static export
-npm run export
+# Build the application
+npm run build
 
-# Upload to S3
-aws s3 sync out/ s3://your-bucket/
-
-# Invalidate CloudFront
-aws cloudfront create-invalidation --distribution-id YOUR_ID --paths "/*"
+# Deploy to Elastic Beanstalk
+eb create fused-gaming-terminal
+eb deploy
 ```
+
+**Using ECS/Fargate**:
+
+Build the Docker image as described above and push to ECR, then deploy via ECS/Fargate console.
 
 ---
 
