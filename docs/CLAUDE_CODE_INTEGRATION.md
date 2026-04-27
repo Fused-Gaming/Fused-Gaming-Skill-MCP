@@ -401,15 +401,16 @@ Click the toggle to view installation logs as they happen.
 
 ### Use Case 2: Skill Registry Updates
 
-Monitor skill registry generation in real-time:
+Monitor skill registry updates via your backend:
 
 ```tsx
-const { addLog } = useTerminalLivestream();
-
-// Watch for registry changes
-fs.watchFile('registry/skills.json', () => {
-  addLog('Registry updated', 'success', 'registry');
+const { logs, addLog } = useTerminalLivestream({
+  wsUrl: 'ws://localhost:8080/registry-updates',
+  autoConnect: true,
 });
+
+// On the server side, use fs.watchFile or polling to detect registry changes
+// and forward updates to clients via WebSocket (see WebSocket Server Integration section)
 ```
 
 ### Use Case 3: Custom Log Integration
