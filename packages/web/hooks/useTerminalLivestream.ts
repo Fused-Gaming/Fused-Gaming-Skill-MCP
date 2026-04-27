@@ -97,7 +97,9 @@ export function useTerminalLivestream(config: TerminalConfig = {}) {
           try {
             const data = JSON.parse(event.data);
             const message = typeof data.message === 'string' ? data.message : String(data.message);
-            addLog(message, data.level || 'info', data.category);
+            const validLevels: StreamLog['level'][] = ['info', 'success', 'warning', 'error', 'command'];
+            const level = validLevels.includes(data.level) ? data.level : 'info';
+            addLog(message, level, data.category);
           } catch {
             const message = typeof event.data === 'string' ? event.data : String(event.data);
             addLog(message, 'info');
