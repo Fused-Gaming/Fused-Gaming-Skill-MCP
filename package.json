@@ -30,6 +30,7 @@
     "packages/skills/*",
     "packages/tools/*",
     "packages/cli",
+    "packages/docs",
     "packages/web"
   ],
   "scripts": {

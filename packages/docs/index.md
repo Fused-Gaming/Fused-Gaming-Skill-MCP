@@ -149,7 +149,7 @@ npx vite build
 - **smart-contract-security-agent** - Audits Solidity contracts
 - **vercel-deployment-agent** - Manages production releases
 
-Learn more: [Agent Architecture](/guide/agents/architecture)
+Learn more: [Full Installation Guide](/guide/installation/full-setup)
 
 ---
 
@@ -181,15 +181,15 @@ Learn more: [Agent Architecture](/guide/agents/architecture)
 </div>
 
 <div style="padding: 20px; border: 1px solid var(--vp-c-divider); border-radius: 8px;">
-  <h4>📚 API Reference</h4>
-  <p>Complete documentation for all packages and tools</p>
-  <a href="/reference/api/mcp-core" class="vp-button alt">View API</a>
+  <h4>📚 Full Documentation</h4>
+  <p>Complete installation and setup guides</p>
+  <a href="/guide/installation/full-setup" class="vp-button alt">View Docs</a>
 </div>
 
 <div style="padding: 20px; border: 1px solid var(--vp-c-divider); border-radius: 8px;">
-  <h4>🤖 Agent Orchestration</h4>
-  <p>Learn how AI agents automate your design system</p>
-  <a href="/guide/agents/architecture" class="vp-button alt">Learn More</a>
+  <h4>🤖 Next Phase</h4>
+  <p>Agent orchestration system coming in v1.1.0</p>
+  <a href="/guide/installation/full-setup" class="vp-button alt">Learn More</a>
 </div>
 
 </div>
