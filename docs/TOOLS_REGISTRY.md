@@ -230,7 +230,7 @@ npm install --save-dev \
 ```bash
 npm install --save-dev \
   @h4shed/skill-frontend-design \
-  @h4shed/skill-style-dictionary \
+  @h4shed/skill-style-dictionary-system \
   @h4shed/tool-style-dictionary \
   @h4shed/tool-postcss \
   @h4shed/tool-jest
@@ -240,7 +240,7 @@ npm install --save-dev \
 
 ```bash
 npm install --save-dev \
-  @h4shed/skill-storybook \
+  @h4shed/skill-storybook-component-library \
   @h4shed/tool-storybook \
   @h4shed/tool-vite \
   @h4shed/tool-jest
@@ -250,7 +250,7 @@ npm install --save-dev \
 
 ```bash
 npm install --save-dev \
-  @h4shed/skill-playwright \
+  @h4shed/skill-playwright-test-automation \
   @h4shed/tool-playwright \
   @h4shed/tool-cypress \
   @h4shed/tool-axe-core \

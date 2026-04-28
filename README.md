@@ -66,15 +66,15 @@
 - `skill-daily-review`
 - `multi-account-session-tracking`
 - `skill-linkedin-master-journalist`
-- `skill-tailwindcss`
-- `skill-storybook`
-- `skill-playwright`
-- `skill-vite`
-- `skill-typescript`
-- `skill-vercel-nextjs`
-- `skill-style-dictionary`
+- `skill-tailwindcss-style-builder`
+- `skill-storybook-component-library`
+- `skill-playwright-test-automation`
+- `skill-vite-module-bundler`
+- `skill-typescript-toolchain`
+- `skill-vercel-nextjs-deployment`
+- `skill-style-dictionary-system`
 - `skill-nft-generative-art`
-- `skill-smart-contracts`
+- `skill-smart-contract-tools`
 
 ---
 
