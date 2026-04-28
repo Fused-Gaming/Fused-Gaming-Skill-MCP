@@ -118,27 +118,17 @@ See [Full Installation Guide](/guide/installation/full-setup) for complete detai
 
 ## 🎨 Sample Usage
 
-### Generate Design Tokens
-```typescript
-import { ThemeFactory } from '@h4shed/skill-theme-factory';
-
-const factory = new ThemeFactory({
-  tokens: {
-    colors: { primary: '#007AFF', focus: '#FFD60A' },
-    spacing: { xs: '4px', sm: '8px', md: '16px' }
-  }
-});
-
-// Export to multiple formats
-await factory.exportCSS('./dist/tokens.css');
-await factory.exportJS('./dist/tokens.js');
-await factory.exportSCSS('./dist/tokens.scss');
+### Install Core Skills
+```bash
+npm install --save-dev @h4shed/skill-theme-factory @h4shed/skill-project-manager
 ```
 
 ### Test Accessibility
 ```bash
-npx @h4shed/tool-axe-core ./dist/index.html
-npx @h4shed/tool-pa11y ./dist/index.html
+# Using upstream tools directly
+npm install --save-dev axe-core pa11y
+npx axe-core ./dist/index.html
+npx pa11y ./dist/index.html
 ```
 
 ### Build with Vite
@@ -168,14 +158,10 @@ Learn more: [Agent Architecture](/guide/agents/architecture)
 
 | Section | Purpose |
 |---------|---------|
-| [Getting Started](/guide/installation/quick-start) | 5-minute quick start |
-| [Design System Guide](/guide/design-system/tokens) | Tokens, components, a11y |
-| [Tools Reference](/guide/tools/overview) | All 50+ tools documented |
-| [Phase Guides](/guide/phases/phase-1-accessibility) | Step-by-step by development phase |
-| [Agent Orchestration](/guide/agents/architecture) | How agents coordinate tools |
-| [API Reference](/reference/api/mcp-core) | Complete API documentation |
-| [Examples](/examples/tokens/generation) | Real-world usage patterns |
-| [FAQ & Troubleshooting](/resources/faq) | Common questions & solutions |
+| [Quick Start](/guide/installation/quick-start) | 5-minute quick start |
+| [Full Setup](/guide/installation/full-setup) | Complete installation guide |
+| [GitHub Repository](https://github.com/fused-gaming/fused-gaming-skill-mcp) | Source code & issues |
+| [npm Scope](https://www.npmjs.com/~h4shed) | All published packages |
 
 ---
 
