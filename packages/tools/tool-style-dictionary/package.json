@@ -5,8 +5,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
-    ".": "./dist/index.js",
-    "./config": "./dist/config.js"
+    ".": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
