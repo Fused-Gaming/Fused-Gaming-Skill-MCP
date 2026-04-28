@@ -155,14 +155,12 @@ Update your `package.json` scripts:
 {
   "scripts": {
     "tokens:generate": "style-dictionary build",
-    "tokens:validate": "pa11y-ci",
     
     "dev": "vite",
     "storybook": "storybook dev",
     "build:storybook": "storybook build",
     
     "test": "jest",
-    "test:a11y": "axe-core",
     "test:e2e": "playwright test",
     
     "build": "vite build",

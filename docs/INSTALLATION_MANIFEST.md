@@ -66,15 +66,15 @@ Newly scaffolded during this sprint. Ready for implementation.
 
 | Skill | Version | Location | Status | Phase |
 |-------|---------|----------|--------|-------|
-| @h4shed/skill-tailwindcss | 1.0.0 | `packages/skills/tailwindcss-style-builder/` | 📋 Scaffolding | 1-2 |
-| @h4shed/skill-storybook | 1.0.0 | `packages/skills/storybook-component-library/` | 📋 Scaffolding | 2 |
-| @h4shed/skill-playwright | 1.0.0 | `packages/skills/playwright-test-automation/` | 📋 Scaffolding | 3 |
-| @h4shed/skill-vite | 1.0.0 | `packages/skills/vite-module-bundler/` | 📋 Scaffolding | 1 |
-| @h4shed/skill-typescript | 1.0.0 | `packages/skills/typescript-toolchain/` | 📋 Scaffolding | 1 |
-| @h4shed/skill-vercel-nextjs | 1.0.0 | `packages/skills/vercel-nextjs-deployment/` | 📋 Scaffolding | 2 |
-| @h4shed/skill-style-dictionary | 1.0.0 | `packages/skills/style-dictionary-system/` | 📋 Scaffolding | 1-2 |
+| @h4shed/skill-tailwindcss-style-builder | 1.0.0 | `packages/skills/tailwindcss-style-builder/` | 📋 Scaffolding | 1-2 |
+| @h4shed/skill-storybook-component-library | 1.0.0 | `packages/skills/storybook-component-library/` | 📋 Scaffolding | 2 |
+| @h4shed/skill-playwright-test-automation | 1.0.0 | `packages/skills/playwright-test-automation/` | 📋 Scaffolding | 3 |
+| @h4shed/skill-vite-module-bundler | 1.0.0 | `packages/skills/vite-module-bundler/` | 📋 Scaffolding | 1 |
+| @h4shed/skill-typescript-toolchain | 1.0.0 | `packages/skills/typescript-toolchain/` | 📋 Scaffolding | 1 |
+| @h4shed/skill-vercel-nextjs-deployment | 1.0.0 | `packages/skills/vercel-nextjs-deployment/` | 📋 Scaffolding | 2 |
+| @h4shed/skill-style-dictionary-system | 1.0.0 | `packages/skills/style-dictionary-system/` | 📋 Scaffolding | 1-2 |
 | @h4shed/skill-nft-generative-art | 1.0.0 | `packages/skills/nft-generative-art/` | 📋 Scaffolding | 4 |
-| @h4shed/skill-smart-contracts | 1.0.0 | `packages/skills/smart-contract-tools/` | 📋 Scaffolding | 4 |
+| @h4shed/skill-smart-contract-tools | 1.0.0 | `packages/skills/smart-contract-tools/` | 📋 Scaffolding | 4 |
 
 **Status**: All directories created with `package.json`, `tsconfig.json`, `README.md`, and `src/tools/` structure.
 
