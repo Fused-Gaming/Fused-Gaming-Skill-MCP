@@ -38,14 +38,9 @@ Create `tokens.json`:
 }
 ```
 
-## Step 4: Build & Verify (1 min)
+## Step 4: Done! (1 min)
 
-Verify your setup is working:
-
-```bash
-npm run build
-npm run typecheck
-```
+Your project is now set up with design tokens.
 
 **Note**: These skills are currently in scaffolding phase. For complete setup with working implementations, see the [Full Installation Guide](/guide/installation/full-setup).
 

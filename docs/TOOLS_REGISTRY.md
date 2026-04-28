@@ -103,21 +103,21 @@ Newly scaffolded tools from infrastructure expansion.
 
 | Skill | Version | Status | Purpose | Phase |
 |-------|---------|--------|---------|-------|
-| @h4shed/skill-tailwindcss | 1.0.0 | 📋 Scaffolding | Utility-first styling | 1-2 |
-| @h4shed/skill-storybook | 1.0.0 | 📋 Scaffolding | Component documentation | 2 |
-| @h4shed/skill-playwright | 1.0.0 | 📋 Scaffolding | E2E testing automation | 3 |
-| @h4shed/skill-vite | 1.0.0 | 📋 Scaffolding | Module bundling | 1 |
-| @h4shed/skill-typescript | 1.0.0 | 📋 Scaffolding | Type safety toolchain | 1 |
-| @h4shed/skill-vercel-nextjs | 1.0.0 | 📋 Scaffolding | Deployment platform | 2 |
-| @h4shed/skill-style-dictionary | 1.0.0 | 📋 Scaffolding | Token management | 1-2 |
+| @h4shed/skill-tailwindcss-style-builder | 1.0.0 | 📋 Scaffolding | Utility-first styling | 1-2 |
+| @h4shed/skill-storybook-component-library | 1.0.0 | 📋 Scaffolding | Component documentation | 2 |
+| @h4shed/skill-playwright-test-automation | 1.0.0 | 📋 Scaffolding | E2E testing automation | 3 |
+| @h4shed/skill-vite-module-bundler | 1.0.0 | 📋 Scaffolding | Module bundling | 1 |
+| @h4shed/skill-typescript-toolchain | 1.0.0 | 📋 Scaffolding | Type safety toolchain | 1 |
+| @h4shed/skill-vercel-nextjs-deployment | 1.0.0 | 📋 Scaffolding | Deployment platform | 2 |
+| @h4shed/skill-style-dictionary-system | 1.0.0 | 📋 Scaffolding | Token management | 1-2 |
 | @h4shed/skill-nft-generative-art | 1.0.0 | 📋 Scaffolding | Blockchain assets | 4 |
-| @h4shed/skill-smart-contracts | 1.0.0 | 📋 Scaffolding | Hardhat/Truffle/Foundry | 4 |
+| @h4shed/skill-smart-contract-tools | 1.0.0 | 📋 Scaffolding | Hardhat/Truffle/Foundry | 4 |
 
 **Installation**:
 ```bash
-npm install @h4shed/skill-tailwindcss @h4shed/skill-vite @h4shed/skill-typescript
-npm install @h4shed/skill-style-dictionary @h4shed/skill-storybook
-npm install @h4shed/skill-playwright @h4shed/skill-vercel-nextjs
+npm install @h4shed/skill-tailwindcss-style-builder @h4shed/skill-vite-module-bundler @h4shed/skill-typescript-toolchain
+npm install @h4shed/skill-style-dictionary-system @h4shed/skill-storybook-component-library
+npm install @h4shed/skill-playwright-test-automation @h4shed/skill-vercel-nextjs-deployment
 ```
 
 **Key Files**:
