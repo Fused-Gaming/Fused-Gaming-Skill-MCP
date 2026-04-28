@@ -13,11 +13,8 @@ hero:
       text: Quick Start (5 min)
       link: /guide/installation/quick-start
     - theme: alt
-      text: View Documentation
+      text: Full Installation
       link: /guide/installation/full-setup
-    - theme: alt
-      text: Tools Registry
-      link: /guide/tools/overview
 
 features:
   - icon: 🎨
