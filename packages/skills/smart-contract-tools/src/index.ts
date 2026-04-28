@@ -5,7 +5,7 @@ const skill: Skill = {
   version: '1.0.0',
   description: 'Smart contract development, deployment, and testing utilities for blockchain integration',
   tools: [],
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     // Implementation coming soon
   },
 };

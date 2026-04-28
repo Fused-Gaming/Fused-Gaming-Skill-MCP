@@ -5,7 +5,7 @@ const skill: Skill = {
   version: '1.0.0',
   description: 'Design token management and cross-platform style distribution system',
   tools: [],
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     // Implementation coming soon
   },
 };

@@ -5,7 +5,7 @@ const skill: Skill = {
   version: '1.0.0',
   description: 'Utility-first CSS framework integration for rapid UI development and consistent styling',
   tools: [],
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     // Implementation coming soon
   },
 };

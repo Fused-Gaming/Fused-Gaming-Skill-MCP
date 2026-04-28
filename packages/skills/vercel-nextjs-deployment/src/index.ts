@@ -5,7 +5,7 @@ const skill: Skill = {
   version: '1.0.0',
   description: 'Next.js framework integration and Vercel deployment automation',
   tools: [],
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     // Implementation coming soon
   },
 };

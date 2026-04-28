@@ -5,7 +5,7 @@ const skill: Skill = {
   version: '1.0.0',
   description: 'Generative art creation and NFT metadata generation for blockchain integration',
   tools: [],
-  async initialize(config: SkillConfig): Promise<void> {
+  async initialize(_config: SkillConfig): Promise<void> {
     // Implementation coming soon
   },
 };
