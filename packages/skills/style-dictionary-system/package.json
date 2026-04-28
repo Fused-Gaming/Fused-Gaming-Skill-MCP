@@ -1,0 +1,32 @@
+{
+  "name": "@h4shed/skill-style-dictionary",
+  "version": "1.0.0",
+  "description": "Design tokens and style dictionary generation for cross-platform design system management",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "dependencies": {
+    "@h4shed/mcp-core": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "keywords": [
+    "mcp",
+    "skill",
+    "style-dictionary",
+    "design-tokens",
+    "design-system",
+    "theming"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

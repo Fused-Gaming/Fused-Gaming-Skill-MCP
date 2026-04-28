@@ -19,6 +19,15 @@ const AVAILABLE_SKILLS = [
   "brand-guidelines",
   "doc-coauthoring",
   "internal-comms",
+  "tailwindcss-style-builder",
+  "storybook-component-library",
+  "playwright-test-automation",
+  "vite-module-bundler",
+  "typescript-toolchain",
+  "vercel-nextjs-deployment",
+  "style-dictionary-system",
+  "nft-generative-art",
+  "smart-contract-tools",
 ];
 
 export async function list(): Promise<void> {
