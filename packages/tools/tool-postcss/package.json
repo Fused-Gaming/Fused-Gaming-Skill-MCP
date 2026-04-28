@@ -1,0 +1,29 @@
+{
+  "name": "@h4shed/tool-postcss",
+  "version": "8.0.0",
+  "description": "CSS transformation and processing integration for @h4shed ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "peerDependencies": {
+    "postcss": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "postcss": "^8.0.0"
+  },
+  "keywords": [
+    "postcss",
+    "css",
+    "transformation",
+    "@h4shed",
+    "fused-gaming"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

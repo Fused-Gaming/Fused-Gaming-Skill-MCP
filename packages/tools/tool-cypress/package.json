@@ -1,0 +1,30 @@
+{
+  "name": "@h4shed/tool-cypress",
+  "version": "13.0.0",
+  "description": "End-to-end testing framework integration for @h4shed ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "peerDependencies": {
+    "cypress": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "cypress": "^13.0.0"
+  },
+  "keywords": [
+    "cypress",
+    "e2e",
+    "testing",
+    "component-testing",
+    "@h4shed",
+    "fused-gaming"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

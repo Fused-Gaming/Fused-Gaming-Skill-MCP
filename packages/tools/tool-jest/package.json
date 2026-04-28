@@ -1,0 +1,29 @@
+{
+  "name": "@h4shed/tool-jest",
+  "version": "29.0.0",
+  "description": "JavaScript testing framework integration for @h4shed ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "peerDependencies": {
+    "jest": "^29.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "jest": "^29.0.0"
+  },
+  "keywords": [
+    "jest",
+    "testing",
+    "unit-tests",
+    "@h4shed",
+    "fused-gaming"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@h4shed/tool-vitepress",
+  "version": "1.0.0",
+  "description": "Lightweight documentation site generator integration for @h4shed ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "peerDependencies": {
+    "vitepress": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "vitepress": "^1.0.0"
+  },
+  "keywords": ["vitepress", "documentation", "static-site", "vite", "@h4shed", "fused-gaming"],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

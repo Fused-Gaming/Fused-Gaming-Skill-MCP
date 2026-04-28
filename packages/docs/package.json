@@ -1,0 +1,25 @@
+{
+  "name": "@h4shed/docs",
+  "version": "1.0.0",
+  "description": "Complete design system and tool documentation hub - docs.vln.gg",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "serve": "vitepress serve"
+  },
+  "devDependencies": {
+    "vitepress": "^1.0.0",
+    "vue": "^3.3.0"
+  },
+  "keywords": [
+    "documentation",
+    "design-system",
+    "fused-gaming",
+    "@h4shed",
+    "vitepress"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}
