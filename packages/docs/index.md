@@ -143,7 +143,8 @@ npx @h4shed/tool-pa11y ./dist/index.html
 
 ### Build with Vite
 ```bash
-npx @h4shed/tool-vite build
+npm install --save-dev vite
+npx vite build
 ```
 
 ---

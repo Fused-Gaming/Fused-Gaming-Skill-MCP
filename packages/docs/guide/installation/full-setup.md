@@ -108,8 +108,7 @@ npm install --save-dev \
 npm install --save-dev \
   @h4shed/tool-docusaurus \
   @h4shed/tool-vitepress \
-  @h4shed/tool-typedoc \
-  @h4shed/tool-markdown-it
+  @h4shed/tool-typedoc
 ```
 
 **What you get**:

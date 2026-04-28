@@ -4,9 +4,6 @@
   "description": "Web accessibility testing CLI integration for @h4shed ecosystem",
   "type": "module",
   "main": "./dist/index.js",
-  "bin": {
-    "pa11y": "./dist/cli.js"
-  },
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
