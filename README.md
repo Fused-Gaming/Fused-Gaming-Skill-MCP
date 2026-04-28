@@ -21,7 +21,7 @@
 
 ## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **10 published-ready skills in-repo** plus core infrastructure packages.
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **19 published-ready skills in-repo** plus core infrastructure packages.
 
 ### 🎯 Your Creative Arsenal Includes:
 
@@ -37,8 +37,17 @@
 | **skill-creator** | Custom skill builder | ✅ |
 | **underworld-writer** | Character/world narrative generation | ✅ |
 | **agentic-flow-devkit** | Agentic orchestration GUI + trailer A/B-roll planning | 🆕 |
+| **tailwindcss-style-builder** | Utility-first styling and design system builder | 📋 |
+| **storybook-component-library** | Component documentation and visual testing | 📋 |
+| **playwright-test-automation** | End-to-end testing automation framework | 📋 |
+| **vite-module-bundler** | Next-generation JavaScript module bundler | 📋 |
+| **typescript-toolchain** | Advanced TypeScript configuration and analysis | 📋 |
+| **vercel-nextjs-deployment** | Vercel deployment and Next.js integration | 📋 |
+| **style-dictionary-system** | Design tokens and cross-platform theming | 📋 |
+| **nft-generative-art** | NFT artwork generation and blockchain assets | 📋 |
+| **smart-contract-tools** | Hardhat, Truffle, and Foundry integration | 📋 |
 
-**All skills are production-ready and actively maintained** ✨
+**Core skills are production-ready; new tools are in active scaffolding** ✨
 
 ### 📦 Publishing now / next wave
 
@@ -57,6 +66,15 @@
 - `skill-daily-review`
 - `multi-account-session-tracking`
 - `skill-linkedin-master-journalist`
+- `skill-tailwindcss-style-builder`
+- `skill-storybook-component-library`
+- `skill-playwright-test-automation`
+- `skill-vite-module-bundler`
+- `skill-typescript-toolchain`
+- `skill-vercel-nextjs-deployment`
+- `skill-style-dictionary-system`
+- `skill-nft-generative-art`
+- `skill-smart-contract-tools`
 
 ---
 

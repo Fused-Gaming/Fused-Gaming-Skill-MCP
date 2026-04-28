@@ -1,0 +1,32 @@
+{
+  "name": "@h4shed/skill-nft-generative-art",
+  "version": "1.0.0",
+  "description": "NFT artwork generation, metadata creation, and blockchain-ready asset creation",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "dependencies": {
+    "@h4shed/mcp-core": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "keywords": [
+    "mcp",
+    "skill",
+    "nft",
+    "generative-art",
+    "blockchain",
+    "web3"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

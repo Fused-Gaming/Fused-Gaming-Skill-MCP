@@ -1,0 +1,32 @@
+{
+  "name": "@h4shed/tool-style-dictionary",
+  "version": "3.0.0",
+  "description": "Design token management and multi-format export integration for @h4shed ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "peerDependencies": {
+    "style-dictionary": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "style-dictionary": "^3.0.0"
+  },
+  "keywords": [
+    "design-tokens",
+    "style-dictionary",
+    "design-system",
+    "@h4shed",
+    "fused-gaming"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}
