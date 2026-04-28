@@ -1,5 +1,5 @@
 {
-  "name": "@h4shed/skill-smart-contracts",
+  "name": "@h4shed/skill-smart-contract-tools",
   "version": "1.0.0",
   "description": "Smart contract development tools for Hardhat, Truffle, and Foundry ecosystems",
   "type": "module",

@@ -1,5 +1,5 @@
 {
-  "name": "@h4shed/skill-storybook",
+  "name": "@h4shed/skill-storybook-component-library",
   "version": "1.0.0",
   "description": "Component library documentation and visual testing with Storybook integration",
   "type": "module",

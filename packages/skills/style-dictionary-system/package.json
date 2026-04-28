@@ -1,5 +1,5 @@
 {
-  "name": "@h4shed/skill-style-dictionary",
+  "name": "@h4shed/skill-style-dictionary-system",
   "version": "1.0.0",
   "description": "Design tokens and style dictionary generation for cross-platform design system management",
   "type": "module",

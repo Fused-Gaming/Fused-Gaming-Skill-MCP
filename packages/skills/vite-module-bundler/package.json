@@ -1,5 +1,5 @@
 {
-  "name": "@h4shed/skill-vite",
+  "name": "@h4shed/skill-vite-module-bundler",
   "version": "1.0.0",
   "description": "Next-generation JavaScript module bundler for lightning-fast development and optimized production builds",
   "type": "module",

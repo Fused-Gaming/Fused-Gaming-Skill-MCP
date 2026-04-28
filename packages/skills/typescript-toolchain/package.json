@@ -1,5 +1,5 @@
 {
-  "name": "@h4shed/skill-typescript",
+  "name": "@h4shed/skill-typescript-toolchain",
   "version": "1.0.0",
   "description": "Advanced TypeScript configuration, type generation, and static analysis tooling",
   "type": "module",

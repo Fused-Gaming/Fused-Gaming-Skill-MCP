@@ -1,5 +1,5 @@
 {
-  "name": "@h4shed/skill-playwright",
+  "name": "@h4shed/skill-playwright-test-automation",
   "version": "1.0.0",
   "description": "End-to-end testing automation framework for web applications with cross-browser support",
   "type": "module",
