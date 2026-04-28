@@ -266,21 +266,20 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-See [Troubleshooting Guide](/resources/troubleshooting/common-issues) for more help.
+Refer to individual tool documentation for tool-specific troubleshooting.
 
 ---
 
 ## 📖 Next Steps
 
 1. ✅ Complete installation
-2. 📖 Read [Design System Guide](/guide/design-system/tokens)
-3. 🎨 Create design tokens
-4. 📝 Write components
-5. ✓ Run tests
-6. 🚀 Deploy
+2. 🎨 Create design tokens in tokens.json
+3. 📝 Configure build scripts (style-dictionary, vite, jest)
+4. ✓ Run npm run build to compile
+5. 🚀 Deploy to your environment
 
 ---
 
 **Total Setup Time**: ~2 hours for full ecosystem  
 **Maintenance**: Automatic updates via Dependabot  
-**Support**: See [FAQ](/resources/faq)
+**Support**: Check package READMEs for tool-specific documentation

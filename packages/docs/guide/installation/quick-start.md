@@ -50,9 +50,8 @@ Your project is now configured with design tokens. To generate CSS output, see t
 
 ### Next Steps
 
-- **Phase 1**: [Add Accessibility Testing](/guide/phases/phase-1-accessibility)
-- **Phase 2**: [Add Component Library](/guide/phases/phase-2-consistency)
 - **Full Guide**: [Complete Setup](/guide/installation/full-setup)
+- **Home**: [Back to Documentation](/)
 
 ---
 
