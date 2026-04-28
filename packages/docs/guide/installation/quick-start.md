@@ -46,7 +46,7 @@ Your project is now set up with design tokens.
 
 ## ✅ Done!
 
-Your design tokens are now in `dist/design-tokens.css`. 
+Your project is now configured with design tokens. To generate CSS output, see the [Full Installation Guide](/guide/installation/full-setup) for build setup instructions.
 
 ### Next Steps
 
