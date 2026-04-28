@@ -16,7 +16,7 @@ This skill provides tools for:
 ## Installation
 
 ```bash
-npm install @h4shed/skill-vite
+npm install @h4shed/skill-vite-module-bundler
 ```
 
 ## Development

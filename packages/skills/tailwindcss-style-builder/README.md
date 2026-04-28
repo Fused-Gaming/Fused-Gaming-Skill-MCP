@@ -16,7 +16,7 @@ This skill provides tools for:
 ## Installation
 
 ```bash
-npm install @h4shed/skill-tailwindcss
+npm install @h4shed/skill-tailwindcss-style-builder
 ```
 
 ## Development

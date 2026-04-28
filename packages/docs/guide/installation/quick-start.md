@@ -38,21 +38,16 @@ Create `tokens.json`:
 }
 ```
 
-## Step 4: Generate CSS (1 min)
+## Step 4: Use the CLI (1 min)
 
-Create `generate-tokens.js`:
-```javascript
-import { ThemeFactory } from '@h4shed/skill-theme-factory';
-import tokens from './tokens.json' assert { type: 'json' };
-
-const factory = new ThemeFactory({ tokens });
-await factory.exportCSS('./dist/design-tokens.css');
-console.log('✅ Design tokens generated!');
-```
+The installed skills can be used through the MCP CLI:
 
 ```bash
-node generate-tokens.js
+# See the full setup guide for CLI-based token generation
+npm run help  # (coming soon in full setup)
 ```
+
+**Note**: These skills are currently in scaffolding phase. For complete setup with working implementations, see the [Full Installation Guide](/guide/installation/full-setup).
 
 ## ✅ Done!
 

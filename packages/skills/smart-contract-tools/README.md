@@ -16,7 +16,7 @@ This skill provides tools for:
 ## Installation
 
 ```bash
-npm install @h4shed/skill-smart-contracts
+npm install @h4shed/skill-smart-contract-tools
 ```
 
 ## Development
