@@ -1,7 +1,8 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-      "ignoreDeprecations": "5.0",
+    "types": ["node"],
+    "ignoreDeprecations": "5.0",
     "rootDir": "./src",
     "outDir": "./dist",
     "baseUrl": ".",

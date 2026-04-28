@@ -1,0 +1,23 @@
+{
+  "name": "@h4shed/tool-ora",
+  "version": "7.0.0",
+  "description": "Terminal spinners and progress indicators integration for @h4shed ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "peerDependencies": {
+    "ora": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "ora": "^7.0.0"
+  },
+  "keywords": ["ora", "spinner", "progress", "cli", "@h4shed", "fused-gaming"],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

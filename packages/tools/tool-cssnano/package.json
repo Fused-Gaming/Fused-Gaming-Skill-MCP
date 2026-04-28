@@ -1,0 +1,22 @@
+{
+  "name": "@h4shed/tool-cssnano",
+  "version": "1.0.0",
+  "description": "CSS minification and optimization tool wrapper for @h4shed ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"No tests yet\""
+  },
+  "peerDependencies": {
+    "cssnano": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "keywords": ["css", "minification", "optimization", "@h4shed", "tool"],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

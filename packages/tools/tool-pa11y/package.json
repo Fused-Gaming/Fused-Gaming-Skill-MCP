@@ -1,0 +1,31 @@
+{
+  "name": "@h4shed/tool-pa11y",
+  "version": "6.0.0",
+  "description": "Web accessibility testing CLI integration for @h4shed ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "echo \"Tests coming soon\""
+  },
+  "peerDependencies": {
+    "pa11y": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "pa11y": "^6.0.0"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "wcag",
+    "testing",
+    "cli",
+    "@h4shed",
+    "fused-gaming"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}

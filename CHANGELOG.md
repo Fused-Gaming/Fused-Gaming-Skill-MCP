@@ -8,7 +8,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- TBD for next release
+- **9 New Scaffolded Development Tool Skills** — Complete package structure and Skill interface implementations
+  - Vite Module Bundler (`@h4shed/skill-vite-module-bundler`)
+  - TypeScript Toolchain (`@h4shed/skill-typescript-toolchain`)
+  - Tailwind CSS Style Builder (`@h4shed/skill-tailwindcss-style-builder`)
+  - Storybook Component Library (`@h4shed/skill-storybook-component-library`)
+  - Playwright Test Automation (`@h4shed/skill-playwright-test-automation`)
+  - Vercel Next.js Deployment (`@h4shed/skill-vercel-nextjs-deployment`)
+  - Style Dictionary System (`@h4shed/skill-style-dictionary-system`)
+  - NFT Generative Art (`@h4shed/skill-nft-generative-art`)
+  - Smart Contract Tools (`@h4shed/skill-smart-contract-tools`)
+  - Each implements the Skill interface with proper name, version, description, and initialize method
+- **27 Tool Wrapper Packages** — Scaffolding for open-source tool integrations under `@h4shed/tool-*` namespace
+  - Design & Style Systems (6): Style Dictionary, Tailwind CSS, PostCSS, cssnano, Sass, Less
+  - Component Systems (5): Storybook, TypeDoc, Docusaurus, VitePress, Markdown-it
+  - Testing & Quality (8): Axe Core, Pa11y, Jest, Cypress, Playwright, Vitest, Istanbul, Husky
+  - Build & Bundling (5): Vite, tsup, Rollup, Webpack, esbuild
+  - CLI & Automation (3): Commander, Inquirer, Ora
+- **Comprehensive Documentation Hub** — VitePress-based site at `packages/docs/`
+  - Home page with hero section, features grid, and quick installation
+  - Quick Start guide (5-minute setup)
+  - Full Installation guide with phase-by-phase approach
+  - Documentation configuration with local search provider
+  - Proper navigation structure preventing 404 errors
+- **Security & Orchestration Documentation**
+  - Tool Integrations Orchestration Guide with security-first approach
+  - Complete Tools Registry tracking 50+ packages across 5 tiers
+  - Installation Manifest with phased rollout plan (5 phases through May 15)
+  - Agent coordination patterns for 13+ specialized agents
+
+### Fixed
+- Fixed TypeScript monorepo type resolution by adding `types: ["node"]` to root tsconfig.json
+- Fixed TypeScript configuration compatibility by updating `ignoreDeprecations` from "6.0" to "5.0" (21 files)
+- Fixed VitePress navigation configuration to prevent 404 errors on missing documentation pages
+- Implemented proper Skill interface exports in all 9 new skill packages (resolves Codex P1 review)
 
 ## [1.0.5] - 2026-04-27
 
