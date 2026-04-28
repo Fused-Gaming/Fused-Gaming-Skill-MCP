@@ -127,7 +127,6 @@ npm install --save-dev @h4shed/skill-theme-factory @h4shed/skill-project-manager
 ```bash
 # Using upstream tools directly
 npm install --save-dev axe-core pa11y
-npx axe-core ./dist/index.html
 npx pa11y ./dist/index.html
 ```
 

@@ -38,13 +38,13 @@ Create `tokens.json`:
 }
 ```
 
-## Step 4: Use the CLI (1 min)
+## Step 4: Build & Verify (1 min)
 
-The installed skills can be used through the MCP CLI:
+Verify your setup is working:
 
 ```bash
-# See the full setup guide for CLI-based token generation
-npm run help  # (coming soon in full setup)
+npm run build
+npm run typecheck
 ```
 
 **Note**: These skills are currently in scaffolding phase. For complete setup with working implementations, see the [Full Installation Guide](/guide/installation/full-setup).
