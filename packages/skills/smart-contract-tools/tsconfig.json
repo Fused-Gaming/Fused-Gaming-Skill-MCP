@@ -3,12 +3,9 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "paths": {
-      "@h4shed/mcp-core": ["../../../packages/core/src/index.ts"],
-      "@h4shed/mcp-cli": ["../../../packages/cli/src/index.ts"],
-      "@h4shed/skill-*": ["../*/src/index.ts"]
-    }
+    "baseUrl": ".",
+    "paths": {}
   },
-  "include": ["src"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
