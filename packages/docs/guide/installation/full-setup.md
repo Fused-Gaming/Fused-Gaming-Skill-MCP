@@ -229,9 +229,6 @@ ls dist/tokens.css  # Should exist
 # Run tests
 npm run test
 
-# Check accessibility
-npm run test:a11y
-
 # Start dev server
 npm run dev
 # Open http://localhost:5173
