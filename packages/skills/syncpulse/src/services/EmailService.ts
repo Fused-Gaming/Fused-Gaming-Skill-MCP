@@ -144,7 +144,11 @@ export class EmailService {
     };
 
     for (const recipient of recipients) {
-      const variables = { ...globalVariables, ...recipient.variables };
+      const variables = {
+        ...globalVariables,
+        ...(recipient.name ? { name: recipient.name, recipientName: recipient.name } : {}),
+        ...recipient.variables,
+      };
       const result = await this.sendEmail(recipient, template, variables);
 
       if (result.success) {

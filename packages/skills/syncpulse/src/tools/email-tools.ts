@@ -98,7 +98,8 @@ export function sendMarketingCampaign(service: EmailService) {
 
     let htmlBody = input.htmlBody;
     if (input.trackingPixel) {
-      const trackingPixel = `<img src="https://mail.vln.gg/track/${input.campaignName}" alt="" width="1" height="1" style="display:none;" />`;
+      const trackingDomain = process.env.TRACKING_PIXEL_DOMAIN || "https://mail.vln.gg";
+      const trackingPixel = `<img src="${trackingDomain}/track/${input.campaignName}" alt="" width="1" height="1" style="display:none;" />`;
       htmlBody = htmlBody + trackingPixel;
     }
 
