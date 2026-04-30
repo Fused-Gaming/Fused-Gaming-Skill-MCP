@@ -8,6 +8,17 @@ export {
   sendMarketingCampaign,
   verifyEmailConfiguration,
 } from "./email-tools.js";
+export {
+  sendMagicLink,
+  sendMFACode,
+  sendPasswordReset,
+  sendSecurityAlert,
+  sendInvoice,
+  sendNewsletter,
+  sendOutageNotice,
+  sendMaintenanceNotice,
+  sendTicketUpdate,
+} from "./email-workflows.js";
 
 export function synchronizeProjectState(
   cache: CacheService,
