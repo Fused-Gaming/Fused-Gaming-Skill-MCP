@@ -76,7 +76,7 @@ export function sendBulkEmail(service: EmailService) {
     const result = await service.sendBulk(recipients, template, input.globalVariables);
 
     return {
-      success: result.success + result.failed === input.recipients.length,
+      success: result.failed === 0,
       summary: {
         total: input.recipients.length,
         successful: result.success,
@@ -111,7 +111,7 @@ export function sendMarketingCampaign(service: EmailService) {
     const result = await service.sendBulk(recipients, template);
 
     return {
-      success: result.success + result.failed === input.recipients.length,
+      success: result.failed === 0,
       campaign: {
         name: input.campaignName,
         total: input.recipients.length,
