@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **SyncPulse Email Workflow Templates (v0.2.0)** — 9 production-ready email automation workflows
+  - **Authentication & Security**: Magic link login, MFA verification, password reset, security alerts
+  - **Business Operations**: Invoice delivery, newsletter distribution
+  - **System Operations**: Outage notices, maintenance announcements, ticket updates
+  - All templates feature professional HTML/text, variable interpolation, and security best practices
+  - Full TypeScript support with MCP tool definitions
+  - Comprehensive documentation: SECURE_EMAIL_SETUP.md, AGENT_INTEGRATION.md, EMAIL_WORKFLOWS.md
 - **9 New Scaffolded Development Tool Skills** — Complete package structure and Skill interface implementations
   - Vite Module Bundler (`@h4shed/skill-vite-module-bundler`)
   - TypeScript Toolchain (`@h4shed/skill-typescript-toolchain`)

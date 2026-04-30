@@ -46,8 +46,17 @@
 | **style-dictionary-system** | Design tokens and cross-platform theming | 📋 |
 | **nft-generative-art** | NFT artwork generation and blockchain assets | 📋 |
 | **smart-contract-tools** | Hardhat, Truffle, and Foundry integration | 📋 |
+| **syncpulse** | Multi-agent coordination + 9 email workflow templates | ✅ |
 
 **Core skills are production-ready; new tools are in active scaffolding** ✨
+
+### 📧 SyncPulse Email Workflows (v0.2.0)
+New to **SyncPulse**: Production-ready email automation with **9 templated workflows**:
+- **Authentication** (4): Magic link login, MFA verification, password reset, security alerts
+- **Business** (2): Invoice delivery, newsletters
+- **Operations** (3): Outage notices, maintenance announcements, ticket updates
+
+All with professional HTML templates, security best practices, and full agent integration.
 
 ### 📦 Publishing now / next wave
 
@@ -56,6 +65,7 @@
 - `skill-algorithmic-art`, `skill-ascii-mockup`, `skill-canvas-design`
 - `skill-frontend-design`, `skill-mcp-builder`, `skill-pre-deploy-validator`
 - `skill-skill-creator`, `skill-theme-factory`, `skill-underworld-writer`
+- `skill-syncpulse` ⭐ (v0.2.0 — 9 email workflow templates)
 
 **Scaffolded and queued for publish (`@h4shed`)**
 - `skill-mermaid-terminal`
