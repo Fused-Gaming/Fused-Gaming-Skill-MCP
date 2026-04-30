@@ -52,7 +52,9 @@
     "mcp:install": "node scripts/interactive-install.js",
     "registry:generate": "node scripts/generate-skill-registry.js",
     "registry:validate": "npm run registry:generate && npm run typecheck && npm run lint",
-    "registry:view": "cat registry/REGISTRY.md | less"
+    "registry:view": "cat registry/REGISTRY.md | less",
+    "update:check": "node scripts/check-updates.js",
+    "update:apply": "npm install && npm run registry:generate && npm run build"
   },
   "engines": {
     "node": ">=20.0.0",

@@ -148,6 +148,77 @@ Done! You're now ready to supercharge Claude. 🔋
 
 ---
 
+## ⚡ One-Command Setup (NEW!)
+
+Get up and running in under 60 seconds:
+
+```bash
+# Clone, install, and initialize everything in one command
+git clone https://github.com/fused-gaming/fused-gaming-skill-mcp.git && \
+cd fused-gaming-skill-mcp && \
+npm install && \
+npm run mcp:install -- --mode=full && \
+npm run build
+```
+
+This single command:
+- ✅ Clones the repository
+- ✅ Installs all dependencies
+- ✅ Runs interactive setup wizard
+- ✅ Generates skill registry
+- ✅ Builds all packages
+- ✅ Ready for immediate use
+
+**First-time setup time:** ~2-3 minutes depending on network speed
+
+---
+
+## 🔄 Session Auto-Update Script (NEW!)
+
+Keep your skills and tools up-to-date automatically in each chat session:
+
+### Installation
+
+```bash
+# Add to your ~/.bashrc, ~/.zshrc, or Claude Code startup hook
+npm run update:check
+```
+
+### What It Does
+
+The auto-update script:
+- ✅ Checks for new skill packages on startup
+- ✅ Fetches latest tool wrapper versions
+- ✅ Validates registry consistency
+- ✅ Reports what's new in your session
+- ✅ Prompts for optional auto-install of updates
+
+### Usage in Claude Code
+
+Add this to your `.claude/settings.json` hook:
+
+```json
+{
+  "hooks": {
+    "session-start": "npm run update:check && npm run registry:validate"
+  }
+}
+```
+
+This ensures every new chat session has the latest skills and tools available.
+
+### Manual Update Check
+
+```bash
+# Check for updates without auto-installing
+npm run update:check
+
+# Install all pending updates
+npm run update:apply
+```
+
+---
+
 ## 🎬 Claude Code Terminal Livestream
 
 **NEW:** Real-time terminal output visualization directly in Claude Code's web interface!
