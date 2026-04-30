@@ -1,6 +1,4 @@
-import { EmailService, type EmailTemplate, type EmailRecipient } from "../services/EmailService.js";
-
-const emailService = new EmailService();
+import { type EmailService, type EmailTemplate, type EmailRecipient } from "../services/EmailService.js";
 
 export interface SendEmailInput {
   recipients: Array<{ email: string; name?: string }>;

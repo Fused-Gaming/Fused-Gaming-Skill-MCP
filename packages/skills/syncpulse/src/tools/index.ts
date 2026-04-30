@@ -2,7 +2,6 @@ import { CacheService } from "../services/CacheService.js";
 import { MemorySystem } from "../services/MemorySystem.js";
 import { SwarmOrchestrator } from "../services/SwarmOrchestrator.js";
 import { TaskOrchestrator } from "../services/TaskOrchestrator.js";
-import { EmailService } from "../services/EmailService.js";
 export {
   sendEmail,
   sendBulkEmail,
