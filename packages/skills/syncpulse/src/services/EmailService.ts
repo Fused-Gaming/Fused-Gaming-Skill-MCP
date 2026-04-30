@@ -97,39 +97,43 @@ export class EmailService {
     }
 
     const recipientArray = Array.isArray(recipients) ? recipients : [recipients];
-    const to = recipientArray
-      .map((r) => (r.name ? `${r.name} <${r.email}>` : r.email))
-      .join(", ");
 
-    const mergedVariables = {
-      ...(variables || {}),
-      ...recipientArray[0]?.variables,
-    };
+    // Send individual emails to avoid exposing all recipients to each other (privacy/security)
+    let lastError: string | undefined;
+    for (const recipient of recipientArray) {
+      const to = recipient.name ? `${recipient.name} <${recipient.email}>` : recipient.email;
 
-    const html = this.interpolateTemplate(template.html, mergedVariables);
-    const text = template.text ? this.interpolateTemplate(template.text, mergedVariables) : undefined;
-
-    const mailOptions: SendMailOptions = {
-      from: this.config.from,
-      to,
-      subject: this.interpolateTemplate(template.subject, mergedVariables),
-      html,
-      text,
-    };
-
-    try {
-      const result = await this.transporter.sendMail(mailOptions);
-      return {
-        success: true,
-        messageId: result.messageId,
+      const mergedVariables = {
+        ...(variables || {}),
+        ...recipient.variables,
       };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      return {
-        success: false,
-        error: errorMessage,
+
+      const html = this.interpolateTemplate(template.html, mergedVariables);
+      const text = template.text ? this.interpolateTemplate(template.text, mergedVariables) : undefined;
+
+      const mailOptions: SendMailOptions = {
+        from: this.config.from,
+        to,
+        subject: this.interpolateTemplate(template.subject, mergedVariables),
+        html,
+        text,
       };
+
+      try {
+        const result = await this.transporter.sendMail(mailOptions);
+        return {
+          success: true,
+          messageId: result.messageId,
+        };
+      } catch (error) {
+        lastError = error instanceof Error ? error.message : String(error);
+      }
     }
+
+    return {
+      success: false,
+      error: lastError || "Failed to send email to all recipients",
+    };
   }
 
   public async sendBulk(
