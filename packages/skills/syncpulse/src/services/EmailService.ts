@@ -99,7 +99,9 @@ export class EmailService {
     const recipientArray = Array.isArray(recipients) ? recipients : [recipients];
 
     // Send individual emails to avoid exposing all recipients to each other (privacy/security)
-    let lastError: string | undefined;
+    let firstMessageId: string | undefined;
+    const errors: string[] = [];
+
     for (const recipient of recipientArray) {
       const to = recipient.name ? `${recipient.name} <${recipient.email}>` : recipient.email;
 
@@ -121,18 +123,26 @@ export class EmailService {
 
       try {
         const result = await this.transporter.sendMail(mailOptions);
-        return {
-          success: true,
-          messageId: result.messageId,
-        };
+        if (!firstMessageId) {
+          firstMessageId = result.messageId;
+        }
       } catch (error) {
-        lastError = error instanceof Error ? error.message : String(error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        errors.push(`${recipient.email}: ${errorMessage}`);
       }
+    }
+
+    // Success only if all recipients received the email
+    if (errors.length === 0) {
+      return {
+        success: true,
+        messageId: firstMessageId,
+      };
     }
 
     return {
       success: false,
-      error: lastError || "Failed to send email to all recipients",
+      error: errors.join("; "),
     };
   }
 
