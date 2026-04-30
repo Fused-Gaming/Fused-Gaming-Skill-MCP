@@ -2,6 +2,23 @@ import { CacheService } from "../services/CacheService.js";
 import { MemorySystem } from "../services/MemorySystem.js";
 import { SwarmOrchestrator } from "../services/SwarmOrchestrator.js";
 import { TaskOrchestrator } from "../services/TaskOrchestrator.js";
+export {
+  sendEmail,
+  sendBulkEmail,
+  sendMarketingCampaign,
+  verifyEmailConfiguration,
+} from "./email-tools.js";
+export {
+  sendMagicLink,
+  sendMFACode,
+  sendPasswordReset,
+  sendSecurityAlert,
+  sendInvoice,
+  sendNewsletter,
+  sendOutageNotice,
+  sendMaintenanceNotice,
+  sendTicketUpdate,
+} from "./email-workflows.js";
 
 export function synchronizeProjectState(
   cache: CacheService,
