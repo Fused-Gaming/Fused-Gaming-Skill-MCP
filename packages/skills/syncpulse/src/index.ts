@@ -2,11 +2,16 @@ import { SwarmOrchestrator } from "./services/SwarmOrchestrator.js";
 import { MemorySystem } from "./services/MemorySystem.js";
 import { TaskOrchestrator } from "./services/TaskOrchestrator.js";
 import { CacheService } from "./services/CacheService.js";
+import { EmailService } from "./services/EmailService.js";
 import {
   synchronizeProjectState,
   queryProjectCache,
   coordinateAgents,
   analyzePerformance,
+  sendEmail,
+  sendBulkEmail,
+  sendMarketingCampaign,
+  verifyEmailConfiguration,
 } from "./tools/index.js";
 
 export function createSyncPulseSkill() {
@@ -14,10 +19,11 @@ export function createSyncPulseSkill() {
   const memory = new MemorySystem();
   const tasks = new TaskOrchestrator();
   const cache = new CacheService();
+  const emailService = new EmailService();
 
   return {
     name: "syncpulse",
-    description: "SyncPulse - Intelligent multi-agent coordination, caching, and project state synchronization",
+    description: "SyncPulse - Intelligent multi-agent coordination, caching, project state synchronization, and secure email automation for marketing teams",
     version: "1.0.0",
     organization: "Fused-Gaming",
     tools: [
@@ -82,15 +88,124 @@ export function createSyncPulseSkill() {
         },
         handler: analyzePerformance(swarm, memory),
       },
+      {
+        name: "send_email",
+        description: "Send secure emails using nodemailer with template variable interpolation",
+        inputSchema: {
+          type: "object",
+          properties: {
+            recipients: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  email: { type: "string", description: "Recipient email address" },
+                  name: { type: "string", description: "Recipient name (optional)" },
+                },
+                required: ["email"],
+              },
+              description: "List of email recipients",
+            },
+            subject: { type: "string", description: "Email subject" },
+            htmlBody: { type: "string", description: "HTML email body with {{variable}} placeholders" },
+            textBody: { type: "string", description: "Plain text email body (optional)" },
+            variables: {
+              type: "object",
+              description: "Template variables for subject and body interpolation",
+            },
+          },
+          required: ["recipients", "subject", "htmlBody"],
+        },
+        handler: sendEmail(emailService),
+      },
+      {
+        name: "send_bulk_email",
+        description: "Send bulk emails to multiple recipients with per-recipient and global variables",
+        inputSchema: {
+          type: "object",
+          properties: {
+            recipients: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  email: { type: "string", description: "Recipient email address" },
+                  name: { type: "string", description: "Recipient name (optional)" },
+                  variables: {
+                    type: "object",
+                    description: "Per-recipient template variables",
+                  },
+                },
+                required: ["email"],
+              },
+              description: "List of recipients with optional per-recipient variables",
+            },
+            subject: { type: "string", description: "Email subject" },
+            htmlBody: { type: "string", description: "HTML email body" },
+            textBody: { type: "string", description: "Plain text email body (optional)" },
+            globalVariables: {
+              type: "object",
+              description: "Global variables applied to all recipients",
+            },
+          },
+          required: ["recipients", "subject", "htmlBody"],
+        },
+        handler: sendBulkEmail(emailService),
+      },
+      {
+        name: "send_marketing_campaign",
+        description: "Send marketing campaign emails with optional tracking pixel for marketing teams",
+        inputSchema: {
+          type: "object",
+          properties: {
+            campaignName: { type: "string", description: "Name of the marketing campaign" },
+            recipients: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  email: { type: "string", description: "Recipient email address" },
+                  name: { type: "string", description: "Recipient name (optional)" },
+                  variables: {
+                    type: "object",
+                    description: "Per-recipient template variables",
+                  },
+                },
+                required: ["email"],
+              },
+              description: "List of campaign recipients",
+            },
+            subject: { type: "string", description: "Campaign email subject" },
+            htmlBody: { type: "string", description: "Campaign HTML email body" },
+            textBody: { type: "string", description: "Campaign plain text body (optional)" },
+            trackingPixel: {
+              type: "boolean",
+              description: "Enable tracking pixel for email open analytics (default: false)",
+            },
+          },
+          required: ["campaignName", "recipients", "subject", "htmlBody"],
+        },
+        handler: sendMarketingCampaign(emailService),
+      },
+      {
+        name: "verify_email_configuration",
+        description: "Verify email service configuration and connection status",
+        inputSchema: {
+          type: "object",
+          properties: {},
+        },
+        handler: verifyEmailConfiguration(emailService),
+      },
     ],
     services: {
       swarm,
       memory,
       tasks,
       cache,
+      email: emailService,
     },
   };
 }
 
-export { SwarmOrchestrator, MemorySystem, TaskOrchestrator, CacheService };
+export { SwarmOrchestrator, MemorySystem, TaskOrchestrator, CacheService, EmailService };
 export * from "./types/index.js";
