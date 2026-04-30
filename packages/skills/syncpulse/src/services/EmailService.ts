@@ -163,7 +163,8 @@ export class EmailService {
 
   private interpolateTemplate(template: string, variables: Record<string, string>): string {
     return Object.entries(variables).reduce((acc, [key, value]) => {
-      return acc.replace(new RegExp(`{{${key}}}`, "g"), value);
+      const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return acc.replace(new RegExp(`{{${escapedKey}}}`, "g"), value);
     }, template);
   }
 

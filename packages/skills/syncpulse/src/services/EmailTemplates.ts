@@ -1,4 +1,4 @@
-import { type EmailTemplate, type EmailRecipient } from "./EmailService.js";
+import { type EmailTemplate } from "./EmailService.js";
 
 export interface TemplateContext {
   recipientName?: string;
@@ -12,7 +12,7 @@ export interface TemplateContext {
 // AUTHENTICATION & SECURITY TEMPLATES
 // ============================================================================
 
-export function magicLinkLoginTemplate(context: TemplateContext & { magicLink: string; expiryMinutes: string }): EmailTemplate {
+export function magicLinkLoginTemplate(_context: TemplateContext & { magicLink: string; expiryMinutes: string }): EmailTemplate {
   return {
     subject: "Your Magic Link Login - {{companyName}}",
     html: `
@@ -49,7 +49,7 @@ Questions? Contact {{supportEmail}}`,
   };
 }
 
-export function mfaVerificationTemplate(context: TemplateContext & { mfaCode: string; expiryMinutes: string }): EmailTemplate {
+export function mfaVerificationTemplate(_context: TemplateContext & { mfaCode: string; expiryMinutes: string }): EmailTemplate {
   return {
     subject: "Your {{companyName}} Verification Code",
     html: `
@@ -89,7 +89,7 @@ Need help? Contact {{supportEmail}}`,
   };
 }
 
-export function passwordResetTemplate(context: TemplateContext & { resetLink: string; expiryHours: string }): EmailTemplate {
+export function passwordResetTemplate(_context: TemplateContext & { resetLink: string; expiryHours: string }): EmailTemplate {
   return {
     subject: "Reset Your {{companyName}} Password",
     html: `
@@ -130,7 +130,7 @@ Questions? {{dashboardUrl}}/help or {{supportEmail}}`,
   };
 }
 
-export function accountSecurityAlertTemplate(context: TemplateContext & { alertType: string; timestamp: string; location?: string }): EmailTemplate {
+export function accountSecurityAlertTemplate(_context: TemplateContext & { alertType: string; timestamp: string; location?: string }): EmailTemplate {
   return {
     subject: "⚠️ Security Alert: {{alertType}} - {{companyName}}",
     html: `
@@ -144,7 +144,7 @@ export function accountSecurityAlertTemplate(context: TemplateContext & { alertT
         <ul style="color: #666;">
           <li><strong>Event:</strong> {{alertType}}</li>
           <li><strong>Time:</strong> {{timestamp}}</li>
-          {{#location}}<li><strong>Location:</strong> {{location}}</li>{{/location}}
+          <li><strong>Location:</strong> {{location}}</li>
         </ul>
         <p style="color: #d32f2f; font-weight: bold;">⚠️ If this wasn't you, secure your account immediately:</p>
         <div style="text-align: center; margin: 20px 0;">
@@ -170,7 +170,7 @@ We detected a security event on your account:
 
 Event: {{alertType}}
 Time: {{timestamp}}
-{{#location}}Location: {{location}}{{/location}}
+Location: {{location}}
 
 ⚠️ If this wasn't you, secure your account immediately:
 {{dashboardUrl}}/security/change-password
@@ -186,7 +186,7 @@ For support, contact {{supportEmail}}`,
 // BUSINESS & TRANSACTIONAL TEMPLATES
 // ============================================================================
 
-export function invoiceTemplate(context: TemplateContext & { invoiceNumber: string; amount: string; dueDate: string; invoiceLink: string }): EmailTemplate {
+export function invoiceTemplate(_context: TemplateContext & { invoiceNumber: string; amount: string; dueDate: string; invoiceLink: string }): EmailTemplate {
   return {
     subject: "Invoice #{{invoiceNumber}} - {{companyName}}",
     html: `
@@ -240,7 +240,7 @@ Questions? Contact {{supportEmail}}`,
   };
 }
 
-export function newsletterTemplate(context: TemplateContext & { title: string; contentHtml: string; unsubscribeLink: string }): EmailTemplate {
+export function newsletterTemplate(_context: TemplateContext & { title: string; contentHtml: string; unsubscribeLink: string }): EmailTemplate {
   return {
     subject: "{{title}} - {{companyName}}",
     html: `
@@ -274,7 +274,7 @@ Account: {{dashboardUrl}}/settings`,
 // OPERATIONAL & ADMINISTRATIVE TEMPLATES
 // ============================================================================
 
-export function developmentOutageTemplate(context: TemplateContext & { service: string; status: string; startTime: string; estimatedResolution?: string }): EmailTemplate {
+export function developmentOutageTemplate(_context: TemplateContext & { service: string; status: string; startTime: string; estimatedResolution?: string }): EmailTemplate {
   return {
     subject: "🔴 Service Status: {{service}} - {{status}}",
     html: `
@@ -298,10 +298,10 @@ export function developmentOutageTemplate(context: TemplateContext & { service: 
             <td style="padding: 10px; border: 1px solid #ddd;"><strong>Started At</strong></td>
             <td style="padding: 10px; border: 1px solid #ddd;">{{startTime}}</td>
           </tr>
-          {{#estimatedResolution}}<tr>
+          <tr>
             <td style="padding: 10px; border: 1px solid #ddd;"><strong>Est. Resolution</strong></td>
             <td style="padding: 10px; border: 1px solid #ddd;">{{estimatedResolution}}</td>
-          </tr>{{/estimatedResolution}}
+          </tr>
         </table>
         <p style="color: #666; font-size: 14px;">
           We're actively working to resolve this. Updates will be posted to our
@@ -322,7 +322,7 @@ We're experiencing issues with {{service}}.
 Service: {{service}}
 Status: {{status}}
 Started: {{startTime}}
-{{#estimatedResolution}}Est. Resolution: {{estimatedResolution}}{{/estimatedResolution}}
+Est. Resolution: {{estimatedResolution}}
 
 We're working to resolve this. Updates: {{dashboardUrl}}/status
 
@@ -330,7 +330,7 @@ Check {{dashboardUrl}}/status for details.`,
   };
 }
 
-export function maintenanceNoticeTemplate(context: TemplateContext & { service: string; startTime: string; endTime: string; impact: string }): EmailTemplate {
+export function maintenanceNoticeTemplate(_context: TemplateContext & { service: string; startTime: string; endTime: string; impact: string }): EmailTemplate {
   return {
     subject: "🔧 Scheduled Maintenance: {{service}}",
     html: `
@@ -381,7 +381,7 @@ Questions? {{supportEmail}}`,
   };
 }
 
-export function ticketUpdateTemplate(context: TemplateContext & { ticketId: string; ticketTitle: string; status: string; updateMessage: string; ticketLink: string }): EmailTemplate {
+export function ticketUpdateTemplate(_context: TemplateContext & { ticketId: string; ticketTitle: string; status: string; updateMessage: string; ticketLink: string }): EmailTemplate {
   return {
     subject: "[Ticket #{{ticketId}}] {{status}}: {{ticketTitle}}",
     html: `
