@@ -9,7 +9,6 @@ import {
   developmentOutageTemplate,
   maintenanceNoticeTemplate,
   ticketUpdateTemplate,
-  type TemplateContext,
 } from "../services/EmailTemplates.js";
 
 // ============================================================================
@@ -28,18 +27,20 @@ export interface SendMagicLinkInput {
 
 export function sendMagicLink(service: EmailService) {
   return async (input: SendMagicLinkInput) => {
-    const template = magicLinkLoginTemplate({
+    const variables = {
       recipientName: input.name || "User",
       magicLink: input.magicLink,
       expiryMinutes: input.expiryMinutes || "30",
       companyName: input.companyName || "Our",
       supportEmail: input.supportEmail || "support@example.com",
       dashboardUrl: input.dashboardUrl || "https://app.example.com",
-    });
+    };
+    const template = magicLinkLoginTemplate(variables);
 
     const result = await service.sendEmail(
       { email: input.email, name: input.name },
-      template
+      template,
+      variables
     );
 
     return {
@@ -65,18 +66,20 @@ export interface SendMFACodeInput {
 
 export function sendMFACode(service: EmailService) {
   return async (input: SendMFACodeInput) => {
-    const template = mfaVerificationTemplate({
+    const variables = {
       recipientName: input.name || "User",
       mfaCode: input.mfaCode,
       expiryMinutes: input.expiryMinutes || "10",
       companyName: input.companyName || "Our",
       supportEmail: input.supportEmail || "support@example.com",
       dashboardUrl: input.dashboardUrl || "https://app.example.com",
-    });
+    };
+    const template = mfaVerificationTemplate(variables);
 
     const result = await service.sendEmail(
       { email: input.email, name: input.name },
-      template
+      template,
+      variables
     );
 
     return {
@@ -102,18 +105,20 @@ export interface SendPasswordResetInput {
 
 export function sendPasswordReset(service: EmailService) {
   return async (input: SendPasswordResetInput) => {
-    const template = passwordResetTemplate({
+    const variables = {
       recipientName: input.name || "User",
       resetLink: input.resetLink,
       expiryHours: input.expiryHours || "24",
       companyName: input.companyName || "Our",
       supportEmail: input.supportEmail || "support@example.com",
       dashboardUrl: input.dashboardUrl || "https://app.example.com",
-    });
+    };
+    const template = passwordResetTemplate(variables);
 
     const result = await service.sendEmail(
       { email: input.email, name: input.name },
-      template
+      template,
+      variables
     );
 
     return {
@@ -140,19 +145,21 @@ export interface SendSecurityAlertInput {
 
 export function sendSecurityAlert(service: EmailService) {
   return async (input: SendSecurityAlertInput) => {
-    const template = accountSecurityAlertTemplate({
+    const variables = {
       recipientName: input.name || "User",
       alertType: input.alertType,
       timestamp: input.timestamp || new Date().toISOString(),
-      location: input.location,
+      location: input.location || "",
       companyName: input.companyName || "Our",
       supportEmail: input.supportEmail || "support@example.com",
       dashboardUrl: input.dashboardUrl || "https://app.example.com",
-    });
+    };
+    const template = accountSecurityAlertTemplate(variables);
 
     const result = await service.sendEmail(
       { email: input.email, name: input.name },
-      template
+      template,
+      variables
     );
 
     return {
@@ -184,7 +191,7 @@ export interface SendInvoiceInput {
 
 export function sendInvoice(service: EmailService) {
   return async (input: SendInvoiceInput) => {
-    const template = invoiceTemplate({
+    const variables = {
       recipientName: input.name || "Customer",
       invoiceNumber: input.invoiceNumber,
       amount: input.amount,
@@ -193,11 +200,13 @@ export function sendInvoice(service: EmailService) {
       companyName: input.companyName || "Our",
       supportEmail: input.supportEmail || "billing@example.com",
       dashboardUrl: input.invoiceLink.split("/invoice")[0],
-    });
+    };
+    const template = invoiceTemplate(variables);
 
     const result = await service.sendEmail(
       { email: input.email, name: input.name },
-      template
+      template,
+      variables
     );
 
     return {
@@ -236,16 +245,17 @@ export function sendNewsletter(service: EmailService) {
     };
 
     for (const recipient of emailRecipients) {
-      const template = newsletterTemplate({
+      const variables = {
         recipientName: recipient.name || "Reader",
         title: input.title,
         contentHtml: input.contentHtml,
         unsubscribeLink: input.unsubscribeLink,
         companyName: input.companyName || "Our",
         dashboardUrl: input.dashboardUrl || "https://app.example.com",
-      });
+      };
+      const template = newsletterTemplate(variables);
 
-      const result = await service.sendEmail(recipient, template);
+      const result = await service.sendEmail(recipient, template, variables);
 
       if (result.success) {
         results.successful++;
@@ -301,18 +311,19 @@ export function sendOutageNotice(service: EmailService) {
     };
 
     for (const email of input.recipientEmails) {
-      const template = developmentOutageTemplate({
+      const variables = {
         recipientName: "Team Member",
         service: input.service,
         status: input.status,
         startTime: input.startTime,
-        estimatedResolution: input.estimatedResolution,
+        estimatedResolution: input.estimatedResolution || "",
         companyName: input.companyName || "Our",
         supportEmail: input.supportEmail || "support@example.com",
         dashboardUrl: input.dashboardUrl || "https://status.example.com",
-      });
+      };
+      const template = developmentOutageTemplate(variables);
 
-      const result = await service.sendEmail({ email }, template);
+      const result = await service.sendEmail({ email }, template, variables);
 
       if (result.success) {
         results.successful++;
@@ -361,7 +372,7 @@ export function sendMaintenanceNotice(service: EmailService) {
     };
 
     for (const email of input.recipientEmails) {
-      const template = maintenanceNoticeTemplate({
+      const variables = {
         recipientName: "Team Member",
         service: input.service,
         startTime: input.startTime,
@@ -370,9 +381,10 @@ export function sendMaintenanceNotice(service: EmailService) {
         companyName: input.companyName || "Our",
         supportEmail: input.supportEmail || "support@example.com",
         dashboardUrl: input.dashboardUrl || "https://status.example.com",
-      });
+      };
+      const template = maintenanceNoticeTemplate(variables);
 
-      const result = await service.sendEmail({ email }, template);
+      const result = await service.sendEmail({ email }, template, variables);
 
       if (result.success) {
         results.successful++;
@@ -415,7 +427,7 @@ export interface SendTicketUpdateInput {
 
 export function sendTicketUpdate(service: EmailService) {
   return async (input: SendTicketUpdateInput) => {
-    const template = ticketUpdateTemplate({
+    const variables = {
       recipientName: input.name || "User",
       ticketId: input.ticketId,
       ticketTitle: input.ticketTitle,
@@ -425,11 +437,13 @@ export function sendTicketUpdate(service: EmailService) {
       companyName: "Our",
       supportEmail: input.supportEmail || "support@example.com",
       dashboardUrl: input.ticketLink.split("/ticket")[0],
-    });
+    };
+    const template = ticketUpdateTemplate(variables);
 
     const result = await service.sendEmail(
       { email: input.email, name: input.name },
-      template
+      template,
+      variables
     );
 
     return {
