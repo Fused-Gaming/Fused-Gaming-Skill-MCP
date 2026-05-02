@@ -716,11 +716,15 @@ function processData(data: DataInput) {
 ### Pitfall 2: Synchronous Crypto
 
 ```typescript
+import { promisify } from 'util';
+import crypto from 'crypto';
+
 // ❌ BAD: Blocks event loop
 const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512');
 
-// ✅ GOOD: Non-blocking
-const hash = await crypto.pbkdf2(password, salt, 100000, 64, 'sha512');
+// ✅ GOOD: Non-blocking with promisify
+const pbkdf2Async = promisify(crypto.pbkdf2);
+const hash = await pbkdf2Async(password, salt, 100000, 64, 'sha512');
 ```
 
 ### Pitfall 3: Missing Input Validation in Loops

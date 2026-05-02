@@ -192,11 +192,11 @@ app.use((req, res, next) => {
   // Prevent MIME type sniffing
   res.setHeader('X-Content-Type-Options', 'nosniff');
   
-  // Enable XSS filter
-  res.setHeader('X-XSS-Protection', '1; mode=block');
+  // Content Security Policy (primary XSS protection)
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'");
   
   // HTTPS only (if applicable)
-  res.setHeader('Strict-Transport-Security', 'max-age=31536000');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   
   // Disable prefetch for sensitive pages
   res.setHeader('X-DNS-Prefetch-Control', 'off');

@@ -166,9 +166,12 @@ spawn('sh', ['-c', userInput]);
 // ❌ DANGER: SQL injection
 query(`SELECT * FROM users WHERE id = ${userId}`);
 
-// ✅ PASS: Safe execution
-execFile(cmd, [arg1, arg2]);
+// ✅ PASS: Safe execution (cmd must be fixed/allowlisted)
+execFile('eslint', [filePath]);
 query('SELECT * FROM users WHERE id = ?', [userId]);
+
+// ❌ DANGER: Unsafe command execution (cmd is user-influenced)
+execFile(userProvidedCmd, [arg1, arg2]); // ANY binary can be executed!
 ```
 
 **Audit Checklist:**
@@ -176,6 +179,7 @@ query('SELECT * FROM users WHERE id = ?', [userId]);
 - [ ] No shell invocation with user input
 - [ ] Parameterized queries used
 - [ ] Template literals not used for commands
+- [ ] Command execution uses fixed/allowlisted commands only
 - [ ] Type safety enforced (no `any`)
 
 ### 2.5 Error Handling
