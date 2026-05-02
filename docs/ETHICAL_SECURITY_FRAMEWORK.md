@@ -261,15 +261,41 @@ export function securePath(userPath: string, allowedPrefix: string): string {
 ```typescript
 import { execFile } from 'child_process';
 
-// ✅ SAFE: execFile without shell
-export async function runCommand(cmd: string, args: string[]): Promise<string> {
+// ✅ SAFE: Fixed command with validated arguments only
+const ALLOWED_COMMANDS: Record<string, string> = {
+  'lint': 'eslint',
+  'format': 'prettier',
+  'test': 'jest',
+  // Explicitly enumerate allowed commands
+};
+
+export async function runCommand(
+  commandName: string,
+  args: string[]
+): Promise<string> {
+  // Validate command against allowlist
+  const cmd = ALLOWED_COMMANDS[commandName];
+  if (!cmd) {
+    throw new SecurityError(`Command not allowed: ${commandName}`);
+  }
+  
+  // Validate arguments don't contain shell metacharacters
+  for (const arg of args) {
+    if (/[;&|<>$`\n]/.test(arg)) {
+      throw new SecurityError('Arguments contain invalid characters');
+    }
+  }
+  
   return new Promise((resolve, reject) => {
-    execFile(cmd, args, (error, stdout) => {
+    execFile(cmd, args, { timeout: 30000 }, (error, stdout) => {
       if (error) reject(error);
       else resolve(stdout);
     });
   });
 }
+
+// ❌ DANGEROUS: User-supplied command execution
+// execFile(userInput, args) // ANY binary can be executed!
 
 // ❌ DANGEROUS: shell interpolation possible
 // exec(`npm run ${userInput}`)

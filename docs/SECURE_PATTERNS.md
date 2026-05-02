@@ -135,19 +135,24 @@ export function securePath(userPath: string): string {
   const baseResolved = path.resolve(ALLOWED_BASE);
   const resolved = path.resolve(baseResolved, userPath);
   
+  // Check existence BEFORE resolving symlinks to avoid ENOENT leaking paths
+  if (!existsSync(resolved)) {
+    throw new NotFoundError('File not found');
+  }
+  
   // Verify within bounds using realpath to resolve symlinks
   const realBase = fs.realpathSync(baseResolved);
-  const realPath = fs.realpathSync(resolved);
+  let realPath: string;
+  try {
+    realPath = fs.realpathSync(resolved);
+  } catch (error) {
+    throw new SecurityError('Path cannot be accessed');
+  }
   
   // Check that resolved path is within the allowed base
   // Must use path separator to avoid sibling prefix bypass
   if (!realPath.startsWith(realBase + path.sep) && realPath !== realBase) {
     throw new SecurityError('Path traversal attempt detected');
-  }
-  
-  // Verify file exists (prevents creating arbitrary paths)
-  if (!existsSync(realPath)) {
-    throw new NotFoundError('File not found');
   }
   
   return realPath;
@@ -639,13 +644,21 @@ export async function buildProject() {
 
 ## 7. Rate Limiting Patterns
 
-### 7.1 Simple Rate Limiting
+### 7.1 Rate Limiting with Distributed Store (Production)
 
 ```typescript
 import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+import redis from 'redis';
 
-// General API rate limit
+const redisClient = redis.createClient();
+
+// General API rate limit with Redis store
 const apiLimiter = rateLimit({
+  store: new RedisStore({
+    client: redisClient,
+    prefix: 'rate-limit:api:',
+  }),
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests, please try again later',
@@ -653,13 +666,25 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Strict rate limit for auth endpoints
+// Strict rate limit for auth endpoints with Redis
 const authLimiter = rateLimit({
+  store: new RedisStore({
+    client: redisClient,
+    prefix: 'rate-limit:auth:',
+  }),
   windowMs: 15 * 60 * 1000,
   max: 5, // Only 5 login attempts per 15 min
   skipSuccessfulRequests: true, // Only count failures
   message: 'Too many login attempts, please try again later',
 });
+
+// ⚠️ SINGLE-INSTANCE ONLY: In-memory store (development only)
+// DO NOT use this for production multi-instance deployments
+// const devLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 100,
+//   // No store specified = process-local memory
+// });
 
 // Usage
 app.use('/api/', apiLimiter);
