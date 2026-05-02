@@ -193,7 +193,7 @@ app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   
   // Content Security Policy (primary XSS protection)
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'");
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'");
   
   // HTTPS only (if applicable)
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');

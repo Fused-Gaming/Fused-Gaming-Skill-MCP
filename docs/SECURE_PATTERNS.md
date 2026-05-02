@@ -183,6 +183,11 @@ router.get('/file/:name', (req, res) => {
   
   const file = path.join('/uploads', basename);
   
+  // Check existence before resolving to avoid ENOENT leaking paths
+  if (!fs.existsSync(file)) {
+    return res.status(404).send('File not found');
+  }
+  
   const realpath = fs.realpathSync(file);
   if (!realpath.startsWith('/uploads/')) {
     return res.status(400).send('Path traversal detected');
