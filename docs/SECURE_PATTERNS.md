@@ -188,8 +188,12 @@ router.get('/file/:name', (req, res) => {
     return res.status(404).send('File not found');
   }
   
+  // Resolve the base and file paths to handle symlinks and be cross-platform safe
+  const uploadBase = fs.realpathSync('/uploads');
   const realpath = fs.realpathSync(file);
-  if (!realpath.startsWith('/uploads/')) {
+  
+  // Verify resolved path is within the allowed base (works with symlinks and Windows)
+  if (!realpath.startsWith(uploadBase + path.sep) && realpath !== uploadBase) {
     return res.status(400).send('Path traversal detected');
   }
   

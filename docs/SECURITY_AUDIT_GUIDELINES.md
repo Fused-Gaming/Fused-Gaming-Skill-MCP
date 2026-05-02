@@ -465,7 +465,19 @@ jobs:
       - name: snyk test
         run: npx snyk test
       - name: eslint security
-        run: npx eslint --ext .ts --plugin security --rule 'security/detect-eval-with-detect: error' --rule 'security/detect-no-eval: error' --rule 'security/detect-unsafe-regex: error'
+        run: |
+          cat > .eslintrc.security.json << 'EOF'
+          {
+            "plugins": ["security"],
+            "rules": {
+              "security/detect-eval-with-expression": "error",
+              "security/detect-non-literal-regexp": "error",
+              "security/detect-unsafe-regex": "error",
+              "security/detect-object-injection": "warn"
+            }
+          }
+          EOF
+          npx eslint --ext .ts --config .eslintrc.security.json
 ```
 
 ### 7.2 Regular Review Schedule
