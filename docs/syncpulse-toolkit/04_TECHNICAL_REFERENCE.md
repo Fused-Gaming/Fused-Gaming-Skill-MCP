@@ -119,7 +119,7 @@ scaleSwarm(
 **Example Usage:**
 
 ```typescript
-import { createSyncPulseSkill } from '@fused-gaming/skill-syncpulse';
+import { createSyncPulseSkill } from '@h4shed/skill-syncpulse';
 
 const skill = createSyncPulseSkill();
 const { swarm } = skill.services;
@@ -820,7 +820,7 @@ interface Swarm {
 ### Pattern 1: Basic Reconnaissance Workflow
 
 ```typescript
-import { createSyncPulseSkill } from '@fused-gaming/skill-syncpulse';
+import { createSyncPulseSkill } from '@h4shed/skill-syncpulse';
 import { RoEValidator } from './services/RoEValidator';
 import { FindingsDatabase } from './services/FindingsDatabase';
 
@@ -1312,7 +1312,7 @@ CREATE INDEX idx_coc_evidence ON evidence_chain_of_custody(evidence_id);
 ### Initializing SyncPulse
 
 ```typescript
-import { createSyncPulseSkill } from '@fused-gaming/skill-syncpulse';
+import { createSyncPulseSkill } from '@h4shed/skill-syncpulse';
 
 const skill = createSyncPulseSkill();
 const {
