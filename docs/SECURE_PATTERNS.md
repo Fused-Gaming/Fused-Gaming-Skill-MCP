@@ -127,7 +127,7 @@ const UpdateUserSchema = z.object({
 
 ```typescript
 import path from 'path';
-import { existsSync } from 'fs';
+import fs from 'fs';
 
 const ALLOWED_BASE = '/app/user-files';
 
@@ -136,7 +136,7 @@ export function securePath(userPath: string): string {
   const resolved = path.resolve(baseResolved, userPath);
   
   // Check existence BEFORE resolving symlinks to avoid ENOENT leaking paths
-  if (!existsSync(resolved)) {
+  if (!fs.existsSync(resolved)) {
     throw new NotFoundError('File not found');
   }
   
@@ -656,14 +656,22 @@ import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import redis from 'redis';
 
+// Initialize and connect Redis client
 const redisClient = redis.createClient();
+await redisClient.connect();
+
+// Configure Redis store for rate limiting
+const redisStore = new RedisStore({
+  client: redisClient,
+  prefix: 'rate-limit:',
+  sendCommand: async (command, args) => {
+    return redisClient.sendCommand([command, ...args]);
+  },
+});
 
 // General API rate limit with Redis store
 const apiLimiter = rateLimit({
-  store: new RedisStore({
-    client: redisClient,
-    prefix: 'rate-limit:api:',
-  }),
+  store: redisStore,
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests, please try again later',
@@ -671,12 +679,9 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Strict rate limit for auth endpoints with Redis
+// Strict rate limit for auth endpoints with same Redis store
 const authLimiter = rateLimit({
-  store: new RedisStore({
-    client: redisClient,
-    prefix: 'rate-limit:auth:',
-  }),
+  store: redisStore,
   windowMs: 15 * 60 * 1000,
   max: 5, // Only 5 login attempts per 15 min
   skipSuccessfulRequests: true, // Only count failures
