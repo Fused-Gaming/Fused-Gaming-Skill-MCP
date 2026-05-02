@@ -1,6 +1,6 @@
-# SyncPulse Swarm Controller
+# SyncPulse Web Interface
 
-An artistic, interactive Next.js + React dashboard for controlling and monitoring SyncPulse agent swarms with real-time visualization and task scheduling.
+An artistic, interactive Next.js + React dashboard and skills catalog for SyncPulse, featuring real-time agent swarm control, monitoring, and an organized skills discovery portal.
 
 ## Features
 
@@ -56,17 +56,26 @@ Visit `http://localhost:3000` to see the dashboard.
 packages/web/
 ├── app/
 │   ├── layout.tsx          # Root layout with global styling
-│   ├── page.tsx            # Main dashboard page
+│   ├── page.tsx            # Main dashboard page (SyncPulse)
+│   ├── skills/
+│   │   └── page.tsx        # Skills catalog with categories
+│   ├── api/
+│   │   ├── health/
+│   │   ├── swarms/
+│   │   ├── tasks/
+│   │   └── roadmap/
 │   └── globals.css         # Global styles and animations
 ├── components/
 │   ├── SwarmVisualizer.tsx # Orbital swarm visualization
 │   ├── ControlPanel.tsx    # Swarm control interface
 │   ├── TaskMonitor.tsx     # Task tracking dashboard
-│   └── RoadmapEditor.tsx   # Execution roadmap timeline
+│   ├── RoadmapEditor.tsx   # Execution roadmap timeline
+│   └── ToolCard.tsx        # Skills catalog card component
 ├── store/
 │   └── swarmStore.ts       # Zustand state management
 ├── tailwind.config.ts      # Tailwind configuration
 ├── next.config.js          # Next.js configuration
+├── vercel.json             # Vercel deployment config
 └── tsconfig.json           # TypeScript configuration
 ```
 
@@ -100,6 +109,15 @@ Manages execution schedules:
 - Cron expression support
 - Completion tracking
 
+### Skills Catalog (`/skills`)
+Organized skill discovery portal:
+- 7 skill categories (Design, Development, Automation, Data, Web3, Content, DevOps)
+- 25+ available skills with descriptions and links
+- Status indicators (Stable, Beta, New)
+- Tag-based filtering and organization
+- Direct npm package links
+- Interactive tool cards with hover effects
+
 ## Styling & Animation
 
 ### Color Scheme
@@ -116,16 +134,25 @@ Manages execution schedules:
 
 ## Integration with SyncPulse API
 
-The dashboard connects to your SyncPulse API at `https://skill.vln.gg/`:
+The dashboard connects to the SyncPulse API and endpoints:
 
 ```typescript
-// Example API calls (ready to implement)
-GET  /health              // Check service status
-GET  /skills              // List available skills
-POST /api                 // MCP RPC calls
-GET  /swarms/:id          // Get swarm details
-POST /swarms/:id/execute  // Execute tasks
+// SyncPulse Dashboard (/)
+GET  /api/health          // Check service status
+GET  /api/swarms          // List available swarms
+POST /api/swarms/:id/execute  // Execute tasks
+GET  /api/tasks           // Get task status
+GET  /api/roadmap         // Get execution roadmap
+
+// Skills Catalog (/skills)
+GET  /skills              // Discover available skills
+GET  /skills/:category    // Filter by category
 ```
+
+**Deployment URLs:**
+- Dashboard: `sync.vln.gg` (SyncPulse agent swarm control)
+- Catalog: `skill.vln.gg` (Skills discovery portal)
+- Tools: `vln.gg/tools` (Main tools hub)
 
 ## Deployment
 
@@ -135,13 +162,23 @@ POST /swarms/:id/execute  // Execute tasks
 vercel --prod
 ```
 
-### Full Deployment Guide
+### Deployment Guides
+
+**SyncPulse Dashboard (sync.vln.gg):**
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for comprehensive deployment instructions including:
 - One-click Vercel deployment
 - GitHub Actions CI/CD setup
 - Environment variable configuration
 - Custom domain setup
 - Monitoring and troubleshooting
+
+**Skills Catalog (skill.vln.gg):**
+See [SKILL_DEPLOYMENT.md](./SKILL_DEPLOYMENT.md) for dedicated deployment guide including:
+- Skills catalog features and updates
+- Domain configuration
+- Integration with main tools hub
+- Category management
+- Adding new skills
 
 ### Environment Variables
 
