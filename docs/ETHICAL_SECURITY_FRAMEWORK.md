@@ -239,14 +239,20 @@ export function executeOperation(input: unknown): OperationInput {
 import path from 'path';
 
 export function securePath(userPath: string, allowedPrefix: string): string {
-  const resolved = path.resolve(allowedPrefix, userPath);
+  const baseResolved = path.resolve(allowedPrefix);
+  const resolved = path.resolve(baseResolved, userPath);
   
-  // Verify the resolved path is within allowed prefix
-  if (!resolved.startsWith(path.resolve(allowedPrefix))) {
+  // Verify within bounds using realpath to resolve symlinks
+  const realBase = fs.realpathSync(baseResolved);
+  const realPath = fs.realpathSync(resolved);
+  
+  // Check that resolved path is within the allowed base
+  // Must use path separator to avoid sibling prefix bypass
+  if (!realPath.startsWith(realBase + path.sep) && realPath !== realBase) {
     throw new SecurityError('Path traversal detected');
   }
   
-  return resolved;
+  return realPath;
 }
 ```
 
