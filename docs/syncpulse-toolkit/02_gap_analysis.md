@@ -103,21 +103,21 @@ hydrate()
 
 #### Email Tools (13)
 - **Templated Workflows (9):**
-  - Critical Finding Alert
-  - Daily Progress Report
-  - Weekly Summary
-  - Engagement Start Notification
-  - Engagement End Notification
-  - Client Finding Review Request
-  - Vendor Notification (CVSS 7+)
-  - Status Update (periodic)
-  - Executive Summary
+  - `send_magic_link_login` — Magic link authentication
+  - `send_mfa_code` — MFA code delivery
+  - `send_password_reset` — Password reset
+  - `send_security_alert` — Security event notification
+  - `send_invoice` — Invoice delivery
+  - `send_newsletter` — Newsletter distribution
+  - `send_outage_notice` — Service outage notification
+  - `send_maintenance_notice` — Maintenance window
+  - `send_ticket_update` — Support ticket update
 
 - **Generic Tools (4):**
-  - Send custom email
-  - Send bulk email
-  - Create email template
-  - Email with attachments
+  - `send_email` — Custom email with variables
+  - `send_bulk_email` — Batch email to multiple recipients
+  - `send_marketing_campaign` — Marketing campaign with tracking
+  - `verify_email_configuration` — Validate SMTP config
 
 ### Email Infrastructure
 - **SMTP Support:** TLS/SSL, credential masking

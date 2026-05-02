@@ -273,8 +273,8 @@ After full implementation (8 weeks):
 
 ## 📋 Checklist Before Proceeding
 
-- [ ] Read EXECUTIVE_SUMMARY.md
-- [ ] Review timeline in IMPLEMENTATION_ROADMAP.md
+- [ ] Read 01_EXECUTIVE_SUMMARY.md
+- [ ] Review timeline in 03_IMPLEMENTATION_ROADMAP.md
 - [ ] Confirm team availability (1 engineer, 8 weeks)
 - [ ] Decide on database (SQLite vs PostgreSQL)
 - [ ] Plan legal review of Phase 1 code

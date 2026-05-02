@@ -826,16 +826,16 @@ import { FindingsDatabase } from './services/FindingsDatabase';
 
 async function runReconnaissance(engagementId: string) {
   const skill = createSyncPulseSkill();
-  const { swarm, memory, roeValidator, findingsDb } = skill.services;
+  const { swarm, memory, cache } = skill.services;
+  // Phase 1 services (roeValidator, findingsDb) coming soon
 
-  // Step 1: Load and validate RoE
-  await roeValidator.loadRoE(`./engagements/${engagementId}/roe.json`);
+  // Cache reconnaissance targets
   const targets = ['example.com', '192.0.2.1', '192.0.2.0/24'];
-  
-  const validation = roeValidator.validateScope(targets);
-  if (!validation.valid) {
-    throw new Error(`RoE violation: ${validation.violations[0].message}`);
-  }
+  await memory.set(
+    `targets:${engagementId}`,
+    { targets },
+    { category: 'recon', ttl: 86400000 }
+  );
 
   // Step 2: Create reconnaissance swarm
   const reconSwarm = swarm.initializeSwarm(
@@ -910,10 +910,8 @@ async function runReconnaissance(engagementId: string) {
 ```typescript
 async function runVulnerabilityTesting(engagementId: string) {
   const skill = createSyncPulseSkill();
-  const { swarm, roeValidator, roeEnforcer, findingsDb } = skill.services;
-
-  // Load RoE
-  await roeValidator.loadRoE(`./engagements/${engagementId}/roe.json`);
+  const { swarm, memory, cache } = skill.services;
+  // Phase 1 services (roeValidator, roeEnforcer, findingsDb) coming soon
 
   // Create testing swarm (hierarchical for coordinated testing)
   const testSwarm = swarm.initializeSwarm(
@@ -923,45 +921,37 @@ async function runVulnerabilityTesting(engagementId: string) {
     6
   );
 
-  // Test cases to execute
+  // Cache test plan
   const testCases = [
     {
       id: 'xss-1',
       name: 'Reflected XSS Testing',
       priority: 9,
-      target: 'example.com',
-      method: 'vulnerability-testing' as const,
-      payloads: ['<script>alert(1)</script>', '"\'>alert(1)</"']
+      target: 'example.com'
     },
     {
       id: 'sqli-1',
       name: 'SQL Injection Testing',
       priority: 10,
-      target: 'example.com/api',
-      method: 'vulnerability-testing' as const,
-      payloads: ["' OR '1'='1", "'; DROP TABLE users; --"]
+      target: 'example.com/api'
     },
     {
       id: 'csrf-1',
       name: 'CSRF Testing',
       priority: 7,
-      target: 'example.com',
-      method: 'vulnerability-testing' as const,
-      payloads: []
+      target: 'example.com'
     }
   ];
 
-  for (const testCase of testCases) {
-    // Enforce RoE for each test
-    const roeCheck = roeValidator.validateTestingMethod(
-      testCase.method,
-      testCase.target
-    );
+  await memory.set(
+    `test-plan:${engagementId}`,
+    { testCases, startTime: new Date().toISOString() },
+    { category: 'testing', ttl: 86400000 }
+  );
 
-    if (!roeCheck.valid) {
-      console.warn(`Skipping ${testCase.name}: ${roeCheck.violations[0].message}`);
-      continue;
-    }
+  for (const testCase of testCases) {
+    // Assign testing task to swarm
+    // (Phase 1 will add RoE validation here)
 
     // Assign test task
     const assignment = swarm.assignTask(`${engagementId}-testing`, {
@@ -985,60 +975,68 @@ async function runVulnerabilityTesting(engagementId: string) {
 
 ---
 
-### Pattern 3: Evidence Collection & Finding Storage
+### Pattern 3: Evidence & Finding Data Management
 
 ```typescript
-async function recordFinding(
+async function recordVulnerability(
   engagementId: string,
   vulnerability: {
     targetHost: string;
     type: string;
     description: string;
-    proof: Buffer;
+    proof: string;
   },
   discoveredBy: string
 ) {
   const skill = createSyncPulseSkill();
-  const { findingsDb, evidenceManager, complianceChecker } = skill.services;
+  const { memory, cache } = skill.services;
+  // Phase 1 services (evidenceManager, findingsDb, complianceChecker) coming soon
 
-  // Record evidence with chain of custody
-  const evidence = await evidenceManager.recordEvidence(
-    crypto.randomUUID(),
-    vulnerability.proof,
-    'binary',
-    discoveredBy
+  // Cache evidence data in memory
+  const evidenceId = crypto.randomUUID();
+  const evidence = {
+    id: evidenceId,
+    targetHost: vulnerability.targetHost,
+    vulnerabilityType: vulnerability.type,
+    description: vulnerability.description,
+    proof: vulnerability.proof,
+    collectedBy: discoveredBy,
+    collectedAt: new Date().toISOString(),
+    engagementId
+  };
+
+  await memory.set(
+    `evidence:${evidenceId}`,
+    evidence,
+    {
+      category: 'evidence',
+      tags: [engagementId, vulnerability.targetHost],
+      ttl: 2592000000  // 30 days
+    }
   );
 
-  // Get compliance mappings
-  const cwes = complianceChecker.mapToCWE(vulnerability.description);
-  const owasps = complianceChecker.mapToOWASP(vulnerability.description);
-  const cvss = complianceChecker.calculateCVSS(vulnerability.description, 'web');
-
-  // Create finding
-  const finding: Finding = {
+  // Cache finding summary for quick access
+  const finding = {
     id: crypto.randomUUID(),
     engagementId,
     targetHost: vulnerability.targetHost,
     vulnerabilityType: vulnerability.type,
-    severity: cvss.baseSeverity as any,
-    cvssScore: cvss.baseScore,
-    cvssVector: cvss.vector,
-    cweIds: cwes.map(c => c.id),
     description: vulnerability.description,
-    evidence: {
-      responseData: vulnerability.proof.toString('utf8')
-    },
-    status: 'Open',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    discoveredBy
+    evidenceId,
+    discoveredBy,
+    discoveredAt: new Date().toISOString()
   };
 
-  // Store finding
-  const findingId = await findingsDb.storeFinding(finding);
-  console.log(`Finding stored: ${findingId} (${cvss.baseSeverity})`);
+  await memory.set(
+    `finding:${finding.id}`,
+    finding,
+    { category: 'findings', tags: [engagementId] }
+  );
 
-  return { finding, evidence };
+  console.log(`Evidence recorded: ${evidenceId}`);
+  console.log(`Finding logged: ${finding.id}`);
+
+  return { evidence, finding };
 }
 ```
 
@@ -1352,11 +1350,9 @@ await email.sendEmail(recipients, template, variables);
 // Phase 1 services (when available):
 // const validation = roeValidator.validateScope(targets);
 // await findingsDb.storeFinding(finding);
-const findings = await findingsDb.queryFindings({ engagementId });
-
-// Record evidence
-const evidence = await evidenceManager.recordEvidence(id, content, type, actor);
-const valid = await evidenceManager.verifyIntegrity(id);
+// const findings = await findingsDb.queryFindings({ engagementId });
+// const evidence = await evidenceManager.recordEvidence(id, content, type, actor);
+// const valid = await evidenceManager.verifyIntegrity(id);
 ```
 
 For more detailed examples, see the [IMPLEMENTATION_ROADMAP.md](03_IMPLEMENTATION_ROADMAP.md) code sketches section.
