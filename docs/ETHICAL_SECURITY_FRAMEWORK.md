@@ -237,6 +237,7 @@ export function executeOperation(input: unknown): OperationInput {
 
 ```typescript
 import path from 'path';
+import fs from 'fs';
 
 export function securePath(userPath: string, allowedPrefix: string): string {
   const baseResolved = path.resolve(allowedPrefix);

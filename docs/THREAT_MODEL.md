@@ -392,13 +392,13 @@ This threat model identifies potential attack vectors, assesses their likelihood
 Impact →
 Likelihood  CRITICAL    HIGH          MEDIUM       LOW
    ↓
-HIGH        T2,T3       T1,T6,T9      T5           
+HIGH        T2,T3,T10   T1,T6,T9      T5           
             (Fix Now)   (Fix Soon)    (Schedule)   
 
-MEDIUM      T1,T7       T4,T8         
+MEDIUM      T7          T4,T8         
             (Fix Soon)  (Schedule)    
 
-LOW                     T10           
+LOW                     
                         (Monitor)
 ```
 
