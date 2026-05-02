@@ -55,7 +55,7 @@ estimated_hours: [hours]
 npm install --save-dev \
   eslint \
   @typescript-eslint/eslint-plugin \
-  security-eslint-plugin \
+  eslint-plugin-security \
   snyk \
   npm-audit
 
@@ -465,7 +465,7 @@ jobs:
       - name: snyk test
         run: npx snyk test
       - name: eslint security
-        run: npx eslint --ext .ts --rule 'security/*: error'
+        run: npx eslint --ext .ts --plugin security --rule 'security/detect-eval-with-detect: error' --rule 'security/detect-no-eval: error' --rule 'security/detect-unsafe-regex: error'
 ```
 
 ### 7.2 Regular Review Schedule
