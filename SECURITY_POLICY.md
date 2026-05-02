@@ -261,11 +261,17 @@ Planned security improvements:
 
 ## 10. Contact Information
 
-**Security Team**: security@fused-gaming.dev
+**For Security Vulnerabilities**: Email security@fused-gaming.dev ONLY
 
-**Public Issues**: Use GitHub Issues with `security` label
+- ❌ Do NOT open public GitHub issues for security vulnerabilities
+- ❌ Do NOT use GitHub Discussions for unpatched vulnerabilities
+- ✅ Do email security@fused-gaming.dev with private disclosure
 
-**Confidential Reports**: Email security team only
+**For Non-Security Issues**: Use GitHub Issues with appropriate labels
+
+- Feature requests, bugs, and documentation use public GitHub Issues
+- Use `bug`, `enhancement`, or `documentation` labels as appropriate
+- Do NOT use public channels for security concerns
 
 ---
 

@@ -132,20 +132,25 @@ import { existsSync } from 'fs';
 const ALLOWED_BASE = '/app/user-files';
 
 export function securePath(userPath: string): string {
-  // Resolve to absolute path
-  const resolved = path.resolve(ALLOWED_BASE, userPath);
+  const baseResolved = path.resolve(ALLOWED_BASE);
+  const resolved = path.resolve(baseResolved, userPath);
   
-  // Verify within bounds
-  if (!resolved.startsWith(path.resolve(ALLOWED_BASE))) {
+  // Verify within bounds using realpath to resolve symlinks
+  const realBase = fs.realpathSync(baseResolved);
+  const realPath = fs.realpathSync(resolved);
+  
+  // Check that resolved path is within the allowed base
+  // Must use path separator to avoid sibling prefix bypass
+  if (!realPath.startsWith(realBase + path.sep) && realPath !== realBase) {
     throw new SecurityError('Path traversal attempt detected');
   }
   
   // Verify file exists (prevents creating arbitrary paths)
-  if (!existsSync(resolved)) {
+  if (!existsSync(realPath)) {
     throw new NotFoundError('File not found');
   }
   
-  return resolved;
+  return realPath;
 }
 
 // Usage
