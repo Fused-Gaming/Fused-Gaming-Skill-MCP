@@ -306,9 +306,12 @@ catch (error) {
 
 - **Acknowledge**: Within 24 hours
 - **Assess**: Within 3 days
-- **Fix**: Within 7 days (or public disclosure)
-- **Patch Release**: When fix is ready
+- **Fix**: Target within 7 days
+- **Patch Release**: When fix is ready (no public disclosure until patch available)
+- **Public Disclosure**: Only after patch is released or 90-day coordinated disclosure window expires
 - **Announce**: In release notes with CVE identifier
+
+**Important**: Vulnerabilities are NEVER disclosed publicly before a patch is available. If a fix cannot be developed within 90 days, disclosure timing will be negotiated with the reporter and security team.
 
 ### Disclosure Process
 

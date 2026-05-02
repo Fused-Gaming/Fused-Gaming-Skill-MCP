@@ -225,9 +225,16 @@ export function generateTokens(userId: string, permissions: string[]) {
   return { accessToken, refreshToken };
 }
 
-export function verifyToken(token: string): TokenPayload {
+export function verifyAccessToken(token: string): TokenPayload {
   try {
-    return jwt.verify(token, TOKEN_SECRET!) as TokenPayload;
+    const payload = jwt.verify(token, TOKEN_SECRET!) as any;
+    
+    // Reject refresh tokens when access token is required
+    if (payload.type === 'refresh') {
+      throw new AuthenticationError('Refresh token cannot be used for API access');
+    }
+    
+    return payload as TokenPayload;
   } catch (error) {
     throw new AuthenticationError('Invalid token');
   }
@@ -243,7 +250,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   
   try {
     const token = header.slice(7);
-    req.user = verifyToken(token);
+    req.user = verifyAccessToken(token);
     next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });
