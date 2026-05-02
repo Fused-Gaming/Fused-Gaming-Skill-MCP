@@ -242,9 +242,19 @@ export function securePath(userPath: string, allowedPrefix: string): string {
   const baseResolved = path.resolve(allowedPrefix);
   const resolved = path.resolve(baseResolved, userPath);
   
+  // Check existence BEFORE resolving symlinks to avoid ENOENT leaking paths
+  if (!fs.existsSync(resolved)) {
+    throw new NotFoundError('File not found');
+  }
+  
   // Verify within bounds using realpath to resolve symlinks
   const realBase = fs.realpathSync(baseResolved);
-  const realPath = fs.realpathSync(resolved);
+  let realPath: string;
+  try {
+    realPath = fs.realpathSync(resolved);
+  } catch (error) {
+    throw new SecurityError('Path cannot be accessed');
+  }
   
   // Check that resolved path is within the allowed base
   // Must use path separator to avoid sibling prefix bypass
@@ -380,11 +390,16 @@ catch (error) {
 
 ## 📞 Questions & Support
 
-For security questions or concerns:
+**For Security Vulnerabilities or Concerns**: Email security@fused-gaming.dev ONLY
+- Do not open public GitHub issues for security concerns
+- Vulnerabilities must be reported via private channels
+- See SECURITY_POLICY.md for responsible disclosure process
+
+**For Non-Security Questions**:
 1. Check the documentation above
 2. Review the security checklist
-3. Open an issue with security-related label
-4. Email security team for vulnerabilities
+3. Email security@fused-gaming.dev if clarification needed
+4. Open GitHub issues only for non-security topics (docs improvements, clarifications, etc.)
 
 **Last Updated**: 2026-05-02  
 **Maintained By**: Fused Gaming Security Team  
