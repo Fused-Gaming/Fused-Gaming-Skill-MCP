@@ -89,16 +89,6 @@ getSwarmMetrics(id: string): {
   agents: Agent[]
 }
 
-// Get individual agent metrics
-getAgentMetrics(swarmId: string, agentId: string): {
-  status: 'idle' | 'busy' | 'error' | 'offline',
-  capacity: number,
-  currentLoad: number,
-  successRate: number,        // 0.0-1.0
-  totalTasksCompleted: number,
-  averageTaskDuration: number
-}
-
 // Scale swarm size
 scaleSwarm(
   swarmId: string,
@@ -1056,11 +1046,11 @@ EVIDENCE_HMAC_KEY=<generate via: openssl rand -hex 32>
 ENCRYPTION_KEY=<generate via: openssl rand -hex 32>
 
 # Email Configuration
-SMTP_HOST=smtp.sendgrid.net
-SMTP_PORT=587
-SMTP_USER=apikey
-SMTP_PASSWORD=<SendGrid API key>
-SMTP_FROM=alerts@example.com
+MAIL_HOST=smtp.sendgrid.net
+MAIL_PORT=587
+MAIL_USER=apikey
+MAIL_PASS=<SendGrid API key>
+MAIL_FROM=alerts@example.com
 
 # SyncPulse Configuration
 SYNCPULSE_CACHE_DIR=.cache

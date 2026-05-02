@@ -249,6 +249,6 @@ A: Yes. SyncPulse's agent model is designed for tool integration. See TECHNICAL_
 
 ---
 
-**For technical details:** See gap-analysis.md
-**For implementation plan:** See IMPLEMENTATION_ROADMAP.md
-**For API reference:** See TECHNICAL_REFERENCE.md
+**For technical details:** See 02_gap_analysis.md
+**For implementation plan:** See 03_IMPLEMENTATION_ROADMAP.md
+**For API reference:** See 04_TECHNICAL_REFERENCE.md
