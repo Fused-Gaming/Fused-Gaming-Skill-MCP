@@ -10,13 +10,13 @@ This package contains complete documentation for deploying an ethical hacking to
 
 ## 📚 Documentation Files (In Reading Order)
 
-### 1. **EXECUTIVE_SUMMARY.md** ⭐ START HERE
+### 1. **01_EXECUTIVE_SUMMARY.md** ⭐ START HERE
 - **What it covers:** Overview, current capabilities, critical gaps, timeline
 - **Who it's for:** Project managers, stakeholders, decision-makers
 - **Time to read:** 10 minutes
 - **Key takeaway:** SyncPulse is ready; you need 4 phases to add security testing capabilities
 
-### 2. **gap-analysis.md** 
+### 2. **02_gap_analysis.md** 
 - **What it covers:** Detailed gap analysis (what's missing for bug bounty work)
 - **Who it's for:** Technical leads, architects
 - **Time to read:** 15 minutes
@@ -26,7 +26,7 @@ This package contains complete documentation for deploying an ethical hacking to
   - Architecture recommendation
   - Integration readiness assessment
 
-### 3. **IMPLEMENTATION_ROADMAP.md**
+### 3. **03_IMPLEMENTATION_ROADMAP.md**
 - **What it covers:** 8-week development plan with code sketches
 - **Who it's for:** Engineers, development teams
 - **Time to read:** 30 minutes
@@ -39,7 +39,7 @@ This package contains complete documentation for deploying an ethical hacking to
   - Testing strategy
   - Deployment checklist
 
-### 4. **TECHNICAL_REFERENCE.md**
+### 4. **04_TECHNICAL_REFERENCE.md**
 - **What it covers:** Complete API reference for all 17 tools and 5 services
 - **Who it's for:** Developers integrating or extending SyncPulse
 - **Time to read:** Reference document (use as needed)
@@ -149,40 +149,40 @@ Layer 5: Reporting Engine (build Week 7-8)
 → Read this file (00_START_HERE.md)
 
 ### If you have **15 minutes:**
-→ Read EXECUTIVE_SUMMARY.md
+→ Read 01_EXECUTIVE_SUMMARY.md
 
 ### If you have **30 minutes:**
-→ Read EXECUTIVE_SUMMARY.md + gap-analysis.md
+→ Read 01_EXECUTIVE_SUMMARY.md + 02_gap_analysis.md
 
 ### If you have **1 hour:**
-→ Read all 3 strategic documents + glance at TECHNICAL_REFERENCE.md
+→ Read all 3 strategic documents + glance at 04_TECHNICAL_REFERENCE.md
 
 ### If you have **2 hours:**
 → Read everything + start sketching Phase 1 implementation
 
 ### If you're coding:**
-→ Start with TECHNICAL_REFERENCE.md for API details
-→ Follow IMPLEMENTATION_ROADMAP.md for architecture guidance
+→ Start with 04_TECHNICAL_REFERENCE.md for API details
+→ Follow 03_IMPLEMENTATION_ROADMAP.md for architecture guidance
 
 ---
 
 ## 🚀 Recommended Next Steps (This Week)
 
 ### For Decision-Makers:
-- [ ] Read EXECUTIVE_SUMMARY.md (10 min)
-- [ ] Review timeline & budget in IMPLEMENTATION_ROADMAP.md (5 min)
+- [ ] Read 01_EXECUTIVE_SUMMARY.md (10 min)
+- [ ] Review timeline & budget in 03_IMPLEMENTATION_ROADMAP.md (5 min)
 - [ ] Schedule stakeholder meeting
 - [ ] Approve Phase 1 kick-off
 
 ### For Technical Leads:
-- [ ] Read gap-analysis.md (15 min)
-- [ ] Review IMPLEMENTATION_ROADMAP.md sections on Phase 1 (20 min)
+- [ ] Read 02_gap_analysis.md (15 min)
+- [ ] Review 03_IMPLEMENTATION_ROADMAP.md sections on Phase 1 (20 min)
 - [ ] Draft resource allocation plan
 - [ ] Identify any additional requirements
 
 ### For Developers:
 - [ ] Install SyncPulse locally (already done ✅)
-- [ ] Read TECHNICAL_REFERENCE.md (30 min)
+- [ ] Read 04_TECHNICAL_REFERENCE.md (30 min)
 - [ ] Create GitHub repo/milestones for 4-phase rollout
 - [ ] Set up development environment
 
@@ -213,16 +213,16 @@ A: Yes. SyncPulse is designed for this. See TECHNICAL_REFERENCE.md integration p
 ## 📞 Getting Help
 
 **For Architecture Questions:**
-→ See gap-analysis.md section "Architecture Recommendation"
+→ See 02_gap_analysis.md section "Architecture Recommendation"
 
 **For Implementation Details:**
-→ See IMPLEMENTATION_ROADMAP.md with code sketches for each service
+→ See 03_IMPLEMENTATION_ROADMAP.md with code sketches for each service
 
 **For API Reference:**
-→ See TECHNICAL_REFERENCE.md for complete tool/service documentation
+→ See 04_TECHNICAL_REFERENCE.md for complete tool/service documentation
 
 **For Integration Examples:**
-→ See TECHNICAL_REFERENCE.md section "Integration Patterns" (3 complete examples)
+→ See 04_TECHNICAL_REFERENCE.md section "Integration Patterns" (3 complete examples)
 
 ---
 
@@ -293,8 +293,8 @@ You have a solid foundation with SyncPulse. Follow the 4-phase roadmap, and you'
 
 ---
 
-**Questions? Start with EXECUTIVE_SUMMARY.md**
-**Ready to code? Check IMPLEMENTATION_ROADMAP.md + TECHNICAL_REFERENCE.md**
-**Need architecture details? See gap-analysis.md**
+**Questions? Start with 01_EXECUTIVE_SUMMARY.md**
+**Ready to code? Check 03_IMPLEMENTATION_ROADMAP.md + 04_TECHNICAL_REFERENCE.md**
+**Need architecture details? See 02_gap_analysis.md**
 
 Good luck! 🚀

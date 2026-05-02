@@ -710,26 +710,26 @@ Real-time metrics and analytics.
 
 ---
 
-#### Email Tools (13)
+#### Email Tools (13 - Currently Available ✅)
 
-**Templated Workflows:**
+**Workflow Templates:**
 
-1. `send_critical_finding_alert` — Immediate notification of critical findings
-2. `send_daily_progress_report` — Daily summary of testing progress
-3. `send_weekly_summary` — Weekly engagement status
-4. `send_engagement_start_notification` — Kickoff notification
-5. `send_engagement_end_notification` — Final report delivery
-6. `send_client_finding_review` — Request client input on findings
-7. `send_vendor_notification` — Responsible disclosure notification
-8. `send_status_update` — General status update
-9. `send_executive_summary` — C-level overview
+1. `send_magic_link` — Magic link authentication email
+2. `send_mfa_code` — Multi-factor authentication code delivery
+3. `send_password_reset` — Password reset instructions
+4. `send_security_alert` — Security event notification
+5. `send_invoice` — Invoice delivery
+6. `send_newsletter` — Newsletter distribution
+7. `send_outage_notice` — Service outage notification
+8. `send_maintenance_notice` — Maintenance window notification
+9. `send_ticket_update` — Support ticket status update
 
-**Generic Tools:**
+**Generic & Bulk Tools:**
 
-10. `send_email` — Custom email
-11. `send_bulk_email` — Batch email to multiple recipients
-12. `create_email_template` — Store custom template
-13. `send_email_with_attachments` — Email with PDF/Excel/JSON
+10. `send_email` — Custom email with template variables
+11. `send_bulk_email` — Batch email to multiple recipients with per-recipient variables
+12. `send_marketing_campaign` — Marketing campaign with tracking
+13. `verify_email_configuration` — Validate SMTP configuration
 
 ---
 
@@ -1316,15 +1316,13 @@ import { createSyncPulseSkill } from '@h4shed/skill-syncpulse';
 
 const skill = createSyncPulseSkill();
 const {
-  swarm,           // SwarmOrchestrator
-  memory,          // MemorySystem
-  tasks,           // TaskOrchestrator
-  cache,           // CacheService
-  session,         // SessionManager
-  roeValidator,    // RoEValidator (Phase 1)
-  findingsDb,      // FindingsDatabase (Phase 1)
-  evidenceManager, // EvidenceManager (Phase 1)
-  complianceChecker // ComplianceChecker (Phase 1)
+  swarm,           // SwarmOrchestrator ✅
+  memory,          // MemorySystem ✅
+  tasks,           // TaskOrchestrator ✅
+  cache,           // CacheService ✅
+  emailService     // EmailService ✅
+  // Phase 1 services coming soon:
+  // roeValidator, findingsDb, evidenceManager, complianceChecker
 } = skill.services;
 ```
 
@@ -1341,12 +1339,17 @@ await memory.set(key, value, metadata);
 const data = await memory.get(key);
 const matches = await memory.vectorSearch(query, 5);
 
-// Validate scope
-const validation = roeValidator.validateScope(targets);
-if (validation.valid) { /* safe to test */ }
+// Send email
+await emailService.sendEmail({
+  recipients: [{ email: 'user@example.com' }],
+  subject: 'Test',
+  htmlBody: '<p>Hello {{name}}</p>',
+  variables: { name: 'User' }
+});
 
-// Store findings
-await findingsDb.storeFinding(finding);
+// Phase 1 services (when available):
+// const validation = roeValidator.validateScope(targets);
+// await findingsDb.storeFinding(finding);
 const findings = await findingsDb.queryFindings({ engagementId });
 
 // Record evidence
