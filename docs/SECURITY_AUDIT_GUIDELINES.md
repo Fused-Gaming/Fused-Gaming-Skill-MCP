@@ -331,8 +331,9 @@ describe('Authorization', () => {
   });
 
   test('should prevent privilege escalation', () => {
-    const user = { permissions: ['READ'] };
-    expect(() => user.permissions.push('ADMIN')).not.toBeDefined();
+    const user = { permissions: Object.freeze(['READ']) };
+    // Frozen array cannot be modified
+    expect(() => user.permissions.push('ADMIN')).toThrow(TypeError);
   });
 });
 
