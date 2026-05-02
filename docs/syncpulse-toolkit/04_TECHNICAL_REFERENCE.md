@@ -642,7 +642,7 @@ Multi-agent task coordination.
 ```typescript
 {
   workflowId: string;
-  topology: 'hierarchical' | 'mesh' | 'adaptive' | 'ring' | 'star';
+  topology: 'hierarchical' | 'mesh' | 'adaptive';
   tasks: Array<{
     id: string;
     name: string;
@@ -714,7 +714,7 @@ Real-time metrics and analytics.
 
 **Workflow Templates:**
 
-1. `send_magic_link` — Magic link authentication email
+1. `send_magic_link_login` — Magic link authentication email
 2. `send_mfa_code` — Multi-factor authentication code delivery
 3. `send_password_reset` — Password reset instructions
 4. `send_security_alert` — Security event notification
@@ -1320,7 +1320,7 @@ const {
   memory,          // MemorySystem ✅
   tasks,           // TaskOrchestrator ✅
   cache,           // CacheService ✅
-  emailService     // EmailService ✅
+  email            // EmailService ✅
   // Phase 1 services coming soon:
   // roeValidator, findingsDb, evidenceManager, complianceChecker
 } = skill.services;
@@ -1340,12 +1340,14 @@ const data = await memory.get(key);
 const matches = await memory.vectorSearch(query, 5);
 
 // Send email
-await emailService.sendEmail({
-  recipients: [{ email: 'user@example.com' }],
-  subject: 'Test',
-  htmlBody: '<p>Hello {{name}}</p>',
-  variables: { name: 'User' }
-});
+const recipients = [{ email: 'user@example.com', name: 'User' }];
+const template = {
+  subject: 'Welcome {{name}}',
+  htmlBody: '<p>Hello {{name}}, welcome to our app!</p>',
+  textBody: 'Hello {{name}}, welcome to our app!'
+};
+const variables = { name: 'Alice' };
+await email.sendEmail(recipients, template, variables);
 
 // Phase 1 services (when available):
 // const validation = roeValidator.validateScope(targets);
