@@ -142,7 +142,7 @@ const server = http.createServer((req, res) => {
       }
 
       const ext = path.extname(filePath);
-      const contentType = mimeTypes[ext as keyof typeof mimeTypes] || 'application/octet-stream';
+      const contentType = mimeTypes[ext] || 'application/octet-stream';
       res.writeHead(200, { 'Content-Type': contentType });
       res.end(data);
     });
