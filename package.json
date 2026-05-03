@@ -57,7 +57,12 @@
     "registry:validate": "npm run registry:generate && npm run typecheck && npm run lint",
     "registry:view": "cat registry/REGISTRY.md | less",
     "update:check": "node scripts/check-updates.js",
-    "update:apply": "npm install && npm run registry:generate && npm run build"
+    "update:apply": "npm install && npm run registry:generate && npm run build",
+    "syncpulse:hub:setup": "bash scripts/setup-syncpulse-hub.sh full",
+    "syncpulse:hub:setup:essential": "bash scripts/setup-syncpulse-hub.sh essential",
+    "syncpulse:hub:check-updates": "npm run build --workspace=packages/skills/syncpulse-hub && node packages/skills/syncpulse-hub/dist/updates/UpdateChecker.js",
+    "validate:deployment": "bash scripts/validate-deployment.sh",
+    "validate:pre-merge": "npm run build && npm run typecheck && npm run lint && npm run registry:validate && npm run validate:deployment"
   },
   "engines": {
     "node": ">=20.0.0",

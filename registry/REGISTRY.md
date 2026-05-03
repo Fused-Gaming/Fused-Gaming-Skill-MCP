@@ -1,11 +1,11 @@
 # 🎮 Fused Gaming Skill Registry
 
-**Generated:** 5/3/2026, 5:05:35 AM
+**Generated:** 5/3/2026, 5:30:30 AM
 **Version:** 1.0.0
 
 ## 📊 Summary
 
-- **Total Skills:** 28
+- **Total Skills:** 29
 - **Total Tools:** 24
 - **Categories:** 11
 
@@ -74,7 +74,7 @@
 - **Version:** 1.0.0
 
 
-### General (6 skills)
+### General (7 skills)
 
 #### 📦 ascii-mockup
 - **Package:** `@h4shed/skill-ascii-mockup`
@@ -97,6 +97,11 @@
 - **Description:** SyncPulse - intelligent project state caching, multi-agent coordination, and secure email automation with 9 production-ready templated workflows
 - **Version:** 0.2.0
 - **Tools:** `email_tools`, `email_workflows`, `index`
+
+#### 📦 syncpulse-hub
+- **Package:** `@h4shed/syncpulse-hub`
+- **Description:** Centralized SyncPulse Hub - Unified orchestration and installation of all @h4shed packages
+- **Version:** 0.1.0
 
 #### 📦 typescript-toolchain
 - **Package:** `@h4shed/skill-typescript-toolchain`

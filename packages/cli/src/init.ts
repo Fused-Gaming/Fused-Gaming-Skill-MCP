@@ -23,7 +23,7 @@ export async function init(): Promise<void> {
       cwd: process.cwd(),
     });
     console.log("✓ Orchestration initialized successfully");
-  } catch (error) {
+  } catch {
     console.warn("⚠️  Orchestration initialization had issues (continuing)");
   }
 

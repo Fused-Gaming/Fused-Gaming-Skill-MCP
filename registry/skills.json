@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "timestamp": "2026-05-03T05:05:35.786Z",
+  "timestamp": "2026-05-03T05:30:30.628Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -554,6 +554,27 @@
       "license": "Apache-2.0"
     },
     {
+      "name": "syncpulse-hub",
+      "id": "syncpulse-hub",
+      "description": "Centralized SyncPulse Hub - Unified orchestration and installation of all @h4shed packages",
+      "version": "0.1.0",
+      "package": "@h4shed/syncpulse-hub",
+      "tools": [],
+      "enabled": true,
+      "category": "general",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "syncpulse",
+        "orchestration",
+        "hub",
+        "installation",
+        "centralized"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "tailwindcss-style-builder",
       "id": "tailwindcss-style-builder",
       "description": "Tailwind CSS utility-first styling and design system builder for rapid UI development",
@@ -711,12 +732,12 @@
       "license": "Apache-2.0"
     }
   ],
-  "totalSkills": 28,
+  "totalSkills": 29,
   "totalTools": 24,
   "categories": {
     "design": 7,
     "generative-art": 3,
-    "general": 6,
+    "general": 7,
     "productivity": 1,
     "content-creation": 2,
     "mcp-tools": 2,

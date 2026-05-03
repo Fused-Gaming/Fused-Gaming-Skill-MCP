@@ -21,7 +21,7 @@ interface Engagement {
   endDate: string;
 }
 
-interface Finding {
+interface _Finding {
   id: string;
   severity: 'critical' | 'high' | 'medium' | 'low';
   title: string;
@@ -48,7 +48,7 @@ export const EthicalHackingPanel: React.FC = () => {
     setShowNewEngagementForm(false);
   };
 
-  const getRoeSeverityColor = (severity: string) => {
+  const _getRoeSeverityColor = (severity: string) => {
     const colors: Record<string, string> = {
       critical: '#dc2626',
       high: '#ea580c',
@@ -231,7 +231,7 @@ export const EthicalHackingPanel: React.FC = () => {
                   textAlign: 'center',
                 }}
               >
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: item.color' }}>{item.count}</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: item.color }}>{item.count}</div>
                 <div style={{ fontSize: '12px', color: '#9ca3af' }}>{item.label}</div>
               </div>
             ))}
