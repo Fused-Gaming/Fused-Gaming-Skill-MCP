@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 interface AgentMetric {
   name: string;
@@ -9,13 +9,9 @@ interface AgentMetric {
   status: 'healthy' | 'warning' | 'error';
 }
 
-interface SystemMetrics {
-  chartData?: Array<{ time: string; cpuUsage: number; memoryUsage: number }>;
-}
-
 export const Dashboard: React.FC = () => {
-  const [agents] = useState<AgentMetric[]>([]);
-  const [metrics, setMetrics] = useState<SystemMetrics>({});
+  const [agents, setAgents] = useState<AgentMetric[]>([]);
+  const [metrics, setMetrics] = useState<any>({});
 
   useEffect(() => {
     // Connect to metrics API
