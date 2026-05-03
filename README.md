@@ -470,13 +470,49 @@ npm run dev         # Start dev server
 
 ---
 
-## 🚢 Release Automation
+## 🚢 Release & Publishing
 
+### 🔐 Signed Commits & Tags
+
+All releases are **GPG signed** for security and authenticity:
+
+- ✅ **Signed Commits** — Version bumps are cryptographically signed
+- ✅ **Signed Tags** — Release tags are verified with GPG
+- ✅ **GitHub Badge** — "Verified" badge on all commits and releases
+- ✅ **npm Authenticity** — Packages published with signing credentials
+
+### Publishing Workflow
+
+**Automated on main push or tag:**
 - **npm publish workflow:** `.github/workflows/publish.yml`
-  - Runs lint, typecheck, build, scope preparation, and workspace publish.
+  - Imports GPG key and signs commits/tags
+  - Runs lint, typecheck, build, scope preparation, and workspace publish
+  - Auto-bumps versions for changed packages
+  - Creates signed commits and tags
+
 - **GitHub release workflow:** `.github/workflows/github-release.yml`
-  - Runs on the same release tags (`v*`, `skill-*`) and creates GitHub Releases with generated notes.
-- This split keeps npm publishing and release-note generation independently observable and easier to retry.
+  - Runs on the same release tags (`v*`, `skill-*`) and creates GitHub Releases with generated notes
+
+### Get Started Publishing
+
+1. **Local Setup** (one-time):
+   ```bash
+   bash scripts/setup-gpg-signing.sh
+   ```
+
+2. **Publish with Signed Commits**:
+   ```bash
+   bash scripts/publish-signed.sh
+   ```
+
+3. **Or push to main** (automatic workflow):
+   ```bash
+   git add .
+   git commit -m "feat: your changes"
+   git push origin main
+   ```
+
+📖 **Full Guide:** [PUBLISH_GUIDE.md](./docs/PUBLISH_GUIDE.md)
 
 ---
 
