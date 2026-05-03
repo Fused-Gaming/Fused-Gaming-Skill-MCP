@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import EthicalHackingPanel from './components/EthicalHackingPanel';
 
@@ -11,6 +12,7 @@ interface AgentMetric {
 }
 
 export const Dashboard: React.FC = () => {
+  const [agents, setAgents] = useState<AgentMetric[]>([]);
   const [_agents, _setAgents] = useState<AgentMetric[]>([]);
   const [metrics, setMetrics] = useState<any>({});
   const [activeTab, setActiveTab] = useState<'orchestration' | 'ethical-hacking'>('orchestration');

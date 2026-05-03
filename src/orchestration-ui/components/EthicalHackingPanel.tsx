@@ -21,6 +21,7 @@ interface Engagement {
   endDate: string;
 }
 
+interface Finding {
 interface _Finding {
   id: string;
   severity: 'critical' | 'high' | 'medium' | 'low';
