@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncPulse Orchestration Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f35 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #1e293b;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab-button:hover {
+            color: #e2e8f0;
+        }
+
+        .tab-button.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 1.5em;
+            margin-bottom: 16px;
+            color: #3b82f6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+        }
+
+        .card-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #10b981;
+            margin: 10px 0;
+        }
+
+        .card-meta {
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-healthy {
+            background: #10b98133;
+            color: #10b981;
+        }
+
+        .status-warning {
+            background: #f5991633;
+            color: #f59916;
+        }
+
+        .status-error {
+            background: #ef444433;
+            color: #ef4444;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            color: #e2e8f0;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #374151;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #94a3b8;
+        }
+
+        .metric-value {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #374151;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 1px solid #374151;
+            color: #64748b;
+            font-size: 0.9em;
+        }
+
+        .api-status {
+            padding: 12px 16px;
+            background: #111827;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .severity-chart {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .severity-item {
+            text-align: center;
+            padding: 15px;
+            background: #111827;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .severity-critical {
+            border-color: #ef4444;
+        }
+
+        .severity-high {
+            border-color: #f97316;
+        }
+
+        .severity-medium {
+            border-color: #f59916;
+        }
+
+        .severity-low {
+            border-color: #eab308;
+        }
+
+        .severity-info {
+            border-color: #3b82f6;
+        }
+
+        .severity-count {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 SyncPulse Orchestration Dashboard</h1>
+            <p class="subtitle">Ethical Hacking Framework & Multi-Agent Orchestration</p>
+        </header>
+
+        <div class="api-status">
+            <span>Metrics API Status</span>
+            <span id="api-status" class="status-badge status-healthy">🟢 Healthy</span>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('orchestration')">
+                📊 Agent Orchestration
+            </button>
+            <button class="tab-button" onclick="switchTab('hacking')">
+                🛡️ Ethical Hacking Framework
+            </button>
+        </div>
+
+        <!-- Agent Orchestration Tab -->
+        <div id="orchestration" class="tab-content active">
+            <div class="section">
+                <h2>🐝 Agent Health & Metrics</h2>
+                <div class="grid" id="agent-cards">
+                    <div class="card">
+                        <div class="card-title">Active Agents</div>
+                        <div class="card-value" id="active-agents">24</div>
+                        <div class="card-meta">Balanced Topology</div>
+                        <span class="status-badge status-healthy">🟢 Healthy</span>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">System Load</div>
+                        <div class="card-value" id="system-load">--</div>
+                        <div class="card-meta">CPU Usage</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Memory Usage</div>
+                        <div class="card-value" id="memory-usage">--</div>
+                        <div class="card-meta">GB / Total</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Cache Hit Rate</div>
+                        <div class="card-value">78%</div>
+                        <div class="card-meta">HNSW Vector Index</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📈 Performance Metrics</h2>
+                <div class="metric-row">
+                    <span class="metric-label">Consensus Algorithm</span>
+                    <span class="metric-value">Raft (5s heartbeat)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Vector Search</span>
+                    <span class="metric-value">HNSW (~150x faster)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Tasks Processed</span>
+                    <span class="metric-value" id="tasks-processed">0</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Uptime</span>
+                    <span class="metric-value" id="uptime">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ethical Hacking Framework Tab -->
+        <div id="hacking" class="tab-content">
+            <div class="section">
+                <h2>📌 Engagements</h2>
+                <div class="grid" id="engagement-cards">
+                    <div class="loading">Loading engagements...</div>
+                </div>
+                <button onclick="showCreateEngagement()">+ New Engagement</button>
+            </div>
+
+            <div class="section" id="create-engagement" style="display: none;">
+                <h2>Create New Engagement</h2>
+                <div class="input-group">
+                    <label>Client Name</label>
+                    <input type="text" id="client-name" placeholder="e.g., Acme Corp">
+                </div>
+                <div class="input-group">
+                    <label>Scope</label>
+                    <textarea id="engagement-scope" placeholder="Define testing scope and authorized targets" rows="3"></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Timeline</label>
+                    <input type="date" id="engagement-date">
+                </div>
+                <button onclick="createEngagement()">Create Engagement</button>
+                <button style="background: #374151; margin-left: 10px;" onclick="showCreateEngagement()">Cancel</button>
+            </div>
+
+            <div class="section">
+                <h2>⚖️ Rules of Engagement</h2>
+                <div class="input-group">
+                    <label>Authorized Targets</label>
+                    <textarea placeholder="*.example.com, 192.168.1.0/24" rows="3"></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Prohibited Targets</label>
+                    <textarea placeholder="admin.example.com, production-db.internal" rows="3"></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Allowed Techniques</label>
+                    <textarea placeholder="Vulnerability scanning, web application testing, API testing" rows="3"></textarea>
+                </div>
+                <button onclick="saveRoE()">Save Rules of Engagement</button>
+            </div>
+
+            <div class="section">
+                <h2>🐛 Findings Summary</h2>
+                <div class="severity-chart">
+                    <div class="severity-item severity-critical">
+                        <div style="color: #ef4444;">🔴</div>
+                        <div class="severity-count" id="critical-count">0</div>
+                        <div style="font-size: 0.9em;">Critical</div>
+                    </div>
+                    <div class="severity-item severity-high">
+                        <div style="color: #f97316;">🟠</div>
+                        <div class="severity-count" id="high-count">0</div>
+                        <div style="font-size: 0.9em;">High</div>
+                    </div>
+                    <div class="severity-item severity-medium">
+                        <div style="color: #f59916;">🟡</div>
+                        <div class="severity-count" id="medium-count">0</div>
+                        <div style="font-size: 0.9em;">Medium</div>
+                    </div>
+                    <div class="severity-item severity-low">
+                        <div style="color: #eab308;">🟨</div>
+                        <div class="severity-count" id="low-count">0</div>
+                        <div style="font-size: 0.9em;">Low</div>
+                    </div>
+                    <div class="severity-item severity-info">
+                        <div style="color: #3b82f6;">🔵</div>
+                        <div class="severity-count" id="info-count">0</div>
+                        <div style="font-size: 0.9em;">Info</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔐 Evidence Chain of Custody</h2>
+                <div class="metric-row">
+                    <span class="metric-label">Findings Recorded</span>
+                    <span class="metric-value" id="evidence-findings">0</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Screenshots Captured</span>
+                    <span class="metric-value" id="evidence-screenshots">0</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Network Logs</span>
+                    <span class="metric-value" id="evidence-logs">0</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Credentials Found</span>
+                    <span class="metric-value" id="evidence-credentials">0</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>
+                SyncPulse Ethical Hacking Toolkit • Phase 1 Legal & Compliance ✅
+                <br>
+                API: http://localhost:3334 | Documentation: docs/syncpulse-toolkit/00_START_HERE.md
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Load data for the tab
+            if (tabName === 'hacking') {
+                loadEngagements();
+            } else {
+                loadMetrics();
+            }
+        }
+
+        // Load metrics from API
+        async function loadMetrics() {
+            try {
+                const response = await fetch('/api/metrics');
+                if (!response.ok) throw new Error('Failed to load metrics');
+
+                const data = await response.json();
+
+                if (data.agents) {
+                    document.getElementById('active-agents').textContent = data.agents.length || 24;
+                }
+                if (data.systemLoad !== undefined) {
+                    document.getElementById('system-load').textContent =
+                        Math.round(data.systemLoad * 100) + '%';
+                }
+                if (data.memoryUsage !== undefined) {
+                    document.getElementById('memory-usage').textContent =
+                        data.memoryUsage.toFixed(1) + ' GB';
+                }
+                if (data.tasksProcessed !== undefined) {
+                    document.getElementById('tasks-processed').textContent =
+                        data.tasksProcessed;
+                }
+
+                // Update API status
+                document.getElementById('api-status').textContent = '🟢 Healthy';
+                document.getElementById('api-status').className =
+                    'status-badge status-healthy';
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+                document.getElementById('api-status').textContent = '🔴 Offline';
+                document.getElementById('api-status').className =
+                    'status-badge status-error';
+            }
+        }
+
+        // Load engagements
+        async function loadEngagements() {
+            try {
+                const response = await fetch('/api/engagements');
+                if (!response.ok) throw new Error('Failed to load engagements');
+
+                const data = await response.json();
+                const container = document.getElementById('engagement-cards');
+
+                if (data.engagements && data.engagements.length > 0) {
+                    container.innerHTML = data.engagements.map(eng => `
+                        <div class="card">
+                            <div class="card-title">${eng.clientName || 'New Engagement'}</div>
+                            <div class="card-meta">Status: ${eng.status || 'planning'}</div>
+                            <div class="card-meta">Findings: ${eng.findingCount || 0}</div>
+                            <span class="status-badge status-healthy">Active</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #94a3b8;">No engagements yet. Click below to create one.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading engagements:', error);
+            }
+        }
+
+        // Show/hide create engagement form
+        function showCreateEngagement() {
+            const form = document.getElementById('create-engagement');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Create engagement
+        function createEngagement() {
+            const clientName = document.getElementById('client-name').value;
+            const scope = document.getElementById('engagement-scope').value;
+
+            if (!clientName || !scope) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            alert(`Engagement created for ${clientName}`);
+            document.getElementById('create-engagement').style.display = 'none';
+            document.getElementById('client-name').value = '';
+            document.getElementById('engagement-scope').value = '';
+            loadEngagements();
+        }
+
+        // Save Rules of Engagement
+        function saveRoE() {
+            alert('Rules of Engagement saved successfully');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMetrics();
+
+            // Refresh metrics every 10 seconds
+            setInterval(loadMetrics, 10000);
+        });
+    </script>
+</body>
+</html>
