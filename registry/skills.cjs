@@ -1,12 +1,12 @@
 module.exports = {
   "version": "1.0.0",
-  "timestamp": "2026-04-26T04:54:48.280Z",
+  "timestamp": "2026-05-03T05:05:35.786Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
       "id": "agentic-flow-devkit",
       "description": "Design and visualize agentic orchestration flows with trailer A/B-roll planning support.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "package": "@h4shed/skill-agentic-flow-devkit",
       "tools": [
         {
@@ -37,7 +37,7 @@ module.exports = {
       "name": "algorithmic-art",
       "id": "algorithmic-art",
       "description": "Generative art using p5.js with seeded randomness, flow fields, and particle systems",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-algorithmic-art",
       "tools": [
         {
@@ -69,7 +69,7 @@ module.exports = {
       "name": "ascii-mockup",
       "id": "ascii-mockup",
       "description": "Mobile-first ASCII wireframe mockup generator for rapid UI prototyping",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-ascii-mockup",
       "tools": [
         {
@@ -97,7 +97,7 @@ module.exports = {
       "name": "canvas-design",
       "id": "canvas-design",
       "description": "Visual design generation for web with SVG and canvas rendering",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-canvas-design",
       "tools": [
         {
@@ -125,7 +125,7 @@ module.exports = {
       "name": "creator",
       "id": "creator",
       "description": "Create custom skills and tools for the Fused Gaming MCP ecosystem",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-skill-creator",
       "tools": [
         {
@@ -151,7 +151,7 @@ module.exports = {
       "name": "daily-review",
       "id": "daily-review",
       "description": "Productivity tracking and daily review skill for session aggregation, metrics analysis, and multi-account reporting",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "package": "@h4shed/skill-daily-review",
       "tools": [
         {
@@ -189,7 +189,7 @@ module.exports = {
       "name": "frontend-design",
       "id": "frontend-design",
       "description": "Frontend component design and HTML/CSS generation for modern web applications",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-frontend-design",
       "tools": [
         {
@@ -217,7 +217,7 @@ module.exports = {
       "name": "linkedin-master-journalist",
       "id": "linkedin-master-journalist",
       "description": "Draft polished LinkedIn release and thought-leadership posts.",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "package": "@h4shed/skill-linkedin-master-journalist",
       "tools": [
         {
@@ -242,7 +242,7 @@ module.exports = {
       "name": "mcp-builder",
       "id": "mcp-builder",
       "description": "Build and scaffold MCP servers and skills with best practices",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-mcp-builder",
       "tools": [
         {
@@ -268,7 +268,7 @@ module.exports = {
       "name": "mermaid-terminal",
       "id": "mermaid-terminal",
       "description": "Generate terminal-friendly Mermaid diagrams and flowcharts.",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "package": "@h4shed/skill-mermaid-terminal",
       "tools": [
         {
@@ -293,7 +293,7 @@ module.exports = {
       "name": "multi-account-session-tracking",
       "id": "multi-account-session-tracking",
       "description": "Track session activity across multiple accounts and workstreams.",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "package": "@h4shed/multi-account-session-tracking",
       "tools": [
         {
@@ -315,10 +315,52 @@ module.exports = {
       "license": "Apache-2.0"
     },
     {
+      "name": "nft-generative-art",
+      "id": "nft-generative-art",
+      "description": "NFT artwork generation, metadata creation, and blockchain-ready asset creation",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-nft-generative-art",
+      "tools": [],
+      "enabled": true,
+      "category": "generative-art",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "nft",
+        "generative-art",
+        "blockchain",
+        "web3"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "playwright-test-automation",
+      "id": "playwright-test-automation",
+      "description": "End-to-end testing automation framework for web applications with cross-browser support",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-playwright-test-automation",
+      "tools": [],
+      "enabled": true,
+      "category": "general",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "playwright",
+        "testing",
+        "e2e",
+        "automation"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "pre-deploy-validator",
       "id": "pre-deploy-validator",
       "description": "Pre-deployment validation and quality checks for production readiness",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-pre-deploy-validator",
       "tools": [
         {
@@ -345,7 +387,7 @@ module.exports = {
       "name": "project-manager",
       "id": "project-manager",
       "description": "Plan projects with milestones, dependencies, and delivery phases.",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "package": "@h4shed/skill-project-manager",
       "tools": [
         {
@@ -370,7 +412,7 @@ module.exports = {
       "name": "project-status-tool",
       "id": "project-status-tool",
       "description": "Summarize current project status, risks, and next actions.",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "package": "@h4shed/skill-project-status-tool",
       "tools": [
         {
@@ -392,10 +434,75 @@ module.exports = {
       "license": "Apache-2.0"
     },
     {
+      "name": "smart-contract-tools",
+      "id": "smart-contract-tools",
+      "description": "Smart contract development tools for Hardhat, Truffle, and Foundry ecosystems",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-smart-contract-tools",
+      "tools": [],
+      "enabled": true,
+      "category": "generative-art",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "smart-contracts",
+        "solidity",
+        "hardhat",
+        "truffle",
+        "foundry",
+        "blockchain"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "storybook-component-library",
+      "id": "storybook-component-library",
+      "description": "Component library documentation and visual testing with Storybook integration",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-storybook-component-library",
+      "tools": [],
+      "enabled": true,
+      "category": "general",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "storybook",
+        "component-library",
+        "documentation",
+        "ui-testing"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "style-dictionary-system",
+      "id": "style-dictionary-system",
+      "description": "Design tokens and style dictionary generation for cross-platform design system management",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-style-dictionary-system",
+      "tools": [],
+      "enabled": true,
+      "category": "design",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "style-dictionary",
+        "design-tokens",
+        "design-system",
+        "theming"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "svg-generator",
       "id": "svg-generator",
       "description": "Generate SVG assets and icon concepts from structured prompts.",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "package": "@h4shed/skill-svg-generator",
       "tools": [
         {
@@ -419,10 +526,20 @@ module.exports = {
     {
       "name": "syncpulse",
       "id": "syncpulse",
-      "description": "SyncPulse - intelligent project state caching and coordination",
-      "version": "0.1.0",
+      "description": "SyncPulse - intelligent project state caching, multi-agent coordination, and secure email automation with 9 production-ready templated workflows",
+      "version": "0.2.0",
       "package": "@h4shed/skill-syncpulse",
       "tools": [
+        {
+          "name": "email_tools",
+          "file": "email-tools.ts",
+          "description": "email_tools from syncpulse"
+        },
+        {
+          "name": "email_workflows",
+          "file": "email-workflows.ts",
+          "description": "email_workflows from syncpulse"
+        },
         {
           "name": "index",
           "file": "index.ts",
@@ -437,10 +554,31 @@ module.exports = {
       "license": "Apache-2.0"
     },
     {
+      "name": "tailwindcss-style-builder",
+      "id": "tailwindcss-style-builder",
+      "description": "Tailwind CSS utility-first styling and design system builder for rapid UI development",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-tailwindcss-style-builder",
+      "tools": [],
+      "enabled": true,
+      "category": "design",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "tailwindcss",
+        "styling",
+        "design-system",
+        "ui-development"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "theme-factory",
       "id": "theme-factory",
       "description": "Design system and theme generation for consistent UI/UX across applications",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-theme-factory",
       "tools": [
         {
@@ -464,10 +602,31 @@ module.exports = {
       "license": "Apache-2.0"
     },
     {
+      "name": "typescript-toolchain",
+      "id": "typescript-toolchain",
+      "description": "Advanced TypeScript configuration, type generation, and static analysis tooling",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-typescript-toolchain",
+      "tools": [],
+      "enabled": true,
+      "category": "general",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "typescript",
+        "type-generation",
+        "static-analysis",
+        "toolchain"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "underworld-writer",
       "id": "underworld-writer",
       "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "package": "@h4shed/skill-underworld-writer",
       "tools": [],
       "enabled": true,
@@ -488,7 +647,7 @@ module.exports = {
       "name": "ux-journeymapper",
       "id": "ux-journeymapper",
       "description": "Create UX journey maps with pain points, touchpoints, and opportunities.",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "package": "@h4shed/skill-ux-journeymapper",
       "tools": [
         {
@@ -508,20 +667,62 @@ module.exports = {
       ],
       "repository": "",
       "license": "Apache-2.0"
+    },
+    {
+      "name": "vercel-nextjs-deployment",
+      "id": "vercel-nextjs-deployment",
+      "description": "Vercel deployment optimization and Next.js framework integration for serverless applications",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-vercel-nextjs-deployment",
+      "tools": [],
+      "enabled": true,
+      "category": "development",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "vercel",
+        "nextjs",
+        "deployment",
+        "serverless"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "vite-module-bundler",
+      "id": "vite-module-bundler",
+      "description": "Next-generation JavaScript module bundler for lightning-fast development and optimized production builds",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-vite-module-bundler",
+      "tools": [],
+      "enabled": true,
+      "category": "general",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "vite",
+        "bundler",
+        "build",
+        "module"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
     }
   ],
-  "totalSkills": 19,
-  "totalTools": 22,
+  "totalSkills": 28,
+  "totalTools": 24,
   "categories": {
-    "design": 5,
-    "generative-art": 1,
-    "general": 2,
+    "design": 7,
+    "generative-art": 3,
+    "general": 6,
     "productivity": 1,
     "content-creation": 2,
     "mcp-tools": 2,
     "visualization": 1,
     "session-management": 1,
-    "development": 1,
+    "development": 2,
     "project-management": 2,
     "user-experience": 1
   }
