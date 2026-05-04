@@ -1,11 +1,11 @@
 {
-  "topology": "advanced",
-  "totalAgents": 60,
-  "consensusMode": "byzantine",
+  "topology": "balanced",
+  "totalAgents": 24,
+  "consensusMode": "raft",
   "systemResources": {
-    "cpuCores": 16,
-    "memoryGB": 21,
-    "timestamp": "2026-04-18T18:58:38Z"
+    "cpuCores": 4,
+    "memoryGB": 15,
+    "timestamp": "2026-05-03T04:28:23Z"
   },
   "agentGroups": {
     "coreAgents": {
@@ -13,27 +13,27 @@
       "roles": ["coordinator", "memory-manager", "metrics-collector"]
     },
     "executionAgents": {
-      "count": 20,
+      "count": 8,
       "roles": ["task-executor", "code-generator", "tester"]
     },
     "optimizationAgents": {
-      "count": 12,
+      "count": 4,
       "roles": ["performance-optimizer", "topology-optimizer", "resource-allocator"]
     },
     "automationAgents": {
-      "count": 15,
+      "count": 6,
       "roles": ["github-automation", "workflow-manager", "release-coordinator"]
     }
   },
   "consensusProtocol": {
-    "mode": "byzantine",
+    "mode": "raft",
     "heartbeatInterval": 5000,
     "electionTimeout": 15000,
     "snapshotInterval": 10000
   },
   "memorySync": {
     "vectorIndexing": "hnsw",
-    "cacheSizeGB": 5,
+    "cacheSizeGB": 3,
     "ttlSeconds": 3600
   },
   "webUI": {

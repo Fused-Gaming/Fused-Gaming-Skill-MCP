@@ -262,6 +262,7 @@ export default function App() {
 ### Learn More
 - **Integration Guide:** [CLAUDE_CODE_INTEGRATION.md](./docs/CLAUDE_CODE_INTEGRATION.md)
 - **Deployment Guide:** [TERMINAL_LIVESTREAM_DEPLOYMENT.md](./docs/TERMINAL_LIVESTREAM_DEPLOYMENT.md)
+- **API Deployment:** [SKILL_VLN_GG_DEPLOYMENT.md](./docs/SKILL_VLN_GG_DEPLOYMENT.md)
 - **Code Examples:** [TerminalLivestream.example.tsx](./packages/web/examples/TerminalLivestream.example.tsx)
 - **License:** [CLAUDE_CODE_LICENSE.md](./packages/web/CLAUDE_CODE_LICENSE.md) (Educational use only)
 
