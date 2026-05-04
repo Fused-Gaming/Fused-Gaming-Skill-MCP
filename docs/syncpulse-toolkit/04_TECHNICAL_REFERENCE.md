@@ -619,6 +619,14 @@ Vector similarity search across distributed cache.
   }>;
   totalMatches: number;
   executionTime: number;         // milliseconds
+  success: boolean;
+  query: string;
+  resultCount: number;
+  results: Array<{
+    key: string;
+    value: unknown;
+    similarity: string;          // e.g., "0.856" (3 decimal places)
+  }>;
 }
 ```
 
@@ -818,6 +826,8 @@ async function runReconnaissance(engagementId: string) {
   const skill = createSyncPulseSkill();
   const { swarm, memory, cache } = skill.services;
   // Phase 1 services (roeValidator, findingsDb) coming soon
+  const findingsDb = new FindingsDatabase();
+  // Phase 1 services (roeValidator) coming soon
 
   // Cache reconnaissance targets
   const targets = ['example.com', '192.0.2.1', '192.0.2.0/24'];
@@ -1333,6 +1343,8 @@ const template = {
   subject: 'Welcome {{name}}',
   htmlBody: '<p>Hello {{name}}, welcome to our app!</p>',
   textBody: 'Hello {{name}}, welcome to our app!'
+  html: '<p>Hello {{name}}, welcome to our app!</p>',
+  text: 'Hello {{name}}, welcome to our app!'
 };
 const variables = { name: 'Alice' };
 await email.sendEmail(recipients, template, variables);

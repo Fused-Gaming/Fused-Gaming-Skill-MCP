@@ -1,0 +1,92 @@
+name: Deploy API to Vercel (skill.vln.gg)
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'api/**'
+      - 'vercel.json'
+      - '.github/workflows/deploy-api-vercel.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - 'vercel.json'
+
+jobs:
+  check-secrets:
+    runs-on: ubuntu-latest
+    outputs:
+      has-token: ${{ steps.check.outputs.has-token }}
+    steps:
+      - id: check
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "has-token=false" >> $GITHUB_OUTPUT
+            echo "⚠️ VERCEL_TOKEN not configured. To enable API deployments, add VERCEL_TOKEN to repository secrets."
+          else
+            echo "has-token=true" >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    needs: check-secrets
+    runs-on: ubuntu-latest
+    if: needs.check-secrets.outputs.has-token == 'true'
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID_API: ${{ secrets.VERCEL_PROJECT_ID_API }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Use Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Install dependencies
+        run: npm install --package-lock-only --ignore-scripts && npm ci
+
+      - name: Deploy API to Vercel (Production)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes \
+            --env CUSTOM_DOMAIN=skill.vln.gg
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy API to Vercel (Preview)
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref != 'refs/heads/main')
+        run: |
+          vercel --token=${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Comment PR with API deployment URL
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 Vercel API deployment preview is ready!\n\nProduction API will be available at https://skill.vln.gg on merge to main.'
+            })
+
+  skip-deploy:
+    needs: check-secrets
+    runs-on: ubuntu-latest
+    if: needs.check-secrets.outputs.has-token != 'true'
+    steps:
+      - name: Notify about missing secrets
+        run: |
+          echo "⚠️ API deployment skipped: VERCEL_TOKEN is not configured"
+          echo "To enable API deployments to skill.vln.gg:"
+          echo "1. Create a Vercel API token at https://vercel.com/account/tokens"
+          echo "2. Add it as VERCEL_TOKEN in GitHub repository secrets"
+          echo "3. (Optional) Add VERCEL_ORG_ID and VERCEL_PROJECT_ID_API for faster deployments"

@@ -30,10 +30,7 @@ export class HealthCheckService {
     this.healthFile = path.join(dataDir, 'health.json');
   }
 
-  public async checkHealth(
-    agents: Array<{ id: string; lastHeartbeat?: number; responseTime?: number }>,
-    systemMetrics: { cpuUsage?: number; memoryUsage?: number; diskUsage?: number; avgLatency?: number }
-  ): Promise<HealthStatus> {
+  public async checkHealth(agents: any[], systemMetrics: any): Promise<HealthStatus> {
     const agentHealth: AgentHealth[] = agents.map(agent => ({
       id: agent.id,
       status: agent.lastHeartbeat && Date.now() - agent.lastHeartbeat < 10000 ? 'healthy' : 'error',
