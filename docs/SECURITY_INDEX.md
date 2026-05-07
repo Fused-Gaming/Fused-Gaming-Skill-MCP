@@ -14,7 +14,7 @@
 | [VULNERABILITY_MANAGEMENT.md](./VULNERABILITY_MANAGEMENT.md) | Handling and fixing vulnerabilities | DevOps, Security team | 20 min |
 | [SECURE_PATTERNS.md](./SECURE_PATTERNS.md) | Copy-paste-ready secure code examples | Developers | 30 min |
 | [SECURITY_PR_CHECKLIST.md](./SECURITY_PR_CHECKLIST.md) | PR review security checklist | Code reviewers | 5 min (ref) |
-| [SECURITY_POLICY.md](../SECURITY_POLICY.md) | Vulnerability disclosure policy | Security researchers, Maintainers | 10 min |
+| [SECURITY.md](../SECURITY.md) | Vulnerability disclosure policy | Security researchers, Maintainers | 10 min |
 
 ---
 
