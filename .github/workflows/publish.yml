@@ -49,7 +49,13 @@ jobs:
           git_tag_gpgsign: true
 
       - name: Prepare workspace publish versions
-        run: npm run publish:prepare
+        run: node scripts/prepare-publish-versions.cjs
+
+      - name: Auto-bump workspace versions for npm publish
+        run: node scripts/auto-bump-publish-versions.js
+
+      - name: Sync package-lock.json after version bumps
+        run: npm install --package-lock-only --ignore-scripts
 
       - name: Install dependencies
         run: npm ci
@@ -64,9 +70,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_SCOPE: ${{ vars.NPM_SCOPE }}
-
-      - name: Auto-bump workspace versions for npm publish
-        run: node scripts/auto-bump-publish-versions.js
 
       - name: Preflight publish version check
         run: node scripts/preflight-publish-check.js
