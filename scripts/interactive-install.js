@@ -249,7 +249,7 @@ function showSupport() {
     '📚 Documentation: ./docs/\n' +
     '🐛 Report Issues: https://github.com/fused-gaming/fused-gaming-skill-mcp/issues\n' +
     '💬 Discussions: https://github.com/fused-gaming/fused-gaming-skill-mcp/discussions\n' +
-    '📧 Support: support@h4shed.io'
+    '📧 Support: support@vln.gg'
   );
 
   console.log(boxen(support, {

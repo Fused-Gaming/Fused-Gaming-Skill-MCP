@@ -23,7 +23,7 @@
   "homepage": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
   "bugs": {
     "url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/issues",
-    "email": "support@h4shed.io"
+    "email": "support@vln.gg"
   },
   "workspaces": [
     "packages/core",
