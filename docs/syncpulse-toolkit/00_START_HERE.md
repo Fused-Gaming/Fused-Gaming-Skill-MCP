@@ -110,6 +110,7 @@ This package contains complete documentation for deploying an ethical hacking to
 
 ---
 
+## 📊 Architecture You're Building
 ## 📊 Complete Ecosystem Architecture
 
 ```mermaid
