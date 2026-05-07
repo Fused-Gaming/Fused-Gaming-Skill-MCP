@@ -11,7 +11,7 @@ interface AgentMetric {
 }
 
 export const Dashboard: React.FC = () => {
-  const [agents, setAgents] = useState<AgentMetric[]>([]);
+  const [agents, _setAgents] = useState<AgentMetric[]>([]);
   const [metrics, setMetrics] = useState<any>({});
   const [activeTab, setActiveTab] = useState<'orchestration' | 'ethical-hacking'>('orchestration');
 

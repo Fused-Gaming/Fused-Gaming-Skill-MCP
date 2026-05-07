@@ -144,7 +144,7 @@ export class SetupOrchestrator {
     try {
       const { execSync } = await import('child_process');
       console.log(`  $ ${command}`);
-      execSync(command, { stdio: 'inherit', shell: true });
+      execSync(command, { stdio: 'inherit', shell: '/bin/bash' });
     } catch (error) {
       console.error(`Failed to execute bash command: ${error}`);
       throw error;
