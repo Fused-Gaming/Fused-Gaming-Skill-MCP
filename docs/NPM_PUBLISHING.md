@@ -562,6 +562,31 @@ npm view @h4shed/mcp-core versions
 npm view @h4shed/mcp-core@latest version
 ```
 
+### Lockfile Sync Mismatches (Fixed)
+
+**Issue**: Build failures during publish workflow with `ERESOLVE` or dependency mismatch errors.
+
+**Root Cause**: package-lock.json was synced before version bumping scripts ran, causing manifest mismatch.
+
+**Solution (Applied in PR #136)**:
+- Version bumping scripts (`prepare-publish-versions.cjs` and `auto-bump-publish-versions.js`) now run **before** lockfile sync
+- Lockfile is synced **after all version bumping completes**
+- This ensures package.json and package-lock.json stay synchronized
+
+**Workflow Order** (Fixed):
+1. `prepare-publish-versions.cjs` - bumps versions already on npm
+2. `auto-bump-publish-versions.js` - bumps remaining conflicts  
+3. `npm install --package-lock-only` - syncs lock after bumping
+4. `npm ci` - frozen install with correct lock
+5. Build and publish - succeeds with consistent manifests
+
+If you see lock-related errors in your local publish workflow:
+```bash
+# Refresh lockfile after version changes
+npm install --package-lock-only --ignore-scripts
+npm ci
+```
+
 ## Best Practices
 
 ### 1. **Version Control**
