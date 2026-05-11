@@ -333,7 +333,7 @@ For issues or questions:
 1. Check logs: `tail -50 .claude-flow/data/health.json`
 2. Review documentation in `docs/`
 3. Check GitHub issues
-4. Contact: support@h4shed.io
+4. Contact: support@vln.gg
 
 ---
 

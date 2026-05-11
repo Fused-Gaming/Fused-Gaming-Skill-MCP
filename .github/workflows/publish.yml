@@ -95,6 +95,7 @@ jobs:
 - Updated workspace versions
 - Refreshed package-lock.json
 - Automated by: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            git commit -S -m $'chore: bump versions for publish\n\n- Updated workspace versions\n- Refreshed package-lock.json\n- Automated by: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}' || true
             git push origin HEAD:${{ github.ref_name }}
           fi
         env:
@@ -110,6 +111,7 @@ jobs:
 
 Automated publish workflow from branch: ${{ github.ref_name }}
 Build: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            git tag -s "${TAG}" -m $'Release version '"${VERSION}"$'\n\nAutomated publish workflow from branch: ${{ github.ref_name }}\nBuild: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
             git push origin "${TAG}"
             echo "Created and pushed signed tag: ${TAG}"
           else

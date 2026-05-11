@@ -1,11 +1,11 @@
-# @fused-gaming/skill-project-manager
+# @h4shed/skill-project-manager
 
 Plan projects with milestones, dependencies, and delivery phases.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-project-manager
+npm install @h4shed/skill-project-manager
 ```
 
 ## Tools
@@ -22,7 +22,7 @@ Plan projects with milestones, dependencies, and delivery phases.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

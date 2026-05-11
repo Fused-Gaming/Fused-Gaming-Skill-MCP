@@ -1,11 +1,11 @@
-# @fused-gaming/skill-project-status-tool
+# @h4shed/skill-project-status-tool
 
 Summarize current project status, risks, and next actions.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-project-status-tool
+npm install @h4shed/skill-project-status-tool
 ```
 
 ## Tools
@@ -22,7 +22,7 @@ Summarize current project status, risks, and next actions.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

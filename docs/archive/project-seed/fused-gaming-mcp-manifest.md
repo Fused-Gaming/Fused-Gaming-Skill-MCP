@@ -1,7 +1,7 @@
 # Fused Gaming MCP — Manifest & Implementation Prompt
 
 **Status:** Ready for scaffolding  
-**Target:** Transform TrystPilot/skills contributions into `@fused-gaming/mcp` ecosystem  
+**Target:** Transform TrystPilot/skills contributions into `@h4shed/mcp` ecosystem  
 **Scope:** Claude skills → modular npm packages + scalable MCP server  
 **Audience:** Open-source consumers + internal (VLN/Fused Gaming) power users
 
@@ -13,7 +13,7 @@ You have curated a portfolio of **Claude skills from TrystPilot/skills** (Anthro
 
 **Your goal:** Package these skills as:
 
-1. **A reusable npm package** (`@fused-gaming/mcp`) that anyone can install
+1. **A reusable npm package** (`@h4shed/mcp`) that anyone can install
 2. **A Claude-compatible skill loader** that bootstraps an MCP server and auto-registers skills
 3. **A modular system** where each skill is independently versioned and maintainable
 4. **A personal customization layer** where you can keep proprietary/internal skills private while contributing public ones
@@ -48,7 +48,7 @@ fused-gaming-mcp/
 │   │   ├── algorithmic-art/
 │   │   │   ├── src/index.ts               # Exports Skill interface
 │   │   │   ├── SKILL.md                   # Original Claude skill definition
-│   │   │   ├── package.json               # @fused-gaming/skill-algorithmic-art
+│   │   │   ├── package.json               # @h4shed/skill-algorithmic-art
 │   │   │   └── README.md
 │   │   ├── ascii-mockup/
 │   │   ├── canvas-design/
@@ -103,7 +103,7 @@ fused-gaming-mcp/
 
 ```json
 {
-  "name": "@fused-gaming/mcp",
+  "name": "@h4shed/mcp",
   "version": "1.0.0",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
@@ -227,8 +227,8 @@ export class SkillRegistry {
     }
 
     try {
-      // Dynamic import: @fused-gaming/skill-{skillName}
-      const module = await import(`@fused-gaming/skill-${skillName}`);
+      // Dynamic import: @h4shed/skill-{skillName}
+      const module = await import(`@h4shed/skill-${skillName}`);
       const skill: Skill = module.default || module.skill;
 
       this.skills.set(skillName, skill);
@@ -275,7 +275,7 @@ packages/skills/algorithmic-art/
 ### 3.2 Example Skill Export (`packages/skills/algorithmic-art/src/index.ts`)
 
 ```typescript
-import type { Skill, ToolDefinition } from "@fused-gaming/mcp-core";
+import type { Skill, ToolDefinition } from "@h4shed/mcp-core";
 import { generateArtTool } from "./tools/generate-art.js";
 
 export const algorithmicArtSkill: Skill = {
@@ -297,7 +297,7 @@ export default algorithmicArtSkill;
 
 ```json
 {
-  "name": "@fused-gaming/skill-algorithmic-art",
+  "name": "@h4shed/skill-algorithmic-art",
   "version": "1.0.0",
   "description": "Algorithmic art skill for Fused Gaming MCP",
   "type": "module",
@@ -310,7 +310,7 @@ export default algorithmicArtSkill;
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "workspace:*"
+    "@h4shed/mcp-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -432,8 +432,8 @@ In your personal `.claude-mcp.config.json`:
 {
   "skills": {
     "enabled": [
-      "@fused-gaming/skill-algorithmic-art",
-      "@fused-gaming/skill-mcp-builder",
+      "@h4shed/skill-algorithmic-art",
+      "@h4shed/skill-mcp-builder",
       "./skills/internal-tools",
       "./skills/custom-overrides"
     ]
@@ -449,9 +449,9 @@ In your personal `.claude-mcp.config.json`:
 
 All skills published under `@fused-gaming` scope:
 
-- `@fused-gaming/mcp` (v1.0.0) — main package + CLI
-- `@fused-gaming/mcp-core` (v1.0.0) — core server + types
-- `@fused-gaming/skill-{name}` (v1.0.0) — individual skills
+- `@h4shed/mcp` (v1.0.0) — main package + CLI
+- `@h4shed/mcp-core` (v1.0.0) — core server + types
+- `@h4shed/skill-{name}` (v1.0.0) — individual skills
 
 **Semantic versioning:**
 - Core: patch for bug fixes, minor for new features, major for breaking changes
@@ -520,12 +520,12 @@ jobs:
 
 ```bash
 # Install core + all default skills
-npm install @fused-gaming/mcp
+npm install @h4shed/mcp
 
 # Or: install core + pick skills
-npm install @fused-gaming/mcp \
-  @fused-gaming/skill-algorithmic-art \
-  @fused-gaming/skill-mcp-builder
+npm install @h4shed/mcp \
+  @h4shed/skill-algorithmic-art \
+  @h4shed/skill-mcp-builder
 
 # Generate config
 npx fused-gaming-mcp init
@@ -540,7 +540,7 @@ npx fused-gaming-mcp list
 
 ### 7.2 Claude.ai / Claude API Integration
 
-Once `@fused-gaming/mcp` is published:
+Once `@h4shed/mcp` is published:
 
 **Claude.ai users:**
 1. Go to **Skills** → **Upload a skill**
@@ -594,10 +594,10 @@ Modular, scalable MCP server with curated Claude skills for creative & technical
 ## Installation
 
 \`\`\`bash
-npm install @fused-gaming/mcp
+npm install @h4shed/mcp
 
 # Or individual skills
-npm install @fused-gaming/skill-algorithmic-art @fused-gaming/skill-mcp-builder
+npm install @h4shed/skill-algorithmic-art @h4shed/skill-mcp-builder
 \`\`\`
 
 ## Quick Start
@@ -714,8 +714,8 @@ body:
 ### 10.1 Track (README badges)
 
 ```markdown
-![npm version](https://img.shields.io/npm/v/@fused-gaming/mcp)
-![npm downloads](https://img.shields.io/npm/dm/@fused-gaming/mcp)
+![npm version](https://img.shields.io/npm/v/@h4shed/mcp)
+![npm downloads](https://img.shields.io/npm/dm/@h4shed/mcp)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Build](https://github.com/fused-gaming/mcp/workflows/test/badge.svg)
 ```
@@ -786,7 +786,7 @@ body:
 
 ## Success Criteria
 
-✅ **Public npm package** installable via `npm install @fused-gaming/mcp`  
+✅ **Public npm package** installable via `npm install @h4shed/mcp`  
 ✅ **13+ modular skills** independently versioned and maintained  
 ✅ **Claude.ai integration** — users can load skills directly  
 ✅ **Private customization** — you can keep internal skills separate  

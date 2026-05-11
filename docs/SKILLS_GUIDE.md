@@ -10,7 +10,7 @@ This guide walks you through creating and publishing a new skill for the Fused G
 cd packages/skills
 npm init -w my-awesome-skill
 cd my-awesome-skill
-npm install --save @fused-gaming/mcp-core
+npm install --save @h4shed/mcp-core
 ```
 
 ### 2. Create TypeScript Config
@@ -40,7 +40,7 @@ mkdir -p src/tools
 
 `src/index.ts`:
 ```typescript
-import type { Skill, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { myTool } from "./tools/my-tool.js";
 
 export const myAwesomeSkill: Skill = {
@@ -63,7 +63,7 @@ export default myAwesomeSkill;
 
 `src/tools/my-tool.ts`:
 ```typescript
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const myTool: ToolDefinition = {
   name: "do-something-awesome",
@@ -262,7 +262,7 @@ packages/skills/my-skill/
 
 ```json
 {
-  "name": "@fused-gaming/skill-my-skill",
+  "name": "@h4shed/skill-my-skill",
   "version": "1.0.0",
   "description": "Does something awesome",
   "type": "module",
@@ -278,7 +278,7 @@ packages/skills/my-skill/
     "test:watch": "vitest --watch"
   },
   "dependencies": {
-    "@fused-gaming/mcp-core": "workspace:*"
+    "@h4shed/mcp-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
@@ -317,7 +317,7 @@ describe("myTool", () => {
 
 ### 1. Configure `package.json`
 
-- [ ] Name: `@fused-gaming/skill-{name}`
+- [ ] Name: `@h4shed/skill-{name}`
 - [ ] Version: `1.0.0`
 - [ ] Main: `./dist/index.js`
 - [ ] Author/license set correctly
@@ -357,10 +357,10 @@ Add to `.fused-gaming-mcp.json`:
 Open PR to [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers):
 
 ```yaml
-- name: "@fused-gaming/skill-my-awesome-skill"
+- name: "@h4shed/skill-my-awesome-skill"
   description: "Does something awesome"
   github: "fused-gaming/mcp"
-  install: "npm install @fused-gaming/skill-my-awesome-skill"
+  install: "npm install @h4shed/skill-my-awesome-skill"
 ```
 
 ---
@@ -394,7 +394,7 @@ Open PR to [modelcontextprotocol/servers](https://github.com/modelcontextprotoco
 
 ```typescript
 // src/tools/get-weather.ts
-import type { ToolDefinition } from "@fused-gaming/mcp-core";
+import type { ToolDefinition } from "@h4shed/mcp-core";
 
 export const getWeatherTool: ToolDefinition = {
   name: "get-weather",
@@ -459,13 +459,13 @@ export const getWeatherTool: ToolDefinition = {
 
 ### "Module not found" error
 
-**Problem:** `Cannot find module '@fused-gaming/skill-my-skill'`
+**Problem:** `Cannot find module '@h4shed/skill-my-skill'`
 
 **Solution:** 
 ```bash
 cd packages/skills/my-skill
 npm run build              # Build the skill
-npm install -w @fused-gaming/mcp-core  # Ensure core is installed
+npm install -w @h4shed/mcp-core  # Ensure core is installed
 ```
 
 ### Tool not appearing

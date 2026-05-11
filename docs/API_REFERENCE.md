@@ -2,7 +2,7 @@
 
 Complete API documentation for Fused Gaming MCP core and skill interfaces.
 
-## Core Package (`@fused-gaming/mcp-core`)
+## Core Package (`@h4shed/mcp-core`)
 
 ### Exports
 
@@ -295,7 +295,7 @@ await registry.unloadAll();
 Load configuration from file or return defaults.
 
 ```typescript
-import { loadConfig } from "@fused-gaming/mcp-core";
+import { loadConfig } from "@h4shed/mcp-core";
 
 const config = loadConfig();
 // or
@@ -309,7 +309,7 @@ const config = loadConfig("/path/to/.fused-gaming-mcp.json");
 Save configuration to file.
 
 ```typescript
-import { saveConfig } from "@fused-gaming/mcp-core";
+import { saveConfig } from "@h4shed/mcp-core";
 
 config.skills.enabled.push("new-skill");
 saveConfig(config);
@@ -322,14 +322,14 @@ saveConfig(config);
 Get default configuration object.
 
 ```typescript
-import { getDefaultConfig } from "@fused-gaming/mcp-core";
+import { getDefaultConfig } from "@h4shed/mcp-core";
 
 const defaults = getDefaultConfig();
 ```
 
 ---
 
-## CLI Package (`@fused-gaming/mcp-cli`)
+## CLI Package (`@h4shed/mcp-cli`)
 
 ### Commands
 
@@ -496,7 +496,7 @@ import type {
   ToolDefinition,
   SkillConfig,
   FusedGamingConfig
-} from "@fused-gaming/mcp-core";
+} from "@h4shed/mcp-core";
 ```
 
 ### Generic Types
@@ -523,7 +523,7 @@ type MyTool = ToolDefinition & {
 ### Complete Skill Example
 
 ```typescript
-import type { Skill, ToolDefinition, SkillConfig } from "@fused-gaming/mcp-core";
+import type { Skill, ToolDefinition, SkillConfig } from "@h4shed/mcp-core";
 
 const processTool: ToolDefinition = {
   name: "process-text",

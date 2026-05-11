@@ -10,7 +10,7 @@
 You are an expert TypeScript / Node.js developer building a production-ready MCP (Model Context Protocol) server 
 with a modular skills system for Fused Gaming.
 
-Create a complete monorepo scaffold for @fused-gaming/mcp with:
+Create a complete monorepo scaffold for @h4shed/mcp with:
 
 STRUCTURE:
 - Root package.json with npm workspaces for packages/core, packages/skills/*, packages/cli
@@ -19,7 +19,7 @@ STRUCTURE:
 
 PACKAGES:
 
-1. packages/core/ (@fused-gaming/mcp-core)
+1. packages/core/ (@h4shed/mcp-core)
    - src/types.ts: Skill, ToolDefinition, SkillConfig, SkillRegistry interfaces
    - src/skill-registry.ts: SkillRegistry class with loadSkill(), registerSkill(), listSkills()
    - src/config.ts: loadConfig(), saveConfig(), mergeConfigs()
@@ -27,7 +27,7 @@ PACKAGES:
    - src/index.ts: Main exports
    - package.json, tsconfig.json, README.md
 
-2. packages/cli/ (@fused-gaming/mcp)
+2. packages/cli/ (@h4shed/mcp)
    - src/index.ts: yargs CLI with commands: init, list, add <skill>, remove <skill>
    - src/init.ts: Generate .fused-gaming-mcp.json
    - src/list.ts: Display enabled/available skills
@@ -35,7 +35,7 @@ PACKAGES:
    - package.json (with "bin": { "fused-gaming-mcp": "./dist/index.js" })
    - README.md
 
-3. packages/skills/algorithmic-art/ (@fused-gaming/skill-algorithmic-art)
+3. packages/skills/algorithmic-art/ (@h4shed/skill-algorithmic-art)
    - src/index.ts: Export algorithmicArtSkill implementing Skill interface
    - src/tools/generate-art.ts: Sample tool with Zod schema
    - SKILL.md: Original Claude skill documentation (reference)
@@ -101,7 +101,7 @@ packages/skills/{skill-name}/
 │   │   └── {tool-name}.ts     # Individual tools
 │   └── types.ts               # Skill-specific types
 ├── SKILL.md                   # Original skill (reference)
-├── package.json               # @fused-gaming/skill-{name}
+├── package.json               # @h4shed/skill-{name}
 ├── tsconfig.json
 └── README.md
 
@@ -118,7 +118,7 @@ IMPLEMENTATION:
    - Zod input schema
    - handler function (async)
    - Clear description
-5. Create package.json with name @fused-gaming/skill-{name}
+5. Create package.json with name @h4shed/skill-{name}
 6. Create README with usage examples
 
 IMPORTANT:
@@ -168,7 +168,7 @@ Tools should be independently usable by an AI agent calling the MCP server.
 ## Prompt: Generate Documentation
 
 ```
-Create professional markdown documentation for the @fused-gaming/mcp monorepo:
+Create professional markdown documentation for the @h4shed/mcp monorepo:
 
 FILES TO GENERATE:
 
@@ -222,7 +222,7 @@ STYLE:
 ## Prompt: Generate CI/CD Workflows
 
 ```
-Create GitHub Actions workflows for @fused-gaming/mcp monorepo:
+Create GitHub Actions workflows for @h4shed/mcp monorepo:
 
 FILES:
 
@@ -304,7 +304,7 @@ Provide:
 ### Option C: In Conversation Thread (This Session)
 Just reply with:
 ```
-Generate the core package scaffold for @fused-gaming/mcp-core
+Generate the core package scaffold for @h4shed/mcp-core
 ```
 
 Or:
@@ -316,7 +316,7 @@ Generate the CLI package with init/list/add/remove commands
 Or for individual skills:
 
 ```
-Convert {SKILL_NAME} to @fused-gaming/skill-{name} package
+Convert {SKILL_NAME} to @h4shed/skill-{name} package
 ```
 
 ---
@@ -326,7 +326,7 @@ Convert {SKILL_NAME} to @fused-gaming/skill-{name} package
 If you want everything in one shot (may be very long):
 
 ```
-Generate the complete @fused-gaming/mcp monorepo scaffold: 
+Generate the complete @h4shed/mcp monorepo scaffold: 
 - Root config + workspaces
 - packages/core with server + registry
 - packages/cli with yargs commands
@@ -378,7 +378,7 @@ After using these prompts, you should have:
 
 ### packages/skills/{x7}
 For each of: algorithmic-art, ascii-mockup, canvas-design, frontend-design, theme-factory, mcp-builder, pre-deploy-validator, skill-creator
-- [ ] package.json (@fused-gaming/skill-{name})
+- [ ] package.json (@h4shed/skill-{name})
 - [ ] tsconfig.json
 - [ ] src/index.ts (exports Skill)
 - [ ] src/tools/*.ts (2-3 tools per skill)

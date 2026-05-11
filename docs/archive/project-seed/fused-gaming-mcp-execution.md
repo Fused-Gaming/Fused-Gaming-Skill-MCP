@@ -143,7 +143,7 @@
 **Deliverables:**
 - Fully functional CLI
 - Config generation + management
-- Executable via `npm exec fused-gaming-mcp` or `npx @fused-gaming/mcp`
+- Executable via `npm exec fused-gaming-mcp` or `npx @h4shed/mcp`
 
 ---
 
@@ -225,7 +225,7 @@
    - [ ] Create `src/index.ts` → exports Skill
    - [ ] Create `src/tools/generate-art.ts` → sample tool
    - [ ] Create `SKILL.md` (copy from TrystPilot/skills reference)
-   - [ ] Create `package.json` with name `@fused-gaming/skill-algorithmic-art`
+   - [ ] Create `package.json` with name `@h4shed/skill-algorithmic-art`
    - [ ] Create `README.md` with usage example
    - [ ] Create `tsconfig.json`
 
@@ -277,7 +277,7 @@ For each of these 12 skills, repeat the process:
 - [ ] Copy `SKILL.md` from TrystPilot/skills
 - [ ] Implement Skill interface in `src/index.ts`
 - [ ] Create tools (adapt Claude instructions → MCP tools)
-- [ ] Create `package.json` with `@fused-gaming/skill-{name}`
+- [ ] Create `package.json` with `@h4shed/skill-{name}`
 - [ ] Create `README.md`
 - [ ] Build: `npm run build --workspace=packages/skills/{skill}`
 - [ ] Test import/export
@@ -405,7 +405,7 @@ For the 8 migrated skills, flesh out **tool implementations**:
    - [ ] LICENSE file (Apache 2.0)
    - [ ] `.gitignore` (ignore `dist/`, `node_modules/`, `*.log`)
    - [ ] Root `package.json` metadata complete
-   - [ ] All package.json files have correct `@fused-gaming/*` names
+   - [ ] All package.json files have correct `@h4shed/*` names
 
 **Deliverables:**
 - Production-ready codebase
@@ -438,12 +438,12 @@ For the 8 migrated skills, flesh out **tool implementations**:
 
 4. **GitHub Actions publishes**
    - [ ] Wait for `publish.yml` workflow to complete
-   - [ ] Verify on npm: `npm view @fused-gaming/mcp`
+   - [ ] Verify on npm: `npm view @h4shed/mcp`
 
 **Deliverables:**
 - All packages published to npm
 - Publicly accessible at `npm.com`
-- Installation working: `npm install @fused-gaming/mcp`
+- Installation working: `npm install @h4shed/mcp`
 
 ---
 
@@ -460,7 +460,7 @@ For the 8 migrated skills, flesh out **tool implementations**:
 2. **MCP Registry submission** (optional but recommended)
    - [ ] Prepare metadata (name, description, homepage, repo)
    - [ ] Submit PR to [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)
-   - [ ] List entry format: `name: @fused-gaming/mcp`, `description: ...`, `github: fused-gaming/mcp`
+   - [ ] List entry format: `name: @h4shed/mcp`, `description: ...`, `github: fused-gaming/mcp`
 
 3. **Announcements**
    - [ ] Post in relevant communities (dev forums, Reddit, Discord)
@@ -555,9 +555,9 @@ For the 8 migrated skills, flesh out **tool implementations**:
 - [ ] Examples + use cases
 
 ### Publishing
-- [ ] Published to npm (`@fused-gaming/*`)
+- [ ] Published to npm (`@h4shed/*`)
 - [ ] Listed on MCP Registry
-- [ ] Installation works: `npm install @fused-gaming/mcp`
+- [ ] Installation works: `npm install @h4shed/mcp`
 - [ ] GitHub Actions auto-publish working
 - [ ] Community feedback loop open
 
