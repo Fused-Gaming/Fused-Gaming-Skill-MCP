@@ -79,7 +79,30 @@ function validateBranchNaming(branchName) {
 // Get tags that match this branch's changes
 function getMatchingSkillTags() {
   try {
-    const tags = execSync("git tag -l 'skill-*'").toString().trim().split("\n").filter(Boolean);
+    // Try multiple approaches to get tags in case of shallow clones
+    let tags = [];
+
+    // Approach 1: Local tags
+    try {
+      const localTags = execSync("git tag -l 'skill-*'").toString().trim().split("\n").filter(Boolean);
+      tags = [...tags, ...localTags];
+    } catch {
+      // Ignore if git tag fails
+    }
+
+    // Approach 2: Check git describe for current commit tags
+    try {
+      const describe = execSync("git describe --tags --exact-match 2>/dev/null || echo ''").toString().trim();
+      if (describe && describe.startsWith('skill-')) {
+        tags = [...tags, describe];
+      }
+    } catch {
+      // Ignore if git describe fails
+    }
+
+    // Remove duplicates
+    tags = [...new Set(tags)];
+
     const matchingTags = [];
 
     tags.forEach((tag) => {
