@@ -1,0 +1,58 @@
+name: Validate Branch-Skill Match
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop, "claude/**", "feat/**", "feature/**", "skill/**"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Branch and Skill Alignment
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Validate branch-skill match
+        run: node scripts/validate-branch-skill-match.cjs
+
+      - name: Check tag strategy compliance
+        if: github.event_name == 'push'
+        run: |
+          BRANCH=${{ github.ref_name }}
+
+          # Extract skill from branch name
+          SKILL=$(echo "$BRANCH" | grep -oE 'feat/[a-z0-9-]+|skill/[a-z0-9-]+|claude/implement-[a-z0-9-]+' | cut -d'/' -f2 || true)
+
+          if [ -n "$SKILL" ] && [ "$BRANCH" != "main" ] && [ "$BRANCH" != "develop" ]; then
+            echo "🎯 Skill detected: $SKILL"
+            echo "📌 Expected tag format: skill-$SKILL@X.Y.Z or @h4shed/skill-$SKILL@X.Y.Z"
+
+            # Check if skill package exists
+            if [ ! -d "packages/skills/$SKILL" ]; then
+              echo "❌ Skill package 'packages/skills/$SKILL' not found"
+              exit 1
+            fi
+
+            # Get version from package.json
+            VERSION=$(grep '"version"' "packages/skills/$SKILL/package.json" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+            echo "✓ Skill version: $VERSION"
+            echo "💡 To publish: git tag skill-$SKILL@$VERSION && git push origin skill-$SKILL@$VERSION"
+          fi
+
+      - name: Enforce tag validation for releases
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          TAG=${{ github.ref_name }}
+
+          # Validate tag format
+          if [[ $TAG =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|skill-[a-z0-9-]+@[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "✓ Tag format valid: $TAG"
+          else
+            echo "❌ Invalid tag format: $TAG"
+            echo "   Expected: v*.*.* or skill-name@*.*.*"
+            exit 1
+          fi
