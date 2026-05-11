@@ -289,8 +289,14 @@ Branch: feat/skill-x
   ↓
 Tag: skill-x@1.0.0
   ↓
-Auto: publish @h4shed/skill-x@1.0.0 to npm
+Triggers: publish workflow (npm publish --workspaces)
+  ↓
+Result: All changed packages publish to npm
+  - @h4shed/skill-x@1.0.0 (the tagged skill)
+  - Other workspaces if they have version changes
 ```
+
+**Important**: The tag triggers the publish workflow but doesn't filter which packages get published. The workflow publishes all workspace packages via `npm publish --workspaces`. Version bumping is handled automatically by `scripts/prepare-publish-versions.cjs` to prevent conflicts with already-published versions.
 
 ## Extensibility Patterns
 
