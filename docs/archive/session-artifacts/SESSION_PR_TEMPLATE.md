@@ -63,13 +63,13 @@ This PR completes all three priority deliverables for the Fused Gaming MCP proje
 - [x] **Proper monorepo structure** — All 10 packages organized correctly
 
 ### Deliverables ✅
-- [x] **Core Package** (@fused-gaming/mcp-core)
+- [x] **Core Package** (@h4shed/mcp-core)
   - SkillRegistry with dynamic loading
   - Type definitions for Skill, Tool, Config
   - Configuration management
   - 5 core files
 
-- [x] **CLI Package** (@fused-gaming/mcp-cli)
+- [x] **CLI Package** (@h4shed/mcp-cli)
   - 4 commands: init, list, add, remove
   - Config generation and management
   - 5 command implementations

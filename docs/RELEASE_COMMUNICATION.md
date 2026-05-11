@@ -1,17 +1,20 @@
-# Release Communication Guide (v1.0.3)
+# Release Communication Guide (v1.0.4)
 
-This document captures a ready-to-use launch summary and recommendation set for announcing the first stable release.
+This document captures a ready-to-use launch summary and recommendation set for announcing releases.
 
 ## Terminal-Friendly Session Summary
 
 Use this in terminal or release-call notes:
 
 ```text
-Fused Gaming MCP v1.0.3 release prep summary
-- Existing: 9 production-ready skills (+ core + CLI) published on npm under @h4shed.
-- Updated: Release automation split into dedicated workflows:
-  * npm publish: .github/workflows/publish.yml
-  * GitHub release: .github/workflows/github-release.yml
+Fused Gaming MCP v1.0.4 release prep summary
+- Existing: 13 production-ready skills (+ core + CLI) published on npm under @h4shed.
+- New: LinkedIn Master Journalist (LIMJ) skill v1.0
+  * Autonomous LinkedIn article generation (1,200-1,800 words)
+  * Dual social post variants (personal + company) with hashtag research
+  * Self-contained LinkedIn cover images with PNG export
+  * Full system prompt + guidelines + templates in repo
+- Updated: Release automation includes npm namespace corrections and LIMJ documentation
 - Risk watch: Ensure GH_TOKEN + NPM_TOKEN + optional NPM_SCOPE are configured in repository settings.
 - Blocker watch: GitHub CLI/API visibility required for PR-level deployment diagnostics.
 ```
@@ -19,20 +22,26 @@ Fused Gaming MCP v1.0.3 release prep summary
 ## LinkedIn Post (Recommended Draft)
 
 ```text
-🚀 We just shipped Fused Gaming MCP v1.0.3!
+🚀 Fused Gaming MCP v1.0.4 ships with LinkedIn Master Journalist (LIMJ) skill!
 
-After a full production hardening cycle, we launched our modular Model Context Protocol stack with 9 ready-to-use skills for design, dev, and creative automation.
+We just added full autonomous LinkedIn content generation to the Fused Gaming MCP ecosystem. Transform briefs into publication-ready articles, dual social posts, and branded covers—no human editing needed.
 
-What’s included:
-✅ MCP core + CLI for skill lifecycle management
-✅ Skill packages for algorithmic art, frontend/canvas design, theming, validation, and scaffolding
-✅ Production CI with npm workspace publishing and dedicated GitHub release automation
-✅ Security-focused dependency updates and stable release documentation
+What’s new:
+✅ LinkedIn Master Journalist (LIMJ) v1.0 — autonomous article + posts + cover images
+✅ 13 total production-ready skills for design, dev, content, and automation
+✅ Full LIMJ documentation: system prompt, guidelines, templates, quality gates
+✅ Tested with real briefs—articles are publication-ready, zero corporate jargon
 
-Huge thanks to everyone who helped shape the first stable release.
-If you’re building AI-native workflows and want composable skills, we’d love your feedback.
+Try LIMJ: Copy the system prompt from the repo, paste into Claude with your content brief, get three LinkedIn-ready files in minutes.
 
-#MCP #AIEngineering #TypeScript #OpenSource #DevTools #Release
+GitHub: [link]
+
+#MCP #LinkedIn #ContentAutomation #AIEngineering #TypeScript #DevTools
+
+---
+
+**Follow-up comment suggestion**:
+"LIMJ eliminates 4-6 hours per LinkedIn article. Dual posts (personal + company), hashtag research, and cover images—all production-ready. Perfect for founders and thought leaders shipping monthly content."
 ```
 
 ## Recommendations for the Post

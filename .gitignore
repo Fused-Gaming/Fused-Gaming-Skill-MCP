@@ -197,3 +197,7 @@ gpg-private-key.asc
 .ssh/
 credentials.json
 secrets.json
+
+# LIMJ Generated Outputs
+LIMJ/**/*-cover-*.png
+LIMJ/**/linkedin-cover-*.png

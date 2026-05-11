@@ -5,12 +5,20 @@
 
 import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { DraftLinkedinPostTool } from "./tools/draft-linkedin-post.js";
+import { VerifyHashtagsTool } from "./tools/verify-hashtags.js";
+import { AnalyzeContentQualityTool } from "./tools/analyze-content-quality.js";
+import { TrackContentPerformanceTool } from "./tools/track-content-performance.js";
 
 export const LinkedinMasterJournalistSkill: Skill = {
   name: "linkedin-master-journalist",
-  version: "1.0.0",
+  version: "1.0.1",
   description: "Draft polished LinkedIn release and thought-leadership posts.",
-  tools: [DraftLinkedinPostTool],
+  tools: [
+    DraftLinkedinPostTool,
+    VerifyHashtagsTool,
+    AnalyzeContentQualityTool,
+    TrackContentPerformanceTool,
+  ],
 
   async initialize(_config: SkillConfig): Promise<void> {
     console.log("[LinkedIn Master Journalist] Skill initialized");

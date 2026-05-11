@@ -19,7 +19,7 @@ npm --version   # 8.0.0 or higher
 ### Option 1: Quick Install (Recommended for most users)
 
 ```bash
-npm install @fused-gaming/mcp
+npm install @h4shed/mcp
 ```
 
 This installs the core MCP server with commonly-used skills.
@@ -41,10 +41,10 @@ npm run build
 ### Option 3: Selective Skills Installation
 
 ```bash
-npm install @fused-gaming/mcp \
-  @fused-gaming/skill-algorithmic-art \
-  @fused-gaming/skill-frontend-design \
-  @fused-gaming/skill-theme-factory
+npm install @h4shed/mcp \
+  @h4shed/skill-algorithmic-art \
+  @h4shed/skill-frontend-design \
+  @h4shed/skill-theme-factory
 ```
 
 See [Available Skills](#available-skills) for the full list.

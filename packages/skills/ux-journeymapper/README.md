@@ -1,11 +1,11 @@
-# @fused-gaming/skill-ux-journeymapper
+# @h4shed/skill-ux-journeymapper
 
 Create UX journey maps with pain points, touchpoints, and opportunities.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-ux-journeymapper
+npm install @h4shed/skill-ux-journeymapper
 ```
 
 ## Tools
@@ -66,7 +66,7 @@ Each journey map includes:
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

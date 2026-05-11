@@ -94,13 +94,13 @@ Executed 5 focused commits following conventional commit format:
 
 ### Code (71 files, 5,486 lines added)
 
-**Core Package (@fused-gaming/mcp-core)**
+**Core Package (@h4shed/mcp-core)**
 - SkillRegistry with dynamic loading
 - Type definitions (Skill, Tool, Config)
 - Configuration management
 - MCP server implementation
 
-**CLI Package (@fused-gaming/mcp-cli)**
+**CLI Package (@h4shed/mcp-cli)**
 - 4 commands: init, list, add, remove
 - Configuration management
 - User-friendly interface

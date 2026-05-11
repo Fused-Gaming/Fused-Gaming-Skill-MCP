@@ -21,7 +21,7 @@
 
 ## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **19 published-ready skills in-repo** plus core infrastructure packages.
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **12 published skills** plus **15+ skills in development** and core infrastructure packages.
 
 ### 🎯 Your Creative Arsenal Includes:
 
@@ -37,6 +37,7 @@
 | **skill-creator** | Custom skill builder | ✅ |
 | **underworld-writer** | Character/world narrative generation | ✅ |
 | **agentic-flow-devkit** | Agentic orchestration GUI + trailer A/B-roll planning | 🆕 |
+| **linkedin-master-journalist** | LinkedIn article + dual posts + branded covers | ✅ |
 | **tailwindcss-style-builder** | Utility-first styling and design system builder | 📋 |
 | **storybook-component-library** | Component documentation and visual testing | 📋 |
 | **playwright-test-automation** | End-to-end testing automation framework | 📋 |
@@ -65,6 +66,7 @@ All with professional HTML templates, security best practices, and full agent in
 - `skill-algorithmic-art`, `skill-ascii-mockup`, `skill-canvas-design`
 - `skill-frontend-design`, `skill-mcp-builder`, `skill-pre-deploy-validator`
 - `skill-skill-creator`, `skill-theme-factory`, `skill-underworld-writer`
+- `skill-linkedin-master-journalist`
 - `skill-syncpulse` ⭐ (v0.2.0 — 9 email workflow templates)
 
 **Scaffolded and queued for publish (`@h4shed`)**
@@ -75,7 +77,6 @@ All with professional HTML templates, security best practices, and full agent in
 - `skill-project-status-tool`
 - `skill-daily-review`
 - `multi-account-session-tracking`
-- `skill-linkedin-master-journalist`
 - `skill-tailwindcss-style-builder`
 - `skill-storybook-component-library`
 - `skill-playwright-test-automation`
@@ -102,7 +103,41 @@ Transform your Claude workflow with meticulously crafted tools designed for:
 
 ---
 
-## 🎬 Quick Start
+## 💼 LinkedIn Master Journalist (LIMJ) Skill
+
+**Transform briefs into publication-ready LinkedIn content with autonomous article generation, social posts, and branded cover images.**
+
+### What LIMJ Does
+
+- **Article.md**: 1,200–1,800 word articles optimized for C-suite engagement
+- **Posts.md**: Dual social variants (personal + company) with hashtag research and engagement strategy
+- **Cover.html**: Self-contained 1200×627px LinkedIn OpenGraph covers with PNG export
+
+### Quick Trigger
+
+```bash
+# Copy the system prompt
+cat LIMJ/LIMJ_System_Prompt.md
+
+# Paste into Claude with your content brief:
+# Topic: [your topic]
+# Angle: [contrarian/educational/case-study]
+# Audience: [founder/CEO/CTO]
+
+# Get: Article.md + Posts.md + Cover.html (publication-ready)
+```
+
+### Learn More
+
+- **Full Documentation**: [LIMJ/README.md](./LIMJ/README.md)
+- **Quick Start Guide**: [LIMJ/quickstart.md](./LIMJ/quickstart.md)
+- **System Prompt**: [LIMJ/LIMJ_System_Prompt.md](./LIMJ/LIMJ_System_Prompt.md)
+- **Guidelines**: [LIMJ/guidelines/](./LIMJ/guidelines/) (vocabulary, colors, typography, hashtags)
+- **Templates**: [LIMJ/templates/](./LIMJ/templates/) (examples + blanks)
+
+---
+
+## 🎬 Quick Start (2 Minutes)
 
 ### Option 1: Interactive Installation (Recommended)
 

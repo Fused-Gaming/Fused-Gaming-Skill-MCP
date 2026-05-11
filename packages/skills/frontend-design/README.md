@@ -1,11 +1,11 @@
-# @fused-gaming/skill-frontend-design
+# @h4shed/skill-frontend-design
 
 Frontend component design and HTML/CSS generation for modern web applications.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-frontend-design
+npm install @h4shed/skill-frontend-design
 ```
 
 ## Tools
@@ -28,7 +28,7 @@ Generate modern frontend components with HTML, CSS, and JavaScript.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

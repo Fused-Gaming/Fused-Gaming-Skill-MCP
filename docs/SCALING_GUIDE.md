@@ -91,7 +91,7 @@ packages/skills/my-feature/
 **`packages/skills/my-feature/src/index.ts`**
 
 ```typescript
-import { BaseMCPServer, Tool } from "@fused-gaming/mcp-core";
+import { BaseMCPServer, Tool } from "@h4shed/mcp-core";
 
 export class MyFeatureSkill extends BaseMCPServer {
   name = "my-feature";
@@ -131,7 +131,7 @@ Each tool should be:
 **`packages/skills/my-feature/src/tools/my-tool.ts`**
 
 ```typescript
-import { Tool } from "@fused-gaming/mcp-core";
+import { Tool } from "@h4shed/mcp-core";
 
 export class MyTool implements Tool {
   name = "my-tool";
@@ -208,7 +208,7 @@ describe("MyTool", () => {
     "skills": [
       // ... existing skills
       {
-        "name": "@fused-gaming/skill-my-feature",
+        "name": "@h4shed/skill-my-feature",
         "version": "1.0.0",
         "published": true
       }
@@ -229,7 +229,7 @@ Brief description of what this skill does.
 ## Installation
 
 \`\`\`bash
-npm install @fused-gaming/skill-my-feature
+npm install @h4shed/skill-my-feature
 \`\`\`
 
 ## Usage
@@ -414,7 +414,7 @@ private getOrCompute(key: string, compute: () => unknown): unknown {
 Add logging for debugging:
 
 ```typescript
-import { Logger } from "@fused-gaming/mcp-core";
+import { Logger } from "@h4shed/mcp-core";
 
 export class MyTool implements Tool {
   private logger = new Logger("my-tool");
@@ -448,7 +448,7 @@ npm test --workspace=packages/skills/my-feature
 Test skills interacting with core:
 
 ```typescript
-import { MCPServer } from "@fused-gaming/mcp-core";
+import { MCPServer } from "@h4shed/mcp-core";
 
 describe("MySkill Integration", () => {
   let server: MCPServer;

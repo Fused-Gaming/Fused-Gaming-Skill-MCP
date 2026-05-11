@@ -16,7 +16,8 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 9. `@h4shed/skill-skill-creator`
 10. `@h4shed/skill-theme-factory`
 11. `@h4shed/skill-underworld-writer`
-12. `@h4shed/skill-agentic-flow-devkit` *(newly scaffolded locally; pending publish)*
+12. `@h4shed/skill-agentic-flow-devkit`
+13. `@h4shed/skill-linkedin-master-journalist` *(v1.0, production-ready, full docs included)*
 
 ---
 
@@ -24,6 +25,7 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 
 ### Published
 - `@h4shed/skill-underworld-writer` (confirmed published)
+- `@h4shed/skill-linkedin-master-journalist` (v1.0, production-ready, April 2026)
 
 ### Scaffolded in repository (queued for publish)
 - `@h4shed/skill-mermaid-terminal`
@@ -33,7 +35,6 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 - `@h4shed/skill-project-status-tool`
 - `@h4shed/skill-daily-review`
 - `@h4shed/multi-account-session-tracking`
-- `@h4shed/skill-linkedin-master-journalist`
 - `@h4shed/skill-agentic-flow-devkit`
 
 ---
