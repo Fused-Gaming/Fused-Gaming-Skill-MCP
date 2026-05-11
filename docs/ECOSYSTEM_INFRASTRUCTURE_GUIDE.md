@@ -63,7 +63,7 @@ EOF
 # Create tsconfig.json
 cat > tsconfig.json <<EOF
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src"
@@ -115,19 +115,22 @@ import { YourSkill } from "@h4shed/skill-skill-name";
 Apache-2.0
 EOF
 
-# 5. Build and test locally
+# 5. Return to repository root
+cd ../../..
+
+# 6. Build and test locally
 npm run build --workspace=packages/skills/skill-name
 npm test --workspace=packages/skills/skill-name
 
-# 6. Commit changes
+# 7. Commit changes
 git add packages/skills/skill-name
 git commit -m "feat(skill-name): Add new skill with X tools"
 
-# 7. Push and create PR
+# 8. Push and create PR
 git push origin feat/skill-name
 # Create PR to main branch
 
-# 8. After merge, tag for publishing
+# 9. After merge, tag for publishing
 git tag skill-skill-name@1.0.0
 git push origin skill-skill-name@1.0.0
 
