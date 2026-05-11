@@ -179,12 +179,8 @@ git push origin skill-linkedin-master-journalist@$VERSION
 #### Step 4: Automatic Publication
 The publish workflow will:
 1. Detect the tag matches `skill-*@*.*.*` format
-2. Trigger GitHub Actions publish job
-3. Auto-bump any workspace versions that conflict with already-published npm packages
-4. Publish **all workspace packages** to npm via `npm publish --workspaces`
-   - Includes the tagged skill (`@h4shed/skill-linkedin-master-journalist@1.0.1`)
-   - Also includes any other changed workspaces with version updates
-5. Create GitHub release notes
+2. Extract skill name and version
+3. Publish to npm as `@h4shed/skill-linkedin-master-journalist@1.0.1`
 
 ## Validation Script
 

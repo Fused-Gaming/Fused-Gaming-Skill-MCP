@@ -374,7 +374,6 @@ export class FirstLoginManager {
 
   /**
    * Save configuration to file
-   * P2: Exclude oneTimePassword from persistence - only hash is saved
    */
   private saveConfig(): void {
     try {
@@ -383,19 +382,7 @@ export class FirstLoginManager {
         fs.mkdirSync(dir, { recursive: true });
       }
 
-      // P2: Never persist plaintext oneTimePassword to disk
-      const configToSave: Partial<FirstLoginConfig> = {
-        enabled: this.config.enabled,
-        passwordHash: this.config.passwordHash,
-        createdAt: this.config.createdAt,
-        expiresAt: this.config.expiresAt,
-        changedAt: this.config.changedAt,
-        changeRequired: this.config.changeRequired,
-        attempts: this.config.attempts,
-        maxAttempts: this.config.maxAttempts,
-      };
-
-      fs.writeFileSync(this.configPath, JSON.stringify(configToSave, null, 2));
+      fs.writeFileSync(this.configPath, JSON.stringify(this.config, null, 2));
     } catch (error) {
       console.error('Failed to save first-login config:', error);
     }

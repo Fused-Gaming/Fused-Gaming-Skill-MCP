@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Complete design system and tool documentation hub - docs.vln.gg",
   "type": "module",
+  "private": true,
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",

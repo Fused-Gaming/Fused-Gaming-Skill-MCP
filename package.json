@@ -4,7 +4,7 @@
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
   "license": "Apache-2.0",
-  "author": "Fused Gaming <support@vln.gg>",
+  "author": "Fused Gaming <info@h4shed.io>",
   "keywords": [
     "mcp",
     "claude",

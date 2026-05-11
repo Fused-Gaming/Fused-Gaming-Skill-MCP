@@ -1,7 +1,7 @@
 {
   "name": "@h4shed/skill-linkedin-master-journalist",
-  "version": "1.0.2",
-  "description": "Draft polished LinkedIn release and thought-leadership posts.",
+  "version": "1.0.1",
+  "description": "Draft polished LinkedIn release and thought-leadership posts with quality validation and performance tracking.",
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
@@ -13,7 +13,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@h4shed/mcp-core": "^1.0.4"
+    "@h4shed/mcp-core": "*"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

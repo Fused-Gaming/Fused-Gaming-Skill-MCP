@@ -138,10 +138,6 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-# LIMJ Generated Outputs
-LIMJ/**/*-cover-*.png
-LIMJ/**/linkedin-cover-*.png
-
 # Claude Flow & Agent Infrastructure
 .claude-flow/cache
 .claude-flow/logs
@@ -189,3 +185,19 @@ config.local.json
 # MCP Tool Registry
 registry/*.tmp
 registry/*.log
+
+# Security & Sensitive Files (GPG Keys, Private Keys, Passphrases)
+gpg-private-key.asc
+*.gpg
+*.key
+*.pem
+*.p12
+*.pfx
+.gnupg/
+.ssh/
+credentials.json
+secrets.json
+
+# LIMJ Generated Outputs
+LIMJ/**/*-cover-*.png
+LIMJ/**/linkedin-cover-*.png

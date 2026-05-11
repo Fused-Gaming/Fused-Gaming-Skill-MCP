@@ -16,9 +16,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch all tags
-        run: git fetch --tags -f
-
       - name: Validate branch-skill match
         run: node scripts/validate-branch-skill-match.cjs
 
@@ -28,7 +25,16 @@ jobs:
           BRANCH=${{ github.ref_name }}
 
           # Extract skill from branch name
-          SKILL=$(echo "$BRANCH" | grep -oE 'feat/[a-z0-9-]+|skill/[a-z0-9-]+|claude/implement-[a-z0-9-]+' | cut -d'/' -f2 || true)
+          # Handles feat/*, skill/*, and claude/implement-* (with optional version suffix like -6WZpc)
+          if [[ "$BRANCH" =~ ^feat/([a-z0-9-]+) ]]; then
+            SKILL="${BASH_REMATCH[1]}"
+          elif [[ "$BRANCH" =~ ^skill/([a-z0-9-]+) ]]; then
+            SKILL="${BASH_REMATCH[1]}"
+          elif [[ "$BRANCH" =~ ^claude/implement-([a-z0-9-]+?)(-[0-9A-Za-z]+)?$ ]]; then
+            SKILL="${BASH_REMATCH[1]}"
+          else
+            SKILL=""
+          fi
 
           if [ -n "$SKILL" ] && [ "$BRANCH" != "main" ] && [ "$BRANCH" != "develop" ]; then
             echo "🎯 Skill detected: $SKILL"
@@ -36,14 +42,14 @@ jobs:
 
             # Check if skill package exists
             if [ ! -d "packages/skills/$SKILL" ]; then
-              echo "❌ Skill package 'packages/skills/$SKILL' not found"
-              exit 1
+              echo "⚠️  Skill package 'packages/skills/$SKILL' not found"
+              echo "   This branch may have non-skill changes or documentation only"
+            else
+              # Get version from package.json
+              VERSION=$(grep '"version"' "packages/skills/$SKILL/package.json" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+              echo "✓ Skill version: $VERSION"
+              echo "💡 To publish: git tag skill-$SKILL@$VERSION && git push origin skill-$SKILL@$VERSION"
             fi
-
-            # Get version from package.json
-            VERSION=$(grep '"version"' "packages/skills/$SKILL/package.json" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-            echo "✓ Skill version: $VERSION"
-            echo "💡 To publish: git tag skill-$SKILL@$VERSION && git push origin skill-$SKILL@$VERSION"
           fi
 
       - name: Enforce tag validation for releases

@@ -94,13 +94,19 @@ export const myTool: ToolDefinition = {
 };
 ```
 
-### 5. Build and Test
+### 5. Return to Repository Root
 
 ```bash
-npm run build
+cd ../../..
 ```
 
-### 6. Test the Skill
+### 6. Build and Test
+
+```bash
+npm run build --workspace=packages/skills/my-awesome-skill
+```
+
+### 7. Test the Skill
 
 Add to `.fused-gaming-mcp.json`:
 ```json

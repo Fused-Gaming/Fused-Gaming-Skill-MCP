@@ -38,5 +38,9 @@
   ],
   "author": "Fused Gaming",
   "license": "Apache-2.0",
-  "repository": "https://github.com/fused-gaming/fused-gaming-skill-mcp"
+  "repository": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

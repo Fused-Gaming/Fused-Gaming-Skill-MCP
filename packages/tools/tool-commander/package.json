@@ -17,7 +17,17 @@
     "typescript": "^5.3.2",
     "commander": "^11.0.0"
   },
-  "keywords": ["commander", "cli", "framework", "@h4shed", "fused-gaming"],
+  "keywords": [
+    "commander",
+    "cli",
+    "framework",
+    "@h4shed",
+    "fused-gaming"
+  ],
   "author": "Fused Gaming",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

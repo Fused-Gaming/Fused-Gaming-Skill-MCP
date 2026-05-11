@@ -90,11 +90,6 @@ jobs:
             echo "No changes to commit"
           else
             git add -A
-            git commit -S -m "chore: bump versions for publish
-
-- Updated workspace versions
-- Refreshed package-lock.json
-- Automated by: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             git commit -S -m $'chore: bump versions for publish\n\n- Updated workspace versions\n- Refreshed package-lock.json\n- Automated by: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}' || true
             git push origin HEAD:${{ github.ref_name }}
           fi
@@ -107,10 +102,6 @@ jobs:
           VERSION=$(node -e "console.log(require('./package.json').version)")
           TAG="v${VERSION}"
           if ! git rev-parse "${TAG}" >/dev/null 2>&1; then
-            git tag -s "${TAG}" -m "Release version ${VERSION}
-
-Automated publish workflow from branch: ${{ github.ref_name }}
-Build: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             git tag -s "${TAG}" -m $'Release version '"${VERSION}"$'\n\nAutomated publish workflow from branch: ${{ github.ref_name }}\nBuild: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
             git push origin "${TAG}"
             echo "Created and pushed signed tag: ${TAG}"
