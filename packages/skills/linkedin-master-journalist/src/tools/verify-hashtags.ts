@@ -29,11 +29,6 @@ const HASHTAG_DATABASE: HashtagData = {
   "#FederalHousing": { volume: "32K", tier: "niche", recommended: true },
 };
 
-interface VerifyHashtagsInput {
-  hashtags: string[];
-  strategy?: "balanced" | "reach" | "niche";
-}
-
 export const VerifyHashtagsTool: ToolDefinition = {
   name: "verify-hashtags",
   description: "Validates hashtag strategy against volume data and LinkedIn best practices.",

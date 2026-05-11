@@ -28,12 +28,6 @@ const BANNED_WORDS = [
   "Best practices",
 ];
 
-interface ContentInput {
-  content: string;
-  contentType: "article" | "post";
-  wordCountTarget?: { min: number; max: number };
-}
-
 export const AnalyzeContentQualityTool: ToolDefinition = {
   name: "analyze-content-quality",
   description: "Validates content against LIMJ quality gates, banned vocabulary, and brand voice guidelines.",

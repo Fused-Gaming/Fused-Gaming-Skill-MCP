@@ -21,13 +21,6 @@ interface PerformanceEntry {
   };
 }
 
-interface PerformanceTrackerInput {
-  action: "record" | "analyze" | "compare";
-  entry?: PerformanceEntry;
-  contentIds?: string[];
-  timeframe?: "week" | "month" | "quarter";
-}
-
 // In-memory storage (would be database in production)
 const performanceLog: PerformanceEntry[] = [];
 
