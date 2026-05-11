@@ -12,7 +12,7 @@ You want Claude to generate a p5.js sketch using the algorithmic-art skill.
 
 ```bash
 # Install
-npm install @fused-gaming/mcp
+npm install @h4shed/mcp
 
 # Initialize config
 npx fused-gaming-mcp init
@@ -201,7 +201,7 @@ mkdir local-skills
 mkdir local-skills/internal-tool
 cd local-skills/internal-tool
 npm init -y
-npm install @fused-gaming/mcp-core
+npm install @h4shed/mcp-core
 ```
 
 2. Create your skill in `src/index.ts`
@@ -239,7 +239,7 @@ registry.registerSkill(internalTool);
 ### Test Tool Manually
 
 ```typescript
-import { myTool } from "@fused-gaming/skill-my-skill";
+import { myTool } from "@h4shed/skill-my-skill";
 
 // Test directly
 const result = await myTool.handler({ input: "test" });

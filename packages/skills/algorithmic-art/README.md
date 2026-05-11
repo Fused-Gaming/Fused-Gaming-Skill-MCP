@@ -1,11 +1,11 @@
-# @fused-gaming/skill-algorithmic-art
+# @h4shed/skill-algorithmic-art
 
 Generative art using p5.js with seeded randomness, flow fields, and particle systems.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-algorithmic-art
+npm install @h4shed/skill-algorithmic-art
 ```
 
 ## Tools
@@ -74,7 +74,7 @@ const result = await callTool("create-flow-field", {
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

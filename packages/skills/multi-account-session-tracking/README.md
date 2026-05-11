@@ -1,11 +1,11 @@
-# @fused-gaming/multi-account-session-tracking
+# @h4shed/multi-account-session-tracking
 
 Track session activity across multiple accounts and workstreams.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/multi-account-session-tracking
+npm install @h4shed/multi-account-session-tracking
 ```
 
 ## Tools
@@ -22,7 +22,7 @@ Track session activity across multiple accounts and workstreams.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 

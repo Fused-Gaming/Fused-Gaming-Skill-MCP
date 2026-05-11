@@ -1,11 +1,11 @@
-# @fused-gaming/skill-skill-creator
+# @h4shed/skill-skill-creator
 
 Create custom skills and tools for the Fused Gaming MCP ecosystem.
 
 ## Installation
 
 ```bash
-npm install @fused-gaming/skill-skill-creator
+npm install @h4shed/skill-skill-creator
 ```
 
 ## Tools
@@ -28,7 +28,7 @@ Create a new custom skill for the Fused Gaming MCP ecosystem.
 
 ## Usage
 
-This package exports an MCP skill definition that can be loaded by `@fused-gaming/mcp-core` via the workspace skill registry.
+This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
 
 ## Development
 
