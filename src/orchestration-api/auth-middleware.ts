@@ -94,9 +94,27 @@ export class AuthMiddleware {
 
   /**
    * Handle password change on first login
+   * Requires valid session token from initial login
    */
   handleChangePasswordFirstLogin = (req: Request, res: Response) => {
-    const { newPassword, confirmPassword } = req.body;
+    const { newPassword, confirmPassword, sessionToken } = req.body;
+
+    // P1: Validate session token was provided
+    if (!sessionToken) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Session token required. Must complete initial login first.'
+      });
+    }
+
+    // Validate session token
+    const isValidToken = this.validateSessionToken(sessionToken);
+    if (!isValidToken) {
+      return res.status(401).json({
+        error: 'Invalid Session',
+        message: 'Session token is invalid or expired. Please log in again.'
+      });
+    }
 
     if (!newPassword || !confirmPassword) {
       return res.status(400).json({
@@ -138,6 +156,30 @@ export class AuthMiddleware {
       exp: Date.now() + 24 * 60 * 60 * 1000,
       type: 'first-login-session'
     })).toString('base64');
+  }
+
+  /**
+   * Validate session token
+   * P1: Ensure token is valid and not expired
+   */
+  private validateSessionToken(token: string): boolean {
+    try {
+      const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+
+      // Check token type
+      if (decoded.type !== 'first-login-session') {
+        return false;
+      }
+
+      // Check expiration
+      if (decoded.exp < Date.now()) {
+        return false;
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 
