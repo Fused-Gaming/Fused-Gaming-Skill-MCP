@@ -5,8 +5,6 @@
  * Enforces proper tagging strategy for version control
  */
 
-const fs = require("fs");
-const path = require("path");
 const { execSync } = require("child_process");
 
 // Get branch name
@@ -58,19 +56,6 @@ function findSkillInPath(filePath) {
 
   const skillMatch = filePath.match(/packages\/skills\/([a-z0-9-]+)\/src/);
   return skillMatch ? skillMatch[1] : null;
-}
-
-// Get skill package version
-function getSkillVersion(skillName) {
-  const pkgPath = path.join(
-    __dirname,
-    `../packages/skills/${skillName}/package.json`
-  );
-  if (!fs.existsSync(pkgPath)) {
-    return null;
-  }
-  const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
-  return pkg.version;
 }
 
 // Validate branch naming convention
