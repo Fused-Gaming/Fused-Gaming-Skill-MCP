@@ -34,28 +34,100 @@ All changes are validated against:
 # 1. Create appropriately named branch
 git checkout -b feat/skill-name
 
-# 2. Scaffold skill package
-npx @h4shed/mcp-cli skill create skill-name
+# 2. Scaffold skill package manually
+mkdir -p packages/skills/skill-name/{src/tools}
+cd packages/skills/skill-name
 
-# 3. Implement tools/functionality
-# - Add src/index.ts (skill export)
-# - Add src/tools/*.ts (tool implementations)
-# - Update package.json metadata
-# - Add comprehensive README.md
+# Create package.json
+cat > package.json <<EOF
+{
+  "name": "@h4shed/skill-skill-name",
+  "version": "1.0.0",
+  "description": "Description of your skill",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@h4shed/mcp-core": "workspace:*",
+    "typescript": "^5.0.0"
+  }
+}
+EOF
 
-# 4. Build and test
+# Create tsconfig.json
+cat > tsconfig.json <<EOF
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src"]
+}
+EOF
+
+# 3. Create skill implementation
+cat > src/index.ts <<'EOF'
+import type { Skill, ToolDefinition } from "@h4shed/mcp-core";
+
+export const YourSkill: Skill = {
+  name: "skill-name",
+  version: "1.0.0",
+  description: "Brief description of what this skill does",
+  tools: [],
+
+  async initialize(_config): Promise<void> {
+    // Initialize skill resources if needed
+  },
+
+  async cleanup(): Promise<void> {
+    // Cleanup resources if needed
+  },
+};
+EOF
+
+# 4. Add comprehensive README.md
+cat > README.md <<'EOF'
+# @h4shed/skill-skill-name
+
+Brief description of the skill.
+
+## Installation
+
+\`\`\`bash
+npm install @h4shed/skill-skill-name
+\`\`\`
+
+## Usage
+
+\`\`\`typescript
+import { YourSkill } from "@h4shed/skill-skill-name";
+\`\`\`
+
+## License
+
+Apache-2.0
+EOF
+
+# 5. Build and test locally
 npm run build --workspace=packages/skills/skill-name
 npm test --workspace=packages/skills/skill-name
 
-# 5. Commit changes
+# 6. Commit changes
 git add packages/skills/skill-name
 git commit -m "feat(skill-name): Add new skill with X tools"
 
-# 6. Push and create PR
+# 7. Push and create PR
 git push origin feat/skill-name
 # Create PR to main branch
 
-# 7. After merge, tag for publishing
+# 8. After merge, tag for publishing
 git tag skill-skill-name@1.0.0
 git push origin skill-skill-name@1.0.0
 
