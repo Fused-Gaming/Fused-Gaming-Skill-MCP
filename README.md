@@ -21,7 +21,7 @@
 
 ## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **12 published skills** plus **15+ skills in development** and core infrastructure packages.
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **19 published-ready skills in-repo** plus core infrastructure packages.
 
 ### 🎯 Your Creative Arsenal Includes:
 
@@ -77,6 +77,7 @@ All with professional HTML templates, security best practices, and full agent in
 - `skill-project-status-tool`
 - `skill-daily-review`
 - `multi-account-session-tracking`
+- `skill-linkedin-master-journalist`
 - `skill-tailwindcss-style-builder`
 - `skill-storybook-component-library`
 - `skill-playwright-test-automation`
@@ -138,6 +139,26 @@ cat LIMJ/LIMJ_System_Prompt.md
 ---
 
 ## 🎬 Quick Start (2 Minutes)
+
+### Option 1: Interactive Installation (Recommended)
+
+```bash
+# Clone and navigate to the repo
+git clone https://github.com/fused-gaming/fused-gaming-skill-mcp.git
+cd fused-gaming-skill-mcp
+
+# Run the interactive installer
+npm run mcp:install
+```
+
+This will guide you through:
+- ✅ Selecting installation mode (full, minimal, or custom)
+- ✅ Choosing your environment (development or production)
+- ✅ Generating the skill registry
+- ✅ Installing dependencies
+- ✅ Building all packages
+
+## 🎬 Quick Start
 
 ### Option 1: Interactive Installation (Recommended)
 
@@ -515,6 +536,9 @@ All releases are **GPG signed** for security and authenticity:
 - ✅ **Signed Tags** — Release tags are verified with GPG
 - ✅ **GitHub Badge** — "Verified" badge on all commits and releases
 - ✅ **npm Authenticity** — Packages published with signing credentials
+
+### Publishing Workflow
+
 
 ### Publishing Workflow
 
