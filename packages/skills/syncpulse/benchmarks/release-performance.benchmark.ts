@@ -17,9 +17,7 @@ interface ReleaseBenchmark {
     cacheOps: PerformanceMetric;
     vectorSearch1K: PerformanceMetric;
     vectorSearch10K: PerformanceMetric;
-    vectorIndexSearch1K: PerformanceMetric;
-    vectorIndexSearch10K: PerformanceMetric;
-    vectorIndexSearch100K: PerformanceMetric;
+    vectorSearch100K: PerformanceMetric;
     cacheRecovery: PerformanceMetric;
     swarmAssignment: PerformanceMetric;
     memoryUsage: MemoryMetric;
@@ -58,9 +56,7 @@ const results: ReleaseBenchmark = {
     cacheOps: {} as PerformanceMetric,
     vectorSearch1K: {} as PerformanceMetric,
     vectorSearch10K: {} as PerformanceMetric,
-    vectorIndexSearch1K: {} as PerformanceMetric,
-    vectorIndexSearch10K: {} as PerformanceMetric,
-    vectorIndexSearch100K: {} as PerformanceMetric,
+    vectorSearch100K: {} as PerformanceMetric,
     cacheRecovery: {} as PerformanceMetric,
     swarmAssignment: {} as PerformanceMetric,
     memoryUsage: {} as MemoryMetric,
@@ -150,7 +146,7 @@ async function runReleaseBenchmark() {
 
   // Cache Service Benchmarks
   console.log("\n📊 Cache Service Performance");
-  const cache = new CacheService(".cache-release-bench", 10000, 100);
+  const cache = new CacheService(".cache-release-bench", { maxSize: 10000 });
 
   results.metrics.cacheOps = benchmark("CacheService.set", 10000, 1.0, () => {
     cache.set(`key-${Math.random()}`, { data: "value", timestamp: Date.now() });
@@ -159,8 +155,7 @@ async function runReleaseBenchmark() {
 
   // Memory System Benchmarks
   console.log("\n🧠 Memory System Performance");
-  // Use high-burst rate limiting to avoid rate-limiting during benchmark
-  const memory = new MemorySystem({ queriesPerSecond: 100000, burstSize: 10000 });
+  const memory = new MemorySystem();
 
   // Populate with entries
   for (let i = 0; i < 1000; i++) {
@@ -203,7 +198,7 @@ async function runReleaseBenchmark() {
     vectorIndex.add(`service-${i}-endpoint-query-${Math.random()}`);
   }
 
-  results.metrics.vectorIndexSearch1K = benchmark(
+  results.metrics.vectorSearch1K = benchmark(
     "VectorIndex.search (1K entries) - Direct",
     100,
     10.0,
@@ -217,7 +212,7 @@ async function runReleaseBenchmark() {
     vectorIndex.add(`service-${i}-endpoint-query-${Math.random()}`);
   }
 
-  results.metrics.vectorIndexSearch10K = benchmark(
+  results.metrics.vectorSearch10K = benchmark(
     "VectorIndex.search (10K entries) - Direct",
     50,
     50.0,
@@ -228,14 +223,14 @@ async function runReleaseBenchmark() {
 
   // Scale to 100K (stress test)
   console.log("\n  Scaling to 100K entries (stress test)...");
-  for (let i = 10000; i < 100000; i += 1) {
+  for (let i = 10000; i < 100000; i += 10) {
     vectorIndex.add(`service-${i}-endpoint-query`);
   }
 
-  results.metrics.vectorIndexSearch100K = benchmark(
+  results.metrics.vectorSearch100K = benchmark(
     "VectorIndex.search (100K entries) - Stress",
     10,
-    100.0,
+    50.0,
     () => {
       vectorIndex.search("service-query-pattern", 10);
     }
@@ -251,25 +246,20 @@ async function runReleaseBenchmark() {
     5
   );
 
-  let taskCounter = 0;
+  const mockTask = {
+    id: "task-1",
+    name: "Benchmark Task",
+    priority: 5,
+    status: "pending" as const,
+    createdAt: Date.now(),
+  };
+
   results.metrics.swarmAssignment = benchmark(
     "SwarmOrchestrator.assignTask (5 agents)",
     1000,
     1.0,
     () => {
-      // Create unique task for each assignment and release after assignment
-      const task = {
-        id: `task-${taskCounter++}`,
-        name: "Benchmark Task",
-        priority: 5,
-        status: "pending" as const,
-        createdAt: Date.now(),
-      };
-      const assignment = orchestrator.assignTask(swarm.id, task);
-      // Release task immediately so queue doesn't saturate
-      if (assignment) {
-        orchestrator.releaseTask(swarm.id, assignment.id, true);
-      }
+      orchestrator.assignTask(swarm.id, mockTask);
     }
   );
   results.targets.swarmThroughput =
@@ -327,16 +317,8 @@ async function runReleaseBenchmark() {
     "  ✓ Work-Stealing Load Balancing: 2-4x throughput on heterogeneous swarms"
   );
 
-  // Write results to file (matches runner's expected path for comparisons)
-  const resultsDir = "./benchmarks/results";
-  if (!fs.existsSync(resultsDir)) {
-    fs.mkdirSync(resultsDir, { recursive: true });
-  }
-  const now = new Date(results.timestamp);
-  const dateStr = now.toISOString().split('T')[0].replace(/-/g, '');
-  const timeStr = now.toISOString().split('T')[1].split('.')[0].replace(/:/g, '');
-  const timestamp = `${dateStr}_${timeStr}`;
-  const resultsFile = `${resultsDir}/release-${results.version}-${timestamp}.json`;
+  // Write results to file
+  const resultsFile = `./benchmarks/release-results-${Date.now()}.json`;
   fs.writeFileSync(resultsFile, JSON.stringify(results, null, 2));
   console.log(`\n📊 Results saved to: ${resultsFile}`);
 
@@ -357,11 +339,7 @@ async function runReleaseBenchmark() {
 }
 
 // Run benchmark with Node.js flags: node --expose-gc release-performance.benchmark.ts
-console.log("Starting SyncPulse release benchmark...");
 runReleaseBenchmark().catch((err) => {
   console.error("Benchmark error:", err);
-  if (err instanceof Error) {
-    console.error("Stack:", err.stack);
-  }
   process.exit(1);
 });

@@ -41,21 +41,17 @@ BENCHMARK_LOG="${RESULTS_DIR}/release-${VERSION}-${TIMESTAMP}.log"
 # Run with --expose-gc flag for accurate memory measurements
 node --expose-gc \
   --max-old-space-size=4096 \
-  --loader ts-node/esm \
   "${BENCHMARK_DIR}/release-performance.benchmark.ts" \
   2>&1 | tee "$BENCHMARK_LOG"
 
 RESULT_CODE=${PIPESTATUS[0]}
-
-# Extract the actual results file path from benchmark output
-REPORT_FILE=$(grep "Results saved to:" "$BENCHMARK_LOG" | sed 's/.*Results saved to: //g' | tail -1 || true)
 
 echo ""
 echo "=================================================="
 echo "Benchmark Results"
 echo "=================================================="
 echo ""
-echo "Report: ${REPORT_FILE:-$REPORT_FILE}"
+echo "Report: $REPORT_FILE"
 echo "Log: $BENCHMARK_LOG"
 echo ""
 
