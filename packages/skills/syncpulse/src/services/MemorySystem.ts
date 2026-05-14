@@ -6,6 +6,11 @@ export interface RateLimitConfig {
   burstSize: number;
 }
 
+export interface RateLimitConfig {
+  queriesPerSecond: number;
+  burstSize: number;
+}
+
 export class MemorySystem {
   private entries = new Map<string, MemoryEntry>();
   private vectorIndex = new VectorIndex();
@@ -103,6 +108,18 @@ export class MemorySystem {
     if (this.isRateLimited()) {
       console.warn("[MemorySystem] Rate limit exceeded; returning empty results");
       return [];
+    }
+
+    const queryLower = query.toLowerCase();
+    const results: VectorSearchResult[] = [];
+
+    for (const entry of this.entries.values()) {
+      const keyLower = entry.key.toLowerCase();
+      const similarity = this.calculateSimilarity(queryLower, keyLower);
+
+      if (similarity > 0.3) {
+        results.push({ entry, similarity });
+      }
     }
 
     const indexResults = this.vectorIndex.search(query, limit, 0.3);

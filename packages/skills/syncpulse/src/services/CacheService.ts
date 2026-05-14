@@ -96,20 +96,6 @@ export class CacheService<T = unknown> {
   async persist(): Promise<void> {
     await fs.mkdir(this.dir, { recursive: true });
     const entries = Array.from(this.cache.entries());
-    const batchCount = Math.ceil(entries.length / this.batchSize);
-
-    // Delete old batch files that are no longer needed
-    const files = await fs.readdir(this.dir);
-    for (const file of files) {
-      if (!file.startsWith("batch-") || !file.endsWith(".jsonl")) continue;
-      const match = file.match(/batch-(\d+)\.jsonl/);
-      if (match) {
-        const batchNum = parseInt(match[1], 10);
-        if (batchNum >= batchCount) {
-          await fs.unlink(path.join(this.dir, file));
-        }
-      }
-    }
 
     for (let i = 0; i < entries.length; i += this.batchSize) {
       const batch = entries.slice(i, i + this.batchSize);
@@ -130,43 +116,16 @@ export class CacheService<T = unknown> {
     try {
       const files = await fs.readdir(this.dir);
       for (const file of files) {
+        if (!file.endsWith(".jsonl")) continue;
+
         const full = path.join(this.dir, file);
+        const content = await fs.readFile(full, "utf-8");
+        const lines = content.split("\n").filter((l) => l.trim());
 
-        // Handle new .jsonl format
-        if (file.endsWith(".jsonl")) {
-          const content = await fs.readFile(full, "utf-8");
-          const lines = content.split("\n").filter((l) => l.trim());
-
-          for (const line of lines) {
-            const { key, value } = JSON.parse(line);
-            this.cache.set(key, value);
-            this.accessOrder.set(key, this.accessCounter++);
-
-            // Enforce maxSize cap during hydration
-            if (this.cache.size > this.maxSize) {
-              this.evictLRU();
-            }
-          }
-        }
-        // Handle legacy .json format for backward compatibility
-        else if (file.endsWith(".json")) {
-          try {
-            const content = await fs.readFile(full, "utf-8");
-            const data = JSON.parse(content);
-
-            // Legacy format: filename (without .json) is the cache key, entire content is the value
-            const key = file.replace(/\.json$/, "");
-            this.cache.set(key, data);
-            this.accessOrder.set(key, this.accessCounter++);
-
-            // Enforce maxSize cap during hydration
-            if (this.cache.size > this.maxSize) {
-              this.evictLRU();
-            }
-          } catch (parseError) {
-            // Log but continue if a legacy file is malformed
-            console.warn(`Failed to parse legacy cache file ${file}:`, parseError);
-          }
+        for (const line of lines) {
+          const { key, value } = JSON.parse(line);
+          this.cache.set(key, value);
+          this.accessOrder.set(key, this.accessCounter++);
         }
       }
     } catch {
