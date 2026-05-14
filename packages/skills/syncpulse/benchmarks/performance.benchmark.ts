@@ -166,13 +166,13 @@ const vectorSearch10K = results.find((r) =>
 
 console.log("\n✅ Performance Goals");
 console.log(
-  `${cacheSetResult?.avg || 0 < 1 ? "✓" : "✗"} Cache ops < 1ms: ${cacheSetResult?.avg.toFixed(3)}ms`
+  `${(cacheSetResult?.avg ?? 0) < 1 ? "✓" : "✗"} Cache ops < 1ms: ${cacheSetResult?.avg.toFixed(3)}ms`
 );
 console.log(
-  `${vectorSearch1K?.avg || 0 < 10 ? "✓" : "✗"} Vector search (1K) < 10ms: ${vectorSearch1K?.avg.toFixed(3)}ms`
+  `${(vectorSearch1K?.avg ?? 0) < 10 ? "✓" : "✗"} Vector search (1K) < 10ms: ${vectorSearch1K?.avg.toFixed(3)}ms`
 );
 console.log(
-  `${vectorSearch10K?.avg || 0 < 50 ? "✓" : "✗"} Vector search (10K) < 50ms: ${vectorSearch10K?.avg.toFixed(3)}ms`
+  `${(vectorSearch10K?.avg ?? 0) < 50 ? "✓" : "✗"} Vector search (10K) < 50ms: ${vectorSearch10K?.avg.toFixed(3)}ms`
 );
 console.log(
   `${avgOpsPerSec > 1000 ? "✓" : "✗"} Overall throughput > 1000 ops/sec: ${avgOpsPerSec.toFixed(0)} ops/sec`
