@@ -1,23 +1,108 @@
-# 🎮 Fused Gaming MCP
+# 
 
-<div align="center">
+<div align="center"> 
 
-![Fused Gaming MCP Social Preview](.github/assets/social-preview.png)
+# 📊 SYNCPULSE MCP 
+
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/0b5dc2bb-4f0d-45f5-8632-8e89de49571b" />
+</div>
+
+<div align="center"> 
+
+[![npm scope](https://img.shields.io/badge/npm-scope%20%40h4shed-red)](https://www.npmjs.com/~h4shed) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE) [![Publish to npm](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions/workflows/publish.yml) [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/typescript-5.3.2-blue)](https://www.typescriptlang.org/) [![npm](https://img.shields.io/badge/npm-%3E%3D8.0.0-red)](https://www.npmjs.com/)
 
 </div>
 
 ---
 
-## 📊 Status & Technology
+## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-[![npm scope](https://img.shields.io/badge/npm-scope%20%40h4shed-red)](https://www.npmjs.com/~h4shed)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE)
-[![Build](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/workflows/test/badge.svg)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/typescript-5.3.2-blue)](https://www.typescriptlang.org/)
-[![npm](https://img.shields.io/badge/npm-%3E%3D8.0.0-red)](https://www.npmjs.com/)
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **19 published-ready skills in-repo** plus core infrastructure packages.
 
-**Version:** `1.0.5` | **Status:** Stable (Released 2026-04-27) | **Published:** 12 packages | **Queued:** 9 packages
+### 🎯 Your Creative Arsenal Includes:
+
+| Skill | Purpose | Status |
+|-------|---------|--------|
+| **algorithmic-art** | Generative art using p5.js | ✅ |
+| **ascii-mockup** | Mobile-first wireframe designs | ✅ |
+| **canvas-design** | SVG-based visual design | ✅ |
+| **frontend-design** | HTML/CSS component design | ✅ |
+| **theme-factory** | Design system generation | ✅ |
+| **mcp-builder** | MCP server scaffolding | ✅ |
+| **pre-deploy-validator** | Deployment validation | ✅ |
+| **skill-creator** | Custom skill builder | ✅ |
+| **underworld-writer** | Character/world narrative generation | ✅ |
+| **agentic-flow-devkit** | Agentic orchestration GUI + trailer A/B-roll planning | 🆕 |
+| **linkedin-master-journalist** | LinkedIn article + dual posts + branded covers | ✅ |
+| **tailwindcss-style-builder** | Utility-first styling and design system builder | 📋 |
+| **storybook-component-library** | Component documentation and visual testing | 📋 |
+| **playwright-test-automation** | End-to-end testing automation framework | 📋 |
+| **vite-module-bundler** | Next-generation JavaScript module bundler | 📋 |
+| **typescript-toolchain** | Advanced TypeScript configuration and analysis | 📋 |
+| **vercel-nextjs-deployment** | Vercel deployment and Next.js integration | 📋 |
+| **style-dictionary-system** | Design tokens and cross-platform theming | 📋 |
+| **nft-generative-art** | NFT artwork generation and blockchain assets | 📋 |
+| **smart-contract-tools** | Hardhat, Truffle, and Foundry integration | 📋 |
+| **syncpulse** | Multi-agent coordination + 9 email workflow templates | ✅ |
+
+**Core skills are production-ready; new tools are in active scaffolding** ✨
+
+### 📧 SyncPulse Email Workflows (v0.2.0)
+New to **SyncPulse**: Production-ready email automation with **9 templated workflows**:
+- **Authentication** (4): Magic link login, MFA verification, password reset, security alerts
+- **Business** (2): Invoice delivery, newsletters
+- **Operations** (3): Outage notices, maintenance announcements, ticket updates
+
+All with professional HTML templates, security best practices, and full agent integration.
+
+### 📦 Publishing now / next wave
+
+**Published now (`@h4shed`)**
+- `mcp-cli`, `mcp-core`,
+- `skill-algorithmic-art`,
+- `skill-ascii-mockup`,
+- `skill-canvas-design`,
+- `skill-frontend-design`,
+- `skill-mcp-builder`,
+- `skill-pre-deploy-validator`,
+- `skill-skill-creator`,
+- `skill-theme-factory`,
+- `skill-underworld-writer`,
+- `skill-linkedin-master-journalist`,
+- `skill-syncpulse` ⭐ (v0.2.0 — 9 email workflow templates)
+
+**Scaffolded and queued for publish (`@h4shed`)**
+- `skill-mermaid-terminal`,
+- `skill-ux-journeymapper`,
+- `skill-svg-generator`,
+- `skill-project-manager`,
+- `skill-project-status-tool`,
+- `skill-daily-review`,
+- `multi-account-session-tracking`,
+- `skill-linkedin-master-journalist`,
+- `skill-tailwindcss-style-builder`,
+- `skill-storybook-component-library`,
+- `skill-playwright-test-automation`,
+- `skill-vite-module-bundler`,
+- `skill-typescript-toolchain`,
+- `skill-vercel-nextjs-deployment`,
+- `skill-style-dictionary-system`,
+- `skill-nft-generative-art`,
+- `skill-smart-contract-tools`,
+
+---
+
+## ✨ Why Fused Gaming MCP?
+
+Transform your Claude workflow with meticulously crafted tools designed for:
+
+- ✔️ **Generative Art** — Create algorithmic artwork and visualizations  
+- ✔️ **UI/UX Design** — Build design systems and component libraries  
+- ✔️ **Web Development** — Scaffold projects and validate deployments  
+- ✔️ **Game Development** — Asset generation and rapid prototyping  
+- ✔️ **AI Automation** — Streamline creative and technical workflows  
+
+**Trusted by:** Fused Gaming • VLN Security • Design Studios • AI Development Teams
 
 ---
 
