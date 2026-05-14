@@ -1,21 +1,17 @@
-# 🎮 Fused Gaming MCP
+# 
 
-<div align="center">
+<div align="center"> 
 
-![Fused Gaming MCP Social Preview](.github/assets/social-preview.png)
+# 📊 SYNCPULSE MCP 
 
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/0b5dc2bb-4f0d-45f5-8632-8e89de49571b" />
 </div>
 
----
+<div align="center"> 
 
-## 📊 Status & Technology
+[![npm scope](https://img.shields.io/badge/npm-scope%20%40h4shed-red)](https://www.npmjs.com/~h4shed) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE) [![Publish to npm](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions/workflows/publish.yml) [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/typescript-5.3.2-blue)](https://www.typescriptlang.org/) [![npm](https://img.shields.io/badge/npm-%3E%3D8.0.0-red)](https://www.npmjs.com/)
 
-[![npm scope](https://img.shields.io/badge/npm-scope%20%40h4shed-red)](https://www.npmjs.com/~h4shed)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE)
-[![Build](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/workflows/test/badge.svg)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/typescript-5.3.2-blue)](https://www.typescriptlang.org/)
-[![npm](https://img.shields.io/badge/npm-%3E%3D8.0.0-red)](https://www.npmjs.com/)
+</div>
 
 ---
 
@@ -62,31 +58,37 @@ All with professional HTML templates, security best practices, and full agent in
 ### 📦 Publishing now / next wave
 
 **Published now (`@h4shed`)**
-- `mcp-cli`, `mcp-core`
-- `skill-algorithmic-art`, `skill-ascii-mockup`, `skill-canvas-design`
-- `skill-frontend-design`, `skill-mcp-builder`, `skill-pre-deploy-validator`
-- `skill-skill-creator`, `skill-theme-factory`, `skill-underworld-writer`
-- `skill-linkedin-master-journalist`
+- `mcp-cli`, `mcp-core`,
+- `skill-algorithmic-art`,
+- `skill-ascii-mockup`,
+- `skill-canvas-design`,
+- `skill-frontend-design`,
+- `skill-mcp-builder`,
+- `skill-pre-deploy-validator`,
+- `skill-skill-creator`,
+- `skill-theme-factory`,
+- `skill-underworld-writer`,
+- `skill-linkedin-master-journalist`,
 - `skill-syncpulse` ⭐ (v0.2.0 — 9 email workflow templates)
 
 **Scaffolded and queued for publish (`@h4shed`)**
-- `skill-mermaid-terminal`
-- `skill-ux-journeymapper`
-- `skill-svg-generator`
-- `skill-project-manager`
-- `skill-project-status-tool`
-- `skill-daily-review`
-- `multi-account-session-tracking`
-- `skill-linkedin-master-journalist`
-- `skill-tailwindcss-style-builder`
-- `skill-storybook-component-library`
-- `skill-playwright-test-automation`
-- `skill-vite-module-bundler`
-- `skill-typescript-toolchain`
-- `skill-vercel-nextjs-deployment`
-- `skill-style-dictionary-system`
-- `skill-nft-generative-art`
-- `skill-smart-contract-tools`
+- `skill-mermaid-terminal`,
+- `skill-ux-journeymapper`,
+- `skill-svg-generator`,
+- `skill-project-manager`,
+- `skill-project-status-tool`,
+- `skill-daily-review`,
+- `multi-account-session-tracking`,
+- `skill-linkedin-master-journalist`,
+- `skill-tailwindcss-style-builder`,
+- `skill-storybook-component-library`,
+- `skill-playwright-test-automation`,
+- `skill-vite-module-bundler`,
+- `skill-typescript-toolchain`,
+- `skill-vercel-nextjs-deployment`,
+- `skill-style-dictionary-system`,
+- `skill-nft-generative-art`,
+- `skill-smart-contract-tools`,
 
 ---
 
@@ -94,11 +96,11 @@ All with professional HTML templates, security best practices, and full agent in
 
 Transform your Claude workflow with meticulously crafted tools designed for:
 
-✔️ **Generative Art** — Create algorithmic artwork and visualizations  
-✔️ **UI/UX Design** — Build design systems and component libraries  
-✔️ **Web Development** — Scaffold projects and validate deployments  
-✔️ **Game Development** — Asset generation and rapid prototyping  
-✔️ **AI Automation** — Streamline creative and technical workflows  
+- ✔️ **Generative Art** — Create algorithmic artwork and visualizations  
+- ✔️ **UI/UX Design** — Build design systems and component libraries  
+- ✔️ **Web Development** — Scaffold projects and validate deployments  
+- ✔️ **Game Development** — Asset generation and rapid prototyping  
+- ✔️ **AI Automation** — Streamline creative and technical workflows  
 
 **Trusted by:** Fused Gaming • VLN Security • Design Studios • AI Development Teams
 
