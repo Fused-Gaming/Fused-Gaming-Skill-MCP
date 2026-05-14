@@ -7,7 +7,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "test": "echo \"tests pending\""
+    "test": "echo \"tests pending\"",
+    "benchmark": "node --expose-gc benchmarks/performance.benchmark.ts",
+    "benchmark:release": "node --expose-gc --max-old-space-size=4096 benchmarks/release-performance.benchmark.ts",
+    "benchmark:runner": "bash scripts/run-release-benchmarks.sh"
   },
   "dependencies": {
     "@h4shed/mcp-core": "^1.0.4",
