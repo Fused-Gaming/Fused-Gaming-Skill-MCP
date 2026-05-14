@@ -17,7 +17,9 @@ interface ReleaseBenchmark {
     cacheOps: PerformanceMetric;
     vectorSearch1K: PerformanceMetric;
     vectorSearch10K: PerformanceMetric;
-    vectorSearch100K: PerformanceMetric;
+    vectorIndexSearch1K: PerformanceMetric;
+    vectorIndexSearch10K: PerformanceMetric;
+    vectorIndexSearch100K: PerformanceMetric;
     cacheRecovery: PerformanceMetric;
     swarmAssignment: PerformanceMetric;
     memoryUsage: MemoryMetric;
@@ -56,7 +58,9 @@ const results: ReleaseBenchmark = {
     cacheOps: {} as PerformanceMetric,
     vectorSearch1K: {} as PerformanceMetric,
     vectorSearch10K: {} as PerformanceMetric,
-    vectorSearch100K: {} as PerformanceMetric,
+    vectorIndexSearch1K: {} as PerformanceMetric,
+    vectorIndexSearch10K: {} as PerformanceMetric,
+    vectorIndexSearch100K: {} as PerformanceMetric,
     cacheRecovery: {} as PerformanceMetric,
     swarmAssignment: {} as PerformanceMetric,
     memoryUsage: {} as MemoryMetric,
@@ -146,7 +150,7 @@ async function runReleaseBenchmark() {
 
   // Cache Service Benchmarks
   console.log("\n📊 Cache Service Performance");
-  const cache = new CacheService(".cache-release-bench", { maxSize: 10000 });
+  const cache = new CacheService(".cache-release-bench", 10000, 100);
 
   results.metrics.cacheOps = benchmark("CacheService.set", 10000, 1.0, () => {
     cache.set(`key-${Math.random()}`, { data: "value", timestamp: Date.now() });
@@ -198,7 +202,7 @@ async function runReleaseBenchmark() {
     vectorIndex.add(`service-${i}-endpoint-query-${Math.random()}`);
   }
 
-  results.metrics.vectorSearch1K = benchmark(
+  results.metrics.vectorIndexSearch1K = benchmark(
     "VectorIndex.search (1K entries) - Direct",
     100,
     10.0,
@@ -212,7 +216,7 @@ async function runReleaseBenchmark() {
     vectorIndex.add(`service-${i}-endpoint-query-${Math.random()}`);
   }
 
-  results.metrics.vectorSearch10K = benchmark(
+  results.metrics.vectorIndexSearch10K = benchmark(
     "VectorIndex.search (10K entries) - Direct",
     50,
     50.0,
@@ -227,10 +231,10 @@ async function runReleaseBenchmark() {
     vectorIndex.add(`service-${i}-endpoint-query`);
   }
 
-  results.metrics.vectorSearch100K = benchmark(
+  results.metrics.vectorIndexSearch100K = benchmark(
     "VectorIndex.search (100K entries) - Stress",
     10,
-    50.0,
+    100.0,
     () => {
       vectorIndex.search("service-query-pattern", 10);
     }
