@@ -106,37 +106,14 @@ Transform your Claude workflow with meticulously crafted tools designed for:
 
 ---
 
-## 💼 LinkedIn Master Journalist (LIMJ) Skill
+## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-**Transform briefs into publication-ready LinkedIn content with autonomous article generation, social posts, and branded cover images.**
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **61 total packages** organized as:
+- **29 reusable AI skills** (across 11 functional categories)
+- **24 specialized MCP tools**
+- **8 infrastructure packages**
 
-### What LIMJ Does
-
-- **Article.md**: 1,200–1,800 word articles optimized for C-suite engagement
-- **Posts.md**: Dual social variants (personal + company) with hashtag research and engagement strategy
-- **Cover.html**: Self-contained 1200×627px LinkedIn OpenGraph covers with PNG export
-
-### Quick Trigger
-
-```bash
-# Copy the system prompt
-cat LIMJ/LIMJ_System_Prompt.md
-
-# Paste into Claude with your content brief:
-# Topic: [your topic]
-# Angle: [contrarian/educational/case-study]
-# Audience: [founder/CEO/CTO]
-
-# Get: Article.md + Posts.md + Cover.html (publication-ready)
-```
-
-### Learn More
-
-- **Full Documentation**: [LIMJ/README.md](./LIMJ/README.md)
-- **Quick Start Guide**: [LIMJ/quickstart.md](./LIMJ/quickstart.md)
-- **System Prompt**: [LIMJ/LIMJ_System_Prompt.md](./LIMJ/LIMJ_System_Prompt.md)
-- **Guidelines**: [LIMJ/guidelines/](./LIMJ/guidelines/) (vocabulary, colors, typography, hashtags)
-- **Templates**: [LIMJ/templates/](./LIMJ/templates/) (examples + blanks)
+All skills, tools, and infrastructure are documented with individual READMEs in their respective package directories. This root README provides a focused navigation index and quick-start guide.
 
 ---
 
@@ -153,33 +130,6 @@ cd fused-gaming-skill-mcp
 npm run mcp:install
 ```
 
-This will guide you through:
-- ✅ Selecting installation mode (full, minimal, or custom)
-- ✅ Choosing your environment (development or production)
-- ✅ Generating the skill registry
-- ✅ Installing dependencies
-- ✅ Building all packages
-
-## 🎬 Quick Start
-
-### Option 1: Interactive Installation (Recommended)
-
-```bash
-# Clone and navigate to the repo
-git clone https://github.com/fused-gaming/fused-gaming-skill-mcp.git
-cd fused-gaming-skill-mcp
-
-# Run the interactive installer
-npm run mcp:install
-```
-
-This will guide you through:
-- ✅ Selecting installation mode (full, minimal, or custom)
-- ✅ Choosing your environment (development or production)
-- ✅ Generating the skill registry
-- ✅ Installing dependencies
-- ✅ Building all packages
-
 ### Option 2: Manual Setup
 
 ```bash
@@ -194,15 +144,12 @@ npm run registry:generate
 
 # Build all packages
 npm run build
-
-# Start development server
-npm run dev
 ```
 
 ### Option 3: Published Packages Only
 
 ```bash
-# Install published packages (active scope: @h4shed)
+# Install published packages (scope: @h4shed)
 npm install @h4shed/mcp-core @h4shed/mcp-cli
 
 # Add selected skills
@@ -212,244 +159,166 @@ npm install \
   @h4shed/skill-underworld-writer
 ```
 
-Done! You're now ready to supercharge Claude. 🔋
+---
+
+## 📚 Skills Index (29 Total)
+
+All skills include individual documentation in their respective directories at `packages/skills/<skill>/README.md`.
+
+### 🎨 Design (7 Skills)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| agentic-flow-devkit | Agentic orchestration GUI + trailer A/B-roll planning | [docs](packages/skills/agentic-flow-devkit/) |
+| canvas-design | SVG-based visual design and asset generation | [docs](packages/skills/canvas-design/) |
+| frontend-design | HTML/CSS component design and prototyping | [docs](packages/skills/frontend-design/) |
+| style-dictionary-system | Design tokens and cross-platform theming | [docs](packages/skills/style-dictionary-system/) |
+| svg-generator | Scalable vector graphics generation | [docs](packages/skills/svg-generator/) |
+| tailwindcss-style-builder | Utility-first styling and design system builder | [docs](packages/skills/tailwindcss-style-builder/) |
+| theme-factory | Design system generation and customization | [docs](packages/skills/theme-factory/) |
+
+### 🎭 Generative Art (3 Skills)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| algorithmic-art | Generative art using p5.js | [docs](packages/skills/algorithmic-art/) |
+| nft-generative-art | NFT artwork generation and blockchain assets | [docs](packages/skills/nft-generative-art/) |
+| smart-contract-tools | Hardhat, Truffle, and Foundry integration | [docs](packages/skills/smart-contract-tools/) |
+
+### 🛠️ General Purpose (7 Skills)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| ascii-mockup | Mobile-first wireframe designs | [docs](packages/skills/ascii-mockup/) |
+| playwright-test-automation | End-to-end testing automation framework | [docs](packages/skills/playwright-test-automation/) |
+| storybook-component-library | Component documentation and visual testing | [docs](packages/skills/storybook-component-library/) |
+| syncpulse | Multi-agent coordination + 9 email workflow templates | [docs](packages/skills/syncpulse/) |
+| syncpulse-hub | SyncPulse ecosystem integration platform | [docs](packages/skills/syncpulse-hub/) |
+| typescript-toolchain | Advanced TypeScript configuration and analysis | [docs](packages/skills/typescript-toolchain/) |
+| vite-module-bundler | Next-generation JavaScript module bundler | [docs](packages/skills/vite-module-bundler/) |
+
+### 🔧 MCP Tools (2 Skills)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| mcp-builder | MCP server scaffolding and code generation | [docs](packages/skills/mcp-builder/) |
+| skill-creator | Custom skill builder and framework | [docs](packages/skills/skill-creator/) |
+
+### 📝 Content Creation (2 Skills)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| linkedin-master-journalist | LinkedIn article + dual posts + branded covers | [docs](packages/skills/linkedin-master-journalist/) |
+| underworld-writer | Character/world narrative generation | [docs](packages/skills/underworld-writer/) |
+
+### 📊 Visualization (1 Skill)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| mermaid-terminal | Mermaid diagram generation and terminal rendering | [docs](packages/skills/mermaid-terminal/) |
+
+### 🎯 Session Management (1 Skill)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| multi-account-session-tracking | Multi-account session management and persistence | [docs](packages/skills/multi-account-session-tracking/) |
+
+### 💻 Development (2 Skills)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| pre-deploy-validator | Deployment validation and safety checks | [docs](packages/skills/pre-deploy-validator/) |
+| vercel-nextjs-deployment | Vercel deployment and Next.js integration | [docs](packages/skills/vercel-nextjs-deployment/) |
+
+### 📋 Project Management (2 Skills)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| project-manager | Project planning and execution orchestration | [docs](packages/skills/project-manager/) |
+| project-status-tool | Project status tracking and reporting | [docs](packages/skills/project-status-tool/) |
+
+### 👥 User Experience (1 Skill)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| ux-journeymapper | User journey mapping and experience design | [docs](packages/skills/ux-journeymapper/) |
+
+### ⚡ Productivity (1 Skill)
+
+| Package | Description | Location |
+|---------|-------------|----------|
+| daily-review | Daily review and reflection automation | [docs](packages/skills/daily-review/) |
 
 ---
 
-## ⚡ One-Command Setup (NEW!)
+## 🛠️ MCP Tools (24 Total)
 
-Get up and running in under 60 seconds:
+For complete MCP tools documentation, including features, tool definitions, and agent flows, see [packages/tools/README.md](packages/tools/).
 
-```bash
-# Clone, install, and initialize everything in one command
-git clone https://github.com/fused-gaming/fused-gaming-skill-mcp.git && \
-cd fused-gaming-skill-mcp && \
-npm install && \
-npm run mcp:install -- --mode=full && \
-npm run build
-```
-
-This single command:
-- ✅ Clones the repository
-- ✅ Installs all dependencies
-- ✅ Runs interactive setup wizard
-- ✅ Generates skill registry
-- ✅ Builds all packages
-- ✅ Ready for immediate use
-
-**First-time setup time:** ~2-3 minutes depending on network speed
+**Tool Categories:**
+- API & Integration Tools
+- Code Generation Tools
+- Data Processing Tools
+- Automation Tools
+- Analysis & Validation Tools
+- And more...
 
 ---
 
-## 🔄 Session Auto-Update Script (NEW!)
+## 📦 Infrastructure Packages (8 Total)
 
-Keep your skills and tools up-to-date automatically in each chat session:
-
-### Installation
-
-```bash
-# Add to your ~/.bashrc, ~/.zshrc, or Claude Code startup hook
-npm run update:check
-```
-
-### What It Does
-
-The auto-update script:
-- ✅ Checks for new skill packages on startup
-- ✅ Fetches latest tool wrapper versions
-- ✅ Validates registry consistency
-- ✅ Reports what's new in your session
-- ✅ Prompts for optional auto-install of updates
-
-### Usage in Claude Code
-
-Add this to your `.claude/settings.json` hook:
-
-```json
-{
-  "hooks": {
-    "session-start": "npm run update:check && npm run registry:validate"
-  }
-}
-```
-
-This ensures every new chat session has the latest skills and tools available.
-
-### Manual Update Check
-
-```bash
-# Check for updates without auto-installing
-npm run update:check
-
-# Install all pending updates
-npm run update:apply
-```
+| Package | Purpose | Location |
+|---------|---------|----------|
+| **mcp-cli** | Command-line interface for MCP orchestration | [docs](packages/cli/) |
+| **mcp-core** | Core MCP framework and server runtime | [docs](packages/core/) |
+| **docs** | Comprehensive documentation and guides | [docs](packages/docs/) |
+| **web** | Web-based UI and dashboard components | [docs](packages/web/) |
+| **mermaid-terminal-skill** | Terminal-based Mermaid diagram rendering | [docs](packages/skills/mermaid-terminal-skill/) |
+| **daily-review-skill** | Daily review and reflection skill | [docs](packages/skills/daily-review-skill/) |
+| **underworld-writer-skill** | Underworld writer narrative generation | [docs](packages/skills/underworld-writer-skill/) |
+| **ux-journeymapper-skill** | User journey mapping and analysis | [docs](packages/skills/ux-journeymapper-skill/) |
 
 ---
 
-## 🎬 Claude Code Terminal Livestream
+## ✨ Key Features
 
-**NEW:** Real-time terminal output visualization directly in Claude Code's web interface!
-
-### What It Does
-The Terminal Livestream component displays:
-- ✅ Live MCP installation progress
-- ✅ Real-time skill registry generation
-- ✅ Installation logs with color coding
-- ✅ Copy/download/clear functionality
-- ✅ WebSocket support for remote log streaming
-- ✅ Educational-use-only licensing compliance
-
-### Quick Integration
-```tsx
-import TerminalLivestream from '@/components/TerminalLivestream';
-
-export default function App() {
-  return <TerminalLivestream />;
-}
-```
-
-### Features
-- 🎨 Fused Gaming branding (magenta/purple theme)
-- 📱 Responsive mobile design (works on narrow screens)
-- ♿ WCAG AA accessibility compliant
-- 🔌 WebSocket real-time streaming support
-- 📋 Educational-use-only licensing enforcement
-- 🎯 Toggle widget (bottom-right, z-50)
-
-### Learn More
-- **Integration Guide:** [CLAUDE_CODE_INTEGRATION.md](./docs/CLAUDE_CODE_INTEGRATION.md)
-- **Deployment Guide:** [TERMINAL_LIVESTREAM_DEPLOYMENT.md](./docs/TERMINAL_LIVESTREAM_DEPLOYMENT.md)
-- **API Deployment:** [SKILL_VLN_GG_DEPLOYMENT.md](./docs/SKILL_VLN_GG_DEPLOYMENT.md)
-- **Code Examples:** [TerminalLivestream.example.tsx](./packages/web/examples/TerminalLivestream.example.tsx)
-- **License:** [CLAUDE_CODE_LICENSE.md](./packages/web/CLAUDE_CODE_LICENSE.md) (Educational use only)
+✔️ **Orchestration & Coordination** — SyncPulse multi-agent coordination with 9 email workflow templates  
+✔️ **Design Systems** — Complete design tokens, theming, and component documentation  
+✔️ **Generative Art** — Algorithmic and NFT artwork generation with blockchain tools  
+✔️ **Content Creation** — Autonomous article generation, social posts, and branded assets  
+✔️ **Automation & Testing** — E2E testing, deployment validation, and workflow automation  
+✔️ **User Experience** — Journey mapping, wireframing, and interactive prototyping  
+✔️ **Development Tools** — MCP scaffolding, TypeScript toolchain, and bundler integration  
 
 ---
 
 ## 📋 Essential Commands
 
-### MCP Core Commands
+### Setup & Installation
 
 ```bash
-npm run mcp:init                   # Initialize MCP core framework
-npm run mcp:install                # Run interactive installer
-npm run registry:generate          # Generate/update skill registry
-npm run registry:validate          # Validate registry & code quality
-npm run registry:view              # View full skill registry
+npm install                      # Install dependencies
+npm run mcp:install              # Run interactive installer
+npm run mcp:init                 # Initialize MCP core
+npm run registry:generate        # Generate skill registry
+npm run registry:validate        # Validate registry & code quality
+npm run build                    # Build all packages
 ```
 
-### Development Commands
+### Development
 
 ```bash
-npm run build                      # Build all packages
-npm run dev                        # Start development server
-npm run lint                       # Check code quality
-npm run typecheck                  # Validate TypeScript
-npm run test                       # Run test suites
+npm run dev                      # Start development server
+npm run lint                     # Check code quality
+npm run typecheck                # Validate TypeScript
+npm run test                     # Run test suites
 ```
 
-### CLI Commands (when using @h4shed/mcp-cli)
+### Publishing
 
 ```bash
-fused-gaming-mcp init              # Initialize config
-fused-gaming-mcp list              # Show available skills
-fused-gaming-mcp add <skill>       # Enable a skill
-fused-gaming-mcp remove <skill>    # Disable a skill
-fused-gaming-mcp panel             # Launch SyncPulse panel directly
-fused-gaming-mcp config            # View current config
-```
-
----
-
-## 📚 Skill Registry
-
-The Fused Gaming MCP includes a **comprehensive skill registry** that automatically discovers and catalogs all available skills and tools.
-
-### View Available Skills
-
-```bash
-# View the Markdown registry
-npm run registry:view
-
-# Or open the HTML registry in your browser
-open registry/registry.html
-```
-
-### Current Registry Status
-
-📊 **19 Skills** | 🛠️ **22 Tools** | 🏷️ **11 Categories**
-
-**Categories:**
-- 🎨 Design (5 skills)
-- 🎭 Generative Art (1 skill)
-- 📖 Content Creation (2 skills)
-- 💼 Project Management (2 skills)
-- 🔧 MCP Tools (2 skills)
-- 🎯 User Experience (1 skill)
-- 📊 Session Management (1 skill)
-- 🎬 Visualization (1 skill)
-- 💻 Development (1 skill)
-- 📈 Productivity (1 skill)
-- 📋 General (2 skills)
-
-See **[registry/REGISTRY.md](./registry/REGISTRY.md)** for the complete skill inventory.
-
-## ⚙️ Configuration
-
-### MCP Core Configuration
-
-Edit `.mcp/config.json`:
-
-```json
-{
-  "version": "1.0.0",
-  "server": {
-    "name": "Fused Gaming MCP",
-    "environment": "development",
-    "debug": false
-  },
-  "skills": {
-    "enabled": [],
-    "auto_discover": true
-  },
-  "logging": {
-    "level": "info"
-  }
-}
-```
-
-### CLI Configuration
-
-Customize via `.fused-gaming-mcp.json`:
-
-```json
-{
-  "skills": {
-    "enabled": ["algorithmic-art", "theme-factory", "frontend-design"],
-    "disabled": []
-  },
-  "auth": {
-    "apiKeys": {
-      "openai": "sk-..."
-    }
-  },
-  "logging": {
-    "level": "info"
-  }
-}
-```
-
----
-
-## 🏗️ Development
-
-```bash
-npm install         # Install dependencies
-npm run build       # Build all packages
-npm run test        # Run tests
-npm run lint        # Check code quality
-npm run typecheck   # Validate TypeScript
-npm run dev         # Start dev server
+npm run publish:packages         # Publish all packages to npm
+npm run publish:prepare          # Prepare versions for publish
 ```
 
 ---
@@ -458,122 +327,54 @@ npm run dev         # Start dev server
 
 | Resource | Purpose |
 |----------|---------|
+| [docs/](./docs/) | Documentation directory index |
 | [QUICKSTART.md](./docs/getting-started/QUICKSTART.md) | Get started in minutes |
 | [ARCHITECTURE.md](./docs/ARCHITECTURE.md) | System design & internals |
 | [SKILLS_GUIDE.md](./docs/SKILLS_GUIDE.md) | Build custom skills |
 | [API_REFERENCE.md](./docs/API_REFERENCE.md) | Complete API docs |
-| [EXAMPLES.md](./docs/EXAMPLES.md) | Real-world usage patterns |
-| [RELEASE_COMMUNICATION.md](./docs/RELEASE_COMMUNICATION.md) | Launch summary + LinkedIn post draft |
-| [ROADMAP.md](./docs/ROADMAP.md) | Published/missing/planned skills and priorities |
-| [docs/README.md](./docs/README.md) | Documentation index by category |
+| [ROADMAP.md](./docs/ROADMAP.md) | Published/missing/planned skills |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | How to contribute |
+| [VERSION.json](./VERSION.json) | Release metadata and version authority |
+| [registry/REGISTRY.md](./registry/REGISTRY.md) | Authoritative package inventory |
 
 ---
 
-## 🗺️ Roadmap Snapshot (Existing + Planned)
+## 🚢 Publishing & Releases
 
-### Current repository state (as of April 27, 2026)
-- ✅ `VERSION.json` is `1.0.5` with new Terminal Livestream component and MCP Core setup system
-- ✅ Terminal Livestream: Real-time log visualization for Claude Code (educational-use-only)
-- ✅ MCP Core Initialization: Automated setup with skill discovery & registry generation
-- ✅ 11 `@h4shed/*` packages published, with 9 additional skill packages queued for publish
-- ✅ Core docs include complete integration/deployment guides for Terminal Livestream
+**Current Status:** `1.0.5` (Stable — Released 2026-04-27)
 
-### Open PR queue (GitHub currently shows 9 open)
-> Source: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/pulls?q=is%3Apr+is%3Aopen
+### Published Packages (12)
+- `@h4shed/mcp-cli`, `@h4shed/mcp-core`
+- `@h4shed/skill-algorithmic-art`, `@h4shed/skill-ascii-mockup`, `@h4shed/skill-canvas-design`
+- `@h4shed/skill-frontend-design`, `@h4shed/skill-mcp-builder`, `@h4shed/skill-pre-deploy-validator`
+- `@h4shed/skill-skill-creator`, `@h4shed/skill-theme-factory`, `@h4shed/skill-underworld-writer`
 
-1. `#118` MCP Core Setup + Claude Code Terminal Livestream Integration (READY TO MERGE)
-2. `#109` Add LinkedIn Master Journalist (LIMJ) skill (base: `main`)
-3. `#101` ux-journeymapper implementation/docs refresh (base: `feature/syncpulse-skill-docs`)
-4. `#81` Feat/socials automation phase1
-5. `#79` Socials Automation Asset Pipeline - Phase 1
-6. `#19` SVG generation for canvas-design skill
-7. `#18` project status tool skill
-8. `#17` project manager skill
-9. `#16` multi-account session tracking skill
+### Publishing Queue (9 Packages)
+- `@h4shed/skill-mermaid-terminal`
+- `@h4shed/skill-ux-journeymapper`
+- `@h4shed/skill-svg-generator`
+- `@h4shed/skill-project-manager`
+- `@h4shed/skill-project-status-tool`
+- `@h4shed/skill-daily-review`
+- `@h4shed/multi-account-session-tracking`
+- `@h4shed/skill-linkedin-master-journalist`
+- `@h4shed/skill-agentic-flow-devkit`
 
-### MVP milestone snapshot (GitHub milestones page)
-> Source: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/milestones
+### Release Workflow
 
-- 14 milestones are open, including:
-  - `Syncpulse - AI Orchestration & Developer Control Plane`
-  - `Social Media Brand Asset Skill`
-  - `NPM Package Release` (closed issues complete)
-  - `SVG generation for Canvas Design Skill`
-  - `Project Manager Skill`
-  - `UX Journeymapper Skill`
-  - `Mermaid Terminal Skill`
-  - `Daily Review Skill`
-  - `Multi Account Session Tracking Skill`
+All releases use **GPG-signed commits and tags** for security:
 
-### Current blockers
-1. GitHub page/API content is partially degraded when unauthenticated (`Uh oh!` load failures on filters/check details), so some check-run evidence must be validated in an authenticated browser session.
-2. Open PR queue includes older April 2026 feature branches that need rebase/conflict/testing passes before merge sequencing.
-3. At least one open PR (`#101`) still shows a failed Vercel preview deployment signal in visible thread events.
+```bash
+# Local setup (one-time)
+bash scripts/setup-gpg-signing.sh
 
-### Current steps
-1. Keep README/roadmap/changelog aligned with live GitHub PR + milestone state.
-2. Prioritize failing-deployment PR remediation before feature merges.
-3. Merge or close stale feature PRs with explicit branch strategy (stacked branch vs `main` direct).
+# Or push to main for automatic workflow
+git add .
+git commit -m "feat: your changes"
+git push origin main
+```
 
-### Immediate next 3 steps
-1. Triage and fix failing deployment(s) on open PRs, starting with `#101`.
-2. Normalize open feature branches (`#16/#17/#18/#19/#79/#81/#101/#109`) against current `main`.
-3. Add/refresh a single merge checklist for each PR with test + deployment evidence links.
-
-### Top 3 priorities now
-1. Resolve failing open PR checks/deployments first (do not merge while red).
-2. Finish publish-ready implementation for missing high-impact skills (`mermaid-terminal`, `ux-journeymapper`, `svg-generator`, `project-*`).
-3. Automate docs/version/package drift checks in CI so release metadata stays accurate.
-
----
-
-## 🚢 Release & Publishing
-
-### 🔐 Signed Commits & Tags
-
-All releases are **GPG signed** for security and authenticity:
-
-- ✅ **Signed Commits** — Version bumps are cryptographically signed
-- ✅ **Signed Tags** — Release tags are verified with GPG
-- ✅ **GitHub Badge** — "Verified" badge on all commits and releases
-- ✅ **npm Authenticity** — Packages published with signing credentials
-
-### Publishing Workflow
-
-
-### Publishing Workflow
-
-**Automated on main push or tag:**
-- **npm publish workflow:** `.github/workflows/publish.yml`
-  - Imports GPG key and signs commits/tags
-  - Runs lint, typecheck, build, scope preparation, and workspace publish
-  - Auto-bumps versions for changed packages
-  - Creates signed commits and tags
-
-- **GitHub release workflow:** `.github/workflows/github-release.yml`
-  - Runs on the same release tags (`v*`, `skill-*`) and creates GitHub Releases with generated notes
-
-### Get Started Publishing
-
-1. **Local Setup** (one-time):
-   ```bash
-   bash scripts/setup-gpg-signing.sh
-   ```
-
-2. **Publish with Signed Commits**:
-   ```bash
-   bash scripts/publish-signed.sh
-   ```
-
-3. **Or push to main** (automatic workflow):
-   ```bash
-   git add .
-   git commit -m "feat: your changes"
-   git push origin main
-   ```
-
-📖 **Full Guide:** [PUBLISH_GUIDE.md](./docs/PUBLISH_GUIDE.md)
+**Full guide:** [docs/NPM_PUBLISHING.md](./docs/NPM_PUBLISHING.md)
 
 ---
 
@@ -584,6 +385,8 @@ All releases are **GPG signed** for security and authenticity:
 🛠️ **Development** — MCP builders, validators, and scaffolding  
 📱 **Prototyping** — Rapid wireframing and layout design  
 🎮 **Game Development** — Asset generation and design automation  
+📝 **Content Creation** — Autonomous article, social post, and asset generation  
+🤖 **AI Automation** — Multi-agent coordination with SyncPulse  
 
 ---
 
@@ -604,10 +407,6 @@ We'd love your involvement!
 - 💡 **Suggest Features** → [GitHub Discussions](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/discussions)
 - 🤝 **Contribute Code** → [CONTRIBUTING.md](./CONTRIBUTING.md)
 - 📧 **Get Support** → [support@fused-gaming.io](mailto:support@fused-gaming.io)
-
-### Contributors
-
-Built with ❤️ by the Fused Gaming Team and community contributors.
 
 ---
 

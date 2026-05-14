@@ -1,0 +1,76 @@
+{
+  "agents": {
+    "agent-1778667979219-4ut0hk": {
+      "agentId": "agent-1778667979219-4ut0hk",
+      "agentType": "core-readme-updater",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "branch": "fix/readme-core",
+        "memoryNamespace": "coordination",
+        "packageCount": 4,
+        "progressKey": "swarm/core-agent/progress",
+        "role": "core-agent",
+        "statusKey": "swarm/core-agent/status",
+        "swarmId": "swarm-1778667968272-jnt5n5",
+        "targetPackages": [
+          "mcp-core",
+          "mcp-cli",
+          "docs",
+          "swarm-controller"
+        ],
+        "model": "sonnet"
+      },
+      "createdAt": "2026-05-13T10:26:19.219Z",
+      "domain": "fused-gaming-mcp",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1778667979769-ou0smy": {
+      "agentId": "agent-1778667979769-ou0smy",
+      "agentType": "skills-readme-updater",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "swarmId": "swarm-1778667968272-jnt5n5",
+        "role": "skills-agent",
+        "branch": "fix/readme-skills",
+        "targetPackages": "all-skill-packages",
+        "packageCount": 30,
+        "memoryNamespace": "coordination",
+        "statusKey": "swarm/skills-agent/status",
+        "progressKey": "swarm/skills-agent/progress",
+        "model": "sonnet"
+      },
+      "createdAt": "2026-05-13T10:26:19.769Z",
+      "domain": "fused-gaming-mcp",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1778667979786-os469a": {
+      "agentId": "agent-1778667979786-os469a",
+      "agentType": "tools-readme-updater",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "swarmId": "swarm-1778667968272-jnt5n5",
+        "role": "tools-agent",
+        "branch": "fix/readme-tools",
+        "targetPackages": "all-tool-packages",
+        "packageCount": 27,
+        "memoryNamespace": "coordination",
+        "statusKey": "swarm/tools-agent/status",
+        "progressKey": "swarm/tools-agent/progress",
+        "model": "sonnet"
+      },
+      "createdAt": "2026-05-13T10:26:19.786Z",
+      "domain": "fused-gaming-mcp",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    }
+  },
+  "version": "3.0.0"
+}

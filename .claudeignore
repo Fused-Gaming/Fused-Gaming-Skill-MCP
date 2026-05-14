@@ -1,0 +1,52 @@
+# Static reference files that are pre-loaded and cause context window bloat
+# These files are important for documentation and configuration but should not be
+# automatically included in every session's context since they rarely change and
+# can be read explicitly when needed
+
+# Package and dependency metadata (pre-loaded during install)
+package.json
+package-lock.json
+
+# Version and release metadata
+VERSION.json
+version.json
+
+# Registry and package inventory (comprehensive listing, rarely needed in context)
+registry/
+registry/REGISTRY.md
+
+# Documentation infrastructure (read explicitly when needed)
+docs/
+CLAUDE.md
+CONTRIBUTING.md
+CHANGELOG.md
+LICENSE
+
+# GitHub configuration and CI/CD
+.github/
+.gitignore
+.gitattributes
+
+# Build output and dependencies
+node_modules/
+dist/
+build/
+.turbo/
+.next/
+
+# Development environment
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Workspace-specific files (each package has its own config)
+tsconfig.json
+jest.config.js
+eslint.config.js
+prettier.config.js
+turbo.json

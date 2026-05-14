@@ -91,6 +91,7 @@
     "docs/"
   ],
   "dependencies": {
+    "@h4shed/syncpulse-hub": "^0.1.0",
     "boxen": "^8.0.1",
     "chalk": "^5.3.0",
     "claude-flow": "^3.5.80",
