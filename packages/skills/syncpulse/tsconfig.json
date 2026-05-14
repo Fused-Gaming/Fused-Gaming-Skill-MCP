@@ -5,8 +5,7 @@
     "outDir": "./dist"
   },
   "include": [
-    "src/**/*.ts",
-    "benchmarks/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
