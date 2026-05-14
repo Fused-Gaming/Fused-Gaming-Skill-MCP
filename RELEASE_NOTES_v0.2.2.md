@@ -1,12 +1,12 @@
-# SyncPulse v0.2.0 Release Notes
+# SyncPulse v0.2.2 Release Notes
 
 **Release Date:** May 14, 2026  
-**Version:** @h4shed/skill-syncpulse v0.2.0  
+**Version:** @h4shed/skill-syncpulse v0.2.2  
 **Status:** Production Ready
 
 ## Overview
 
-SyncPulse v0.2.0 brings transformative performance improvements and stability enhancements to the multi-agent orchestration platform. This release focuses on scaling to 100K+ cache entries, achieving 100-500x vector search speedups, and introducing work-stealing load balancing for heterogeneous swarms.
+SyncPulse v0.2.2 brings transformative performance improvements and stability enhancements to the multi-agent orchestration platform. This release focuses on scaling to 100K+ cache entries, achieving 100-500x vector search speedups, and introducing work-stealing load balancing for heterogeneous swarms.
 
 **Key Achievement:** Eliminated OOM risks in 24h+ deployments while achieving 100-1000x performance improvements at scale.
 
@@ -129,7 +129,7 @@ SyncPulse v0.2.0 brings transformative performance improvements and stability en
 
 ## Performance Comparison
 
-| Operation | v0.1.x | v0.2.0 | Improvement |
+| Operation | v0.1.x | v0.2.2 | Improvement |
 |-----------|--------|--------|-------------|
 | **Vector Search (1K entries)** | 50ms | <5ms | **10x** |
 | **Vector Search (10K entries)** | 500ms | 5-20ms | **50-100x** |
@@ -219,7 +219,7 @@ Comprehensive performance benchmarks included in `benchmarks/performance.benchma
 
 ## Documentation Updates
 
-- **README.md:** Added comprehensive v0.2.0 performance section
+- **README.md:** Added comprehensive v0.2.2 performance section
 - **SECURE_EMAIL_SETUP.md:** Email security best practices (updated)
 - **AGENT_INTEGRATION.md:** Multi-agent email workflow examples
 - **Benchmark Suite:** `performance.benchmark.ts` with detailed metrics
@@ -256,7 +256,7 @@ SyncPulse v0.2.0 represents significant architectural improvements based on:
 
 ### Installation
 ```bash
-npm install @h4shed/skill-syncpulse@0.2.0
+npm install @h4shed/skill-syncpulse@0.2.2
 ```
 
 ### Quick Start
@@ -298,11 +298,11 @@ npm run benchmark --workspace=@fused-gaming/skill-syncpulse
 ## Version Info
 
 - **Package:** @h4shed/skill-syncpulse
-- **Version:** 0.2.0
+- **Version:** 0.2.2
 - **License:** Apache-2.0
-- **Release Tag:** skill-syncpulse-v0.2.0
+- **Release Tag:** skill-syncpulse-v0.2.2
 
 ---
 
-**SyncPulse v0.2.0 is production-ready and recommended for all users of the platform.**
+**SyncPulse v0.2.2 is production-ready and recommended for all users of the platform.**
 
