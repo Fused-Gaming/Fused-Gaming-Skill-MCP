@@ -227,7 +227,7 @@ async function runReleaseBenchmark() {
 
   // Scale to 100K (stress test)
   console.log("\n  Scaling to 100K entries (stress test)...");
-  for (let i = 10000; i < 100000; i += 10) {
+  for (let i = 10000; i < 100000; i += 1) {
     vectorIndex.add(`service-${i}-endpoint-query`);
   }
 

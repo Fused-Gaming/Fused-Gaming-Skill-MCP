@@ -96,6 +96,20 @@ export class CacheService<T = unknown> {
   async persist(): Promise<void> {
     await fs.mkdir(this.dir, { recursive: true });
     const entries = Array.from(this.cache.entries());
+    const batchCount = Math.ceil(entries.length / this.batchSize);
+
+    // Delete old batch files that are no longer needed
+    const files = await fs.readdir(this.dir);
+    for (const file of files) {
+      if (!file.startsWith("batch-") || !file.endsWith(".jsonl")) continue;
+      const match = file.match(/batch-(\d+)\.jsonl/);
+      if (match) {
+        const batchNum = parseInt(match[1], 10);
+        if (batchNum >= batchCount) {
+          await fs.unlink(path.join(this.dir, file));
+        }
+      }
+    }
 
     for (let i = 0; i < entries.length; i += this.batchSize) {
       const batch = entries.slice(i, i + this.batchSize);
@@ -126,6 +140,11 @@ export class CacheService<T = unknown> {
           const { key, value } = JSON.parse(line);
           this.cache.set(key, value);
           this.accessOrder.set(key, this.accessCounter++);
+
+          // Enforce maxSize cap during hydration
+          if (this.cache.size > this.maxSize) {
+            this.evictLRU();
+          }
         }
       }
     } catch {
