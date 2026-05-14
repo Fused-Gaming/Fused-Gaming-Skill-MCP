@@ -6,11 +6,6 @@ export interface RateLimitConfig {
   burstSize: number;
 }
 
-export interface RateLimitConfig {
-  queriesPerSecond: number;
-  burstSize: number;
-}
-
 export class MemorySystem {
   private entries = new Map<string, MemoryEntry>();
   private vectorIndex = new VectorIndex();
@@ -110,33 +105,11 @@ export class MemorySystem {
       return [];
     }
 
-    const queryLower = query.toLowerCase();
-    const results: VectorSearchResult[] = [];
-
-    for (const entry of this.entries.values()) {
-      const keyLower = entry.key.toLowerCase();
-      const similarity = this.calculateSimilarity(queryLower, keyLower);
-
-      if (similarity > 0.3) {
-        results.push({ entry, similarity });
-      }
-    }
-
     const indexResults = this.vectorIndex.search(query, limit, 0.3);
-    return indexResults
-      .map((result) => {
-        const entry = this.entries.get(result.key);
-        if (!entry) {
-          // Clean up stale index reference if entry is missing
-          this.vectorIndex.remove(result.key);
-          return null;
-        }
-        return {
-          entry,
-          similarity: result.similarity,
-        };
-      })
-      .filter((result) => result !== null) as VectorSearchResult[];
+    return indexResults.map((result) => ({
+      entry: this.entries.get(result.key)!,
+      similarity: result.similarity,
+    }));
   }
 
   private calculateSimilarity(a: string, b: string): number {
