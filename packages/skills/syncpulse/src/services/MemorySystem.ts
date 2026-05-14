@@ -1,5 +1,10 @@
 import { MemoryEntry, VectorSearchResult, MemoryStats } from "../types/index.js";
 
+export interface RateLimitConfig {
+  queriesPerSecond: number;
+  burstSize: number;
+}
+
 export class MemorySystem {
   private entries = new Map<string, MemoryEntry>();
   private stats: MemoryStats = {
@@ -9,6 +14,36 @@ export class MemorySystem {
     hitRate: 0,
     avgRetrievalTime: 0,
   };
+
+  private tokens: number;
+  private lastRefill: number;
+  private rateLimitConfig: RateLimitConfig;
+
+  constructor(rateLimitConfig: RateLimitConfig = { queriesPerSecond: 1000, burstSize: 100 }) {
+    this.rateLimitConfig = rateLimitConfig;
+    this.tokens = rateLimitConfig.burstSize;
+    this.lastRefill = Date.now();
+  }
+
+  private refillTokens(): void {
+    const now = Date.now();
+    const elapsed = (now - this.lastRefill) / 1000;
+    const tokensToAdd = elapsed * this.rateLimitConfig.queriesPerSecond;
+    this.tokens = Math.min(
+      this.rateLimitConfig.burstSize,
+      this.tokens + tokensToAdd
+    );
+    this.lastRefill = now;
+  }
+
+  private isRateLimited(): boolean {
+    this.refillTokens();
+    if (this.tokens < 1) {
+      return true;
+    }
+    this.tokens -= 1;
+    return false;
+  }
 
   set(key: string, value: unknown, metadata: Record<string, unknown> = {}): void {
     const id = `mem-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -61,7 +96,11 @@ export class MemorySystem {
   }
 
   vectorSearch(query: string, limit: number = 10): VectorSearchResult[] {
-    // Simplified vector search based on string similarity
+    if (this.isRateLimited()) {
+      console.warn("[MemorySystem] Rate limit exceeded; returning empty results");
+      return [];
+    }
+
     const queryLower = query.toLowerCase();
     const results: VectorSearchResult[] = [];
 
