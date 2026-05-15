@@ -176,14 +176,12 @@ Generated: ${new Date().toISOString()}`;
     try {
       const message = notes.split('\n')[0];
 
-      // Create commit with safe message (using environment variable to avoid shell injection)
-      execSync('git add VERSION.json package.json', { stdio: 'inherit' });
-      execSync('git commit -m "chore: Bump version to v' + version.replace(/"/g, '\\"') + ' for release"', {
+      execSync('git', ['add', 'VERSION.json', 'package.json'], { stdio: 'inherit' });
+      execSync('git', ['commit', '-m', `chore: Bump version to v${version} for release`], {
         stdio: 'inherit',
       });
 
-      // Create annotated tag with safe message (using environment variable)
-      execSync('git tag -a v' + version.replace(/"/g, '\\"') + ' -m ' + JSON.stringify(message), {
+      execSync('git', ['tag', '-a', `v${version}`, '-m', message], {
         stdio: 'inherit',
       });
 
@@ -204,10 +202,10 @@ Generated: ${new Date().toISOString()}`;
     linesDeleted: number;
   }> {
     try {
-      const range = lastTag ? lastTag.replace(/[^a-zA-Z0-9./~_-]/g, '') + '..HEAD' : 'HEAD~10..HEAD';
+      const range = lastTag ? `${lastTag}..HEAD` : 'HEAD~10..HEAD';
 
-      const totalCommits = execSync('git rev-list --count ' + range).toString().trim();
-      const diffStat = execSync('git diff --stat ' + range).toString();
+      const totalCommits = execSync('git', ['rev-list', '--count', range]).toString().trim();
+      const diffStat = execSync('git', ['diff', '--stat', range]).toString();
 
       let filesChanged = 0;
       let linesAdded = 0;
