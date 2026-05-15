@@ -147,6 +147,14 @@
       "@h4shed/multi-account-session-tracking",
       "@h4shed/skill-linkedin-master-journalist",
       "@h4shed/skill-agentic-flow-devkit"
+    ],
+    "tools": [
+      {
+        "name": "@h4shed/tool-release-manager",
+        "version": "1.0.0",
+        "published": false,
+        "description": "Automated release management tool for monorepo contributions"
+      }
     ]
   },
   "versioningStrategy": {

@@ -104,6 +104,9 @@
 - `skill-nft-generative-art`,
 - `skill-smart-contract-tools`,
 
+**🛠️ Development Tools (Scaffolded)**
+- `tool-release-manager` ⭐ (v1.0.0 NEW — Automated version bumping, release notes, and git tagging)
+
 ---
 
 ## ✨ Why Fused Gaming MCP?
