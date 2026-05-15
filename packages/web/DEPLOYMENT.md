@@ -11,6 +11,14 @@
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FFused-Gaming%2FFused-Gaming-Skill-MCP&project-name=syncpulse-dashboard&repository-name=fused-gaming-skill-mcp)
 
+### What You Get After Deployment
+
+✅ **Live SyncPulse Dashboard** at your deployment URL  
+✅ **Real-time Agent Monitoring** with WebSocket updates  
+✅ **REST API** for programmatic access to orchestration data  
+✅ **Performance Analytics** built into Vercel dashboard  
+✅ **Auto-scaling Infrastructure** managed by Vercel
+
 ### Manual Deployment Steps
 
 #### 1. Prepare the Repository
@@ -128,20 +136,113 @@ GET /api/roadmap          - Get execution roadmap
 POST /api/roadmap         - Add roadmap phase
 ```
 
-## Monitoring & Logging
+## Dashboard Access & Monitoring
 
-### Vercel Dashboard
-Monitor deployments, errors, and performance at https://vercel.com/dashboard
+### Accessing the SyncPulse Dashboard
 
-### Real-time Logs
+After deployment completes, you can access the orchestration dashboard at your deployed URL:
+
+```
+https://your-deployment-url.vercel.app
+```
+
+**Dashboard Features:**
+- 🐝 **Agent Swarm Visualization** - Real-time view of all running agent swarms
+- 📊 **Performance Metrics** - Task throughput, latency, and success rates
+- 🔍 **Queue Management** - Monitor task queues and agent load distribution
+- 💾 **Cache Analytics** - View cache hit rates, memory usage, and eviction patterns
+- 🎯 **Task Monitoring** - Track individual task execution and completion status
+- ⚡ **Live Updates** - Real-time metrics via WebSocket when live mode is enabled
+
+### Dashboard Navigation
+
+**Main Sections:**
+1. **Overview** - System health and high-level metrics
+2. **Swarms** - Detailed swarm topology and agent metrics
+3. **Tasks** - Current and historical task execution
+4. **Performance** - Benchmarks and performance analytics
+5. **Settings** - Configuration and monitoring preferences
+
+### Accessing Deployment Logs
+
+**Via Vercel Dashboard:**
+1. Go to https://vercel.com/dashboard
+2. Select your `syncpulse-dashboard` project
+3. Click **Deployments** tab
+4. Select the deployment to view logs
+
+**Via Vercel CLI:**
 ```bash
+# Real-time logs
 vercel logs --follow
+
+# Specific deployment
+vercel logs <deployment-url>
+
+# Filter by service
+vercel logs --function name
+```
+
+### Monitoring & Observability
+
+**Vercel Dashboard Features:**
+- Monitor deployments, errors, and performance at https://vercel.com/dashboard
+- View Web Vitals and performance metrics
+- Real-time error tracking and alerting
+- Edge Function execution analytics
+
+**Built-in Monitoring:**
+- Core Web Vitals automatically tracked
+- Server response times and status codes
+- Automatic error reporting to Vercel
+- Custom analytics integration available
+
+### Setting Up Alerts
+
+**Email Notifications:**
+1. In Vercel dashboard: Settings → Alerts
+2. Choose alert triggers (deployment, error, performance)
+3. Configure notification email addresses
+
+**Slack Integration:**
+1. Install Vercel Slack App
+2. Link your Vercel account
+3. Receive deployment and error notifications
+
+### Health Checks
+
+Monitor your deployment health:
+
+```bash
+# Check API health
+curl https://your-deployment-url.vercel.app/api/health
+
+# Expected response
+{
+  "status": "ok",
+  "uptime": 3600,
+  "timestamp": "2026-05-15T00:00:00Z",
+  "services": {
+    "database": "ok",
+    "cache": "ok",
+    "orchestration": "ok"
+  }
+}
 ```
 
 ### Performance Monitoring
-- Core Web Vitals automatically tracked
-- Analytics available in Vercel dashboard
-- Custom analytics can be configured
+
+**Vercel Analytics:**
+- Real-time visitor analytics
+- Core Web Vitals (LCP, FID, CLS)
+- Regional performance distribution
+- Cold start and response time metrics
+
+**SyncPulse Metrics:**
+- Access `/api/metrics` for detailed orchestration metrics
+- View agent utilization and task completion rates
+- Monitor cache performance and memory usage
+- Track swarm health and rebalancing events
 
 ## Troubleshooting
 
@@ -184,11 +285,53 @@ To protect API routes:
 2. Use `VERCEL_JWT_SECRET` for JWT signing
 3. Validate tokens in route handlers
 
+## Getting Started After Deployment
+
+### Step 1: Verify Deployment
+```bash
+# Check deployment status
+curl https://your-deployment-url.vercel.app/api/health
+
+# Should return 200 OK with service status
+```
+
+### Step 2: Access the Dashboard
+1. Open your browser to `https://your-deployment-url.vercel.app`
+2. Explore the Overview page to see system metrics
+3. Navigate to the Swarms section to visualize your agent network
+4. Check the Performance tab for detailed analytics
+
+### Step 3: Configure Monitoring (Optional)
+1. Set up Vercel alerts in dashboard settings
+2. Connect Slack for real-time notifications
+3. Enable custom analytics if desired
+
+### Step 4: Test API Endpoints
+```bash
+# List all swarms
+curl https://your-deployment-url.vercel.app/api/swarms
+
+# Create a test task
+curl -X POST https://your-deployment-url.vercel.app/api/tasks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test Task",
+    "priority": 5,
+    "type": "test"
+  }'
+```
+
+### Step 5: Monitor Performance
+- Check Vercel dashboard for Core Web Vitals
+- Review agent throughput in SyncPulse dashboard
+- Monitor cache hit rates and memory usage
+
 ## Support & Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Vercel Documentation](https://vercel.com/docs)
 - [SyncPulse Skill Documentation](../../docs/SYNCPULSE_IMPLEMENTATION.md)
+- **Dashboard Help**: Hover over metric cards for tooltips and detailed explanations
 
 ## Deployment Status Badge
 
