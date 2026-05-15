@@ -37,7 +37,7 @@ export default function SalesPage() {
                 Pricing
               </a>
               <motion.a
-                href="/signin"
+                href="/auth/login"
                 whileHover={{ scale: 1.05 }}
                 className="px-6 py-2 bg-swarm-accent text-swarm-dark rounded-lg font-semibold hover:shadow-lg hover:shadow-swarm-accent/50 transition-all"
               >
@@ -115,7 +115,7 @@ export default function SalesPage() {
               className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
             >
               <motion.a
-                href="/signup"
+                href="/auth/signup"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 className="px-8 py-4 bg-swarm-accent text-swarm-dark rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-swarm-accent/50 transition-all duration-300 flex items-center justify-center gap-2"
@@ -216,7 +216,7 @@ export default function SalesPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.a
-                href="/signup"
+                href="/auth/signup"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 className="px-8 py-4 bg-swarm-accent text-swarm-dark rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-swarm-accent/50 transition-all"

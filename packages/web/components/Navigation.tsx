@@ -110,7 +110,7 @@ export default function Navigation({
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 }}
-                  onClick={onLogin}
+                  onClick={() => router.push('/auth/login')}
                   className="text-sm font-medium text-slate-300 transition-colors hover:text-swarm-accent"
                 >
                   Login
@@ -119,7 +119,7 @@ export default function Navigation({
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.25 }}
-                  onClick={onMagicLink}
+                  onClick={() => router.push('/auth/magic-link-request')}
                   className="rounded-lg border border-swarm-accent/50 bg-swarm-accent/10 px-4 py-2 text-sm font-medium text-swarm-accent transition-all hover:bg-swarm-accent/20 hover:shadow-lg hover:shadow-swarm-accent/20"
                 >
                   Magic Link

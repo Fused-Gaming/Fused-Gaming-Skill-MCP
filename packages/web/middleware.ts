@@ -74,6 +74,15 @@ export function middleware(request: NextRequest) {
   // PROBLEM 3: API route auth enforcement
   // Check authentication FIRST for protected API routes, BEFORE returning CORS headers
   if (pathname.startsWith('/api/')) {
+    // Allow CORS preflight requests to reach their handlers
+    if (request.method === 'OPTIONS') {
+      const response = NextResponse.next();
+      response.headers.set('Access-Control-Allow-Origin', '*');
+      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      return response;
+    }
+
     // Check if this is a protected API route
     const isProtectedApi = matchesRoutes(pathname, PROTECTED_API_ROUTES);
 

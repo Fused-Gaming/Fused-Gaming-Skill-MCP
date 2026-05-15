@@ -47,12 +47,15 @@ node --expose-gc \
 
 RESULT_CODE=${PIPESTATUS[0]}
 
+# Extract the actual results file path from benchmark output
+REPORT_FILE=$(grep "Results saved to:" "$BENCHMARK_LOG" | sed 's/.*Results saved to: //g' | tail -1)
+
 echo ""
 echo "=================================================="
 echo "Benchmark Results"
 echo "=================================================="
 echo ""
-echo "Report: $REPORT_FILE"
+echo "Report: ${REPORT_FILE:-$REPORT_FILE}"
 echo "Log: $BENCHMARK_LOG"
 echo ""
 
