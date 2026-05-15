@@ -1,117 +1,128 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SessionStore } from '@/lib/session-store';
+import crypto from 'crypto';
 
-/**
- * POST /api/auth/change-password
- * Allows users to change their password
- * Requires valid session token
- */
+interface ChangePasswordRequest {
+  newPassword: string;
+  confirmPassword: string;
+}
+
+interface StoredPassword {
+  hash: string;
+  salt: string;
+  timestamp: number;
+}
+
+const PASSWORDS_MAP = new Map<string, StoredPassword>();
+const SESSION_TOKENS = new Map<string, { authenticated: boolean; passwordChanged: boolean; timestamp: number }>();
+
+function hashPassword(password: string): { hash: string; salt: string } {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto
+    .pbkdf2Sync(password, salt, 10000, 64, 'sha512')
+    .toString('hex');
+  return { hash, salt };
+}
+
+function validatePasswordStrength(password: string): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+
+  if (password.length < 16) {
+    errors.push('Password must be at least 16 characters');
+  }
+  if (!/[A-Z]/.test(password)) {
+    errors.push('Password must contain at least one uppercase letter');
+  }
+  if (!/[a-z]/.test(password)) {
+    errors.push('Password must contain at least one lowercase letter');
+  }
+  if (!/[0-9]/.test(password)) {
+    errors.push('Password must contain at least one number');
+  }
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    errors.push('Password must contain at least one special character');
+  }
+  if (/(.)\1{2,}/.test(password)) {
+    errors.push('Password cannot contain repeated characters (e.g., aaa)');
+  }
+  if (/123|456|789|qwerty|password|abc/i.test(password)) {
+    errors.push('Password contains common patterns that are not allowed');
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors
+  };
+}
+
 export async function POST(request: NextRequest) {
   try {
-    // Get session token from cookie or Authorization header
-    let sessionToken = request.cookies.get('sessionToken')?.value;
-    if (!sessionToken) {
-      const authHeader = request.headers.get('authorization');
-      if (authHeader?.startsWith('Bearer ')) {
-        sessionToken = authHeader.slice(7);
-      }
-    }
-
-    // Validate session
-    if (!sessionToken) {
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { message: 'Missing or invalid authorization header' },
         { status: 401 }
       );
     }
 
-    const session = SessionStore.getSession(sessionToken);
-    if (!session) {
+    const sessionToken = authHeader.substring(7);
+    const sessionInfo = SESSION_TOKENS.get(sessionToken);
+
+    if (!sessionInfo || !sessionInfo.authenticated || sessionInfo.passwordChanged) {
       return NextResponse.json(
-        { error: 'Invalid or expired session' },
+        { message: 'Invalid or expired session' },
         { status: 401 }
       );
     }
 
-    // Parse request body
-    const body = await request.json();
-    const { currentPassword, newPassword, confirmPassword } = body;
+    const body = await request.json() as ChangePasswordRequest;
+    const { newPassword, confirmPassword } = body;
 
-    // Validate inputs
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!newPassword || !confirmPassword) {
       return NextResponse.json(
-        { error: 'All password fields are required' },
+        { message: 'Both password fields are required' },
         { status: 400 }
       );
     }
 
-    // Validate new password matches confirmation
     if (newPassword !== confirmPassword) {
       return NextResponse.json(
-        { error: 'New passwords do not match' },
+        { message: 'Passwords do not match' },
         { status: 400 }
       );
     }
 
-    // Validate new password strength (basic validation)
-    if (newPassword.length < 6) {
+    const validation = validatePasswordStrength(newPassword);
+    if (!validation.valid) {
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters' },
+        { message: 'Password does not meet strength requirements', errors: validation.errors },
         { status: 400 }
       );
     }
 
-    // Verify current password
-    if (!SessionStore.validatePassword(session.email, currentPassword)) {
-      return NextResponse.json(
-        { error: 'Current password is incorrect' },
-        { status: 401 }
-      );
-    }
+    // Hash and store password
+    const { hash, salt } = hashPassword(newPassword);
+    PASSWORDS_MAP.set('admin-password', {
+      hash,
+      salt,
+      timestamp: Date.now()
+    });
 
-    // Update password in session store
-    const updated = SessionStore.updatePassword(session.email, newPassword);
-    if (!updated) {
-      return NextResponse.json(
-        { error: 'Failed to update password' },
-        { status: 500 }
-      );
-    }
-
-    // Mark session password as changed
-    SessionStore.markPasswordChanged(sessionToken);
+    // Mark session as having changed password
+    const updatedSession = { ...sessionInfo, passwordChanged: true };
+    SESSION_TOKENS.set(sessionToken, updatedSession);
 
     return NextResponse.json(
       {
-        success: true,
         message: 'Password changed successfully',
-        user: {
-          id: session.userId,
-          email: session.email,
-        },
+        success: true
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Change password error:', error);
+    console.error('Password change error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { message: 'Internal server error' },
       { status: 500 }
     );
   }
-}
-
-/**
- * OPTIONS /api/auth/change-password
- * CORS preflight handler
- */
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
-  });
 }
