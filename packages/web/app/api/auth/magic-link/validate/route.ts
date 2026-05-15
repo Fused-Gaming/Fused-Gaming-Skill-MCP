@@ -33,9 +33,7 @@ function hashToken(token: string): string {
 }
 
 function generateSessionToken(): string {
-  return Array.from(crypto.getRandomValues(new Uint8Array(32)))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
+  return crypto.randomBytes(32).toString('hex');
 }
 
 export async function POST(request: NextRequest) {

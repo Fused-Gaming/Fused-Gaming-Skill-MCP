@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import EmailService, { EmailTemplate, EmailRecipient } from "./EmailService.ts";
+import EmailService, { EmailTemplate, EmailRecipient } from "./EmailService";
 
 export interface MagicLinkConfig {
   emailService: EmailService;
