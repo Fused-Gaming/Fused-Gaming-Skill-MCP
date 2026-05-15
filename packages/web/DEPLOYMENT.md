@@ -238,11 +238,11 @@ curl https://your-deployment-url.vercel.app/api/health
 - Regional performance distribution
 - Cold start and response time metrics
 
-**SyncPulse Metrics:**
-- Access `/api/metrics` for detailed orchestration metrics
-- View agent utilization and task completion rates
-- Monitor cache performance and memory usage
-- Track swarm health and rebalancing events
+**SyncPulse Metrics via API:**
+- Query `/api/swarms` for agent utilization and swarm health
+- Query `/api/tasks` for task completion rates and execution status
+- Query `/api/health` for cache performance and service status
+- Dashboard automatically aggregates these metrics for real-time visualization
 
 ## Troubleshooting
 
