@@ -46,7 +46,7 @@ export default function SignupPage() {
       // TODO: Implement actual signup logic
       // For now, redirect to login with a message
       router.push('/auth/login');
-    } catch (err) {
+    } catch (_err) {
       setError('An error occurred during signup');
       setIsLoading(false);
     }
