@@ -3,6 +3,11 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Navigation from './Navigation';
+import PricingPlans from './PricingPlans';
+import FeatureGrid from './FeatureGrid';
+import FeaturedSection from './FeaturedSection';
+import ContactForm from './ContactForm';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -50,8 +55,18 @@ export default function LandingPage() {
     );
   }
 
+  const handleNavigate = (path: string) => {
+    router.push(path);
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark">
+      {/* Navigation Header */}
+      <Navigation
+        isAuthenticated={isAuthenticated}
+        onLogin={() => handleNavigate('/auth/login')}
+      />
+
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center px-6">
         <div className="max-w-4xl w-full">
@@ -192,8 +207,44 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-6">
+      {/* Featured Section */}
+      <FeaturedSection />
+
+      {/* Feature Grid */}
+      <FeatureGrid />
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-20 px-6 border-t border-swarm-accent/10">
+        <div className="max-w-7xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl font-bold text-center mb-16 glow-accent"
+          >
+            Simple, Transparent Pricing
+          </motion.h2>
+          <PricingPlans />
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-20 px-6 border-t border-swarm-accent/10">
+        <div className="max-w-4xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl font-bold text-center mb-12 glow-accent"
+          >
+            Get in Touch
+          </motion.h2>
+          <ContactForm />
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-20 px-6 border-t border-swarm-accent/10">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
