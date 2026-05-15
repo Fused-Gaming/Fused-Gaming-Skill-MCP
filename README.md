@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Fused Gaming MCP Social Preview](.github/assets/social-preview.png)
+![SyncPulse Agent Swarms - Production Ready](.github/assets/syncpulse-hero.png)
 
 </div>
 
@@ -21,7 +21,7 @@
 
 ## 🚀 The Ultimate AI-Powered Skill Ecosystem
 
-**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **19 published-ready skills in-repo** plus core infrastructure packages.
+**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **21 published-ready skills in-repo** plus core infrastructure packages, including enterprise-grade agent orchestration with SyncPulse and ethical hacking frameworks.
 
 ### 🎯 Your Creative Arsenal Includes:
 
@@ -48,16 +48,23 @@
 | **nft-generative-art** | NFT artwork generation and blockchain assets | 📋 |
 | **smart-contract-tools** | Hardhat, Truffle, and Foundry integration | 📋 |
 | **syncpulse** | Multi-agent coordination + 9 email workflow templates | ✅ |
+| **syncpulse-hub** | SyncPulse orchestration dashboard and agent management | ✅ |
+| **ethical-hacking-framework** | Penetration testing, vulnerability analysis, and security assessment tools | ✅ |
 
 **Core skills are production-ready; new tools are in active scaffolding** ✨
 
-### 📧 SyncPulse Email Workflows (v0.2.0)
-New to **SyncPulse**: Production-ready email automation with **9 templated workflows**:
-- **Authentication** (4): Magic link login, MFA verification, password reset, security alerts
-- **Business** (2): Invoice delivery, newsletters
-- **Operations** (3): Outage notices, maintenance announcements, ticket updates
+### 🐝 SyncPulse Agent Orchestration (v0.2.2)
+**SyncPulse** brings enterprise-grade multi-agent orchestration with:
+- **Performance**: 100-500x vector search speedup via hierarchical indexing
+- **Reliability**: LRU cache eviction preventing OOM in 24h+ deployments
+- **Scale**: Work-stealing load balancing for heterogeneous swarms
+- **Email Workflows**: 9 templated automation workflows (authentication, business, operations)
 
-All with professional HTML templates, security best practices, and full agent integration.
+**SyncPulse Hub** (v0.1.1) provides:
+- Orchestration dashboard for real-time swarm monitoring
+- Agent health metrics and performance analytics
+- Task queue management and load visualization
+- Integration with SyncPulse v0.2.2+ for seamless orchestration
 
 ### 📦 Publishing now / next wave
 
@@ -67,7 +74,9 @@ All with professional HTML templates, security best practices, and full agent in
 - `skill-frontend-design`, `skill-mcp-builder`, `skill-pre-deploy-validator`
 - `skill-skill-creator`, `skill-theme-factory`, `skill-underworld-writer`
 - `skill-linkedin-master-journalist`
-- `skill-syncpulse` ⭐ (v0.2.0 — 9 email workflow templates)
+- `skill-syncpulse` ⭐ (v0.2.2 — 100-500x vector search speedup, LRU cache, work-stealing load balancing)
+- `syncpulse-hub` ⭐ (v0.1.1 — Agent orchestration dashboard and monitoring)
+- `skill-ethical-hacking-framework` ⭐ (v0.1.0 — Penetration testing and security assessment tools)
 
 **Scaffolded and queued for publish (`@h4shed`)**
 - `skill-mermaid-terminal`
