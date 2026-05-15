@@ -201,3 +201,32 @@ secrets.json
 # LIMJ Generated Outputs
 LIMJ/**/*-cover-*.png
 LIMJ/**/linkedin-cover-*.png
+
+# Backup & Archive Files (should not be tracked)
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Generated Build/Lock Files (context bloat)
+pnpm-lock.yaml
+yarn.lock
+
+# Session/State Files
+*.session
+session-*.json
+.session.*
+
+# Large Log & Data Files
+*.log.*
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Temporary Cache Directories
+.vercel/
+.turbo/cache/
+node_modules/.cache/
