@@ -39,7 +39,7 @@ REPORT_FILE="${RESULTS_DIR}/release-${VERSION}-${TIMESTAMP}.json"
 BENCHMARK_LOG="${RESULTS_DIR}/release-${VERSION}-${TIMESTAMP}.log"
 
 # Run with --expose-gc flag for accurate memory measurements
-node --expose-gc \
+BENCHMARK_TIMESTAMP="$TIMESTAMP" node --expose-gc \
   --max-old-space-size=4096 \
   --loader ts-node/esm \
   "${BENCHMARK_DIR}/release-performance.benchmark.ts" \
