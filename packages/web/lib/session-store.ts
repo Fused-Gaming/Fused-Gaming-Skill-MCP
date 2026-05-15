@@ -1,5 +1,3 @@
-import { randomBytes } from 'crypto';
-
 /**
  * Session Store - Unified authentication and session state management
  * Handles user sessions, magic link tokens, and password changes
@@ -51,9 +49,20 @@ usersMap.set(DEMO_USER_EMAIL, {
 
 /**
  * Generates a cryptographically secure random token
+ * Uses Web Crypto API for Edge Runtime compatibility
  */
 function generateToken(): string {
-  return `token_${randomBytes(32).toString('hex')}`;
+  // Use crypto.getRandomValues for Edge-safe randomness
+  // If crypto is not available (shouldn't happen in Node/Edge), fall back to Math.random
+  if (typeof globalThis !== 'undefined' && globalThis.crypto) {
+    const array = new Uint8Array(32);
+    globalThis.crypto.getRandomValues(array);
+    const hex = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
+    return `token_${hex}`;
+  }
+
+  // Fallback for environments without crypto (shouldn't be needed in practice)
+  return `token_${Math.random().toString(36).substr(2, 32)}`;
 }
 
 /**

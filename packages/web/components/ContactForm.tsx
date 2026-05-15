@@ -45,11 +45,8 @@ export default function ContactForm({
     setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       if (onSubmit) {
-        onSubmit(formData);
+        await onSubmit(formData);
       }
 
       setSubmitted(true);
@@ -59,6 +56,8 @@ export default function ContactForm({
       }, 3000);
     } catch (error) {
       console.error('Form submission error:', error);
+      // Show error state to user instead of success
+      alert('Failed to submit form. Please try again.');
     } finally {
       setLoading(false);
     }
