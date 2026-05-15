@@ -35,7 +35,7 @@ export default function LoginPage() {
       const data = await response.json();
       login(data.sessionToken, data.expiresIn);
       router.push('/dashboard');
-    } catch (err) {
+    } catch (_err) {
       setError('An error occurred during login');
       setIsLoading(false);
     }

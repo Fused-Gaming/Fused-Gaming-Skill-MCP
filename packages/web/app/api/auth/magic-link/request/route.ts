@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       try {
         // Attempt to send via configured email service
         // Note: In production, integrate with nodemailer or your preferred email provider
-        const emailHtml = `
+        const _emailHtml = `
           <!DOCTYPE html>
           <html>
             <head><style>body { font-family: Arial, sans-serif; }</style></head>
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
         //   from: process.env.SMTP_FROM || 'noreply@syncpulse.app',
         //   to: email,
         //   subject: 'Your Magic Link - SyncPulse',
-        //   html: emailHtml,
+        //   html: _emailHtml,
         // });
 
         console.log(`[EMAIL] Magic link sent to ${email}: ${magicLinkUrl}`);
@@ -80,7 +80,16 @@ export async function POST(request: NextRequest) {
 
     // For development/testing: include the token in the response
     // This allows testing without email setup
-    const responseData: any = {
+    interface MagicLinkResponse {
+      success: boolean;
+      message: string;
+      email: string;
+      expiresIn: number;
+      _testToken?: string;
+      _testLink?: string;
+      _testLinkNote?: string;
+    }
+    const responseData: MagicLinkResponse = {
       success: true,
       message: 'Magic link generated successfully',
       email,
