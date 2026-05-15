@@ -332,7 +332,10 @@ async function runReleaseBenchmark() {
   if (!fs.existsSync(resultsDir)) {
     fs.mkdirSync(resultsDir, { recursive: true });
   }
-  const timestamp = new Date(results.timestamp).toISOString().replace(/[:.]/g, "");
+  const now = new Date(results.timestamp);
+  const dateStr = now.toISOString().split('T')[0].replace(/-/g, '');
+  const timeStr = now.toISOString().split('T')[1].split('.')[0].replace(/:/g, '');
+  const timestamp = `${dateStr}_${timeStr}`;
   const resultsFile = `${resultsDir}/release-${results.version}-${timestamp}.json`;
   fs.writeFileSync(resultsFile, JSON.stringify(results, null, 2));
   console.log(`\n📊 Results saved to: ${resultsFile}`);
