@@ -268,7 +268,7 @@ async function runReleaseBenchmark() {
       const assignment = orchestrator.assignTask(swarm.id, task);
       // Release task immediately so queue doesn't saturate
       if (assignment) {
-        orchestrator.releaseTask(swarm.id, assignment.id);
+        orchestrator.releaseTask(swarm.id, assignment.id, true);
       }
     }
   );
@@ -357,7 +357,11 @@ async function runReleaseBenchmark() {
 }
 
 // Run benchmark with Node.js flags: node --expose-gc release-performance.benchmark.ts
+console.log("Starting SyncPulse release benchmark...");
 runReleaseBenchmark().catch((err) => {
   console.error("Benchmark error:", err);
+  if (err instanceof Error) {
+    console.error("Stack:", err.stack);
+  }
   process.exit(1);
 });
