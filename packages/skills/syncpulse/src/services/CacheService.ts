@@ -154,19 +154,14 @@ export class CacheService<T = unknown> {
             const content = await fs.readFile(full, "utf-8");
             const data = JSON.parse(content);
 
-            // Legacy format could be an array or an object with entries
-            const entries = Array.isArray(data) ? data : (data.entries || []);
+            // Legacy format: filename (without .json) is the cache key, entire content is the value
+            const key = file.replace(/\.json$/, "");
+            this.cache.set(key, data);
+            this.accessOrder.set(key, this.accessCounter++);
 
-            for (const entry of entries) {
-              const key = typeof entry === 'object' && entry.key ? entry.key : JSON.stringify(entry);
-              const value = typeof entry === 'object' && entry.value ? entry.value : entry;
-              this.cache.set(key, value);
-              this.accessOrder.set(key, this.accessCounter++);
-
-              // Enforce maxSize cap during hydration
-              if (this.cache.size > this.maxSize) {
-                this.evictLRU();
-              }
+            // Enforce maxSize cap during hydration
+            if (this.cache.size > this.maxSize) {
+              this.evictLRU();
             }
           } catch (parseError) {
             // Log but continue if a legacy file is malformed

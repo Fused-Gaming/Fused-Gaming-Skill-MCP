@@ -24,7 +24,7 @@ const pricingTiers: PricingTier[] = [
     price: '$0',
     period: 'forever',
     cta: 'Get Started',
-    ctaHref: '/signup?plan=free',
+    ctaHref: '/auth/signup?plan=free',
     features: [
       { name: 'Up to 3 agents', included: true },
       { name: 'Basic monitoring', included: true },
@@ -41,7 +41,7 @@ const pricingTiers: PricingTier[] = [
     price: '$299',
     period: 'month',
     cta: 'Start Free Trial',
-    ctaHref: '/signup?plan=pro',
+    ctaHref: '/auth/signup?plan=pro',
     featured: true,
     features: [
       { name: 'Up to 50 agents', included: true },
