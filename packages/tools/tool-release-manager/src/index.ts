@@ -42,7 +42,15 @@ export class ReleaseManager {
    */
   async getCurrentVersion(): Promise<VersionInfo> {
     const content = await fs.readFile(this.versionFilePath, 'utf-8');
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    return {
+      version: parsed.version,
+      majorVersion: parsed.majorVersion,
+      minorVersion: parsed.minorVersion,
+      patchVersion: parsed.patchVersion,
+      releaseDate: parsed.releaseDate,
+      buildNumber: parsed.metadata?.buildNumber || 0,
+    };
   }
 
   /**
@@ -77,8 +85,13 @@ export class ReleaseManager {
    * Update VERSION.json and package.json
    */
   async updateVersionFiles(newVersion: VersionInfo): Promise<void> {
-    // Update VERSION.json
-    const versionContent = {
+    // Read existing VERSION.json to preserve metadata
+    const versionContent = await fs.readFile(this.versionFilePath, 'utf-8');
+    const existing = JSON.parse(versionContent);
+
+    // Update only version-related fields, preserve rest
+    const updated = {
+      ...existing,
       version: newVersion.version,
       releaseDate: newVersion.releaseDate,
       status: 'stable',
@@ -87,14 +100,12 @@ export class ReleaseManager {
       patchVersion: newVersion.patchVersion,
       prerelease: null,
       metadata: {
-        nodeMinimum: '20.0.0',
-        npmMinimum: '8.0.0',
-        typescriptVersion: '5.3.2',
+        ...existing.metadata,
         buildNumber: newVersion.buildNumber,
       },
     };
 
-    await fs.writeFile(this.versionFilePath, JSON.stringify(versionContent, null, 2) + '\n');
+    await fs.writeFile(this.versionFilePath, JSON.stringify(updated, null, 2) + '\n');
 
     // Update package.json
     const pkgContent = await fs.readFile(this.packageJsonPath, 'utf-8');
@@ -163,14 +174,18 @@ Generated: ${new Date().toISOString()}`;
    */
   async createGitTag(version: string, notes: string): Promise<void> {
     try {
-      // Create commit
+      const message = notes.split('\n')[0];
+
+      // Create commit with safe message (using environment variable to avoid shell injection)
       execSync('git add VERSION.json package.json', { stdio: 'inherit' });
-      execSync(`git commit -m "chore: Bump version to v${version} for release"`, {
+      execSync('git commit -m "chore: Bump version to v' + version.replace(/"/g, '\\"') + ' for release"', {
         stdio: 'inherit',
       });
 
-      // Create annotated tag
-      execSync(`git tag -a v${version} -m "${notes.split('\n')[0]}"`, { stdio: 'inherit' });
+      // Create annotated tag with safe message (using environment variable)
+      execSync('git tag -a v' + version.replace(/"/g, '\\"') + ' -m ' + JSON.stringify(message), {
+        stdio: 'inherit',
+      });
 
       console.log(`✅ Created git tag v${version}`);
     } catch (error) {
@@ -189,10 +204,10 @@ Generated: ${new Date().toISOString()}`;
     linesDeleted: number;
   }> {
     try {
-      const range = lastTag ? `${lastTag}..HEAD` : 'HEAD~10..HEAD';
+      const range = lastTag ? lastTag.replace(/[^a-zA-Z0-9./~_-]/g, '') + '..HEAD' : 'HEAD~10..HEAD';
 
-      const totalCommits = execSync(`git rev-list --count ${range}`).toString().trim();
-      const diffStat = execSync(`git diff --stat ${range}`).toString();
+      const totalCommits = execSync('git rev-list --count ' + range).toString().trim();
+      const diffStat = execSync('git diff --stat ' + range).toString();
 
       let filesChanged = 0;
       let linesAdded = 0;
