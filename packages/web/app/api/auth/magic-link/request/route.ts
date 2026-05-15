@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     // Build the magic link URL
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const magicLinkUrl = `${baseUrl}/auth/magic-link/verify?token=${token}`;
+    const magicLinkUrl = `${baseUrl}/auth/magic-link?token=${token}`;
 
     // SEND EMAIL WITH MAGIC LINK
     // In production, use a proper email service (SendGrid, AWS SES, etc.)
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
       ...(isDevelopment && {
         _testToken: token,
         _testLink: magicLinkUrl,
-        _testLinkNote: 'Available in development only. Use /auth/magic-link/verify?token=<token>',
+        _testLinkNote: 'Available in development only. Use /auth/magic-link?token=<token>',
       }),
     };
 

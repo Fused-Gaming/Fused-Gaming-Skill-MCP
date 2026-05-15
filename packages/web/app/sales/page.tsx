@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 import PricingPlans from '@/components/PricingPlans';
 import FeatureGrid from '@/components/FeatureGrid';
 import FeaturedSection from '@/components/FeaturedSection';

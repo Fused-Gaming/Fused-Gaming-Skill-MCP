@@ -11,6 +11,8 @@ const PUBLIC_ROUTES = [
   '/auth/magic-link-request',
   '/auth/magic-link',
   '/landing',
+  '/sales',
+  '/contact-sales',
   '/api/auth',
   '/api/health',
 ];

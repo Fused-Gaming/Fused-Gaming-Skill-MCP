@@ -215,6 +215,26 @@ export const SessionStore = {
   },
 
   /**
+   * Creates a new user with email and password
+   */
+  createUser(email: string, password: string): { userId: string } | null {
+    // Check if user already exists
+    if (usersMap.has(email)) {
+      return null;
+    }
+
+    const userId = `user_${Date.now()}`;
+    usersMap.set(email, {
+      email,
+      userId,
+      password,
+      passwordChanged: false,
+    });
+
+    return { userId };
+  },
+
+  /**
    * Deletes a session
    */
   deleteSession(token: string): boolean {

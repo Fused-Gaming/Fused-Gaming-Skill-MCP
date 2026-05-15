@@ -130,20 +130,47 @@ export class CacheService<T = unknown> {
     try {
       const files = await fs.readdir(this.dir);
       for (const file of files) {
-        if (!file.endsWith(".jsonl")) continue;
-
         const full = path.join(this.dir, file);
-        const content = await fs.readFile(full, "utf-8");
-        const lines = content.split("\n").filter((l) => l.trim());
 
-        for (const line of lines) {
-          const { key, value } = JSON.parse(line);
-          this.cache.set(key, value);
-          this.accessOrder.set(key, this.accessCounter++);
+        // Handle new .jsonl format
+        if (file.endsWith(".jsonl")) {
+          const content = await fs.readFile(full, "utf-8");
+          const lines = content.split("\n").filter((l) => l.trim());
 
-          // Enforce maxSize cap during hydration
-          if (this.cache.size > this.maxSize) {
-            this.evictLRU();
+          for (const line of lines) {
+            const { key, value } = JSON.parse(line);
+            this.cache.set(key, value);
+            this.accessOrder.set(key, this.accessCounter++);
+
+            // Enforce maxSize cap during hydration
+            if (this.cache.size > this.maxSize) {
+              this.evictLRU();
+            }
+          }
+        }
+        // Handle legacy .json format for backward compatibility
+        else if (file.endsWith(".json")) {
+          try {
+            const content = await fs.readFile(full, "utf-8");
+            const data = JSON.parse(content);
+
+            // Legacy format could be an array or an object with entries
+            const entries = Array.isArray(data) ? data : (data.entries || []);
+
+            for (const entry of entries) {
+              const key = typeof entry === 'object' && entry.key ? entry.key : JSON.stringify(entry);
+              const value = typeof entry === 'object' && entry.value ? entry.value : entry;
+              this.cache.set(key, value);
+              this.accessOrder.set(key, this.accessCounter++);
+
+              // Enforce maxSize cap during hydration
+              if (this.cache.size > this.maxSize) {
+                this.evictLRU();
+              }
+            }
+          } catch (parseError) {
+            // Log but continue if a legacy file is malformed
+            console.warn(`Failed to parse legacy cache file ${file}:`, parseError);
           }
         }
       }

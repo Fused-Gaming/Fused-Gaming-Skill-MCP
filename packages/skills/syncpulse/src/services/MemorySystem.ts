@@ -75,6 +75,7 @@ export class MemorySystem {
     // Check TTL
     if (entry.ttl && Date.now() - entry.createdAt > entry.ttl) {
       this.entries.delete(key);
+      this.vectorIndex.remove(key);
       this.stats.cacheMisses += 1;
       this.updateHitRate();
       return null;
@@ -105,10 +106,20 @@ export class MemorySystem {
     }
 
     const indexResults = this.vectorIndex.search(query, limit, 0.3);
-    return indexResults.map((result) => ({
-      entry: this.entries.get(result.key)!,
-      similarity: result.similarity,
-    }));
+    return indexResults
+      .map((result) => {
+        const entry = this.entries.get(result.key);
+        if (!entry) {
+          // Clean up stale index reference if entry is missing
+          this.vectorIndex.remove(result.key);
+          return null;
+        }
+        return {
+          entry,
+          similarity: result.similarity,
+        };
+      })
+      .filter((result) => result !== null) as VectorSearchResult[];
   }
 
   private calculateSimilarity(a: string, b: string): number {
@@ -156,6 +167,7 @@ export class MemorySystem {
 
   clear(): void {
     this.entries.clear();
+    this.vectorIndex.clear();
     this.stats = {
       totalEntries: 0,
       cacheHits: 0,

@@ -185,6 +185,12 @@ export class SwarmOrchestrator {
         2;
     }
 
+    // Remove the completed task from the agent's task queue
+    const queue = this.agentQueues.get(agentId);
+    if (queue && queue.tasks.length > 0) {
+      queue.tasks.shift();
+    }
+
     const swarm = this.swarms.get(swarmId);
     if (swarm) {
       if (success) {
