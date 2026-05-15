@@ -34,7 +34,7 @@ export default function MagicLinkRequestPage() {
       setSuccess(true);
       setEmail('');
       // Don't navigate away - let user see success message
-    } catch (_err) {
+    } catch {
       setError('An error occurred while sending the magic link');
       setIsLoading(false);
     }
