@@ -3,19 +3,6 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Navigation from './Navigation';
-import PricingPlans from './PricingPlans';
-import FeatureGrid from './FeatureGrid';
-import FeaturedSection from './FeaturedSection';
-import ContactForm from './ContactForm';
-
-interface FormData {
-  name: string;
-  email: string;
-  company: string;
-  agents: string;
-  message: string;
-}
 
 export default function LandingPage() {
   const router = useRouter();
@@ -63,36 +50,8 @@ export default function LandingPage() {
     );
   }
 
-  const handleNavigate = (path: string) => {
-    router.push(path);
-  };
-
-  const handleContactSubmit = async (formData: FormData) => {
-    try {
-      const response = await fetch('/api/contact-sales', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to submit contact form');
-      }
-    } catch (error) {
-      console.error('Error submitting contact form:', error);
-      throw error;
-    }
-  };
-
   return (
     <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark">
-      {/* Navigation Header */}
-      <Navigation
-        isAuthenticated={isAuthenticated}
-        onLogin={() => handleNavigate('/auth/login')}
-      />
-
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center px-6">
         <div className="max-w-4xl w-full">
@@ -233,44 +192,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Featured Section */}
-      <FeaturedSection />
-
-      {/* Feature Grid */}
-      <FeatureGrid />
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-6 border-t border-swarm-accent/10">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="text-4xl font-bold text-center mb-16 glow-accent"
-          >
-            Simple, Transparent Pricing
-          </motion.h2>
-          <PricingPlans />
-        </div>
-      </section>
-
-      {/* Contact Form Section */}
-      <section className="py-20 px-6 border-t border-swarm-accent/10">
-        <div className="max-w-4xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="text-4xl font-bold text-center mb-12 glow-accent"
-          >
-            Get in Touch
-          </motion.h2>
-          <ContactForm variant="compact" onSubmit={handleContactSubmit} />
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-20 px-6 border-t border-swarm-accent/10">
+      {/* CTA Section */}
+      <section className="py-20 px-6">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}

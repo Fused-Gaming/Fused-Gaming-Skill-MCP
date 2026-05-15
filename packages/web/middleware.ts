@@ -1,59 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SessionStore } from '@/lib/session-store';
 
-/**
- * Public routes that do NOT require authentication
- * Includes landing/login pages, health checks, and auth callbacks
- */
-const PUBLIC_ROUTES = [
-  '/auth/login',
-  '/auth/signup',
-  '/auth/magic-link-request',
-  '/auth/magic-link',
-  '/landing',
-  '/sales',
-  '/contact-sales',
-  '/api/auth',
-  '/api/health',
-];
+// Public routes that don't require authentication
+const PUBLIC_ROUTES = ['/', '/auth', '/api/auth'];
+
+// Protected routes that require authentication
+const PROTECTED_ROUTES = ['/dashboard'];
 
 /**
- * Protected API routes that require authentication
- * Routes starting with /api/ that need valid session
- */
-const PROTECTED_API_ROUTES = [
-  '/api/tasks',
-  '/api/swarms',
-  '/api/roadmap',
-];
-
-/**
- * Protected page routes that require authentication
- */
-const PROTECTED_PAGE_ROUTES = ['/dashboard'];
-
-/**
- * Validates if a session token exists in the session store
- * Checks expiry and validates the token is legitimate
- * @param sessionToken - The session token to validate
- * @returns true if token is valid, not expired, and exists in store
+ * Validates if a session token exists and is non-empty
  */
 function isValidSession(sessionToken: string | undefined): boolean {
-  if (!sessionToken || sessionToken.trim().length === 0) {
-    return false;
-  }
-
-  // Validate token exists in store and is not expired
-  const session = SessionStore.getSession(sessionToken);
-  return session !== null;
+  return Boolean(sessionToken && sessionToken.trim().length > 0);
 }
 
 /**
  * Checks if a pathname matches any of the allowed routes
- * Supports both exact and prefix matching
- * @param pathname - The path to check
- * @param routes - List of routes to match against
- * @returns true if pathname matches any route
  */
 function matchesRoutes(pathname: string, routes: string[]): boolean {
   return routes.some(route => {
@@ -62,18 +24,12 @@ function matchesRoutes(pathname: string, routes: string[]): boolean {
   });
 }
 
-/**
- * Main middleware function
- * Handles authentication, authorization, CORS, and security headers
- */
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const sessionToken = request.cookies.get('sessionToken')?.value;
+  const isAuthenticated = isValidSession(sessionToken);
 
-  // Public routes that don't require authentication
-  const publicRoutes = ['/auth/login', '/api/auth/login', '/api/auth/status', '/api/health'];
-  const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route));
-
-  // Add CORS headers to API routes
+  // Handle API routes with CORS headers
   if (pathname.startsWith('/api/')) {
     const response = NextResponse.next();
 
@@ -83,7 +39,7 @@ export function middleware(request: NextRequest) {
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
 
-    // Security headers
+    // Add security headers
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('X-Frame-Options', 'SAMEORIGIN');
     response.headers.set('X-XSS-Protection', '1; mode=block');
@@ -92,16 +48,17 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // Check authentication for protected routes
-  if (!isPublicRoute && pathname !== '/') {
-    const sessionToken = request.cookies.get('sessionToken')?.value;
-    if (!sessionToken) {
-      const loginUrl = new URL('/auth/login', request.url);
-      return NextResponse.redirect(loginUrl);
+  // Check if accessing protected routes without authentication
+  if (matchesRoutes(pathname, PROTECTED_ROUTES)) {
+    if (!isAuthenticated) {
+      // Redirect to landing page if not authenticated
+      const url = request.nextUrl.clone();
+      url.pathname = '/';
+      return NextResponse.redirect(url);
     }
   }
 
-  // Add security headers to all responses
+  // Add security headers to all non-API responses
   const response = NextResponse.next();
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'SAMEORIGIN');

@@ -1,21 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SessionStore } from '@/lib/session-store';
+import { validateSession } from '@/lib/session';
 
 /**
  * GET /api/auth/session
  * Validates and returns current session information
- * Uses unified session store for token validation
  */
 export async function GET(request: NextRequest) {
   try {
     const sessionToken = request.cookies.get('sessionToken')?.value;
+    const validation = validateSession(sessionToken);
 
-    // Validate session using the unified store
-    const session = SessionStore.getSession(sessionToken || '');
-
-    if (!session) {
+    if (!validation.isValid) {
       return NextResponse.json(
-        { isValid: false, error: 'Invalid or expired session' },
+        { isValid: false, error: validation.error },
         { status: 401 }
       );
     }
@@ -23,13 +20,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         isValid: true,
-        sessionToken: session.token,
+        sessionToken: validation.token?.value,
         user: {
-          id: session.userId,
-          email: session.email,
-          name: session.email.split('@')[0],
+          id: 'user_demo',
+          email: 'demo@example.com',
+          name: 'Demo User',
         },
-        passwordChanged: session.passwordChanged,
       },
       { status: 200 }
     );

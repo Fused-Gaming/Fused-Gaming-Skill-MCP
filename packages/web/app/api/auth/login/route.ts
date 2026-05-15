@@ -1,98 +1,78 @@
 import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
+import { createSessionTokenCookie } from '@/lib/session';
 
-interface LoginRequest {
-  password: string;
-}
-
-interface StoredSession {
-  sessionToken: string;
-  timestamp: number;
-  authenticated: boolean;
-  passwordChanged: boolean;
-  attempts: number;
-  lastAttempt: number;
-}
-
-const SESSIONS_MAP = new Map<string, StoredSession>();
-const ACCOUNT_LOCK_DURATION = 3600000; // 1 hour
-const MAX_ATTEMPTS = 5;
-const ONE_TIME_PASSWORD = process.env.SYNCPULSE_ONE_TIME_PASSWORD || 'Quantum-Phoenix-Stellar-Cascade';
-
+/**
+ * POST /api/auth/login
+ * Handles user login and session token creation
+ */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as LoginRequest;
-    const { password } = body;
+    const body = await request.json();
+    const { email, password } = body;
 
-    if (!password) {
+    // Validate input
+    if (!email || !password) {
       return NextResponse.json(
-        { message: 'Password is required' },
+        { error: 'Email and password are required' },
         { status: 400 }
       );
     }
 
-    // Check account lockout (in a real app, this would be in a database)
-    const accountKey = 'admin-account';
-    const session = SESSIONS_MAP.get(accountKey);
+    // TODO: Implement actual authentication logic
+    // This is a placeholder implementation
+    if (email === 'demo@example.com' && password === 'demo') {
+      // Generate a mock session token
+      const sessionToken = `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const expiresIn = 24 * 60 * 60 * 1000; // 24 hours
 
-    if (session && session.attempts >= MAX_ATTEMPTS) {
-      const timeSinceLock = Date.now() - session.lastAttempt;
-      if (timeSinceLock < ACCOUNT_LOCK_DURATION) {
-        const minutesLeft = Math.ceil((ACCOUNT_LOCK_DURATION - timeSinceLock) / 60000);
-        return NextResponse.json(
-          { message: `Account locked. Try again in ${minutesLeft} minutes.` },
-          { status: 429 }
-        );
-      } else {
-        // Unlock after timeout
-        SESSIONS_MAP.delete(accountKey);
-      }
-    }
-
-    // Verify one-time password
-    if (password !== ONE_TIME_PASSWORD) {
-      const newSession = session ? { ...session, attempts: session.attempts + 1, lastAttempt: Date.now() } : {
-        sessionToken: '',
-        timestamp: Date.now(),
-        authenticated: false,
-        passwordChanged: false,
-        attempts: 1,
-        lastAttempt: Date.now()
-      };
-      SESSIONS_MAP.set(accountKey, newSession);
-
-      return NextResponse.json(
-        { message: 'Invalid password' },
-        { status: 401 }
+      const response = NextResponse.json(
+        {
+          success: true,
+          sessionToken,
+          expiresIn,
+          user: {
+            id: 'user_demo',
+            email: 'demo@example.com',
+            name: 'Demo User',
+          },
+        },
+        { status: 200 }
       );
+
+      // Set session cookie
+      response.headers.set(
+        'Set-Cookie',
+        createSessionTokenCookie(sessionToken, expiresIn)
+      );
+
+      return response;
     }
 
-    // Generate session token
-    const sessionToken = crypto.randomBytes(32).toString('hex');
-    const newSession: StoredSession = {
-      sessionToken,
-      timestamp: Date.now(),
-      authenticated: true,
-      passwordChanged: false,
-      attempts: 0,
-      lastAttempt: Date.now()
-    };
-
-    SESSIONS_MAP.set(accountKey, newSession);
-
+    // Invalid credentials
     return NextResponse.json(
-      {
-        message: 'Login successful',
-        sessionToken,
-        requiresPasswordChange: true
-      },
-      { status: 200 }
+      { error: 'Invalid email or password' },
+      { status: 401 }
     );
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
+}
+
+/**
+ * OPTIONS /api/auth/login
+ * CORS preflight handler
+ */
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
 }

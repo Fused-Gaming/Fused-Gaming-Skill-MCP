@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, Zap, CheckCircle } from 'lucide-react';
 import PricingPlans from '@/components/PricingPlans';
 import FeatureGrid from '@/components/FeatureGrid';
 import FeaturedSection from '@/components/FeaturedSection';
@@ -37,7 +37,7 @@ export default function SalesPage() {
                 Pricing
               </a>
               <motion.a
-                href="/auth/login"
+                href="/signin"
                 whileHover={{ scale: 1.05 }}
                 className="px-6 py-2 bg-swarm-accent text-swarm-dark rounded-lg font-semibold hover:shadow-lg hover:shadow-swarm-accent/50 transition-all"
               >
@@ -115,7 +115,7 @@ export default function SalesPage() {
               className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
             >
               <motion.a
-                href="/auth/signup"
+                href="/signup"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 className="px-8 py-4 bg-swarm-accent text-swarm-dark rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-swarm-accent/50 transition-all duration-300 flex items-center justify-center gap-2"
@@ -216,7 +216,7 @@ export default function SalesPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.a
-                href="/auth/signup"
+                href="/signup"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 className="px-8 py-4 bg-swarm-accent text-swarm-dark rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-swarm-accent/50 transition-all"

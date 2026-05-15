@@ -1,28 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createLogoutCookie } from '@/lib/session';
-import { SessionStore } from '@/lib/session-store';
 
 /**
  * POST /api/auth/logout
  * Handles user logout and session token clearing
- * Destroys the session in the unified store
  */
 export async function POST(request: NextRequest) {
   try {
-    // Get session token from cookie or Authorization header
-    let sessionToken = request.cookies.get('sessionToken')?.value;
-    if (!sessionToken) {
-      const authHeader = request.headers.get('authorization');
-      if (authHeader?.startsWith('Bearer ')) {
-        sessionToken = authHeader.slice(7);
-      }
-    }
-
-    // Destroy the session in the store if it exists
-    if (sessionToken) {
-      SessionStore.deleteSession(sessionToken);
-    }
-
     const response = NextResponse.json(
       { success: true, message: 'Logged out successfully' },
       { status: 200 }

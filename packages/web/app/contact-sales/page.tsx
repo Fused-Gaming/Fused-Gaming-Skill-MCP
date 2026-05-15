@@ -4,33 +4,7 @@ import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 
-interface FormData {
-  name: string;
-  email: string;
-  company: string;
-  agents: string;
-  message: string;
-}
-
 export default function ContactSalesPage() {
-  const handleContactSubmit = async (formData: FormData) => {
-    try {
-      const response = await fetch('/api/contact-sales', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to submit contact form');
-      }
-    } catch (error) {
-      console.error('Error submitting contact form:', error);
-      throw error;
-    }
-  };
-
   return (
     <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark">
       {/* Header */}
@@ -224,7 +198,7 @@ export default function ContactSalesPage() {
                 Fill out the form below and we&apos;ll get back to you as soon as
                 possible.
               </p>
-              <ContactForm variant="full" onSubmit={handleContactSubmit} />
+              <ContactForm variant="full" />
             </div>
           </motion.div>
         </div>
