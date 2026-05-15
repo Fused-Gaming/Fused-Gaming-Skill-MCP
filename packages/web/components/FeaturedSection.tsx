@@ -25,7 +25,7 @@ const differentiators: FeaturedDifferentiator[] = [
       'Supports 1000+ concurrent agents',
       'Automatic failover & recovery',
     ],
-    cta: { label: 'Explore Architecture', href: '/docs/architecture' },
+    cta: { label: 'Learn More', href: '/contact-sales' },
   },
   {
     icon: <Shield className="w-12 h-12" />,
@@ -37,7 +37,7 @@ const differentiators: FeaturedDifferentiator[] = [
       'Role-based access control',
       'Audit trails & compliance',
     ],
-    cta: { label: 'Security Details', href: '/docs/security' },
+    cta: { label: 'Learn More', href: '/contact-sales' },
   },
   {
     icon: <TrendingUp className="w-12 h-12" />,
@@ -49,7 +49,7 @@ const differentiators: FeaturedDifferentiator[] = [
       'Adaptive resource allocation',
       'Predictive scaling',
     ],
-    cta: { label: 'Optimization Guide', href: '/docs/optimization' },
+    cta: { label: 'Learn More', href: '/contact-sales' },
   },
 ];
 

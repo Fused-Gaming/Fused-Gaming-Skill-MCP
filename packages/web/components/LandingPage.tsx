@@ -9,6 +9,14 @@ import FeatureGrid from './FeatureGrid';
 import FeaturedSection from './FeaturedSection';
 import ContactForm from './ContactForm';
 
+interface FormData {
+  name: string;
+  email: string;
+  company: string;
+  agents: string;
+  message: string;
+}
+
 export default function LandingPage() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -57,6 +65,24 @@ export default function LandingPage() {
 
   const handleNavigate = (path: string) => {
     router.push(path);
+  };
+
+  const handleContactSubmit = async (formData: FormData) => {
+    try {
+      const response = await fetch('/api/contact-sales', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to submit contact form');
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      throw error;
+    }
   };
 
   return (
@@ -239,7 +265,7 @@ export default function LandingPage() {
           >
             Get in Touch
           </motion.h2>
-          <ContactForm />
+          <ContactForm variant="compact" onSubmit={handleContactSubmit} />
         </div>
       </section>
 
