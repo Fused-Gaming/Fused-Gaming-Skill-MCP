@@ -41,6 +41,7 @@ BENCHMARK_LOG="${RESULTS_DIR}/release-${VERSION}-${TIMESTAMP}.log"
 # Run with --expose-gc flag for accurate memory measurements
 node --expose-gc \
   --max-old-space-size=4096 \
+  --loader ts-node/esm \
   "${BENCHMARK_DIR}/release-performance.benchmark.ts" \
   2>&1 | tee "$BENCHMARK_LOG"
 

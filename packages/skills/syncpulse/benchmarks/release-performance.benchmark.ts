@@ -250,20 +250,25 @@ async function runReleaseBenchmark() {
     5
   );
 
-  const mockTask = {
-    id: "task-1",
-    name: "Benchmark Task",
-    priority: 5,
-    status: "pending" as const,
-    createdAt: Date.now(),
-  };
-
+  let taskCounter = 0;
   results.metrics.swarmAssignment = benchmark(
     "SwarmOrchestrator.assignTask (5 agents)",
     1000,
     1.0,
     () => {
-      orchestrator.assignTask(swarm.id, mockTask);
+      // Create unique task for each assignment and release after assignment
+      const task = {
+        id: `task-${taskCounter++}`,
+        name: "Benchmark Task",
+        priority: 5,
+        status: "pending" as const,
+        createdAt: Date.now(),
+      };
+      const assignment = orchestrator.assignTask(swarm.id, task);
+      // Release task immediately so queue doesn't saturate
+      if (assignment) {
+        orchestrator.completeTask(swarm.id, assignment.agentId, task.id);
+      }
     }
   );
   results.targets.swarmThroughput =
