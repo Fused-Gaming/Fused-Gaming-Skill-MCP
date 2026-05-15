@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 
+// Mark page as dynamic since it uses useSearchParams
+export const dynamic = 'force-dynamic';
+
 export default function MagicLinkPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
