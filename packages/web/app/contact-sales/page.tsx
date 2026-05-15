@@ -22,10 +22,12 @@ export default function ContactSalesPage() {
       });
 
       if (!response.ok) {
-        console.error('Failed to submit contact form');
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to submit contact form');
       }
     } catch (error) {
       console.error('Error submitting contact form:', error);
+      throw error;
     }
   };
 

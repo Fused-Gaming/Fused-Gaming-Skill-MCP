@@ -65,8 +65,8 @@ export default function LandingPage() {
       {/* Navigation */}
       <Navigation
         isAuthenticated={false}
-        onLogin={() => console.log('Login clicked')}
-        onMagicLink={() => console.log('Magic Link clicked')}
+        onLogin={() => window.location.href = '/auth/login'}
+        onMagicLink={() => window.location.href = '/auth/magic-link-request'}
       />
 
       {/* Hero Section */}

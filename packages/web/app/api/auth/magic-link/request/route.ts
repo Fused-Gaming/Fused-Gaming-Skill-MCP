@@ -92,13 +92,15 @@ export async function POST(request: NextRequest) {
       success: true,
       message: isDevelopment
         ? 'Magic link generated. Check the response for the test link.'
-        : 'Magic link generated successfully',
+        : 'Magic link generated successfully. Check your email to complete sign-in.',
       email,
       expiresIn,
-      // Include link for manual verification since email sending is not yet implemented
-      // TODO: Once email service is integrated, remove this from production response
-      _link: magicLinkUrl,
-      _linkNote: 'For testing only. In production with email configured, this will be removed.',
+      // Only include link in development for testing
+      // In production, the link is sent via email (when configured)
+      ...(isDevelopment && {
+        _link: magicLinkUrl,
+        _linkNote: 'For testing only. Not returned in production.',
+      }),
     };
 
     return NextResponse.json(responseData, { status: 200 });
