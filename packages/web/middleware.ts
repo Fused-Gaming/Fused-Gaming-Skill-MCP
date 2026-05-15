@@ -68,7 +68,16 @@ function matchesRoutes(pathname: string, routes: string[]): boolean {
  */
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const sessionToken = request.cookies.get('sessionToken')?.value;
+
+  // Get session token from cookie or Authorization header
+  let sessionToken = request.cookies.get('sessionToken')?.value;
+  if (!sessionToken) {
+    const authHeader = request.headers.get('authorization');
+    if (authHeader?.startsWith('Bearer ')) {
+      sessionToken = authHeader.slice(7);
+    }
+  }
+
   const isAuthenticated = isValidSession(sessionToken);
 
   // PROBLEM 3: API route auth enforcement

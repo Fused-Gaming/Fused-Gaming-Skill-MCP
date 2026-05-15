@@ -237,7 +237,7 @@ export default function FeaturedSection({
             Ready to experience the power of intelligent swarm orchestration?
           </p>
           <motion.a
-            href="/signup"
+            href="/auth/signup"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             className="inline-block px-8 py-4 bg-swarm-accent text-swarm-dark rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-swarm-accent/50 transition-all duration-300"
