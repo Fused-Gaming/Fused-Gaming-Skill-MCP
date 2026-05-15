@@ -19,6 +19,39 @@
 ✅ **Performance Analytics** built into Vercel dashboard  
 ✅ **Auto-scaling Infrastructure** managed by Vercel
 
+### Dashboard Endpoints Reference
+
+**Main Dashboard:**
+```
+GET https://your-deployment-url.vercel.app/
+```
+Displays the SyncPulse Agent Swarm Commander with real-time visualization
+
+**Dashboard Pages:**
+```
+GET https://your-deployment-url.vercel.app/           # Main dashboard (Swarm Visualizer + Control Panel)
+GET https://your-deployment-url.vercel.app/skills     # Available skills and agents
+```
+
+**API Endpoints (for programmatic access):**
+```
+GET  https://your-deployment-url.vercel.app/api/health      # System health check
+GET  https://your-deployment-url.vercel.app/api/swarms      # List all agent swarms
+POST https://your-deployment-url.vercel.app/api/swarms      # Create/execute swarm action
+GET  https://your-deployment-url.vercel.app/api/tasks       # List all tasks
+POST https://your-deployment-url.vercel.app/api/tasks       # Create a new task
+GET  https://your-deployment-url.vercel.app/api/roadmap     # Get execution roadmap
+POST https://your-deployment-url.vercel.app/api/roadmap     # Add roadmap phase
+```
+
+**Health Check (Quick Verification):**
+```bash
+curl https://your-deployment-url.vercel.app/api/health
+
+# Expected response:
+# {"status":"ok","service":"fused-gaming-skill-mcp","timestamp":"...","version":"..."}
+```
+
 ### Manual Deployment Steps
 
 #### 1. Prepare the Repository
