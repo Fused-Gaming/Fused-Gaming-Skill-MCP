@@ -39,7 +39,7 @@ export default function MagicLinkPage() {
         const data = await response.json();
         login(data.sessionToken, data.expiresIn);
         router.push('/dashboard');
-      } catch (_err) {
+      } catch {
         setError('An error occurred while verifying your magic link');
         setIsLoading(false);
       }
