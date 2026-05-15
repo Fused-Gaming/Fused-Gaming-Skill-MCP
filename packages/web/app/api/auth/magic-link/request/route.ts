@@ -85,27 +85,21 @@ export async function POST(request: NextRequest) {
       message: string;
       email: string;
       expiresIn: number;
-      _testToken?: string;
-      _testLink?: string;
-      _testLinkNote?: string;
+      _link?: string;
+      _linkNote?: string;
     }
     const responseData: MagicLinkResponse = {
       success: true,
-      message: 'Magic link generated successfully',
+      message: isDevelopment
+        ? 'Magic link generated. Check the response for the test link.'
+        : 'Magic link generated successfully',
       email,
       expiresIn,
-      // Include test token link in development for manual testing
-      ...(isDevelopment && {
-        _testToken: token,
-        _testLink: magicLinkUrl,
-        _testLinkNote: 'Available in development only. Use /auth/magic-link?token=<token>',
-      }),
+      // Include link for manual verification since email sending is not yet implemented
+      // TODO: Once email service is integrated, remove this from production response
+      _link: magicLinkUrl,
+      _linkNote: 'For testing only. In production with email configured, this will be removed.',
     };
-
-    // In production with email sending enabled, emphasize that they should check email
-    if (!isDevelopment && process.env.SMTP_HOST) {
-      responseData.message = `Magic link sent to ${email}. Please check your email to complete sign-in.`;
-    }
 
     return NextResponse.json(responseData, { status: 200 });
   } catch (error) {
