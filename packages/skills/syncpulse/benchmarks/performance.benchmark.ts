@@ -128,7 +128,7 @@ benchmark("SwarmOrchestrator.assignTask (5 agents)", 1000, () => {
   };
   const assignment = orchestrator.assignTask(swarm.id, task);
   if (assignment) {
-    orchestrator.releaseTask(swarm.id, assignment.id);
+    orchestrator.releaseTask(swarm.id, assignment.id, true);
   }
 });
 
