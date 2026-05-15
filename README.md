@@ -49,7 +49,6 @@
 | **smart-contract-tools** | Hardhat, Truffle, and Foundry integration | 📋 |
 | **syncpulse** | Multi-agent coordination + 9 email workflow templates | ✅ |
 | **syncpulse-hub** | SyncPulse orchestration dashboard and agent management | ✅ |
-| **ethical-hacking-framework** | Penetration testing, vulnerability analysis, and security assessment tools | ✅ |
 
 **Core skills are production-ready; new tools are in active scaffolding** ✨
 
@@ -76,7 +75,6 @@
 - `skill-linkedin-master-journalist`
 - `skill-syncpulse` ⭐ (v0.2.2 — 100-500x vector search speedup, LRU cache, work-stealing load balancing)
 - `syncpulse-hub` ⭐ (v0.1.1 — Agent orchestration dashboard and monitoring)
-- `skill-ethical-hacking-framework` ⭐ (v0.1.0 — Penetration testing and security assessment tools)
 
 **Scaffolded and queued for publish (`@h4shed`)**
 - `skill-mermaid-terminal`
