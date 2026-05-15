@@ -115,7 +115,7 @@ benchmark("VectorIndex.search (10K entries)", 50, () => {
 // Swarm Orchestrator Benchmarks
 console.log("\n🐝 Swarm Orchestrator Benchmarks");
 const orchestrator = new SwarmOrchestrator();
-const swarm = orchestrator.initializeSwarm("swarm-1", "Test Swarm", "balanced", 5);
+const swarm = orchestrator.initializeSwarm("swarm-1", "Test Swarm", "adaptive", 5);
 
 let taskCounter = 0;
 
@@ -129,7 +129,7 @@ benchmark("SwarmOrchestrator.assignTask (5 agents)", 1000, () => {
   };
   const assignment = orchestrator.assignTask(swarm.id, task);
   if (assignment) {
-    orchestrator.releaseTask(swarm.id, assignment.id);
+    orchestrator.releaseTask(swarm.id, assignment.id, true);
   }
 });
 
