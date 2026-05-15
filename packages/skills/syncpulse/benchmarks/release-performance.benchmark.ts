@@ -159,7 +159,8 @@ async function runReleaseBenchmark() {
 
   // Memory System Benchmarks
   console.log("\n🧠 Memory System Performance");
-  const memory = new MemorySystem();
+  // Use high-burst rate limiting to avoid rate-limiting during benchmark
+  const memory = new MemorySystem({ queriesPerSecond: 100000, burstSize: 10000 });
 
   // Populate with entries
   for (let i = 0; i < 1000; i++) {
