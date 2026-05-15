@@ -267,7 +267,7 @@ async function runReleaseBenchmark() {
       const assignment = orchestrator.assignTask(swarm.id, task);
       // Release task immediately so queue doesn't saturate
       if (assignment) {
-        orchestrator.completeTask(swarm.id, assignment.agentId, task.id);
+        orchestrator.releaseTask(swarm.id, assignment.id);
       }
     }
   );
@@ -326,8 +326,13 @@ async function runReleaseBenchmark() {
     "  ✓ Work-Stealing Load Balancing: 2-4x throughput on heterogeneous swarms"
   );
 
-  // Write results to file
-  const resultsFile = `./benchmarks/release-results-${Date.now()}.json`;
+  // Write results to file (matches runner's expected path for comparisons)
+  const resultsDir = "./benchmarks/results";
+  if (!fs.existsSync(resultsDir)) {
+    fs.mkdirSync(resultsDir, { recursive: true });
+  }
+  const timestamp = new Date(results.timestamp).toISOString().replace(/[:.]/g, "");
+  const resultsFile = `${resultsDir}/release-${results.version}-${timestamp}.json`;
   fs.writeFileSync(resultsFile, JSON.stringify(results, null, 2));
   console.log(`\n📊 Results saved to: ${resultsFile}`);
 
