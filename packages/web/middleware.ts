@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SessionStore } from '@/lib/session-store';
 
 /**
  * Public routes that do NOT require authentication
@@ -30,12 +31,19 @@ const PROTECTED_API_ROUTES = [
 const PROTECTED_PAGE_ROUTES = ['/dashboard'];
 
 /**
- * Validates if a session token exists and is non-empty
+ * Validates if a session token exists in the session store
+ * Checks expiry and validates the token is legitimate
  * @param sessionToken - The session token to validate
- * @returns true if token is valid and non-empty
+ * @returns true if token is valid, not expired, and exists in store
  */
 function isValidSession(sessionToken: string | undefined): boolean {
-  return Boolean(sessionToken && sessionToken.trim().length > 0);
+  if (!sessionToken || sessionToken.trim().length === 0) {
+    return false;
+  }
+
+  // Validate token exists in store and is not expired
+  const session = SessionStore.getSession(sessionToken);
+  return session !== null;
 }
 
 /**

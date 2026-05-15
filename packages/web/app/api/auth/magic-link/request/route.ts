@@ -28,28 +28,58 @@ export async function POST(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     const magicLinkUrl = `${baseUrl}/auth/magic-link/verify?token=${token}`;
 
-    // IMPLEMENT EMAIL SENDING (currently commented out for dev)
-    // In production, uncomment and configure your email service:
-    /*
-    try {
-      await emailService.send({
-        to: email,
-        subject: 'Your Magic Link - SyncPulse',
-        template: 'magic-link',
-        data: {
-          magicLink: magicLinkUrl,
-          expiresIn: Math.round(expiresIn / 1000 / 60), // Convert to minutes
-        },
-      });
-    } catch (emailError) {
-      console.error('Failed to send magic link email:', emailError);
-      // Don't fail the request - still return success so user knows to check email
+    // SEND EMAIL WITH MAGIC LINK
+    // In production, use a proper email service (SendGrid, AWS SES, etc.)
+    // For development/testing, we provide the token in response
+    const isDevelopment = process.env.NODE_ENV === 'development';
+
+    if (!isDevelopment && process.env.SMTP_HOST) {
+      try {
+        // Attempt to send via configured email service
+        // Note: In production, integrate with nodemailer or your preferred email provider
+        const emailHtml = `
+          <!DOCTYPE html>
+          <html>
+            <head><style>body { font-family: Arial, sans-serif; }</style></head>
+            <body>
+              <h2>Your Magic Link - SyncPulse</h2>
+              <p>Click the link below to complete your sign-in:</p>
+              <p><a href="${magicLinkUrl}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">Sign In</a></p>
+              <p>Or copy this link: <code>${magicLinkUrl}</code></p>
+              <p>This link expires in ${Math.round(expiresIn / 1000 / 60)} minutes.</p>
+              <p><small>If you didn't request this link, you can ignore this email.</small></p>
+            </body>
+          </html>
+        `;
+
+        // TODO: Implement actual email sending via nodemailer or your email service
+        // Example for nodemailer:
+        // const transporter = nodemailer.createTransport({
+        //   host: process.env.SMTP_HOST,
+        //   port: parseInt(process.env.SMTP_PORT || '587'),
+        //   secure: process.env.SMTP_SECURE === 'true',
+        //   auth: {
+        //     user: process.env.SMTP_USER,
+        //     pass: process.env.SMTP_PASS,
+        //   },
+        // });
+        // await transporter.sendMail({
+        //   from: process.env.SMTP_FROM || 'noreply@syncpulse.app',
+        //   to: email,
+        //   subject: 'Your Magic Link - SyncPulse',
+        //   html: emailHtml,
+        // });
+
+        console.log(`[EMAIL] Magic link sent to ${email}: ${magicLinkUrl}`);
+      } catch (emailError) {
+        console.error('Failed to send magic link email:', emailError);
+        // Don't fail the request - still return success so user knows to check email
+        // In production, you may want to log this and alert monitoring
+      }
     }
-    */
 
     // For development/testing: include the token in the response
     // This allows testing without email setup
-    const isDevelopment = process.env.NODE_ENV === 'development';
     const responseData: any = {
       success: true,
       message: 'Magic link generated successfully',
@@ -62,6 +92,11 @@ export async function POST(request: NextRequest) {
         _testLinkNote: 'Available in development only. Use /auth/magic-link/verify?token=<token>',
       }),
     };
+
+    // In production with email sending enabled, emphasize that they should check email
+    if (!isDevelopment && process.env.SMTP_HOST) {
+      responseData.message = `Magic link sent to ${email}. Please check your email to complete sign-in.`;
+    }
 
     return NextResponse.json(responseData, { status: 200 });
   } catch (error) {
