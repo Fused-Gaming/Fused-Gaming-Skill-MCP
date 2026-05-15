@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSessionTokenCookie } from '@/lib/session';
+import { SessionStore } from '@/lib/session-store';
 
 /**
  * POST /api/auth/login
  * Handles user login and session token creation
+ * Validates credentials against stored passwords (one-time or changed)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -18,41 +20,47 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Implement actual authentication logic
-    // This is a placeholder implementation
-    if (email === 'demo@example.com' && password === 'demo') {
-      // Generate a mock session token
-      const sessionToken = `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const expiresIn = 24 * 60 * 60 * 1000; // 24 hours
-
-      const response = NextResponse.json(
-        {
-          success: true,
-          sessionToken,
-          expiresIn,
-          user: {
-            id: 'user_demo',
-            email: 'demo@example.com',
-            name: 'Demo User',
-          },
-        },
-        { status: 200 }
+    // Validate credentials using unified session store
+    // Accepts BOTH initial one-time password AND changed password
+    if (!SessionStore.validatePassword(email, password)) {
+      return NextResponse.json(
+        { error: 'Invalid email or password' },
+        { status: 401 }
       );
-
-      // Set session cookie
-      response.headers.set(
-        'Set-Cookie',
-        createSessionTokenCookie(sessionToken, expiresIn)
-      );
-
-      return response;
     }
 
-    // Invalid credentials
-    return NextResponse.json(
-      { error: 'Invalid email or password' },
-      { status: 401 }
+    // Check if user has changed their password in a previous session
+    const passwordChanged = SessionStore.hasChangedPassword(email);
+
+    // Create session in the unified store
+    const userId = `user_${email.split('@')[0]}`;
+    const { token: sessionToken, expiresIn } = SessionStore.createSession(
+      userId,
+      email,
+      passwordChanged
     );
+
+    const response = NextResponse.json(
+      {
+        success: true,
+        sessionToken,
+        expiresIn,
+        user: {
+          id: userId,
+          email,
+          name: email.split('@')[0],
+        },
+      },
+      { status: 200 }
+    );
+
+    // Set session cookie with proper expiration
+    response.headers.set(
+      'Set-Cookie',
+      createSessionTokenCookie(sessionToken, expiresIn)
+    );
+
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
