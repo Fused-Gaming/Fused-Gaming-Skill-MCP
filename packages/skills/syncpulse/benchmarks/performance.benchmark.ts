@@ -117,20 +117,31 @@ console.log("\n🐝 Swarm Orchestrator Benchmarks");
 const orchestrator = new SwarmOrchestrator();
 const swarm = orchestrator.initializeSwarm("swarm-1", "Test Swarm", "balanced", 5);
 
-const mockTask = {
-  id: "task-1",
-  name: "Test Task",
-  priority: 5,
-  status: "pending" as const,
-  createdAt: Date.now(),
-};
-
+let taskCounter = 0;
 benchmark("SwarmOrchestrator.assignTask (5 agents)", 1000, () => {
-  orchestrator.assignTask(swarm.id, mockTask);
+  const task = {
+    id: `task-${taskCounter++}`,
+    name: "Test Task",
+    priority: 5,
+    status: "pending" as const,
+    createdAt: Date.now(),
+  };
+  const assignment = orchestrator.assignTask(swarm.id, task);
+  if (assignment) {
+    orchestrator.releaseTask(swarm.id, assignment.id);
+  }
 });
 
+let releaseTaskCounter = 0;
 benchmark("SwarmOrchestrator.releaseTask", 1000, () => {
-  const agent = orchestrator.assignTask(swarm.id, mockTask);
+  const task = {
+    id: `task-${releaseTaskCounter++}`,
+    name: "Test Task",
+    priority: 5,
+    status: "pending" as const,
+    createdAt: Date.now(),
+  };
+  const agent = orchestrator.assignTask(swarm.id, task);
   if (agent) {
     orchestrator.releaseTask(swarm.id, agent.id, true);
   }
