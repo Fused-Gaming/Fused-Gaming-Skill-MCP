@@ -1,3 +1,5 @@
+import { randomBytes } from 'crypto';
+
 /**
  * Session Store - Unified authentication and session state management
  * Handles user sessions, magic link tokens, and password changes
@@ -48,10 +50,10 @@ usersMap.set(DEMO_USER_EMAIL, {
 });
 
 /**
- * Generates a random token
+ * Generates a cryptographically secure random token
  */
 function generateToken(): string {
-  return `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `token_${randomBytes(32).toString('hex')}`;
 }
 
 /**
