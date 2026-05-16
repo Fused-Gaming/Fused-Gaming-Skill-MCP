@@ -3,11 +3,9 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from '@/hooks/useSession';
 
 export default function SignupPage() {
   const router = useRouter();
-  const { login } = useSession();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -45,30 +43,9 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.error || 'Failed to create account');
-        setIsLoading(false);
-        return;
-      }
-
-      const data = await response.json();
-
-      // Login with the new session token
-      login(data.sessionToken, data.expiresIn);
-
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // TODO: Implement actual signup logic
+      // For now, redirect to login with a message
+      router.push('/auth/login');
     } catch {
       setError('An error occurred during signup');
       setIsLoading(false);

@@ -48,21 +48,10 @@ usersMap.set(DEMO_USER_EMAIL, {
 });
 
 /**
- * Generates a cryptographically secure random token
- * Uses Web Crypto API for Edge Runtime compatibility
+ * Generates a random token
  */
 function generateToken(): string {
-  // Use crypto.getRandomValues for Edge-safe randomness
-  // If crypto is not available (shouldn't happen in Node/Edge), fall back to Math.random
-  if (typeof globalThis !== 'undefined' && globalThis.crypto) {
-    const array = new Uint8Array(32);
-    globalThis.crypto.getRandomValues(array);
-    const hex = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
-    return `token_${hex}`;
-  }
-
-  // Fallback for environments without crypto (shouldn't be needed in practice)
-  return `token_${Math.random().toString(36).substr(2, 32)}`;
+  return `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
 /**
@@ -223,26 +212,6 @@ export const SessionStore = {
    */
   getUserByEmail(email: string): UserData | null {
     return usersMap.get(email) || null;
-  },
-
-  /**
-   * Creates a new user with email and password
-   */
-  createUser(email: string, password: string): { userId: string } | null {
-    // Check if user already exists
-    if (usersMap.has(email)) {
-      return null;
-    }
-
-    const userId = `user_${Date.now()}`;
-    usersMap.set(email, {
-      email,
-      userId,
-      password,
-      passwordChanged: false,
-    });
-
-    return { userId };
   },
 
   /**

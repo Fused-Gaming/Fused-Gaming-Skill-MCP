@@ -11,8 +11,6 @@ const PUBLIC_ROUTES = [
   '/auth/magic-link-request',
   '/auth/magic-link',
   '/landing',
-  '/sales',
-  '/contact-sales',
   '/api/auth',
   '/api/health',
 ];
@@ -68,30 +66,12 @@ function matchesRoutes(pathname: string, routes: string[]): boolean {
  */
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-
-  // Get session token from cookie or Authorization header
-  let sessionToken = request.cookies.get('sessionToken')?.value;
-  if (!sessionToken) {
-    const authHeader = request.headers.get('authorization');
-    if (authHeader?.startsWith('Bearer ')) {
-      sessionToken = authHeader.slice(7);
-    }
-  }
-
+  const sessionToken = request.cookies.get('sessionToken')?.value;
   const isAuthenticated = isValidSession(sessionToken);
 
   // PROBLEM 3: API route auth enforcement
   // Check authentication FIRST for protected API routes, BEFORE returning CORS headers
   if (pathname.startsWith('/api/')) {
-    // Allow CORS preflight requests to reach their handlers
-    if (request.method === 'OPTIONS') {
-      const response = NextResponse.next();
-      response.headers.set('Access-Control-Allow-Origin', '*');
-      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      return response;
-    }
-
     // Check if this is a protected API route
     const isProtectedApi = matchesRoutes(pathname, PROTECTED_API_ROUTES);
 

@@ -45,8 +45,11 @@ export default function ContactForm({
     setLoading(true);
 
     try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       if (onSubmit) {
-        await onSubmit(formData);
+        onSubmit(formData);
       }
 
       setSubmitted(true);
@@ -56,8 +59,6 @@ export default function ContactForm({
       }, 3000);
     } catch (error) {
       console.error('Form submission error:', error);
-      // Show error state to user instead of success
-      alert('Failed to submit form. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -85,31 +86,6 @@ export default function ContactForm({
             required
             className="px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-swarm-accent/50 transition-colors"
           />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="text"
-            name="company"
-            placeholder="Your company"
-            value={formData.company}
-            onChange={handleChange}
-            required
-            className="px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-swarm-accent/50 transition-colors"
-          />
-          <select
-            name="agents"
-            value={formData.agents}
-            onChange={handleChange}
-            required
-            className="px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white focus:outline-none focus:border-swarm-accent/50 transition-colors"
-          >
-            <option value="">Agent count...</option>
-            <option value="under-10">Under 10</option>
-            <option value="10-50">10-50</option>
-            <option value="50-100">50-100</option>
-            <option value="100-500">100-500</option>
-            <option value="500-plus">500+</option>
-          </select>
         </div>
         <textarea
           name="message"

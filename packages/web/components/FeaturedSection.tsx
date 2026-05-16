@@ -25,7 +25,7 @@ const differentiators: FeaturedDifferentiator[] = [
       'Supports 1000+ concurrent agents',
       'Automatic failover & recovery',
     ],
-    cta: { label: 'Learn More', href: '/contact-sales' },
+    cta: { label: 'Explore Architecture', href: '/docs/architecture' },
   },
   {
     icon: <Shield className="w-12 h-12" />,
@@ -37,7 +37,7 @@ const differentiators: FeaturedDifferentiator[] = [
       'Role-based access control',
       'Audit trails & compliance',
     ],
-    cta: { label: 'Learn More', href: '/contact-sales' },
+    cta: { label: 'Security Details', href: '/docs/security' },
   },
   {
     icon: <TrendingUp className="w-12 h-12" />,
@@ -49,7 +49,7 @@ const differentiators: FeaturedDifferentiator[] = [
       'Adaptive resource allocation',
       'Predictive scaling',
     ],
-    cta: { label: 'Learn More', href: '/contact-sales' },
+    cta: { label: 'Optimization Guide', href: '/docs/optimization' },
   },
 ];
 
@@ -237,7 +237,7 @@ export default function FeaturedSection({
             Ready to experience the power of intelligent swarm orchestration?
           </p>
           <motion.a
-            href="/auth/signup"
+            href="/signup"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             className="inline-block px-8 py-4 bg-swarm-accent text-swarm-dark rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-swarm-accent/50 transition-all duration-300"

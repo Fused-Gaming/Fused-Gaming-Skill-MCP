@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     // Build the magic link URL
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const magicLinkUrl = `${baseUrl}/auth/magic-link?token=${token}`;
+    const magicLinkUrl = `${baseUrl}/auth/magic-link/verify?token=${token}`;
 
     // SEND EMAIL WITH MAGIC LINK
     // In production, use a proper email service (SendGrid, AWS SES, etc.)
@@ -85,23 +85,27 @@ export async function POST(request: NextRequest) {
       message: string;
       email: string;
       expiresIn: number;
-      _link?: string;
-      _linkNote?: string;
+      _testToken?: string;
+      _testLink?: string;
+      _testLinkNote?: string;
     }
     const responseData: MagicLinkResponse = {
       success: true,
-      message: isDevelopment
-        ? 'Magic link generated. Check the response for the test link.'
-        : 'Magic link generated successfully. Check your email to complete sign-in.',
+      message: 'Magic link generated successfully',
       email,
       expiresIn,
-      // Only include link in development for testing
-      // In production, the link is sent via email (when configured)
+      // Include test token link in development for manual testing
       ...(isDevelopment && {
-        _link: magicLinkUrl,
-        _linkNote: 'For testing only. Not returned in production.',
+        _testToken: token,
+        _testLink: magicLinkUrl,
+        _testLinkNote: 'Available in development only. Use /auth/magic-link/verify?token=<token>',
       }),
     };
+
+    // In production with email sending enabled, emphasize that they should check email
+    if (!isDevelopment && process.env.SMTP_HOST) {
+      responseData.message = `Magic link sent to ${email}. Please check your email to complete sign-in.`;
+    }
 
     return NextResponse.json(responseData, { status: 200 });
   } catch (error) {

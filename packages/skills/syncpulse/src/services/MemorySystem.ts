@@ -106,20 +106,10 @@ export class MemorySystem {
     }
 
     const indexResults = this.vectorIndex.search(query, limit, 0.3);
-    return indexResults
-      .map((result) => {
-        const entry = this.entries.get(result.key);
-        if (!entry) {
-          // Clean up stale index reference if entry is missing
-          this.vectorIndex.remove(result.key);
-          return null;
-        }
-        return {
-          entry,
-          similarity: result.similarity,
-        };
-      })
-      .filter((result) => result !== null) as VectorSearchResult[];
+    return indexResults.map((result) => ({
+      entry: this.entries.get(result.key)!,
+      similarity: result.similarity,
+    }));
   }
 
   private calculateSimilarity(a: string, b: string): number {

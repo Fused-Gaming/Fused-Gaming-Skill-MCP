@@ -9,14 +9,7 @@ import { SessionStore } from '@/lib/session-store';
  */
 export async function POST(request: NextRequest) {
   try {
-    // Get session token from cookie or Authorization header
-    let sessionToken = request.cookies.get('sessionToken')?.value;
-    if (!sessionToken) {
-      const authHeader = request.headers.get('authorization');
-      if (authHeader?.startsWith('Bearer ')) {
-        sessionToken = authHeader.slice(7);
-      }
-    }
+    const sessionToken = request.cookies.get('sessionToken')?.value;
 
     // Destroy the session in the store if it exists
     if (sessionToken) {
