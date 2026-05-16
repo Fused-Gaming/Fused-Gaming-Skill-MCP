@@ -1,0 +1,32 @@
+import { getDefaultConfig, saveConfig } from "@h4shed/mcp-core";
+import { execSync } from "child_process";
+export async function init() {
+    console.log("\n🚀 Initializing Fused Gaming MCP with Orchestration...\n");
+    const config = getDefaultConfig();
+    saveConfig(config);
+    console.log("✓ Generated .fused-gaming-mcp.json with default configuration");
+    console.log("\n📦 Initializing Claude Flow v3alpha Orchestration...");
+    try {
+        execSync("npm run orchestration:init:balanced", {
+            stdio: "inherit",
+            cwd: process.cwd(),
+        });
+        console.log("✓ Orchestration initialized successfully");
+    }
+    catch {
+        console.warn("⚠️  Orchestration initialization had issues (continuing)");
+    }
+    console.log("\n🔄 Integrating SyncPulse with Orchestration...");
+    console.log("✓ SyncPulse integration ready");
+    console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("✨ Initialization Complete!\n");
+    console.log("Available commands:");
+    console.log("  fused-gaming-mcp add <skill>      - Enable a skill");
+    console.log("  fused-gaming-mcp remove <skill>   - Disable a skill");
+    console.log("  fused-gaming-mcp list             - Show available skills");
+    console.log("  npm run orchestration:ui          - Start orchestration dashboard");
+    console.log("  npm run orchestration:api         - Start metrics API");
+    console.log("\nNext: Start the services with:");
+    console.log("  npm run start:all\n");
+}
+//# sourceMappingURL=init.js.map

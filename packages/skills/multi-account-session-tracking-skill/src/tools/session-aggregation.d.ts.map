@@ -1,0 +1,1 @@
+{"version":3,"file":"session-aggregation.d.ts","sourceRoot":"","sources":["session-aggregation.ts"],"names":[],"mappings":"AAIA,OAAO,EACL,eAAe,EAEf,kBAAkB,EACnB,MAAM,aAAa,CAAC;AAErB,MAAM,WAAW,sBAAsB;IACrC,IAAI,EAAE,MAAM,CAAC;IACb,eAAe,EAAE,eAAe,EAAE,CAAC;CACpC;AAED,wBAAgB,iBAAiB,CAAC,KAAK,EAAE,sBAAsB,GAAG,kBAAkB,CAuHnF;AAwBD,wBAAgB,mBAAmB,CAAC,MAAM,EAAE,kBAAkB,GAAG,MAAM,CAqBtE"}

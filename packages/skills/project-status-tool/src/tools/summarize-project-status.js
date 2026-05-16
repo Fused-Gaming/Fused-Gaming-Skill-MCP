@@ -1,0 +1,29 @@
+export const SummarizeProjectStatusTool = {
+    name: "summarize-project-status",
+    description: "Summarize current project status, risks, and next actions.",
+    inputSchema: {
+        type: "object",
+        properties: {
+            objective: {
+                type: "string",
+                description: "Primary objective for this tool invocation",
+            },
+            context: {
+                type: "string",
+                description: "Optional contextual details",
+            },
+        },
+        required: ["objective"],
+    },
+    async handler(input) {
+        const { objective, context = "" } = input;
+        return {
+            success: true,
+            tool: "summarize-project-status",
+            objective,
+            context,
+            note: "Scaffold implementation complete; full logic pending.",
+        };
+    },
+};
+//# sourceMappingURL=summarize-project-status.js.map
