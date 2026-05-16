@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncPulse - Agent Swarm Orchestration Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /**
+         * ============================================================================
+         * SyncPulse Concept Page - Design System & Styles
+         * ============================================================================
+         *
+         * DESIGN TOKENS (from GitHub issues #164/#165):
+         * - Base: #05010D (Deep purple-black)
+         * - Cards: #120A24, #160F2E (Card backgrounds)
+         * - Purple: #A855F7 (Primary accent)
+         * - Plasma Pink: #C026D3 (Secondary accent)
+         * - Cyber Blue: #38BDF8 (Tertiary accent)
+         * - Text: #F5F3FF, #D8B4FE (Light text)
+         *
+         * ANIMATIONS:
+         * - Pulse: 280ms rhythm
+         * - Float: gentle vertical movement
+         * - Scanline: horizontal shimmer effect
+         *
+         * SHADOWS & GLOWS:
+         * - Light: 0 0 20px rgba(168,85,247,0.22)
+         * - Medium: 0 0 40px rgba(168,85,247,0.35)
+         * - Heavy: 0 0 80px rgba(168,85,247,0.55)
+         */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-base: #05010D;
+            --color-card-dark: #120A24;
+            --color-card-light: #160F2E;
+            --color-purple: #A855F7;
+            --color-plasma: #C026D3;
+            --color-cyber-blue: #38BDF8;
+            --color-text-primary: #F5F3FF;
+            --color-text-secondary: #D8B4FE;
+
+            --glow-light: 0 0 20px rgba(168, 85, 247, 0.22);
+            --glow-medium: 0 0 40px rgba(168, 85, 247, 0.35);
+            --glow-heavy: 0 0 80px rgba(168, 85, 247, 0.55);
+
+            --duration-pulse: 280ms;
+            --duration-float: 3s;
+            --duration-transition: 300ms;
+
+            --font-heading: 'Orbitron', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: var(--font-body);
+            background: var(--color-base);
+            color: var(--color-text-primary);
+            scroll-behavior: smooth;
+        }
+
+        /* ========================================================================
+           ANIMATIONS
+           ======================================================================== */
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                box-shadow:
+                    0 0 20px rgba(168, 85, 247, 0.22),
+                    inset 0 0 20px rgba(168, 85, 247, 0.1);
+            }
+            50% {
+                box-shadow:
+                    0 0 60px rgba(168, 85, 247, 0.45),
+                    inset 0 0 40px rgba(168, 85, 247, 0.2);
+            }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes neural-pulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.25; }
+        }
+
+        @keyframes antenna-glow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(196, 38, 211, 0.6);
+            }
+        }
+
+        /* ========================================================================
+           LAYOUT & STRUCTURE
+           ======================================================================== */
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ========================================================================
+           BACKGROUND & NEURAL VISUALIZATION
+           ======================================================================== */
+
+        .neural-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                linear-gradient(135deg, #05010D 0%, #1a0a2e 25%, #16213e 50%, #0f3460 75%, #05010D 100%);
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .neural-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(168, 85, 247, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(168, 85, 247, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: neural-pulse 4s ease-in-out infinite;
+        }
+
+        .neural-orb {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            filter: blur(40px);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .neural-orb-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(168, 85, 247, 0.3);
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .neural-orb-2 {
+            width: 250px;
+            height: 250px;
+            background: rgba(196, 38, 211, 0.2);
+            bottom: 20%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .neural-orb-3 {
+            width: 200px;
+            height: 200px;
+            background: rgba(56, 189, 248, 0.2);
+            top: 50%;
+            right: 5%;
+            animation-delay: 4s;
+        }
+
+        /* ========================================================================
+           HEADER & HERO SECTION
+           ======================================================================== */
+
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 20px 0;
+            background: linear-gradient(180deg,
+                rgba(5, 1, 13, 0.9) 0%,
+                rgba(5, 1, 13, 0.7) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--color-purple), var(--color-plasma));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-status {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            font-size: 12px;
+            font-family: var(--font-mono);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ADE80;
+            animation: pulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        .hero {
+            position: relative;
+            z-index: 5;
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg,
+                var(--color-purple),
+                var(--color-plasma),
+                var(--color-cyber-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: var(--color-text-secondary);
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========================================================================
+           PULSEBOT MASCOT
+           ======================================================================== */
+
+        .mascot-section {
+            position: relative;
+            z-index: 8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+            min-height: 280px;
+        }
+
+        .mascot-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            perspective: 1000px;
+        }
+
+        /* Outer glow halo effect */
+        .mascot-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%,
+                rgba(196, 38, 211, 0.4),
+                rgba(168, 85, 247, 0.2),
+                transparent);
+            filter: blur(20px);
+            animation: glow-pulse 2s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .mascot-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%,
+                #2a1a4a,
+                #1a0f2e);
+            box-shadow:
+                inset -20px -20px 40px rgba(0, 0, 0, 0.5),
+                inset 10px 10px 30px rgba(168, 85, 247, 0.15),
+                0 0 40px rgba(168, 85, 247, 0.4),
+                0 0 80px rgba(196, 38, 211, 0.3);
+            z-index: 1;
+            border: 2px solid rgba(168, 85, 247, 0.3);
+        }
+
+        /* Chest emblem with "S" pulse */
+        .mascot-emblem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%,
+                rgba(196, 38, 211, 0.8),
+                rgba(168, 85, 247, 0.4));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            box-shadow:
+                0 0 20px rgba(196, 38, 211, 0.6),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            z-index: 3;
+            animation: pulse 1.4s ease-in-out infinite;
+            letter-spacing: -1px;
+        }
+
+        .mascot-emblem.working {
+            animation: pulse 0.6s ease-in-out infinite;
+        }
+
+        .mascot-emblem.alert {
+            animation: pulse 0.3s ease-in-out infinite;
+            color: #FF6B6B;
+        }
+
+        .mascot-emblem.success {
+            animation: pulse 0.8s ease-in-out infinite;
+            color: #4ADE80;
+        }
+
+        /* Eyes */
+        .mascot-eyes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .eye {
+            position: absolute;
+            width: 18px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(56, 189, 248, 0.3);
+            border: 2px solid var(--color-cyber-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .eye-left {
+            top: 35%;
+            left: 28%;
+        }
+
+        .eye-right {
+            top: 35%;
+            right: 28%;
+        }
+
+        .eye-pupil {
+            width: 6px;
+            height: 6px;
+            background: var(--color-cyber-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+        }
+
+        /* Antenna */
+        .antenna {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 50px;
+            background: linear-gradient(180deg,
+                var(--color-purple),
+                var(--color-plasma));
+            border-radius: 2px;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+            z-index: 4;
+        }
+
+        .antenna-tip {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%,
+                var(--color-plasma),
+                var(--color-purple));
+            box-shadow: 0 0 15px rgba(196, 38, 211, 0.6);
+            animation: antenna-glow 1.5s ease-in-out infinite;
+        }
+
+        .antenna.working .antenna-tip {
+            animation: antenna-glow 0.5s ease-in-out infinite;
+        }
+
+        /* Floating animation when idle */
+        .mascot-container.idle .mascot-body {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ========================================================================
+           AGENT STATUS DASHBOARD
+           ======================================================================== */
+
+        .dashboard-section {
+            position: relative;
+            z-index: 5;
+            padding: 60px 0;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .dashboard-header h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: var(--color-text-primary);
+        }
+
+        .dashboard-subtitle {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            font-weight: 300;
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        /* Agent Status Card */
+        .agent-card {
+            position: relative;
+            padding: 25px;
+            background: linear-gradient(135deg,
+                rgba(18, 10, 36, 0.8),
+                rgba(22, 15, 46, 0.6));
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glow-light);
+            transition: all var(--duration-transition) ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent,
+                var(--color-purple),
+                transparent);
+            animation: scanline 2s linear infinite;
+        }
+
+        .agent-card:hover {
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow:
+                0 0 40px rgba(168, 85, 247, 0.35),
+                inset 0 0 20px rgba(168, 85, 247, 0.1);
+            transform: translateY(-5px);
+        }
+
+        /* Card states */
+        .agent-card.idle {
+            opacity: 0.7;
+        }
+
+        .agent-card.working {
+            border-color: rgba(168, 85, 247, 0.6);
+            box-shadow:
+                0 0 60px rgba(168, 85, 247, 0.45),
+                inset 0 0 20px rgba(168, 85, 247, 0.15);
+        }
+
+        .agent-card.alert {
+            border-color: rgba(255, 107, 107, 0.6);
+            box-shadow:
+                0 0 40px rgba(255, 107, 107, 0.3),
+                inset 0 0 20px rgba(255, 107, 107, 0.1);
+        }
+
+        .agent-card.success {
+            border-color: rgba(74, 222, 128, 0.6);
+            box-shadow:
+                0 0 40px rgba(74, 222, 128, 0.3),
+                inset 0 0 20px rgba(74, 222, 128, 0.1);
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .agent-status-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #8B5CF6;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+        }
+
+        .agent-card.working .agent-status-light {
+            background: #4F46E5;
+            animation: pulse 0.8s ease-in-out infinite;
+        }
+
+        .agent-card.alert .agent-status-light {
+            background: #FF6B6B;
+            animation: pulse 0.4s ease-in-out infinite;
+        }
+
+        .agent-card.success .agent-status-light {
+            background: #4ADE80;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .agent-name {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .agent-role {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            font-family: var(--font-mono);
+            margin-bottom: 15px;
+        }
+
+        .agent-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .agent-detail {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+        }
+
+        .agent-detail-label {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        .agent-detail-value {
+            color: var(--color-cyber-blue);
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .agent-detail:last-child {
+            border-bottom: none;
+        }
+
+        /* ========================================================================
+           ACTIVITY LOG
+           ======================================================================== */
+
+        .activity-section {
+            position: relative;
+            z-index: 5;
+            padding: 40px 0 60px;
+        }
+
+        .activity-log {
+            background: linear-gradient(135deg,
+                rgba(18, 10, 36, 0.6),
+                rgba(22, 15, 46, 0.4));
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glow-light);
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        .activity-log::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .activity-log::-webkit-scrollbar-track {
+            background: rgba(168, 85, 247, 0.05);
+            border-radius: 3px;
+        }
+
+        .activity-log::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.3);
+            border-radius: 3px;
+        }
+
+        .activity-log::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 85, 247, 0.5);
+        }
+
+        .activity-entry {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .activity-entry:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .activity-time {
+            color: var(--color-cyber-blue);
+            font-weight: 600;
+            flex-shrink: 0;
+            min-width: 70px;
+        }
+
+        .activity-message {
+            color: var(--color-text-secondary);
+            flex-grow: 1;
+        }
+
+        .activity-message.success {
+            color: #4ADE80;
+        }
+
+        .activity-message.alert {
+            color: #FF6B6B;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================================================================
+           CTA BUTTONS
+           ======================================================================== */
+
+        .cta-section {
+            position: relative;
+            z-index: 5;
+            padding: 50px 0 60px;
+            text-align: center;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--duration-transition) ease;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left var(--duration-transition) ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-purple), var(--color-plasma));
+            color: var(--color-text-primary);
+            box-shadow: var(--glow-medium);
+            border-color: var(--color-plasma);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--glow-heavy);
+            border-color: var(--color-purple);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-cyber-blue);
+            border-color: var(--color-cyber-blue);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(56, 189, 248, 0.1);
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .btn-tertiary {
+            background: transparent;
+            color: var(--color-text-secondary);
+            border-color: var(--color-text-secondary);
+            box-shadow: 0 0 15px rgba(216, 180, 254, 0.15);
+        }
+
+        .btn-tertiary:hover {
+            background: rgba(216, 180, 254, 0.1);
+            box-shadow: 0 0 30px rgba(216, 180, 254, 0.3);
+            color: var(--color-text-primary);
+            transform: translateY(-3px);
+        }
+
+        /* ========================================================================
+           FOOTER
+           ======================================================================== */
+
+        footer {
+            position: relative;
+            z-index: 5;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(168, 85, 247, 0.15);
+            background: rgba(5, 1, 13, 0.5);
+            backdrop-filter: blur(10px);
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        /* ========================================================================
+           RESPONSIVE DESIGN
+           ======================================================================== */
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero {
+                padding: 40px 0 30px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .mascot-container {
+                width: 160px;
+                height: 160px;
+            }
+
+            .mascot-emblem {
+                width: 60px;
+                height: 60px;
+                font-size: 32px;
+            }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .dashboard-section {
+                padding: 40px 0;
+            }
+
+            .button-group {
+                gap: 15px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 12px;
+                flex-grow: 1;
+                min-width: 140px;
+            }
+
+            .activity-log {
+                font-size: 11px;
+                max-height: 250px;
+            }
+
+            .activity-time {
+                min-width: 60px;
+            }
+
+            .activity-entry {
+                gap: 8px;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 15px 0;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .nav-status {
+                gap: 10px;
+                font-size: 11px;
+            }
+
+            .hero {
+                padding: 30px 0 20px;
+            }
+
+            .hero h1 {
+                font-size: 22px;
+                letter-spacing: 0.5px;
+            }
+
+            .mascot-section {
+                padding: 30px 0;
+                min-height: 220px;
+            }
+
+            .mascot-container {
+                width: 140px;
+                height: 140px;
+            }
+
+            .mascot-emblem {
+                width: 50px;
+                height: 50px;
+                font-size: 26px;
+            }
+
+            .dashboard-header h2 {
+                font-size: 22px;
+            }
+
+            .agent-card {
+                padding: 18px;
+            }
+
+            .agent-name {
+                font-size: 14px;
+            }
+
+            .agent-detail {
+                font-size: 12px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+
+        /* ========================================================================
+           ACCESSIBILITY & UTILITIES
+           ======================================================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Background -->
+    <div class="neural-background">
+        <div class="neural-grid"></div>
+        <div class="neural-orb neural-orb-1"></div>
+        <div class="neural-orb neural-orb-2"></div>
+        <div class="neural-orb neural-orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">⚡ SYNCPULSE</div>
+                <div class="nav-status">
+                    <span class="status-indicator"></span>
+                    <span>SWARM ACTIVE</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Agent Swarm Orchestration</h1>
+            <p>Unified coordination and synchronization of distributed AI agents in real-time</p>
+        </div>
+    </section>
+
+    <!-- PulseBot Mascot -->
+    <section class="mascot-section">
+        <div class="mascot-container idle" id="mascot">
+            <div class="mascot-glow"></div>
+            <div class="mascot-body">
+                <div class="mascot-eyes">
+                    <div class="eye eye-left">
+                        <div class="eye-pupil"></div>
+                    </div>
+                    <div class="eye eye-right">
+                        <div class="eye-pupil"></div>
+                    </div>
+                </div>
+                <div class="mascot-emblem" id="emblem">S</div>
+                <div class="antenna" id="antenna">
+                    <div class="antenna-tip"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agent Status Dashboard -->
+    <section class="dashboard-section">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Agent Swarm Activity</h2>
+                <p class="dashboard-subtitle">Real-time status monitoring of distributed orchestration agents</p>
+            </div>
+
+            <div class="agents-grid">
+                <!-- Orchestrator Agent -->
+                <div class="agent-card idle" id="agent-orchestrator">
+                    <div class="agent-header">
+                        <div class="agent-status-light"></div>
+                        <div class="agent-name">Orchestrator</div>
+                    </div>
+                    <div class="agent-role">coordination.orchestrator</div>
+                    <div class="agent-details">
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Status</span>
+                            <span class="agent-detail-value">IDLE</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Tasks</span>
+                            <span class="agent-detail-value">0/12</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Agents</span>
+                            <span class="agent-detail-value">4/4</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Latency</span>
+                            <span class="agent-detail-value">2ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sentinel Agent -->
+                <div class="agent-card idle" id="agent-sentinel">
+                    <div class="agent-header">
+                        <div class="agent-status-light"></div>
+                        <div class="agent-name">Sentinel</div>
+                    </div>
+                    <div class="agent-role">validation.sentinel</div>
+                    <div class="agent-details">
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Status</span>
+                            <span class="agent-detail-value">IDLE</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Checks</span>
+                            <span class="agent-detail-value">142/142</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Health</span>
+                            <span class="agent-detail-value">100%</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Uptime</span>
+                            <span class="agent-detail-value">99.9%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analyst Agent -->
+                <div class="agent-card idle" id="agent-analyst">
+                    <div class="agent-header">
+                        <div class="agent-status-light"></div>
+                        <div class="agent-name">Analyst</div>
+                    </div>
+                    <div class="agent-role">analysis.analyst</div>
+                    <div class="agent-details">
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Status</span>
+                            <span class="agent-detail-value">IDLE</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Patterns</span>
+                            <span class="agent-detail-value">847</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Accuracy</span>
+                            <span class="agent-detail-value">94.2%</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Memory</span>
+                            <span class="agent-detail-value">2.1GB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Executor Agent -->
+                <div class="agent-card idle" id="agent-executor">
+                    <div class="agent-header">
+                        <div class="agent-status-light"></div>
+                        <div class="agent-name">Executor</div>
+                    </div>
+                    <div class="agent-role">execution.executor</div>
+                    <div class="agent-details">
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Status</span>
+                            <span class="agent-detail-value">IDLE</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Queue</span>
+                            <span class="agent-detail-value">0</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Completed</span>
+                            <span class="agent-detail-value">1024</span>
+                        </div>
+                        <div class="agent-detail">
+                            <span class="agent-detail-label">Success</span>
+                            <span class="agent-detail-value">99.8%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Activity Log -->
+    <section class="activity-section">
+        <div class="container">
+            <div class="activity-log" id="activityLog">
+                <div class="activity-entry">
+                    <span class="activity-time">14:32:18</span>
+                    <span class="activity-message success">✓ Swarm initialized successfully</span>
+                </div>
+                <div class="activity-entry">
+                    <span class="activity-time">14:32:19</span>
+                    <span class="activity-message">Orchestrator connected to coordination hub</span>
+                </div>
+                <div class="activity-entry">
+                    <span class="activity-time">14:32:20</span>
+                    <span class="activity-message">Sentinel validation checks running</span>
+                </div>
+                <div class="activity-entry">
+                    <span class="activity-time">14:32:21</span>
+                    <span class="activity-message">Analyst pattern database loaded (847 patterns)</span>
+                </div>
+                <div class="activity-entry">
+                    <span class="activity-time">14:32:22</span>
+                    <span class="activity-message success">✓ All agents operational - ready for deployment</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Buttons -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="button-group">
+                <button class="btn btn-primary" id="btn-deploy" onclick="handleDeployClick()">
+                    Deploy Swarm
+                </button>
+                <button class="btn btn-secondary" id="btn-agents" onclick="handleAgentsClick()">
+                    View Agents
+                </button>
+                <button class="btn btn-tertiary" id="btn-simulation" onclick="handleSimulationClick()">
+                    Run Simulation
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SyncPulse Hub. Agent Swarm Orchestration Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript State Management & Interactivity -->
+    <script>
+        /**
+         * ========================================================================
+         * STATE MANAGEMENT & AGENT CONTROL
+         * ========================================================================
+         *
+         * This section provides the core API for managing agent states and
+         * updating the UI in response to swarm activity.
+         *
+         * USAGE:
+         *   setAgentState('working')  // Activate working state
+         *   logActivity('message')    // Log to activity feed
+         *   setAgentStatus(name, status) // Update specific agent
+         */
+
+        // Constants
+        const STATES = {
+            IDLE: 'idle',
+            WORKING: 'working',
+            ALERT: 'alert',
+            SUCCESS: 'success'
+        };
+
+        const AGENTS = [
+            'agent-orchestrator',
+            'agent-sentinel',
+            'agent-analyst',
+            'agent-executor'
+        ];
+
+        // Current swarm state
+        let swarmState = STATES.IDLE;
+
+        /**
+         * Main API: Set the global agent swarm state
+         *
+         * @param {string} state - One of: 'idle' | 'working' | 'alert' | 'success'
+         *
+         * EFFECTS:
+         * - Updates mascot animation and emblem appearance
+         * - Highlights all agent cards with appropriate glow
+         * - Modulates antenna glow intensity
+         * - Updates nav status indicator
+         *
+         * EXAMPLE:
+         *   // When starting a deployment
+         *   setAgentState('working');
+         *
+         *   // When an error occurs
+         *   setAgentState('alert');
+         *
+         *   // When task completes
+         *   setAgentState('success');
+         */
+        function setAgentState(state) {
+            if (!Object.values(STATES).includes(state)) {
+                console.error(`Invalid state: ${state}. Must be one of: ${Object.values(STATES).join(', ')}`);
+                return;
+            }
+
+            swarmState = state;
+
+            // Update mascot and emblem
+            const mascot = document.getElementById('mascot');
+            const emblem = document.getElementById('emblem');
+            const antenna = document.getElementById('antenna');
+
+            // Remove all state classes
+            mascot.classList.remove(...Object.values(STATES));
+            emblem.classList.remove(...Object.values(STATES));
+            antenna.classList.remove(...Object.values(STATES));
+
+            // Add appropriate state class
+            mascot.classList.add(state);
+            emblem.classList.add(state);
+            antenna.classList.add(state);
+
+            // Update agent cards
+            AGENTS.forEach(agentId => {
+                const card = document.getElementById(agentId);
+                card.classList.remove(...Object.values(STATES));
+                card.classList.add(state);
+
+                // Update status text
+                const statusValue = card.querySelector('.agent-detail-value');
+                if (statusValue) {
+                    switch (state) {
+                        case STATES.WORKING:
+                            statusValue.textContent = 'WORKING';
+                            break;
+                        case STATES.ALERT:
+                            statusValue.textContent = 'ALERT';
+                            break;
+                        case STATES.SUCCESS:
+                            statusValue.textContent = 'SUCCESS';
+                            break;
+                        default:
+                            statusValue.textContent = 'IDLE';
+                    }
+                }
+            });
+
+            // Log the state change
+            const stateEmoji = {
+                idle: '⚪',
+                working: '🔵',
+                alert: '🔴',
+                success: '✅'
+            };
+            logActivity(`Swarm state changed to ${state.toUpperCase()}`, state === STATES.SUCCESS || state === STATES.ALERT ? state : null);
+        }
+
+        /**
+         * Set status for a specific agent
+         *
+         * @param {string} agentName - One of: 'orchestrator' | 'sentinel' | 'analyst' | 'executor'
+         * @param {string} state - One of: 'idle' | 'working' | 'alert' | 'success'
+         *
+         * EXAMPLE:
+         *   // When Orchestrator starts working
+         *   setAgentStatus('orchestrator', 'working');
+         */
+        function setAgentStatus(agentName, state) {
+            const agentId = `agent-${agentName.toLowerCase()}`;
+            const card = document.getElementById(agentId);
+
+            if (!card) {
+                console.error(`Agent not found: ${agentName}`);
+                return;
+            }
+
+            card.classList.remove(...Object.values(STATES));
+            card.classList.add(state);
+
+            const statusValue = card.querySelector('.agent-detail-value');
+            if (statusValue) {
+                statusValue.textContent = state.toUpperCase();
+            }
+        }
+
+        /**
+         * Add message to activity log
+         *
+         * @param {string} message - Message to display
+         * @param {string} type - Optional: 'success' | 'alert' for color coding
+         *
+         * EXAMPLE:
+         *   logActivity('Processing batch 1/5');
+         *   logActivity('Task completed', 'success');
+         *   logActivity('Connection error', 'alert');
+         */
+        function logActivity(message, type = null) {
+            const activityLog = document.getElementById('activityLog');
+            const timestamp = new Date().toLocaleTimeString('en-US', {
+                hour12: false
+            });
+
+            const entry = document.createElement('div');
+            entry.className = 'activity-entry';
+
+            const time = document.createElement('span');
+            time.className = 'activity-time';
+            time.textContent = timestamp;
+
+            const msg = document.createElement('span');
+            msg.className = 'activity-message';
+            if (type === STATES.SUCCESS) {
+                msg.className += ' success';
+                msg.textContent = '✓ ' + message;
+            } else if (type === STATES.ALERT) {
+                msg.className += ' alert';
+                msg.textContent = '⚠ ' + message;
+            } else {
+                msg.textContent = message;
+            }
+
+            entry.appendChild(time);
+            entry.appendChild(msg);
+            activityLog.insertBefore(entry, activityLog.firstChild);
+
+            // Keep only last 20 entries
+            const entries = activityLog.querySelectorAll('.activity-entry');
+            if (entries.length > 20) {
+                entries[entries.length - 1].remove();
+            }
+
+            // Auto-scroll to top
+            activityLog.scrollTop = 0;
+        }
+
+        /**
+         * Update agent card metric
+         *
+         * @param {string} agentName - Agent to update
+         * @param {string} label - Label text (e.g., 'Tasks', 'Health', 'Uptime')
+         * @param {string} value - New value (e.g., '5/12', '95%', '99.9%')
+         *
+         * EXAMPLE:
+         *   updateAgentMetric('orchestrator', 'Tasks', '5/12');
+         */
+        function updateAgentMetric(agentName, label, value) {
+            const agentId = `agent-${agentName.toLowerCase()}`;
+            const card = document.getElementById(agentId);
+
+            if (!card) return;
+
+            const details = card.querySelectorAll('.agent-detail');
+            details.forEach(detail => {
+                const labelEl = detail.querySelector('.agent-detail-label');
+                if (labelEl && labelEl.textContent === label) {
+                    const valueEl = detail.querySelector('.agent-detail-value');
+                    if (valueEl) {
+                        valueEl.textContent = value;
+                    }
+                }
+            });
+        }
+
+        /**
+         * Demonstration function: Simulate a deployment workflow
+         *
+         * Shows how to wire real events into the state system.
+         * In production, this would be replaced with actual event handlers
+         * from your agent orchestration system.
+         */
+        function simulateDeployment() {
+            setAgentState(STATES.WORKING);
+            logActivity('Deployment initiated...');
+
+            // Simulate progressive task completion
+            let progress = 0;
+            const deploymentInterval = setInterval(() => {
+                progress += Math.random() * 3;
+                const tasks = Math.floor(progress);
+
+                updateAgentMetric('orchestrator', 'Tasks', `${Math.min(tasks, 12)}/12`);
+
+                if (progress >= 12) {
+                    clearInterval(deploymentInterval);
+                    setAgentState(STATES.SUCCESS);
+                    logActivity('Deployment completed successfully', STATES.SUCCESS);
+
+                    // Return to idle after 3 seconds
+                    setTimeout(() => {
+                        setAgentState(STATES.IDLE);
+                        updateAgentMetric('orchestrator', 'Tasks', '0/12');
+                    }, 3000);
+                }
+            }, 500);
+        }
+
+        function simulateError() {
+            setAgentState(STATES.ALERT);
+            logActivity('Critical error detected in agent network', STATES.ALERT);
+
+            // Return to idle after 4 seconds
+            setTimeout(() => {
+                setAgentState(STATES.IDLE);
+            }, 4000);
+        }
+
+        // Button click handlers
+        function handleDeployClick() {
+            logActivity('Deploy Swarm button clicked');
+            simulateDeployment();
+        }
+
+        function handleAgentsClick() {
+            // Cycle through states for demonstration
+            const states = [STATES.IDLE, STATES.WORKING, STATES.SUCCESS];
+            const currentIndex = states.indexOf(swarmState);
+            const nextState = states[(currentIndex + 1) % states.length];
+            setAgentState(nextState);
+        }
+
+        function handleSimulationClick() {
+            logActivity('Run Simulation button clicked');
+            simulateError();
+        }
+
+        // Initialize
+        setAgentState(STATES.IDLE);
+        logActivity('SyncPulse Hub initialized');
+
+        /**
+         * ========================================================================
+         * INTEGRATION GUIDE FOR REAL EVENTS
+         * ========================================================================
+         *
+         * To connect this to your actual agent orchestration system:
+         *
+         * 1. AGENT STATE CHANGES:
+         *    yourEventBus.on('agent-state-change', (state) => {
+         *        setAgentState(state);
+         *    });
+         *
+         * 2. INDIVIDUAL AGENT UPDATES:
+         *    yourEventBus.on('agent-update', ({ agent, status }) => {
+         *        setAgentStatus(agent, status);
+         *    });
+         *
+         * 3. ACTIVITY LOGGING:
+         *    yourEventBus.on('activity', ({ message, type }) => {
+         *        logActivity(message, type);
+         *    });
+         *
+         * 4. METRIC UPDATES:
+         *    yourEventBus.on('metric-update', ({ agent, label, value }) => {
+         *        updateAgentMetric(agent, label, value);
+         *    });
+         *
+         * EXAMPLE INTEGRATION WITH A REAL ORCHESTRATION SYSTEM:
+         *
+         *    import { SyncPulseHub } from '@h4shed/syncpulse-hub';
+         *
+         *    const hub = new SyncPulseHub('full');
+         *    const page = document.getElementById('concept-page');
+         *
+         *    hub.on('orchestration:start', () => {
+         *        page.setAgentState('working');
+         *    });
+         *
+         *    hub.on('agent:update', (agent) => {
+         *        page.setAgentStatus(agent.name, agent.state);
+         *        page.updateAgentMetric(agent.name, 'Tasks', agent.taskCount);
+         *    });
+         *
+         *    hub.on('orchestration:complete', () => {
+         *        page.setAgentState('success');
+         *    });
+         *
+         * The API is intentionally simple and stateless, making it easy
+         * to bind to any event system or real-time protocol (WebSocket, SSE, etc.)
+         */
+
+        // Export API to window for external access
+        if (typeof window !== 'undefined') {
+            window.SyncPulseAPI = {
+                setAgentState,
+                setAgentStatus,
+                logActivity,
+                updateAgentMetric,
+                STATES
+            };
+        }
+    </script>
+</body>
+</html>
