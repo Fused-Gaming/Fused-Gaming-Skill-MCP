@@ -1,123 +1,45 @@
-# Roadmap & Release Orientation (April 2026)
+# Roadmap & Release Orientation (May 2026)
 
-## Current Published Packages (npm)
+## 📦 Complete Skills & Tools Inventory
 
-The active public npm scope is currently `@h4shed` (not an npm org scope).
+**31 completed/scaffolded skills** — See `docs/RELEASES.md` for full versioned inventory and release milestones.
 
-### Published now
-1. `@h4shed/mcp-cli`
-2. `@h4shed/mcp-core`
-3. `@h4shed/skill-algorithmic-art`
-4. `@h4shed/skill-ascii-mockup`
-5. `@h4shed/skill-canvas-design`
-6. `@h4shed/skill-frontend-design`
-7. `@h4shed/skill-mcp-builder`
-8. `@h4shed/skill-pre-deploy-validator`
-9. `@h4shed/skill-skill-creator`
-10. `@h4shed/skill-theme-factory`
-11. `@h4shed/skill-underworld-writer`
-12. `@h4shed/skill-agentic-flow-devkit`
-13. `@h4shed/skill-linkedin-master-journalist` *(v1.0, production-ready, full docs included)*
+The active public npm scope is `@h4shed` (not an npm org scope).
+
+### Quick Stats
+- ✅ **13 Published Skills** (v1.0.1 - v1.0.4)
+- 🔨 **15 Scaffolded Skills** (ready for polish)
+- 📋 **~60 Planned Skills** (backlog)
+- **Total Product Version:** 1.1.1
 
 ---
 
-## Skill Status Updates
+## Release Planning (Q2-Q3 2026)
 
-### Published
-- `@h4shed/skill-underworld-writer` (confirmed published)
-- `@h4shed/skill-linkedin-master-journalist` (v1.0, production-ready, April 2026)
+### Immediate: v1.2.0 (June 2026)
+Publish 15 scaffolded skills (ready for final polish)
 
-### Scaffolded in repository (queued for publish)
-- `@h4shed/skill-mermaid-terminal`
-- `@h4shed/skill-ux-journeymapper`
-- `@h4shed/skill-svg-generator`
-- `@h4shed/skill-project-manager`
-- `@h4shed/skill-project-status-tool`
-- `@h4shed/skill-daily-review`
-- `@h4shed/multi-account-session-tracking`
-- `@h4shed/skill-agentic-flow-devkit`
+### Short-term: v1.3.0 (July 2026)
+Implement & release Wave 1 of 15 planned skills
+
+### Medium-term: v1.4.0 (August 2026)
+Implement & release Wave 2 of 15 planned skills
+
+### Future: v2.0.0 (September 2026)
+Complete remaining backlog (~30 skills) + major features
+
+**→ See `docs/RELEASES.md` for detailed release milestones and skills breakdown**
 
 ---
 
-## Planned Skill Backlog
+## Planned Skill Backlog (~60 items)
 
-### A
-- Accessibility Audit
-- API Contract Generator
-- Architecture Decision Record (ADR) Writer
+**Complete alphabetical listing with release wave assignment: See `docs/RELEASES.md`**
 
-### B
-- Backend Refactorer
-- Bug Reproduction Planner
-
-### C
-- Codebase Analyzer
-- Component Generator
-- Context Builder
-- Core Web Vitals Optimizer
-
-### D
-- Data Model Designer
-- Debugging Strategist
-- Dependency Auditor
-
-### E
-- Error Log Analyzer
-
-### F
-- Feature Planner
-- Frontend Performance Optimizer
-
-### G
-- Git Diff Summarizer
-- GitHub PR Reviewer
-
-### I
-- Integration Tester Generator
-- Infrastructure Generator (Terraform)
-
-### L
-- Logging Strategy Designer
-
-### M
-- Meeting Notes Summarizer
-- Microservice Boundary Identifier
-
-### O
-- Observability Setup Guide
-
-### P
-- Performance Profiler
-- Planning with Files
-- PRD Generator
-
-### Q
-- Query Optimizer
-
-### R
-- Refactor Planner
-- Repository Scraper
-
-### S
-- Security Analyzer
-- SEO Optimizer
-- Skill Generator
-- State Management Advisor
-
-### T
-- Test Generator
-- Task Breakdown Engine
-- Tech Debt Analyzer
-
-### U
-- UI/UX Critic
-
-### V
-- Validation Rule Generator
-
-### W
-- Web Quality Auditor
-- Workflow Automator
+The backlog is organized into 3 implementation waves:
+- **Wave 1 (v1.3.0):** Items A-G (15 skills)
+- **Wave 2 (v1.4.0):** Items G-R (15 skills)  
+- **Wave 3 (v2.0.0):** Items R-W + reserves (30 skills)
 
 ---
 
@@ -152,19 +74,9 @@ The active public npm scope is currently `@h4shed` (not an npm org scope).
 
 ## Immediate Next 3 Steps
 
-1. Verify PR #51 checks/deployments in GitHub UI and resolve any failing workflows before merge.
-2. Re-run `npm ci` in a full-network runtime and capture completion telemetry/log artifacts.
-3. Add CI validation to ensure docs package names stay aligned with published scope metadata.
-1. Keep release-facing docs synchronized with actual `@h4shed` package publication.
-2. Keep CI test/runtime lanes aligned to active Node LTS versions (20.x/22.x) across all workflows.
-3. Complete implementation for newly scaffolded skills.
-4. Keep release workflow docs synchronized with CI workflows.
-
-## Immediate Next 3 Steps
-
-1. Validate GitHub Actions `Test` matrix (`20.x`, `22.x`) and release workflow after Node lane adjustments.
-2. Implement production logic + tests for `mermaid-terminal`, `ux-journeymapper`, `svg-generator`.
-3. Add CI validation to ensure docs package names and Node runtime references stay aligned with workflows.
+1. **Create GitHub milestones** for v1.2.0, v1.3.0, v1.4.0, v2.0.0 releases
+2. **Assign owners** to each skill in planned backlog
+3. **Complete v1.2.0 prep:** finalize 15 scaffolded skill implementations, tests, and documentation
 
 ---
 
