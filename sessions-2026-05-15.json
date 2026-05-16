@@ -43,21 +43,21 @@
   "blockers": [
     {
       "issue": "npm Registry HTTP 403 - Transitive dependency resolution fails",
-      "category": "environmental",
+      "category": "environment",
       "resolved": false,
       "resolution": "Use CI environment with full registry access; document workarounds in CONTRIBUTING.md",
       "impact": "Lockfile refresh blocked in restricted environments, CI pipeline works correctly"
     },
     {
       "issue": "GitHub API Authentication - Unauthenticated PR check/deployment details unavailable",
-      "category": "environmental",
+      "category": "environment",
       "resolved": false,
       "resolution": "Use GitHub Actions UI or authenticated session for PR #101/#109 checks",
       "impact": "Cannot validate full PR details locally without authentication, not a code issue"
     },
     {
       "issue": "Workspace build dependencies incomplete - @h4shed/mcp-core missing",
-      "category": "technical",
+      "category": "infrastructure",
       "resolved": false,
       "resolution": "Run full workspace install with npm registry access, or use CI environment",
       "impact": "Cannot run npm run build/lint/typecheck locally, CI pipeline handles correctly"

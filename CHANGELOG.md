@@ -23,6 +23,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved error handling in signup and contact form submission workflows
 - Enhanced JWT token cookie generation and session management across auth endpoints
 
+## [1.1.1] - 2026-05-16
+
+### Fixed
+- **TypeScript Configuration Standardization** — Fixed tsconfig.json across 60+ workspace packages
+  - Resolved TypeScript 5.3.2 module resolution issues affecting monorepo builds
+  - Standardized `ignoreDeprecations: "5.0"` compiler option for baseUrl+paths pattern
+  - Fixed malformed JSON in package-level tsconfig.json files (include/exclude placement)
+  - Added consistent `baseUrl: "."` and `"paths": {}` to package tsconfigs to resolve inheritance issues
+  - Ensured proper TypeScript compilation for all workspace builds (Node 20.x and 22.x)
+
+### Changed
+- Updated TypeScript build system to ensure consistent compilation across all CI environments
+- Standardized workspace package configuration inheritance patterns
+
+### Security
+- No new vulnerabilities introduced; maintained security baseline from v1.1.0
+
 ## [1.0.5] - 2026-04-27
 
 ### Added

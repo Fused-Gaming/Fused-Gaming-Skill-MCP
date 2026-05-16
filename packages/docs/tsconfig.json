@@ -1,9 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": ".",
     "outDir": ".vitepress/dist"
   },
-  "include": [".vitepress/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    ".vitepress/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

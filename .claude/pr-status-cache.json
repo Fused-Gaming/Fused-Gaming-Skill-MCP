@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-05-16T00:00:00Z",
+  "activePRs": {
+    "critical": [
+      {
+        "number": 101,
+        "title": "High-priority fix branch",
+        "status": "checks-pending",
+        "note": "Requires authenticated GitHub session for full detail view"
+      },
+      {
+        "number": 109,
+        "title": "High-priority fix branch",
+        "status": "checks-pending",
+        "note": "Requires authenticated GitHub session for full detail view"
+      }
+    ],
+    "readyForReview": []
+  },
+
+  "recentCheckFailures": [
+    {
+      "type": "TypeScript Compilation",
+      "packages": [
+        "packages/skills/daily-review-skill",
+        "packages/skills/underworld-writer-skill"
+      ],
+      "error": "TS2688 - Cannot find type definitions",
+      "resolution": "Ensure tsconfig.json inherits from root with proper extends"
+    },
+    {
+      "type": "Module Resolution",
+      "packages": ["packages/cli"],
+      "error": "TS2307 - Cannot find module",
+      "resolution": "Verify dependencies in package.json (ora, chalk, inquirer, etc.)"
+    }
+  ],
+
+  "publishPipeline": {
+    "stage": "prepare-publish-versions.cjs",
+    "workflowFile": ".github/workflows/publish.yml",
+    "steps": [
+      "npm run publish:prepare",
+      "npm install --package-lock-only --ignore-scripts",
+      "npm ci",
+      "npm publish"
+    ],
+    "notes": "Auto-bumps only changed packages to prevent version collision"
+  }
+}

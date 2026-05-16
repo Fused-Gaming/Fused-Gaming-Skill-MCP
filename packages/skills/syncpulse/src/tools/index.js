@@ -1,0 +1,99 @@
+export { sendEmail, sendBulkEmail, sendMarketingCampaign, verifyEmailConfiguration, } from "./email-tools.js";
+export { sendMagicLink, sendMFACode, sendPasswordReset, sendSecurityAlert, sendInvoice, sendNewsletter, sendOutageNotice, sendMaintenanceNotice, sendTicketUpdate, } from "./email-workflows.js";
+export function synchronizeProjectState(cache, memory) {
+    return async (input) => {
+        const state = {
+            projectId: input.projectId,
+            synchronized: true,
+            timestamp: Date.now(),
+            gitIncluded: input.includeGit ?? false,
+        };
+        cache.set(`project-${input.projectId}`, state, input.cacheTTL || 300000);
+        memory.set(`project-state-${input.projectId}`, state, {
+            type: "project-state",
+            synchronized: true,
+        });
+        return {
+            success: true,
+            projectId: input.projectId,
+            message: "Project state synchronized and cached",
+            state,
+        };
+    };
+}
+export function queryProjectCache(cache, memory) {
+    return async (input) => {
+        const results = memory.vectorSearch(input.query, input.limit || 10);
+        return {
+            success: true,
+            query: input.query,
+            resultCount: results.length,
+            results: results.map((r) => ({
+                key: r.entry.key,
+                value: r.entry.value,
+                similarity: r.similarity.toFixed(3),
+            })),
+        };
+    };
+}
+export function coordinateAgents(swarm, tasks) {
+    return async (input) => {
+        let swarmId = input.workflowId;
+        const existingSwarm = swarm.getSwarm(swarmId);
+        if (!existingSwarm) {
+            const agentCount = input.topology === "hierarchical" ? 3 : 5;
+            swarm.initializeSwarm(swarmId, `Swarm-${input.workflowId}`, input.topology, agentCount);
+        }
+        const taskObjects = input.tasks.map((t) => ({
+            id: t.id,
+            name: t.name,
+            priority: t.priority,
+            status: "pending",
+            createdAt: Date.now(),
+        }));
+        tasks.setSwarm(swarm);
+        const results = tasks.run(taskObjects, swarmId);
+        const swarmMetrics = swarm.getSwarmMetrics(swarmId);
+        return {
+            success: true,
+            workflowId: input.workflowId,
+            topology: input.topology,
+            tasksCompleted: results.filter((r) => r.success).length,
+            tasksFailed: results.filter((r) => !r.success).length,
+            metrics: swarmMetrics,
+            results: results.map((r) => ({
+                taskId: r.task.id,
+                success: r.success,
+                status: r.task.status,
+            })),
+        };
+    };
+}
+export function analyzePerformance(swarm, memory) {
+    return async (input) => {
+        const memoryStats = memory.getStats();
+        const swarms = swarm.listSwarms();
+        const analysis = {
+            memoryMetrics: {
+                totalEntries: memoryStats.totalEntries,
+                cacheHitRate: (memoryStats.hitRate * 100).toFixed(2) + "%",
+                avgRetrievalTime: memoryStats.avgRetrievalTime.toFixed(2) + "ms",
+            },
+            swarmMetrics: swarms.map((s) => ({
+                swarmId: s.id,
+                agentCount: s.agents.length,
+                topology: s.config.topology,
+                healthScore: s.metrics.healthScore.toFixed(3),
+                completedTasks: s.metrics.completedTasks,
+                failedTasks: s.metrics.failedTasks,
+                throughput: s.metrics.throughput.toFixed(2),
+            })),
+        };
+        return {
+            success: true,
+            timeRange: input.timeRange,
+            analysis,
+        };
+    };
+}
+//# sourceMappingURL=index.js.map

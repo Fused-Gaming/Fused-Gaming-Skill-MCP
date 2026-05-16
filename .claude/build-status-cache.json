@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-05-16T00:00:00Z",
+  "buildStatus": "needs-validation",
+
+  "dependencies": {
+    "nodeMinimum": "20.0.0",
+    "npmMinimum": "8.0.0",
+    "typescriptVersion": "5.3.2",
+    "status": "workspace-install-incomplete"
+  },
+
+  "testMatrix": {
+    "lanes": ["20.x", "22.x"],
+    "framework": "Node.js CI matrix",
+    "allPassing": "requires-verification"
+  },
+
+  "buildScript": "npm run build",
+  "lintScript": "npm run lint",
+  "typeCheckScript": "npm run typecheck",
+  "testScript": "npm test --workspaces --if-present",
+
+  "workspacePackages": {
+    "core": 1,
+    "cli": 1,
+    "skills": 33,
+    "tools": "multiple"
+  },
+
+  "publishedScope": "@h4shed",
+  "internalScope": "@fused-gaming",
+
+  "recentSuccessfulPublishes": 11,
+  "pendingPublishes": 17
+}

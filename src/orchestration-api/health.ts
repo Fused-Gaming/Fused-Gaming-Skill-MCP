@@ -77,8 +77,8 @@ export class HealthCheckService {
   private saveHealth(health: HealthStatus): void {
     try {
       fs.writeFileSync(this.healthFile, JSON.stringify(health, null, 2));
-    } catch (error) {
-      console.error('Failed to save health status:', error);
+    } catch (_error) {
+      console.error('Failed to save health status:', _error);
     }
   }
 }
