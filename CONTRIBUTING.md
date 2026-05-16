@@ -83,7 +83,7 @@ Then open a pull request on GitHub.
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20.x (tested on 20.x and 22.x LTS)
 - npm 8+
 - Git
 
@@ -118,7 +118,7 @@ npm run test:watch   # Watch mode
 
 ## Contributing a New Skill
 
-See [docs/guides/SKILLS_GUIDE.md](./docs/guides/SKILLS_GUIDE.md) for detailed instructions.
+See [docs/SKILLS_GUIDE.md](./docs/SKILLS_GUIDE.md) for detailed instructions.
 
 ### Quick Checklist
 
@@ -291,6 +291,39 @@ npm test -- --coverage
 
 ---
 
+## Workspace Installation & Dependency Management
+
+### Safe Install Steps
+
+When installing dependencies in this monorepo workspace:
+
+```bash
+# 1. First, sync the lockfile without building (safe in all environments)
+npm install --package-lock-only --ignore-scripts
+
+# 2. Then install normally
+npm install
+```
+
+**Why:** The root `prepare` hook is no-op to prevent install-time build failures. This two-step approach ensures workspace metadata aligns with `package-lock.json` before any CI/production installs.
+
+### Workspace Naming Constraint
+
+All workspace packages must have unique names across `packages/*/package.json`. Duplicate workspace names cause `EDUPLICATEWORKSPACE` errors during install. If you see this error:
+
+```bash
+npm ERR! EDUPLICATEWORKSPACE...
+```
+
+Check for duplicate `name` fields:
+```bash
+grep -r '"name":' packages/*/package.json | sort
+```
+
+For skill packages, use: `@fused-gaming/skill-{unique-name}` to prevent conflicts.
+
+---
+
 ## Documentation
 
 ### Documentation Structure
@@ -310,7 +343,7 @@ Essential files remain in root: `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, 
 When adding features, update relevant documentation:
 - `README.md` — High-level overview & feature list
 - `docs/architecture/` — System design & implementation details
-- `docs/guides/SKILLS_GUIDE.md` — Skill development guide
+- `docs/SKILLS_GUIDE.md` — Skill development guide
 - `docs/API_REFERENCE.md` — API documentation
 - `docs/releases/RELEASE_NOTES.md` — Update with new features
 
@@ -372,6 +405,36 @@ When working on features or fixes that will be released:
    - Add entry to `VERSION.json` publishedPackages list
    - Use @h4shed scope for published packages: `@h4shed/skill-{name}`
    - Keep internal reference as `@fused-gaming/skill-{name}` in package.json
+
+### Version Bump Validation
+
+Before any version bump, ensure all checks pass:
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm test
+```
+
+**Important:** All checks must pass before updating VERSION.json. Version bumps are coupled to successful validation to prevent releases with broken builds.
+
+### Release Automation
+
+The publish workflow automatically handles version bumping:
+
+1. **Changed-Package Detection:** CI detects which workspace packages changed using git diff
+2. **Auto-Bump:** `scripts/prepare-publish-versions.cjs` patches version numbers for already-published packages (collision avoidance)
+3. **Lockfile Sync:** `npm install --package-lock-only --ignore-scripts` aligns package-lock.json with bumped versions
+4. **Publish:** GitHub Actions publishes updated packages to npm
+
+You don't need to manually bump versions for changed packages—the automation handles it. However, if you need to manually trigger a version bump for a specific reason, use:
+
+```bash
+npm version patch|minor|major --workspace=@fused-gaming/skill-{name}
+```
+
+See [docs/releases/NPM_PUBLICATION_CHECKLIST.md](./docs/releases/NPM_PUBLICATION_CHECKLIST.md) for the complete release workflow.
 
 ### For Maintainers
 
