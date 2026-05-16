@@ -18,15 +18,19 @@ The active public npm scope is `@h4shed` (not an npm org scope).
 
 ### Immediate: v1.2.0 (June 2026)
 Publish 15 scaffolded skills (ready for final polish)
+**→ GitHub Issue #174: Release v1.2.0 Tracking**
 
 ### Short-term: v1.3.0 (July 2026)
 Implement & release Wave 1 of 15 planned skills
+**→ GitHub Issue #175: Release v1.3.0 Tracking**
 
 ### Medium-term: v1.4.0 (August 2026)
 Implement & release Wave 2 of 15 planned skills
+**→ GitHub Issue #176: Release v1.4.0 Tracking**
 
 ### Future: v2.0.0 (September 2026)
 Complete remaining backlog (~30 skills) + major features
+**→ GitHub Issue #177: Release v2.0.0 Tracking**
 
 **→ See `docs/RELEASES.md` for detailed release milestones and skills breakdown**
 
@@ -74,7 +78,7 @@ The backlog is organized into 3 implementation waves:
 
 ## Immediate Next 3 Steps
 
-1. **Create GitHub milestones** for v1.2.0, v1.3.0, v1.4.0, v2.0.0 releases
+1. ✅ **Create GitHub milestones** for v1.2.0, v1.3.0, v1.4.0, v2.0.0 releases (Issues #174-177)
 2. **Assign owners** to each skill in planned backlog
 3. **Complete v1.2.0 prep:** finalize 15 scaffolded skill implementations, tests, and documentation
 
