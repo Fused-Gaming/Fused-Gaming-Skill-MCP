@@ -115,7 +115,7 @@ function matchesRoutes(pathname: string, routes: string[]): boolean {
  */
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const sessionToken = request.cookies.get('sessionToken')?.value;
+  const sessionToken = request.cookies.get('sessionToken')?.value || '';
   const isAuthenticated = isValidJWT(sessionToken);
 
   // PROBLEM 3: API route auth enforcement

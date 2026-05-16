@@ -104,7 +104,7 @@ export function cleanupOldBuckets(maxAgeMs: number = 30 * 60 * 1000): void {
 }
 
 // Schedule cleanup every 5 minutes
-if (typeof global !== 'undefined' && !global._rateLimiterCleanupScheduled) {
-  global._rateLimiterCleanupScheduled = true;
+if (typeof global !== 'undefined' && !(global as any)._rateLimiterCleanupScheduled) {
+  (global as any)._rateLimiterCleanupScheduled = true;
   setInterval(() => cleanupOldBuckets(), 5 * 60 * 1000);
 }
