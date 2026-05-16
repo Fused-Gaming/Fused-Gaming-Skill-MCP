@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getClientIdentifier } from '@/lib/rate-limiter';
 
 interface ContactData {
   name: string;
@@ -13,6 +14,26 @@ const submissions: Array<ContactData & { submittedAt: string }> = [];
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null;
+    const clientId = getClientIdentifier(clientIp);
+    const rateLimitCheck = checkRateLimit(clientId, RATE_LIMIT_CONFIGS.contactForm);
+
+    if (!rateLimitCheck.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Too many submissions. Please try again later.',
+          retryAfter: rateLimitCheck.retryAfterSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimitCheck.retryAfterSeconds),
+          },
+        }
+      );
+    }
+
     const data: ContactData = await request.json();
 
     // Validate required fields

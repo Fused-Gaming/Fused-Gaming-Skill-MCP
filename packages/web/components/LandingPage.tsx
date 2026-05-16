@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import VersionBadge from './VersionBadge';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function LandingPage() {
       const cookie = document.cookie
         .split('; ')
         .find(row => row.startsWith('sessionToken='));
-      
+
       if (cookie) {
         const token = cookie.split('=')[1];
         setIsAuthenticated(Boolean(token && token.trim().length > 0));
@@ -51,9 +52,9 @@ export default function LandingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark">
+    <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark flex flex-col">
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-6">
+      <section className="flex-1 flex items-center justify-center px-6 py-20">
         <div className="max-w-4xl w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -81,8 +82,8 @@ export default function LandingPage() {
               transition={{ delay: 0.4, duration: 0.8 }}
               className="text-lg text-slate-300 mb-12 leading-relaxed max-w-2xl mx-auto"
             >
-              Orchestrate, monitor, and control distributed agent swarms with unprecedented 
-              visibility and control. SyncPulse gives you the tools to build and manage 
+              Orchestrate, monitor, and control distributed agent swarms with unprecedented
+              visibility and control. SyncPulse gives you the tools to build and manage
               intelligent agent networks at scale.
             </motion.p>
 
@@ -215,6 +216,24 @@ export default function LandingPage() {
           </button>
         </motion.div>
       </section>
+
+      {/* Footer with Version Badge */}
+      <footer className="border-t border-swarm-accent/10 py-8 px-6 mt-auto">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-slate-500">
+            Copyright 2026 SyncPulse. All rights reserved.
+          </p>
+          <div className="flex items-center gap-4">
+            <a href="/privacy" className="text-sm text-slate-500 hover:text-swarm-accent transition-colors">
+              Privacy
+            </a>
+            <a href="/terms" className="text-sm text-slate-500 hover:text-swarm-accent transition-colors">
+              Terms
+            </a>
+            <VersionBadge variant="small" />
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

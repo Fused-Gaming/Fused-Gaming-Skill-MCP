@@ -45,8 +45,20 @@ export default function ContactForm({
     setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Call contact-sales API endpoint
+      const response = await fetch('/api/contact-sales', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        console.error('Contact form error:', data.error);
+        throw new Error(data.error || 'Failed to submit form');
+      }
 
       if (onSubmit) {
         onSubmit(formData);

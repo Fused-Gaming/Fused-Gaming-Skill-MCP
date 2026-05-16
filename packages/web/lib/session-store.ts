@@ -326,10 +326,34 @@ export const SessionStore = {
   },
 
   /**
-   * Deletes a session
+   * Creates a new user with email and password
+   * Returns userId if created, null if email already exists
    */
-  deleteSession(token: string): boolean {
-    return sessionsMap.delete(token);
+  createUser(email: string, password: string): { userId: string } | null {
+    // Check if user already exists
+    if (usersMap.has(email)) {
+      return null;
+    }
+
+    const userId = `user_${Date.now()}`;
+    usersMap.set(email, {
+      email,
+      userId,
+      password,
+      passwordChanged: true, // Password was set during signup
+    });
+
+    return { userId };
+  },
+
+  /**
+   * Deletes a session (stateless JWT - no actual deletion needed)
+   * Returns true for compatibility
+   */
+  deleteSession(_token: string): boolean {
+    // JWTs are stateless, so there's nothing to delete server-side
+    // Just return true for API compatibility
+    return true;
   },
 
   /**

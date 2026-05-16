@@ -1,12 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createSessionTokenCookie } from '@/lib/session';
 import { SessionStore } from '@/lib/session-store';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getClientIdentifier } from '@/lib/rate-limiter';
 
 /**
  * POST /api/auth/signup
  * Creates a new user account with email and password
  * Stores credentials in SessionStore and returns a session token
+ * Protected by rate limiting to prevent abuse
  */
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null;
+  const clientId = getClientIdentifier(clientIp);
+  const rateLimitCheck = checkRateLimit(clientId, RATE_LIMIT_CONFIGS.auth);
+
+  if (!rateLimitCheck.allowed) {
+    return NextResponse.json(
+      {
+        error: 'Too many signup attempts. Please try again later.',
+        retryAfter: rateLimitCheck.retryAfterSeconds,
+      },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(rateLimitCheck.retryAfterSeconds),
+        },
+      }
+    );
+  }
   try {
     const body = await request.json();
     const { email, password, name } = body;
@@ -46,7 +68,7 @@ export async function POST(request: NextRequest) {
     const { token, expiresIn } = SessionStore.createSession(userResult.userId, email, false);
 
     // Return success with session token
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         message: 'Account created successfully',
@@ -57,6 +79,14 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
+
+    // Set session cookie with proper expiration
+    response.headers.set(
+      'Set-Cookie',
+      createSessionTokenCookie(token, expiresIn)
+    );
+
+    return response;
   } catch (error) {
     console.error('Signup error:', error);
     return NextResponse.json(

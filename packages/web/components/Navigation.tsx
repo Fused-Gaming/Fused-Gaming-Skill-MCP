@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown, LogOut, LayoutDashboard } from 'lucide-react';
+import VersionBadge from './VersionBadge';
 
 interface NavigationProps {
   isAuthenticated?: boolean;
@@ -102,8 +103,10 @@ export default function Navigation({
             </div>
           )}
 
-          {/* Desktop Auth Buttons */}
+          {/* Right Side: Version Badge + Auth Buttons */}
           <div className="hidden items-center gap-4 md:flex">
+            <VersionBadge variant="small" />
+
             {!isAuthenticated ? (
               <>
                 <motion.button
@@ -254,6 +257,13 @@ export default function Navigation({
                     </button>
                   </>
                 )}
+              </div>
+
+              {/* Mobile Version Badge */}
+              <div className="border-t border-slate-700/30 pt-4 mt-4">
+                <div className="px-4">
+                  <VersionBadge variant="small" />
+                </div>
               </div>
             </motion.div>
           )}

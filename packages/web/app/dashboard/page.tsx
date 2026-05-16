@@ -6,6 +6,7 @@ import RoadmapEditor from '@/components/RoadmapEditor';
 import TaskMonitor from '@/components/TaskMonitor';
 import ControlPanel from '@/components/ControlPanel';
 import TerminalLivestream from '@/components/TerminalLivestream';
+import VersionBadge from '@/components/VersionBadge';
 import { useSwarmStore } from '@/store/swarmStore';
 import { useEffect } from 'react';
 
@@ -30,8 +31,8 @@ export default function Home() {
               <h1 className="text-4xl font-bold glow-accent">⚡ SyncPulse</h1>
               <p className="text-swarm-tertiary text-sm mt-1">Agent Swarm Commander</p>
             </div>
-            <div className="text-right">
-              <p className="text-swarm-accent font-mono text-sm">v1.0.0</p>
+            <div className="text-right flex flex-col items-end gap-2">
+              <VersionBadge variant="normal" showBuildNumber={false} />
               <p className="text-slate-400 text-xs">Live Dashboard</p>
             </div>
           </motion.div>

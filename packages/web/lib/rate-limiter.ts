@@ -21,7 +21,7 @@ export interface RateLimitConfig {
 
 // Default rate limit configs for different endpoints
 export const RATE_LIMIT_CONFIGS = {
-  auth: { tokensPerWindow: 5, windowSizeMs: 60 * 1000 }, // 5 requests per minute
+  auth: { tokensPerWindow: 5, windowSizeMs: 60 * 1000 }, // 5 requests per minute (signup, etc)
   login: { tokensPerWindow: 5, windowSizeMs: 60 * 1000 }, // 5 login attempts per minute
   magicLink: { tokensPerWindow: 3, windowSizeMs: 60 * 1000 }, // 3 magic link requests per minute
   changePassword: { tokensPerWindow: 3, windowSizeMs: 60 * 1000 }, // 3 attempts per minute

@@ -8,6 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Auth Architecture Enhancement (v1.0.6)** — PR #166 security and functionality improvements
+  - JWT-based session management with stateless authentication
+  - User account creation via `SessionStore.createUser()` method
+  - Rate limiting on signup and contact form endpoints (5 requests/min and 10 requests/min respectively)
+  - Secured password validation and change workflows
+  - Enhanced form submissions with actual API integration (ContactForm, signup page)
+
+### Fixed
+- Fixed session-store.ts references to non-existent `sessionsMap` in `deleteSession()` method
+- Fixed signup page to call `/api/auth/signup` endpoint instead of redirecting without creating account
+- Fixed ContactForm.tsx to POST contact data to `/api/contact-sales` instead of simulating submission
+- Added missing rate limiter imports to signup and contact-sales endpoints
+- Improved error handling in signup and contact form submission workflows
+- Enhanced JWT token cookie generation and session management across auth endpoints
+
+## [1.0.5] - 2026-04-27
+
+### Added
 - **SyncPulse Email Workflow Templates (v0.2.0)** — 9 production-ready email automation workflows
   - **Authentication & Security**: Magic link login, MFA verification, password reset, security alerts
   - **Business Operations**: Invoice delivery, newsletter distribution

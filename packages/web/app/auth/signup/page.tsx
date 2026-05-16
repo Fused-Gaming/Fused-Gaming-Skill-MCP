@@ -43,10 +43,39 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual signup logic
-      // For now, redirect to login with a message
-      router.push('/auth/login');
-    } catch {
+      // Call signup API endpoint
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || 'Failed to create account');
+        setIsLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+
+      // Store session token and redirect to dashboard
+      if (data.sessionToken) {
+        // Session cookie is set by Set-Cookie header
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } else {
+        setError('Failed to create session');
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
       setError('An error occurred during signup');
       setIsLoading(false);
     }
