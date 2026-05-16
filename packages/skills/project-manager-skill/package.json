@@ -1,5 +1,5 @@
 {
-  "name": "@fused-gaming/skill-project-manager",
+  "name": "@fused-gaming/skill-project-manager-skill",
   "version": "1.0.0",
   "description": "Task and project management skill for tracking work items and team collaboration",
   "type": "module",

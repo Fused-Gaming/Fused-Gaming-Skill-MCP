@@ -29,7 +29,7 @@ npm run build
 ### Create a Task
 
 ```typescript
-import { createTask } from '@fused-gaming/skill-project-manager';
+import { createTask } from '@fused-gaming/skill-project-manager-skill';
 
 const task = createTask({
   title: 'Implement Daily Review Skill',
@@ -46,7 +46,7 @@ const task = createTask({
 ### Update Task Status
 
 ```typescript
-import { updateTaskStatus } from '@fused-gaming/skill-project-manager';
+import { updateTaskStatus } from '@fused-gaming/skill-project-manager-skill';
 
 const inProgress = updateTaskStatus(task, 'in-progress');
 const completed = updateTaskStatus(inProgress, 'done');
@@ -55,7 +55,7 @@ const completed = updateTaskStatus(inProgress, 'done');
 ### Assign and Track Time
 
 ```typescript
-import { assignTask, logTaskTime } from '@fused-gaming/skill-project-manager';
+import { assignTask, logTaskTime } from '@fused-gaming/skill-project-manager-skill';
 
 const assigned = assignTask(task, 'Bob');
 const timeLogged = logTaskTime(assigned, 3);  // 3 hours
@@ -64,7 +64,7 @@ const timeLogged = logTaskTime(assigned, 3);  // 3 hours
 ### Get Metrics
 
 ```typescript
-import { calculateMetrics } from '@fused-gaming/skill-project-manager';
+import { calculateMetrics } from '@fused-gaming/skill-project-manager-skill';
 
 const metrics = calculateMetrics(tasks);
 console.log(`Completion: ${metrics.completionPercentage}%`);
