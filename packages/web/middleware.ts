@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SessionStore } from '@/lib/session-store';
+import crypto from 'crypto';
 
 /**
  * Public routes that do NOT require authentication
@@ -11,8 +11,11 @@ const PUBLIC_ROUTES = [
   '/auth/magic-link-request',
   '/auth/magic-link',
   '/landing',
+  '/sales',
+  '/contact-sales',
   '/api/auth',
   '/api/health',
+  '/api/contact-sales',
 ];
 
 /**
@@ -30,20 +33,66 @@ const PROTECTED_API_ROUTES = [
  */
 const PROTECTED_PAGE_ROUTES = ['/dashboard'];
 
+// JWT secret for verifying tokens (in production, load from env)
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+
 /**
- * Validates if a session token exists in the session store
- * Checks expiry and validates the token is legitimate
- * @param sessionToken - The session token to validate
- * @returns true if token is valid, not expired, and exists in store
+ * Base64URL decodes a string (for JWT)
  */
-function isValidSession(sessionToken: string | undefined): boolean {
-  if (!sessionToken || sessionToken.trim().length === 0) {
+function base64UrlDecode(str: string): string {
+  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+  const padding = 4 - (base64.length % 4);
+  if (padding !== 4) {
+    base64 += '='.repeat(padding);
+  }
+  return Buffer.from(base64, 'base64').toString('utf-8');
+}
+
+/**
+ * Verifies a JWT token without requiring session store lookup
+ * Suitable for serverless/deployed environments
+ * @param token - The JWT token to validate
+ * @returns true if token is valid and not expired
+ */
+function isValidJWT(token: string): boolean {
+  if (!token || token.trim().length === 0) {
     return false;
   }
 
-  // Validate token exists in store and is not expired
-  const session = SessionStore.getSession(sessionToken);
-  return session !== null;
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+
+    const [encodedHeader, encodedPayload, signature] = parts;
+    const message = `${encodedHeader}.${encodedPayload}`;
+
+    // Verify signature
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(message)
+      .digest()
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
+
+    if (signature !== expectedSignature) {
+      return false;
+    }
+
+    // Decode and validate payload
+    const payload = JSON.parse(base64UrlDecode(encodedPayload));
+
+    // Check expiration
+    const now = Math.floor(Date.now() / 1000);
+    if (payload.exp && now > payload.exp) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 /**
@@ -67,7 +116,7 @@ function matchesRoutes(pathname: string, routes: string[]): boolean {
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const sessionToken = request.cookies.get('sessionToken')?.value;
-  const isAuthenticated = isValidSession(sessionToken);
+  const isAuthenticated = isValidJWT(sessionToken);
 
   // PROBLEM 3: API route auth enforcement
   // Check authentication FIRST for protected API routes, BEFORE returning CORS headers

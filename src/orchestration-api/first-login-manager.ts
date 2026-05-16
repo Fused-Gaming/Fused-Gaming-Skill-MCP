@@ -67,7 +67,13 @@ export class FirstLoginManager {
       ]
     };
 
-    const getRandomWord = (list: string[]) => list[Math.floor(Math.random() * list.length)];
+    // Use crypto.getRandomValues for secure random selection
+    const getRandomWord = (list: string[]) => {
+      const randomBytes = new Uint8Array(1);
+      crypto.getRandomValues(randomBytes);
+      const randomIndex = randomBytes[0] % list.length;
+      return list[randomIndex];
+    };
 
     return [
       getRandomWord(wordLists.adjectives),

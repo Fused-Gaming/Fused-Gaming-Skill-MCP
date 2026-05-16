@@ -1,14 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSessionTokenCookie } from '@/lib/session';
 import { SessionStore } from '@/lib/session-store';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getClientIdentifier } from '@/lib/rate-limiter';
 
 /**
  * POST /api/auth/login
  * Handles user login and session token creation
  * Validates credentials against stored passwords (one-time or changed)
+ * Protected by rate limiting to prevent brute force attacks
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null;
+    const clientId = getClientIdentifier(clientIp);
+    const rateLimitCheck = checkRateLimit(clientId, RATE_LIMIT_CONFIGS.login);
+
+    if (!rateLimitCheck.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Too many login attempts. Please try again later.',
+          retryAfter: rateLimitCheck.retryAfterSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimitCheck.retryAfterSeconds),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
     const { email, password } = body;
 

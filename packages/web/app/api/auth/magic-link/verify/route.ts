@@ -1,13 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSessionTokenCookie } from '@/lib/session';
 import { SessionStore } from '@/lib/session-store';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getClientIdentifier } from '@/lib/rate-limiter';
 
 /**
  * POST /api/auth/magic-link/verify
  * Verifies a magic link token and creates a session
+ * Protected by rate limiting to prevent brute force attacks
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null;
+    const clientId = getClientIdentifier(clientIp);
+    const rateLimitCheck = checkRateLimit(clientId, RATE_LIMIT_CONFIGS.magicLink);
+
+    if (!rateLimitCheck.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Too many verification attempts. Please try again later.',
+          retryAfter: rateLimitCheck.retryAfterSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimitCheck.retryAfterSeconds),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
     const { token } = body;
 
@@ -80,9 +102,30 @@ export async function POST(request: NextRequest) {
 /**
  * GET /api/auth/magic-link/verify
  * Alternative verification via query parameters (for email client links)
+ * Protected by rate limiting to prevent brute force attacks
  */
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null;
+    const clientId = getClientIdentifier(clientIp);
+    const rateLimitCheck = checkRateLimit(clientId, RATE_LIMIT_CONFIGS.magicLink);
+
+    if (!rateLimitCheck.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Too many verification attempts. Please try again later.',
+          retryAfter: rateLimitCheck.retryAfterSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimitCheck.retryAfterSeconds),
+          },
+        }
+      );
+    }
+
     const { searchParams } = request.nextUrl;
     const token = searchParams.get('token');
 

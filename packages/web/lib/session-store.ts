@@ -1,10 +1,13 @@
 /**
- * Session Store - Unified authentication and session state management
- * Handles user sessions, magic link tokens, and password changes
+ * Session Store - JWT-based authentication and session state management
+ * Handles user sessions using stateless JWT tokens
+ * Magic link tokens and password metadata stored in-memory for auth flow
  *
- * NOTE: In production, this should be backed by a persistent database.
- * This implementation uses in-memory storage for development/demo purposes.
+ * JWT provides stateless sessions suitable for serverless/deployed contexts.
+ * In production, magic link tokens should be stored in a database with TTL.
  */
+
+import crypto from 'crypto';
 
 interface SessionData {
   token: string;
@@ -31,9 +34,12 @@ interface UserData {
 }
 
 // In-memory storage (replace with database in production)
-const sessionsMap = new Map<string, SessionData>();
 const magicLinksMap = new Map<string, MagicLinkToken>();
 const usersMap = new Map<string, UserData>();
+
+// JWT secret for signing tokens (in production, load from env)
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+const JWT_EXPIRY = 24 * 60 * 60; // 24 hours in seconds
 
 // Initialize demo user
 const DEMO_USER_EMAIL = 'demo@example.com';
@@ -48,10 +54,123 @@ usersMap.set(DEMO_USER_EMAIL, {
 });
 
 /**
- * Generates a random token
+ * Generates a cryptographically secure random token for one-time use (magic links, etc)
+ * Uses crypto.getRandomValues for secure randomness
  */
-function generateToken(): string {
-  return `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+function generateSecureToken(): string {
+  const buffer = new Uint8Array(16);
+  crypto.getRandomValues(buffer);
+  return Array.from(buffer)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+/**
+ * Base64URL encodes a string (for JWT)
+ */
+function base64UrlEncode(str: string): string {
+  return Buffer.from(str)
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+}
+
+/**
+ * Base64URL decodes a string (for JWT)
+ */
+function base64UrlDecode(str: string): string {
+  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+  const padding = 4 - (base64.length % 4);
+  if (padding !== 4) {
+    base64 += '='.repeat(padding);
+  }
+  return Buffer.from(base64, 'base64').toString('utf-8');
+}
+
+/**
+ * Creates a JWT token for session authentication
+ * Token is stateless and verifiable without session store lookup
+ */
+function createJWT(userId: string, email: string, passwordChanged: boolean): { token: string; expiresIn: number } {
+  const now = Math.floor(Date.now() / 1000);
+  const expiresAt = now + JWT_EXPIRY;
+
+  const header = {
+    alg: 'HS256',
+    typ: 'JWT',
+  };
+
+  const payload = {
+    sub: userId,
+    email,
+    passwordChanged,
+    iat: now,
+    exp: expiresAt,
+  };
+
+  const encodedHeader = base64UrlEncode(JSON.stringify(header));
+  const encodedPayload = base64UrlEncode(JSON.stringify(payload));
+  const message = `${encodedHeader}.${encodedPayload}`;
+
+  // Sign with HMAC-SHA256
+  const signature = crypto
+    .createHmac('sha256', JWT_SECRET)
+    .update(message)
+    .digest()
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+
+  const token = `${message}.${signature}`;
+  return { token, expiresIn: JWT_EXPIRY * 1000 }; // Return expiresIn in milliseconds
+}
+
+/**
+ * Verifies and decodes a JWT token
+ * Returns null if invalid or expired
+ */
+function verifyJWT(token: string): { userId: string; email: string; passwordChanged: boolean } | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+
+    const [encodedHeader, encodedPayload, signature] = parts;
+    const message = `${encodedHeader}.${encodedPayload}`;
+
+    // Verify signature
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(message)
+      .digest()
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
+
+    if (signature !== expectedSignature) {
+      return null;
+    }
+
+    // Decode and validate payload
+    const payload = JSON.parse(base64UrlDecode(encodedPayload));
+
+    // Check expiration
+    const now = Math.floor(Date.now() / 1000);
+    if (payload.exp && now > payload.exp) {
+      return null;
+    }
+
+    return {
+      userId: payload.sub,
+      email: payload.email,
+      passwordChanged: payload.passwordChanged,
+    };
+  } catch (error) {
+    console.error('JWT verification failed:', error);
+    return null;
+  }
 }
 
 /**
@@ -59,45 +178,36 @@ function generateToken(): string {
  */
 export const SessionStore = {
   /**
-   * Creates a new session for a user
+   * Creates a new JWT session for a user
+   * JWT tokens are stateless and don't require server-side storage
    */
   createSession(
     userId: string,
     email: string,
     passwordChanged: boolean = false
   ): { token: string; expiresIn: number } {
-    const token = generateToken();
-    const expiresIn = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-    const now = new Date();
-    const expiresAt = new Date(now.getTime() + expiresIn);
-
-    const session: SessionData = {
-      token,
-      email,
-      userId,
-      createdAt: now,
-      expiresAt,
-      passwordChanged,
-    };
-
-    sessionsMap.set(token, session);
-    return { token, expiresIn };
+    return createJWT(userId, email, passwordChanged);
   },
 
   /**
-   * Retrieves session information
+   * Verifies and decodes a JWT token
+   * Returns session data if token is valid, null otherwise
    */
   getSession(token: string): SessionData | null {
-    const session = sessionsMap.get(token);
-    if (!session) return null;
+    const decoded = verifyJWT(token);
+    if (!decoded) return null;
 
-    // Check if session has expired
-    if (new Date() > session.expiresAt) {
-      sessionsMap.delete(token);
-      return null;
-    }
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + JWT_EXPIRY * 1000);
 
-    return session;
+    return {
+      token,
+      email: decoded.email,
+      userId: decoded.userId,
+      createdAt: now,
+      expiresAt,
+      passwordChanged: decoded.passwordChanged,
+    };
   },
 
   /**
@@ -152,6 +262,7 @@ export const SessionStore = {
 
   /**
    * Creates a magic link token for email-based authentication
+   * Uses cryptographically secure random token generation
    */
   createMagicLinkToken(email: string): { token: string; expiresIn: number } {
     // Create user if doesn't exist
@@ -163,7 +274,7 @@ export const SessionStore = {
       });
     }
 
-    const token = generateToken();
+    const token = generateSecureToken();
     const expiresIn = 15 * 60 * 1000; // 15 minutes in milliseconds
     const now = new Date();
     const expiresAt = new Date(now.getTime() + expiresIn);

@@ -1,14 +1,70 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SessionStore } from '@/lib/session-store';
+import crypto from 'crypto';
+
+// JWT secret for verifying tokens
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+
+/**
+ * Base64URL decodes a string (for JWT)
+ */
+function base64UrlDecode(str: string): string {
+  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+  const padding = 4 - (base64.length % 4);
+  if (padding !== 4) {
+    base64 += '='.repeat(padding);
+  }
+  return Buffer.from(base64, 'base64').toString('utf-8');
+}
+
+/**
+ * Verifies a JWT token
+ */
+function verifyJWT(token: string): { email: string; userId: string } | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+
+    const [encodedHeader, encodedPayload, signature] = parts;
+    const message = `${encodedHeader}.${encodedPayload}`;
+
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(message)
+      .digest()
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
+
+    if (signature !== expectedSignature) return null;
+
+    const payload = JSON.parse(base64UrlDecode(encodedPayload));
+    const now = Math.floor(Date.now() / 1000);
+    if (payload.exp && now > payload.exp) return null;
+
+    return { email: payload.email, userId: payload.sub };
+  } catch (error) {
+    return null;
+  }
+}
 
 /**
  * POST /api/auth/change-password
  * Allows users to change their password
- * Requires valid session token
+ * Accepts JWT from either cookie or Authorization bearer header
  */
 export async function POST(request: NextRequest) {
   try {
-    const sessionToken = request.cookies.get('sessionToken')?.value;
+    let sessionToken = request.cookies.get('sessionToken')?.value;
+
+    // Also check Authorization header for bearer token
+    if (!sessionToken) {
+      const authHeader = request.headers.get('Authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        sessionToken = authHeader.slice(7);
+      }
+    }
 
     // Validate session
     if (!sessionToken) {
@@ -18,6 +74,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const decoded = verifyJWT(sessionToken);
+    if (!decoded) {
+      return NextResponse.json(
+        { error: 'Invalid or expired session' },
+        { status: 401 }
+      );
+    }
+
+    // Create session object for compatibility
     const session = SessionStore.getSession(sessionToken);
     if (!session) {
       return NextResponse.json(
