@@ -4,7 +4,7 @@
  */
 
 import { promises as fs } from 'fs';
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import path from 'path';
 
 export interface ReleaseConfig {
@@ -176,12 +176,12 @@ Generated: ${new Date().toISOString()}`;
     try {
       const message = notes.split('\n')[0];
 
-      execSync('git', ['add', 'VERSION.json', 'package.json'], { stdio: 'inherit' });
-      execSync('git', ['commit', '-m', `chore: Bump version to v${version} for release`], {
+      execFileSync('git', ['add', 'VERSION.json', 'package.json'], { stdio: 'inherit' });
+      execFileSync('git', ['commit', '-m', `chore: Bump version to v${version} for release`], {
         stdio: 'inherit',
       });
 
-      execSync('git', ['tag', '-a', `v${version}`, '-m', message], {
+      execFileSync('git', ['tag', '-a', `v${version}`, '-m', message], {
         stdio: 'inherit',
       });
 
@@ -204,8 +204,8 @@ Generated: ${new Date().toISOString()}`;
     try {
       const range = lastTag ? `${lastTag}..HEAD` : 'HEAD~10..HEAD';
 
-      const totalCommits = execSync('git', ['rev-list', '--count', range]).toString().trim();
-      const diffStat = execSync('git', ['diff', '--stat', range]).toString();
+      const totalCommits = execFileSync('git', ['rev-list', '--count', range]).toString().trim();
+      const diffStat = execFileSync('git', ['diff', '--stat', range]).toString();
 
       let filesChanged = 0;
       let linesAdded = 0;
