@@ -1,20 +1,11 @@
 {
   "name": "fused-gaming-skill-mcp",
   "version": 2,
+  "framework": "nextjs",
+  "buildCommand": "npm run build --workspace=packages/web",
+  "outputDirectory": "packages/web/.next",
   "env": {
     "NODE_ENV": "production"
   },
-  "regions": ["sfo1"],
-  "builds": [
-    {
-      "src": "api/index.ts",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "^/(.*)",
-      "dest": "api/index.ts"
-    }
-  ]
+  "regions": ["sfo1"]
 }

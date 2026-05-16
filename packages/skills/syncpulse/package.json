@@ -1,12 +1,15 @@
 {
   "name": "@h4shed/skill-syncpulse",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "SyncPulse - intelligent project state caching, multi-agent coordination, and secure email automation with 9 production-ready templated workflows",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.json",
+    "benchmark": "node --expose-gc --loader ts-node/esm benchmarks/performance.benchmark.ts",
+    "benchmark:release": "node --expose-gc --max-old-space-size=4096 --loader ts-node/esm benchmarks/release-performance.benchmark.ts",
+    "benchmark:runner": "bash scripts/run-release-benchmarks.sh",
     "test": "echo \"tests pending\""
   },
   "dependencies": {
@@ -16,7 +19,8 @@
   "devDependencies": {
     "@types/node": "^20.12.0",
     "@types/nodemailer": "^6.4.14",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.2",
+    "ts-node": "^10.9.0"
   },
   "publishConfig": {
     "access": "public",

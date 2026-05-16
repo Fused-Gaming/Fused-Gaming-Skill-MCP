@@ -7,9 +7,17 @@ import {
   AgentRole,
 } from "../types/index.js";
 
+export interface AgentQueue {
+  tasks: Task[];
+  avgExecutionTime: number;
+}
+
 export class SwarmOrchestrator {
   private swarms = new Map<string, Swarm>();
   private agents = new Map<string, Agent>();
+  private agentQueues = new Map<string, AgentQueue>();
+  private lastRebalance = new Map<string, number>();
+  private readonly rebalanceInterval = 1000;
 
   initializeSwarm(
     id: string,
@@ -43,7 +51,11 @@ export class SwarmOrchestrator {
     };
 
     this.swarms.set(id, swarm);
-    agents.forEach((a) => this.agents.set(a.id, a));
+    agents.forEach((a) => {
+      this.agents.set(a.id, a);
+      this.agentQueues.set(a.id, { tasks: [], avgExecutionTime: 100 });
+    });
+    this.lastRebalance.set(id, Date.now());
     return swarm;
   }
 
@@ -70,9 +82,12 @@ export class SwarmOrchestrator {
     return agents;
   }
 
-  assignTask(swarmId: string, _task: Task): Agent | null {
+  assignTask(swarmId: string, task: Task): Agent | null {
     const swarm = this.swarms.get(swarmId);
     if (!swarm) return null;
+
+    // Perform rebalancing if needed
+    this.rebalanceIfNeeded(swarmId, swarm);
 
     // Find least loaded agent with capacity
     let best: Agent | null = null;
@@ -91,10 +106,71 @@ export class SwarmOrchestrator {
 
     if (best) {
       best.currentLoad += 1;
+      const queue = this.agentQueues.get(best.id);
+      if (queue) {
+        queue.tasks.push(task);
+      }
       swarm.metrics.totalTasks += 1;
     }
 
     return best;
+  }
+
+  private rebalanceIfNeeded(swarmId: string, swarm: Swarm): void {
+    const now = Date.now();
+    const lastRebalanceTime = this.lastRebalance.get(swarmId) || 0;
+
+    if (now - lastRebalanceTime < this.rebalanceInterval) {
+      return;
+    }
+
+    this.performWorkStealing(swarm);
+    this.lastRebalance.set(swarmId, now);
+  }
+
+  private performWorkStealing(swarm: Swarm): void {
+    if (swarm.agents.length < 2) return;
+
+    const agents = swarm.agents.filter((a) => a.status !== "offline");
+    if (agents.length < 2) return;
+
+    // Calculate predicted completion times
+    const predictions = agents.map((agent) => ({
+      agent,
+      queue: this.agentQueues.get(agent.id),
+      predictedTime:
+        agent.currentLoad *
+        (this.agentQueues.get(agent.id)?.avgExecutionTime || 100),
+    }));
+
+    const maxPrediction = Math.max(...predictions.map((p) => p.predictedTime));
+    const minPrediction = Math.min(...predictions.map((p) => p.predictedTime));
+
+    // Only steal if imbalance > 50%
+    if (maxPrediction - minPrediction < maxPrediction * 0.5) {
+      return;
+    }
+
+    const slowest = predictions.reduce((prev, current) =>
+      prev.predictedTime > current.predictedTime ? prev : current
+    );
+    const fastest = predictions.reduce((prev, current) =>
+      prev.predictedTime < current.predictedTime ? prev : current
+    );
+
+    if (
+      slowest.queue &&
+      fastest.queue &&
+      slowest.queue.tasks.length > 1 &&
+      fastest.agent.currentLoad < fastest.agent.capacity
+    ) {
+      const stolenTask = slowest.queue.tasks.shift();
+      if (stolenTask) {
+        fastest.queue.tasks.push(stolenTask);
+        slowest.agent.currentLoad = Math.max(0, slowest.agent.currentLoad - 1);
+        fastest.agent.currentLoad += 1;
+      }
+    }
   }
 
   releaseTask(swarmId: string, agentId: string, success: boolean): void {
@@ -107,6 +183,19 @@ export class SwarmOrchestrator {
         (agent.successRate * (agent.successRate === 0 ? 0 : 1) +
           1) /
         2;
+    }
+
+    // Remove the completed task from the agent's task queue
+    const queue = this.agentQueues.get(agentId);
+    if (queue && queue.tasks.length > 0) {
+      if (taskId) {
+        const index = queue.tasks.findIndex(t => t.id === taskId);
+        if (index >= 0) {
+          queue.tasks.splice(index, 1);
+        }
+      } else {
+        queue.tasks.shift();
+      }
     }
 
     const swarm = this.swarms.get(swarmId);
@@ -146,6 +235,33 @@ export class SwarmOrchestrator {
 
   getSwarmMetrics(id: string) {
     const swarm = this.swarms.get(id);
-    return swarm?.metrics || null;
+    if (!swarm) return null;
+
+    const queueImbalance = this.calculateQueueImbalance(swarm);
+    return {
+      ...swarm.metrics,
+      queueImbalance,
+      predictedCompletion: this.predictCompletionTime(swarm),
+    };
+  }
+
+  private calculateQueueImbalance(swarm: Swarm): number {
+    if (swarm.agents.length < 2) return 0;
+
+    const loads = swarm.agents.map((a) => a.currentLoad);
+    const maxLoad = Math.max(...loads);
+    const minLoad = Math.min(...loads);
+
+    return maxLoad - minLoad;
+  }
+
+  private predictCompletionTime(swarm: Swarm): number {
+    const predictions = swarm.agents.map((agent) => {
+      const queue = this.agentQueues.get(agent.id);
+      const avgTime = queue?.avgExecutionTime || 100;
+      return agent.currentLoad * avgTime;
+    });
+
+    return Math.max(...predictions);
   }
 }

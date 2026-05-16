@@ -1,7 +1,14 @@
 import { MemoryEntry, VectorSearchResult, MemoryStats } from "../types/index.js";
+import { VectorIndex } from "./VectorIndex.js";
+
+export interface RateLimitConfig {
+  queriesPerSecond: number;
+  burstSize: number;
+}
 
 export class MemorySystem {
   private entries = new Map<string, MemoryEntry>();
+  private vectorIndex = new VectorIndex();
   private stats: MemoryStats = {
     totalEntries: 0,
     cacheHits: 0,
@@ -9,6 +16,36 @@ export class MemorySystem {
     hitRate: 0,
     avgRetrievalTime: 0,
   };
+
+  private tokens: number;
+  private lastRefill: number;
+  private rateLimitConfig: RateLimitConfig;
+
+  constructor(rateLimitConfig: RateLimitConfig = { queriesPerSecond: 1000, burstSize: 100 }) {
+    this.rateLimitConfig = rateLimitConfig;
+    this.tokens = rateLimitConfig.burstSize;
+    this.lastRefill = Date.now();
+  }
+
+  private refillTokens(): void {
+    const now = Date.now();
+    const elapsed = (now - this.lastRefill) / 1000;
+    const tokensToAdd = elapsed * this.rateLimitConfig.queriesPerSecond;
+    this.tokens = Math.min(
+      this.rateLimitConfig.burstSize,
+      this.tokens + tokensToAdd
+    );
+    this.lastRefill = now;
+  }
+
+  private isRateLimited(): boolean {
+    this.refillTokens();
+    if (this.tokens < 1) {
+      return true;
+    }
+    this.tokens -= 1;
+    return false;
+  }
 
   set(key: string, value: unknown, metadata: Record<string, unknown> = {}): void {
     const id = `mem-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -21,6 +58,7 @@ export class MemorySystem {
       accessCount: 0,
       lastAccessed: Date.now(),
     });
+    this.vectorIndex.add(key);
     this.stats.totalEntries += 1;
   }
 
@@ -37,6 +75,7 @@ export class MemorySystem {
     // Check TTL
     if (entry.ttl && Date.now() - entry.createdAt > entry.ttl) {
       this.entries.delete(key);
+      this.vectorIndex.remove(key);
       this.stats.cacheMisses += 1;
       this.updateHitRate();
       return null;
@@ -61,20 +100,16 @@ export class MemorySystem {
   }
 
   vectorSearch(query: string, limit: number = 10): VectorSearchResult[] {
-    // Simplified vector search based on string similarity
-    const queryLower = query.toLowerCase();
-    const results: VectorSearchResult[] = [];
-
-    for (const entry of this.entries.values()) {
-      const keyLower = entry.key.toLowerCase();
-      const similarity = this.calculateSimilarity(queryLower, keyLower);
-
-      if (similarity > 0.3) {
-        results.push({ entry, similarity });
-      }
+    if (this.isRateLimited()) {
+      console.warn("[MemorySystem] Rate limit exceeded; returning empty results");
+      return [];
     }
 
-    return results.sort((a, b) => b.similarity - a.similarity).slice(0, limit);
+    const indexResults = this.vectorIndex.search(query, limit, 0.3);
+    return indexResults.map((result) => ({
+      entry: this.entries.get(result.key)!,
+      similarity: result.similarity,
+    }));
   }
 
   private calculateSimilarity(a: string, b: string): number {
@@ -122,6 +157,7 @@ export class MemorySystem {
 
   clear(): void {
     this.entries.clear();
+    this.vectorIndex.clear();
     this.stats = {
       totalEntries: 0,
       cacheHits: 0,

@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/syncpulse-hub",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Centralized SyncPulse Hub - Unified orchestration and installation of all @h4shed packages",
   "type": "module",
   "main": "dist/index.js",
