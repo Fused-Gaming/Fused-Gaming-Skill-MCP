@@ -2,10 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": ".vitepress/dist",
-    "ignoreDeprecations": "5.0",
-    "baseUrl": ".",
-    "paths": {}
+    "outDir": ".vitepress/dist"
   },
   "include": [
     ".vitepress/**/*"
