@@ -27,6 +27,8 @@
   },
   "workspaces": [
     "packages/core",
+    "packages/design-tokens",
+    "packages/license-client",
     "packages/skills/*",
     "packages/cli",
     "packages/web"
@@ -37,7 +39,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
     "dev": "npm run dev --workspace=packages/core",
-    "prepare": "npm run build",
+    "prepare": "echo 'Prepare step - explicit build step runs in CI'",
     "version": "node scripts/update-version.js && git add VERSION.json",
     "publish:packages": "npm publish --workspaces",
     "prerelease": "npm run build && npm run typecheck && npm run lint",
