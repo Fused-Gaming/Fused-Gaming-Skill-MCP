@@ -173,7 +173,7 @@ export class SwarmOrchestrator {
     }
   }
 
-  releaseTask(swarmId: string, agentId: string, success: boolean): void {
+  releaseTask(swarmId: string, agentId: string, success: boolean, taskId?: string): void {
     const agent = this.agents.get(agentId);
     if (!agent) return;
 
