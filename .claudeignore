@@ -1,0 +1,39 @@
+# Lock files (large, auto-generated)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Build outputs and caches
+dist/
+build/
+.next/
+out/
+.turbo/
+
+# Dependencies
+node_modules/
+.mcp/cache/
+
+# Test coverage and logs
+coverage/
+*.log
+.nyc_output/
+
+# IDE and tool caches
+.vscode/
+.idea/
+.DS_Store
+
+# Large documentation that's auto-generated
+IMPLEMENTATION_PLAN_SYNCPULSE_LANDING.md
+SYNCPULSE_IMPLEMENTATION_INDEX.md
+SYNCPULSE_INTEGRATION_STRATEGY.md
+RELEASE_NOTES_*.md
+
+# Archives
+*.zip
+*.tar.gz
+*.tgz
+
+# Generated graphics/assets
+LIMJ/

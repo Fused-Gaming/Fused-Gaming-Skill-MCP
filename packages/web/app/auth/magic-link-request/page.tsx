@@ -1,283 +1,125 @@
 'use client';
 
-import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function MagicLinkRequestPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [step, setStep] = useState<'request' | 'sent' | 'error'>('request');
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [sentEmail, setSentEmail] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const handleRequestMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
-
-    // Basic email validation
-    if (!email || !email.includes('@')) {
-      setError('Please enter a valid email address');
-      setLoading(false);
-      return;
-    }
+    setSuccess(false);
+    setIsLoading(true);
 
     try {
       const response = await fetch('/api/auth/magic-link/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email.toLowerCase(),
-          name: name.trim() || undefined
-        })
+        body: JSON.stringify({ email }),
       });
 
       if (!response.ok) {
         const data = await response.json();
         setError(data.error || 'Failed to send magic link');
-        setStep('error');
+        setIsLoading(false);
         return;
       }
 
-      setSentEmail(email);
-      setStep('sent');
-    } catch (err) {
-      setError('Failed to request magic link. Please try again.');
-      setStep('error');
-    } finally {
-      setLoading(false);
+      setSuccess(true);
+      setEmail('');
+      // Don't navigate away - let user see success message
+    } catch {
+      setError('An error occurred while sending the magic link');
+      setIsLoading(false);
     }
   };
 
-  const handleBackToRequest = () => {
-    setStep('request');
-    setError('');
-    setEmail('');
-    setName('');
-  };
-
-  if (step === 'sent') {
-    return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <div style={styles.successIcon}>✉️</div>
-          <h1>Check Your Email</h1>
-          <p style={styles.subtitle}>
-            We've sent a magic link to <strong>{sentEmail}</strong>
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark flex items-center justify-center px-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md"
+      >
+        <div className="glass p-8 rounded-lg border border-swarm-accent/20">
+          <h1 className="text-3xl font-bold glow-accent mb-2">Passwordless Login</h1>
+          <p className="text-swarm-tertiary mb-8">
+            We'll send you a secure link to sign in without a password
           </p>
 
-          <div style={styles.infoBox}>
-            <h3>What happens next:</h3>
-            <ol>
-              <li>Open the email from SyncPulse</li>
-              <li>Click the "Authenticate Now" button</li>
-              <li>You'll be automatically logged in</li>
-            </ol>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300"
+            >
+              {error}
+            </motion.div>
+          )}
+
+          {success && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-300"
+            >
+              <p className="font-semibold mb-2">Check your email</p>
+              <p className="text-sm">
+                We've sent a magic link to {email}. Click the link in the email to continue.
+              </p>
+            </motion.div>
+          )}
+
+          {!success && (
+            <form onSubmit={handleRequestMagicLink} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 bg-swarm-dark border border-swarm-accent/20 rounded-lg text-white focus:outline-none focus:border-swarm-accent/50 transition-colors"
+                  placeholder="your@email.com"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full px-4 py-2 rounded-lg bg-swarm-accent/20 hover:bg-swarm-accent/30 text-swarm-accent hover:text-white transition-colors font-semibold border border-swarm-accent/50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Sending link...' : 'Send Magic Link'}
+              </button>
+            </form>
+          )}
+
+          <div className="mt-6 text-center text-swarm-tertiary">
+            <button
+              onClick={() => router.push('/auth/login')}
+              className="text-swarm-accent hover:text-white transition-colors font-semibold"
+            >
+              Back to Sign In
+            </button>
           </div>
 
-          <div style={styles.warningBox}>
-            <p style={{ margin: '0 0 10px 0' }}>⏰ <strong>Link expires in 15 minutes</strong></p>
-            <p style={{ margin: '0' }}>📧 Check your spam folder if you don't see the email</p>
+          <div className="mt-4 p-3 bg-swarm-dark border border-swarm-accent/10 rounded-lg text-xs text-slate-400">
+            <p className="font-semibold text-white mb-1">How it works:</p>
+            <p>1. Enter your email address</p>
+            <p>2. Click the link in the email we send you</p>
+            <p>3. You'll be signed in automatically</p>
           </div>
-
-          <button
-            onClick={handleBackToRequest}
-            style={{
-              ...styles.button,
-              backgroundColor: '#6b7280'
-            }}
-          >
-            Request Another Link
-          </button>
         </div>
-      </div>
-    );
-  }
-
-  if (step === 'error') {
-    return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <h1>Something Went Wrong</h1>
-          {error && <div style={styles.error}>{error}</div>}
-
-          <button
-            onClick={handleBackToRequest}
-            style={styles.button}
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1>🔐 SyncPulse Magic Link</h1>
-        <p style={styles.subtitle}>
-          Enter your email to receive a secure authentication link. No password needed!
-        </p>
-
-        {error && <div style={styles.error}>{error}</div>}
-
-        <form onSubmit={handleRequestMagicLink}>
-          <div style={styles.formGroup}>
-            <label htmlFor="name">Full Name (Optional)</label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="John Doe"
-              style={styles.input}
-              disabled={loading}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label htmlFor="email">Email Address</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              style={styles.input}
-              disabled={loading}
-              autoFocus
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={!email || loading}
-            style={{
-              ...styles.button,
-              opacity: !email || loading ? 0.5 : 1,
-              cursor: !email || loading ? 'not-allowed' : 'pointer'
-            }}
-          >
-            {loading ? 'Sending...' : 'Send Magic Link'}
-          </button>
-        </form>
-
-        <div style={styles.infoBox}>
-          <h3>How Magic Links Work:</h3>
-          <ul>
-            <li>Click the button to request a secure link</li>
-            <li>Check your email for the link (valid for 15 minutes)</li>
-            <li>Click the link to automatically log in</li>
-            <li>No passwords to remember or manage</li>
-          </ul>
-        </div>
-
-        <div style={styles.divider}>
-          <span>or</span>
-        </div>
-
-        <p style={{ textAlign: 'center', color: '#cbd5e1' }}>
-          <a href="/auth/login" style={styles.link}>
-            Use traditional login with password
-          </a>
-        </p>
-      </div>
-    </div>
+      </motion.div>
+    </main>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '100vh',
-    backgroundColor: '#0f172a',
-    padding: '20px',
-    fontFamily: 'system-ui, -apple-system, sans-serif'
-  },
-  card: {
-    width: '100%',
-    maxWidth: '500px',
-    backgroundColor: '#1e293b',
-    border: '1px solid #334155',
-    borderRadius: '8px',
-    padding: '40px',
-    color: '#e2e8f0'
-  },
-  subtitle: {
-    color: '#cbd5e1',
-    marginBottom: '30px'
-  },
-  error: {
-    backgroundColor: '#7f1d1d',
-    color: '#fca5a5',
-    padding: '12px',
-    borderRadius: '4px',
-    marginBottom: '20px',
-    border: '1px solid #dc2626'
-  },
-  formGroup: {
-    marginBottom: '20px'
-  },
-  input: {
-    width: '100%',
-    padding: '12px',
-    backgroundColor: '#0f172a',
-    border: '1px solid #475569',
-    borderRadius: '4px',
-    color: '#e2e8f0',
-    fontSize: '14px',
-    marginTop: '8px',
-    boxSizing: 'border-box'
-  },
-  button: {
-    width: '100%',
-    padding: '12px',
-    backgroundColor: '#667eea',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    marginTop: '20px',
-    cursor: 'pointer'
-  },
-  infoBox: {
-    backgroundColor: '#1a1f35',
-    padding: '15px',
-    borderRadius: '4px',
-    marginTop: '20px',
-    marginBottom: '20px',
-    fontSize: '14px'
-  },
-  warningBox: {
-    backgroundColor: '#5f3f00',
-    border: '1px solid #b45309',
-    color: '#fef3c7',
-    padding: '15px',
-    borderRadius: '4px',
-    marginTop: '20px',
-    marginBottom: '20px',
-    fontSize: '14px'
-  },
-  successIcon: {
-    fontSize: '48px',
-    textAlign: 'center',
-    marginBottom: '20px'
-  },
-  divider: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '20px 0',
-    color: '#64748b'
-  },
-  link: {
-    color: '#667eea',
-    textDecoration: 'none'
-  }
-};

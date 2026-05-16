@@ -268,7 +268,7 @@ async function runReleaseBenchmark() {
       const assignment = orchestrator.assignTask(swarm.id, task);
       // Release task immediately so queue doesn't saturate
       if (assignment) {
-        orchestrator.releaseTask(swarm.id, assignment.id);
+        orchestrator.releaseTask(swarm.id, assignment.id, true);
       }
     }
   );
@@ -332,13 +332,10 @@ async function runReleaseBenchmark() {
   if (!fs.existsSync(resultsDir)) {
     fs.mkdirSync(resultsDir, { recursive: true });
   }
-  // Use runner's timestamp if provided, otherwise compute from results timestamp
-  const timestamp = process.env.BENCHMARK_TIMESTAMP || (() => {
-    const now = new Date(results.timestamp);
-    const dateStr = now.toISOString().split('T')[0].replace(/-/g, '');
-    const timeStr = now.toISOString().split('T')[1].split('.')[0].replace(/:/g, '');
-    return `${dateStr}_${timeStr}`;
-  })();
+  const now = new Date(results.timestamp);
+  const dateStr = now.toISOString().split('T')[0].replace(/-/g, '');
+  const timeStr = now.toISOString().split('T')[1].split('.')[0].replace(/:/g, '');
+  const timestamp = `${dateStr}_${timeStr}`;
   const resultsFile = `${resultsDir}/release-${results.version}-${timestamp}.json`;
   fs.writeFileSync(resultsFile, JSON.stringify(results, null, 2));
   console.log(`\n📊 Results saved to: ${resultsFile}`);
@@ -360,7 +357,11 @@ async function runReleaseBenchmark() {
 }
 
 // Run benchmark with Node.js flags: node --expose-gc release-performance.benchmark.ts
+console.log("Starting SyncPulse release benchmark...");
 runReleaseBenchmark().catch((err) => {
   console.error("Benchmark error:", err);
+  if (err instanceof Error) {
+    console.error("Stack:", err.stack);
+  }
   process.exit(1);
 });

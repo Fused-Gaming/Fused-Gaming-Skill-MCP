@@ -35,7 +35,7 @@ export class TaskOrchestrator {
 
         const success = true;
         if (this.swarm && swarmId && assignedAgent) {
-          this.swarm.releaseTask(swarmId, assignedAgent.id, success);
+          this.swarm.releaseTask(swarmId, assignedAgent.id, success, task.id);
         }
 
         results.push({ task, success });
@@ -44,7 +44,7 @@ export class TaskOrchestrator {
         task.error = e instanceof Error ? e.message : String(e);
 
         if (this.swarm && swarmId && assignedAgent) {
-          this.swarm.releaseTask(swarmId, assignedAgent.id, false);
+          this.swarm.releaseTask(swarmId, assignedAgent.id, false, task.id);
         }
 
         results.push({ task, success: false });

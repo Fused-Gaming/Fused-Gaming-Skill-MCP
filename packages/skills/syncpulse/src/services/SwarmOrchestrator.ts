@@ -173,7 +173,7 @@ export class SwarmOrchestrator {
     }
   }
 
-  releaseTask(swarmId: string, agentId: string, success: boolean): void {
+  releaseTask(swarmId: string, agentId: string, success: boolean, taskId?: string): void {
     const agent = this.agents.get(agentId);
     if (!agent) return;
 
@@ -183,6 +183,19 @@ export class SwarmOrchestrator {
         (agent.successRate * (agent.successRate === 0 ? 0 : 1) +
           1) /
         2;
+    }
+
+    // Remove the completed task from the agent's task queue
+    const queue = this.agentQueues.get(agentId);
+    if (queue && queue.tasks.length > 0) {
+      if (taskId) {
+        const index = queue.tasks.findIndex(t => t.id === taskId);
+        if (index >= 0) {
+          queue.tasks.splice(index, 1);
+        }
+      } else {
+        queue.tasks.shift();
+      }
     }
 
     const swarm = this.swarms.get(swarmId);
