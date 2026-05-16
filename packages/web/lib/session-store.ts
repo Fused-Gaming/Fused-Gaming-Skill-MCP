@@ -8,6 +8,7 @@
  */
 
 import crypto from 'crypto';
+import bcryptjs from 'bcryptjs';
 
 interface SessionData {
   token: string;
@@ -46,10 +47,13 @@ const DEMO_USER_EMAIL = 'demo@example.com';
 const DEMO_USER_PASSWORD = 'demo';
 const DEMO_USER_ID = 'user_demo';
 
+// Hash the demo password with bcrypt (10 salt rounds for security)
+const hashedDemoPassword = bcryptjs.hashSync(DEMO_USER_PASSWORD, 10);
+
 usersMap.set(DEMO_USER_EMAIL, {
   email: DEMO_USER_EMAIL,
   userId: DEMO_USER_ID,
-  password: DEMO_USER_PASSWORD,
+  password: hashedDemoPassword,
   passwordChanged: false,
 });
 
@@ -229,27 +233,28 @@ export const SessionStore = {
   },
 
   /**
-   * Updates a user's password
+   * Updates a user's password with secure bcrypt hashing
    */
   updatePassword(email: string, newPassword: string): boolean {
     const user = usersMap.get(email);
     if (!user) return false;
 
-    user.password = newPassword;
+    // Hash password with bcrypt (10 salt rounds)
+    user.password = bcryptjs.hashSync(newPassword, 10);
     user.passwordChanged = true;
     return true;
   },
 
   /**
-   * Validates a user's email/password combination
+   * Validates a user's email/password combination using bcrypt
    * Accepts both one-time password (first login) and changed password (subsequent logins)
    */
   validatePassword(email: string, password: string): boolean {
     const user = usersMap.get(email);
-    if (!user) return false;
+    if (!user || !user.password) return false;
 
-    // Match against stored password (works for both initial and changed passwords)
-    return user.password === password;
+    // Compare password using bcrypt safe comparison
+    return bcryptjs.compareSync(password, user.password);
   },
 
   /**
