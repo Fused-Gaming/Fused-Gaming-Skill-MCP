@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, X, ChevronDown, LogOut, LayoutDashboard, Activity } from 'lucide-react';
 import VersionBadge from './VersionBadge';
 
 interface NavigationProps {
@@ -77,7 +76,7 @@ export default function Navigation({
             className="flex cursor-pointer items-center gap-3"
             onClick={() => router.push('/')}
           >
-            <Icon name="pulse" size={28} color="#667eea" />
+            <Activity size={28} color="#667eea" />
             <div>
               <div className="text-lg font-bold text-white">SyncPulse</div>
               {isDashboard && (
