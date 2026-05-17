@@ -3,10 +3,9 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import VersionBadge from './VersionBadge';
 import Icon from './Icon';
 import GlassmorphCard from './GlassmorphCard';
-import Breadcrumb from './Breadcrumb';
+import PageFooter from './PageFooter';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -56,7 +55,6 @@ export default function LandingPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark flex flex-col">
-      <Breadcrumb items={[]} showVersion={true} showStatus={true} />
       {/* Hero Section */}
       <section className="flex-1 flex items-center justify-center px-6 py-20">
         <div className="max-w-4xl w-full">
@@ -233,23 +231,17 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Footer with Version Badge */}
-      <footer className="border-t border-swarm-accent/10 py-8 px-6 mt-auto">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-slate-500">
-            Copyright 2026 SyncPulse. All rights reserved.
-          </p>
-          <div className="flex items-center gap-4">
-            <a href="/privacy" className="text-sm text-slate-500 hover:text-swarm-accent transition-colors">
-              Privacy
-            </a>
-            <a href="/terms" className="text-sm text-slate-500 hover:text-swarm-accent transition-colors">
-              Terms
-            </a>
-            <VersionBadge variant="small" />
-          </div>
-        </div>
-      </footer>
+      {/* Footer */}
+      <PageFooter
+        items={[]}
+        showVersion={true}
+        showStatus={true}
+        showCopyright={true}
+        links={[
+          { label: 'Privacy', href: '/privacy' },
+          { label: 'Terms', href: '/terms' },
+        ]}
+      />
     </main>
   );
 }

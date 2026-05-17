@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Icon from '@/components/Icon';
-import Breadcrumb from '@/components/Breadcrumb';
+import PageFooter from '@/components/PageFooter';
 import ToolCard from '@/components/ToolCard';
 import { ChevronRight } from 'lucide-react';
 
@@ -246,7 +246,6 @@ const toolCategories: ToolCategory[] = [
 export default function SkillsPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark">
-      <Breadcrumb items={[{ label: 'Skills', href: '/skills' }]} showVersion={true} showStatus={true} />
       {/* Header */}
       <header className="border-b border-swarm-accent/20 sticky top-0 z-40 glass">
         <div className="max-w-7xl mx-auto px-6 py-8">
@@ -331,6 +330,19 @@ export default function SkillsPage() {
           </div>
         </motion.section>
       </div>
+
+      {/* Footer */}
+      <PageFooter
+        items={[{ label: 'Skills', href: '/skills' }]}
+        showVersion={true}
+        showStatus={true}
+        showCopyright={true}
+        links={[
+          { label: 'Privacy', href: '/privacy' },
+          { label: 'Terms', href: '/terms' },
+          { label: 'GitHub', href: 'https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP' },
+        ]}
+      />
     </main>
   );
 }
