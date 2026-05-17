@@ -7,8 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-05-17
+
 ### Added
-- **Auth Architecture Enhancement (v1.0.6)** — PR #166 security and functionality improvements
+- **Standardized PR Merge Workflow (v1.0)** — Comprehensive documentation and templates for consistent development practices
+  - `.github/pull_request_template.md` — Auto-populated PR template with 5-phase merge checklist
+  - `docs/PR_MERGE_CHECKLIST.md` — 136+ verification items across validation, testing, documentation, review, and merge execution phases
+  - `docs/MERGE_WORKFLOW_GUIDE.md` — Team reference guide with commands, metrics, customization examples, and adoption strategy
+  - Publication branch tagging procedures with version numbering (semantic versioning v[X.Y.Z])
+  - Comprehensive label checklist system (7+ issue categories, 5+ PR categories)
+  - Phase timeline with command sequences for each workflow stage
+  - Benchmark metrics template and performance tracking guidelines
+  - Migration guide and breaking change documentation standards
+  - Post-merge verification and release notes procedures
+
+### Fixed
+- **Tailwind CSS Opacity Compatibility (GlassmorphCard)** — PR #186 Codex review resolution
+  - Changed unsupported `border-white/8` to valid arbitrary opacity `border-white/[0.08]`
+  - Updated hover state from `hover:border-purple-500/50` to `hover:border-white/[0.12]` for consistency
+  - Ensures proper translucent border rendering without Tailwind build warnings
+
+### Changed
+- Enhanced breadcrumb component with three design variants (default, compact, minimal)
+- Updated dashboard and navigation pages to use standardized breadcrumb component
+- Improved PR template with implementation checklist for code/testing/documentation/QA tracking
+- Added session achievement documentation to checklists with commit tracking
+
+### Documentation
+- All PR merge workflow documentation integrated into version-controlled references
+- Label system standardized across issues and PRs for consistent project organization
+- Release procedures documented with explicit steps for version tagging and publication
+- Team adoption guidelines with metrics tracking and retrospective process
+
+## [1.1.2] - 2026-05-16
+
+### Performance
+- **SyncPulse v0.2.2 Benchmark Results** — Comprehensive performance validation across all critical operations
   - JWT-based session management with stateless authentication
   - User account creation via `SessionStore.createUser()` method
   - Rate limiting on signup and contact form endpoints (5 requests/min and 10 requests/min respectively)
