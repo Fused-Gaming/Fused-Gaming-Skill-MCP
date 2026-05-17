@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Icon from '@/components/Icon';
+import Breadcrumb from '@/components/Breadcrumb';
 import PageFooter from '@/components/PageFooter';
 import SwarmVisualizer from '@/components/SwarmVisualizer';
 import RoadmapEditor from '@/components/RoadmapEditor';
@@ -43,6 +44,17 @@ export default function Home() {
           </motion.div>
         </div>
       </header>
+
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb
+        items={[
+          { label: 'Dashboard', href: '/dashboard', icon: 'grid' },
+          { label: 'Overview' },
+        ]}
+        variant="default"
+        showVersion={true}
+        showStatus={true}
+      />
 
       {/* Main Grid */}
       <div className="max-w-7xl mx-auto px-6 py-8">

@@ -11,11 +11,11 @@ export default function GlassmorphCard({ children, className = '', onClick }: Gl
     <div
       onClick={onClick}
       className={`
-        backdrop-blur-[22px] bg-gradient-to-br from-[#050508] to-[#0a0a0f]
-        border border-white/8
+        backdrop-blur-[22px] bg-gradient-to-br from-slate-800/50 to-slate-900/50
+        border border-white/[0.08]
         rounded-[24px] p-6
         shadow-[0_24px_80px_rgba(0,0,0,0.45),inset_0_0_28px_rgba(168,85,247,0.06)]
-        hover:border-white/15 transition-all duration-300
+        hover:border-white/[0.12] transition-all duration-300
         ${className}
       `}
     >
