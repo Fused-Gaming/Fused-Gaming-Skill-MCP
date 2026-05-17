@@ -1,6 +1,39 @@
 ## 📝 Description
 <!-- Provide a brief description of your changes -->
 
+## 🏷️ Labels
+**Select appropriate labels for this PR:**
+
+### Change Type (required - select one)
+- [ ] `type:breaking` - Breaking change
+- [ ] `type:feature` - New feature
+- [ ] `type:bugfix` - Bug fix
+- [ ] `type:refactor` - Refactoring
+- [ ] `type:docs` - Documentation only
+- [ ] `type:test` - Test additions/updates
+- [ ] `type:chore` - Maintenance, build, deps
+
+### Area (select one or more)
+- [ ] `area:frontend` - Frontend changes
+- [ ] `area:backend` - Backend changes
+- [ ] `area:ci-cd` - CI/CD changes
+- [ ] `area:database` - Database changes
+- [ ] `area:performance` - Performance improvements
+- [ ] `area:security` - Security-related
+
+### Review Status
+- [ ] `status:ready-for-review` - Ready for code review
+- [ ] `status:blocked` - Blocked (specify reason below)
+
+### Size (required - select one)
+- [ ] `size:xs` - Very small (1-10 files)
+- [ ] `size:s` - Small (10-50 files)
+- [ ] `size:m` - Medium (50-100 files)
+- [ ] `size:l` - Large (100-200 files)
+- [ ] `size:xl` - Extra large (200+ files)
+
+---
+
 ## 🎯 Type of Change
 - [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
 - [ ] ✨ New feature (non-breaking change which adds functionality)
@@ -54,6 +87,14 @@ Relates to #[other-issue-number]
 - [ ] Code review completed (at least 1 approval)
 - [ ] All review comments addressed or documented
 - [ ] Architecture/security review completed (if applicable)
+
+### 🏷️ Publication Tagging (if release-ready)
+- [ ] Semantic version determined (major.minor.patch)
+- [ ] CHANGELOG.md updated with release notes
+- [ ] Version tags documented (v[X.Y.Z] format)
+- [ ] Release branch created (if applicable)
+- [ ] NPM publish workflow ready (if package)
+- [ ] GitHub Release notes prepared
 
 ---
 

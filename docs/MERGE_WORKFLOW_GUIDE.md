@@ -140,6 +140,91 @@ npm run typecheck
 
 ---
 
+## 🏷️ Publication Branch Tagging
+
+### Version Tagging
+**When:** After merge to main/release branch  
+**Format:** `v[X.Y.Z]` (semantic versioning)
+
+```bash
+# Create annotated tag with release notes
+git tag -a v1.2.3 -m "Release v1.2.3: Major features and bug fixes"
+
+# Push tag to remote
+git push origin v1.2.3
+
+# Verify tag
+git tag -l -n v1.2.3
+```
+
+### Release Branch Strategy
+- **Release Branches:** `release/v[X.Y.Z]` (for patch/hotfix)
+- **Hotfix Branches:** `hotfix/v[X.Y.Z]` (critical fixes only)
+- **Protection Rules:** Require PR review before merge
+
+### Publication Checklist
+- [ ] Semantic version determined (major/minor/patch)
+- [ ] Tag format verified: `v[X.Y.Z]`
+- [ ] Release notes finalized
+- [ ] CHANGELOG.md updated
+- [ ] GitHub Release created
+- [ ] NPM publish triggered (if package)
+- [ ] Artifacts verified and accessible
+
+---
+
+## 🏷️ Label Checklist for Issues & PRs
+
+### Issue Labels (9+ categories)
+
+**Priority:** `priority:critical`, `priority:high`, `priority:medium`, `priority:low`  
+**Type:** `type:bug`, `type:feature`, `type:enhancement`, `type:documentation`, `type:refactor`, `type:performance`, `type:security`, `type:chore`  
+**Status:** `status:backlog`, `status:ready`, `status:in-progress`, `status:in-review`, `status:blocked`, `status:done`  
+**Area:** `area:frontend`, `area:backend`, `area:database`, `area:ci-cd`, `area:documentation`  
+**Workflow:** `needs:design-review`, `needs:security-review`, `help-wanted`, `good-first-issue`, `wontfix`, `duplicate`
+
+### PR Labels (5+ categories)
+
+**Change Type (required):** `type:breaking`, `type:feature`, `type:bugfix`, `type:refactor`, `type:docs`, `type:test`, `type:chore`  
+**Area:** `area:frontend`, `area:backend`, `area:ci-cd`, `area:database`, `area:performance`, `area:security`  
+**Review Status:** `status:ready-for-review`, `status:changes-requested`, `status:approved`, `status:blocked`  
+**Size (required):** `size:xs`, `size:s`, `size:m`, `size:l`, `size:xl`  
+**Release:** `release:v[X.Y.Z]`, `milestone:next-release`, `backport-candidate`
+
+### Labeling Workflow
+
+**On Issue Creation:**
+```
+1. Assign type:* (required, one)
+2. Assign priority:* (required, one)
+3. Assign area:* (optional, one or more)
+4. Default status: status:backlog
+```
+
+**On PR Creation:**
+```
+1. Assign type:* (required, one)
+2. Assign area:* (optional, one or more)
+3. Assign size:* (required, one)
+4. Default status: status:ready-for-review
+```
+
+**During Review:**
+```
+1. Changes requested → Add status:changes-requested
+2. Approved → Add status:approved
+3. Ready to merge → Confirm all labels present
+```
+
+**Before Release:**
+```
+1. Add release:v[X.Y.Z] to merged PRs
+2. Add milestone:next-release to related issues
+3. Archive old milestone labels
+```
+
+---
+
 ## Command Reference
 
 ### Quick Validation Sequence

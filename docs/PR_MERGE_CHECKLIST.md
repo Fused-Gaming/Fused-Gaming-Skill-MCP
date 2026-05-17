@@ -220,6 +220,170 @@
 
 ---
 
+## 🏷️ Publication Branch Tagging
+
+### Version Tagging (if release-ready)
+- [ ] **Tag Creation:**
+  - [ ] Tag format verified: `v[X.Y.Z]` (semantic versioning)
+  - [ ] Tag created on main/release branch: `git tag v[X.Y.Z]`
+  - [ ] Tag annotated with release notes: `git tag -a v[X.Y.Z] -m "Release v[X.Y.Z]"`
+  - [ ] Tag pushed to remote: `git push origin v[X.Y.Z]`
+- [ ] **Release Branch:**
+  - [ ] Release branch created (if applicable): `release/v[X.Y.Z]`
+  - [ ] Release branch protection enabled (GitHub settings)
+  - [ ] Release notes finalized on release branch
+
+### Publication Documentation
+- [ ] **Changelog Entry:**
+  - [ ] Version header: `## v[X.Y.Z] - YYYY-MM-DD`
+  - [ ] All changes categorized (Features, Fixes, Breaking, Performance)
+  - [ ] Contributors listed
+  - [ ] Migration guide included (if breaking)
+- [ ] **GitHub Release:**
+  - [ ] Release title: `v[X.Y.Z]: [Brief description]`
+  - [ ] Release body matches CHANGELOG entry
+  - [ ] Pre-release flag set (if beta/rc)
+  - [ ] Artifacts attached (if applicable)
+
+### Publication Workflow
+- [ ] **NPM Publication** (if package):
+  - [ ] `npm publish` or publish workflow triggered
+  - [ ] Package version matches tag: `npm view [package] version`
+  - [ ] README and documentation in published package
+  - [ ] Package unpacked and verified: `npm pack`
+- [ ] **Docker/Artifact Publication** (if applicable):
+  - [ ] Docker image built: `docker build -t [name]:v[X.Y.Z]`
+  - [ ] Image pushed to registry
+  - [ ] Image verified: `docker run [name]:v[X.Y.Z]`
+  - [ ] Artifact checksums computed and published
+
+### Post-Publication Verification
+- [ ] **Package Availability:**
+  - [ ] NPM package visible on npmjs.com
+  - [ ] GitHub Release visible on repository releases page
+  - [ ] Docker image pullable from registry
+  - [ ] Artifact downloads working
+- [ ] **Notification:**
+  - [ ] Release announcement published (if applicable)
+  - [ ] Team notification sent
+  - [ ] Dependent projects notified (if applicable)
+
+---
+
+## 🏷️ Label Checklist for Issues & PRs
+
+### Issue Labels
+
+**Priority Labels:**
+- [ ] `priority:critical` - Blocks deployment/critical bug
+- [ ] `priority:high` - High impact, urgent
+- [ ] `priority:medium` - Normal priority
+- [ ] `priority:low` - Nice-to-have, backlog
+
+**Type Labels:**
+- [ ] `type:bug` - Bug report or fix
+- [ ] `type:feature` - New feature request/implementation
+- [ ] `type:enhancement` - Improvement to existing feature
+- [ ] `type:documentation` - Documentation update
+- [ ] `type:refactor` - Code refactoring
+- [ ] `type:performance` - Performance optimization
+- [ ] `type:security` - Security fix or improvement
+- [ ] `type:chore` - Maintenance, build, dependencies
+
+**Status Labels:**
+- [ ] `status:backlog` - In product backlog
+- [ ] `status:ready` - Ready for development
+- [ ] `status:in-progress` - Currently being worked on
+- [ ] `status:in-review` - Under review
+- [ ] `status:blocked` - Blocked by dependency
+- [ ] `status:done` - Completed
+
+**Category Labels:**
+- [ ] `area:frontend` - Frontend/UI changes
+- [ ] `area:backend` - Backend/API changes
+- [ ] `area:database` - Database schema/queries
+- [ ] `area:ci-cd` - CI/CD pipeline
+- [ ] `area:documentation` - Docs and guides
+- [ ] `area:dependencies` - Dependency updates
+- [ ] `area:testing` - Testing infrastructure
+
+**Workflow Labels:**
+- [ ] `needs:design-review` - Awaiting design review
+- [ ] `needs:security-review` - Awaiting security review
+- [ ] `needs:architecture-review` - Awaiting architecture review
+- [ ] `help-wanted` - Community contributions welcome
+- [ ] `good-first-issue` - Good for new contributors
+- [ ] `wontfix` - Won't be addressed
+- [ ] `duplicate` - Duplicate of existing issue
+
+### Pull Request Labels
+
+**Change Type Labels:**
+- [ ] `type:breaking` - Breaking change
+- [ ] `type:feature` - New feature
+- [ ] `type:bugfix` - Bug fix
+- [ ] `type:refactor` - Refactoring
+- [ ] `type:docs` - Documentation only
+- [ ] `type:test` - Test additions/updates
+- [ ] `type:chore` - Maintenance, build, deps
+
+**Area Labels:**
+- [ ] `area:frontend` - Frontend changes
+- [ ] `area:backend` - Backend changes
+- [ ] `area:ci-cd` - CI/CD changes
+- [ ] `area:database` - Database changes
+- [ ] `area:performance` - Performance improvements
+- [ ] `area:security` - Security-related
+
+**Review Status Labels:**
+- [ ] `status:ready-for-review` - Ready for code review
+- [ ] `status:changes-requested` - Awaiting author changes
+- [ ] `status:approved` - Review approved
+- [ ] `status:blocked` - Blocked (missing dependency)
+
+**Size Labels:**
+- [ ] `size:xs` - Very small (1-10 files)
+- [ ] `size:s` - Small (10-50 files)
+- [ ] `size:m` - Medium (50-100 files)
+- [ ] `size:l` - Large (100-200 files)
+- [ ] `size:xl` - Extra large (200+ files)
+
+**Release Labels:**
+- [ ] `release:v[X.Y.Z]` - Included in version X.Y.Z
+- [ ] `milestone:next-release` - Target for next release
+- [ ] `backport-candidate` - Consider for backport
+
+### Labeling Rules
+
+**Issue Creation:**
+- [ ] Assign exactly one `type:*` label
+- [ ] Assign exactly one `priority:*` label
+- [ ] Assign one or more `area:*` labels (if applicable)
+- [ ] Assign `status:backlog` by default
+
+**Issue During Development:**
+- [ ] Update status label as work progresses
+- [ ] Add `needs:*-review` labels as needed
+- [ ] Add `status:blocked` if dependencies arise
+
+**PR Creation:**
+- [ ] Assign exactly one `type:*` label
+- [ ] Assign one or more `area:*` labels
+- [ ] Assign `size:*` label based on scope
+- [ ] Assign `status:ready-for-review` when ready
+
+**PR During Review:**
+- [ ] Update status labels based on review feedback
+- [ ] Add `status:changes-requested` if changes needed
+- [ ] Change to `status:approved` when ready to merge
+
+**Before Release:**
+- [ ] Apply `release:v[X.Y.Z]` label to merged PRs
+- [ ] Apply `milestone:next-release` to related issues
+- [ ] Clean up old milestone labels
+
+---
+
 ## 📊 Checklist Summary
 
 **Total Items:** [AUTO-COUNT]  
