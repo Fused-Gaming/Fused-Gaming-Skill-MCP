@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown, LogOut, LayoutDashboard } from 'lucide-react';
 import VersionBadge from './VersionBadge';
-import Icon from './Icon';
 
 interface NavigationProps {
   isAuthenticated?: boolean;
@@ -74,7 +74,7 @@ export default function Navigation({
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
-            className="flex cursor-pointer items-center gap-2"
+            className="flex cursor-pointer items-center gap-3"
             onClick={() => router.push('/')}
           >
             <Icon name="pulse" size={28} color="#667eea" />

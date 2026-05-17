@@ -19,13 +19,21 @@ export const iconPaths: Record<string, string> = {
   mobile: 'M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4 18H9c-.55 0-1-.45-1-1s.45-1 1-1h6c.55 0 1 .45 1 1s-.45 1-1 1zm4-3H5V4h14v13z',
   wrench: 'M20.57 14.76L22 13.33 20.57 11.9c.35-1.48.35-3.1 0-4.58L22 4.9 20.57 3.47 19.04 5c-1.31-.99-2.86-1.64-4.46-1.64-4.42 0-8 3.58-8 8s3.58 8 8 8c1.6 0 3.15-.65 4.46-1.64l1.53 1.53zM14.58 15.4c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z',
   document: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-8-6z',
-  users: 'M17 21h-5v-2c0-1.66-3.34-2.5-5-2.5S2 17.34 2 19v2H0v-2c0-2.5 3.97-3.5 7-3.5s7 1 7 3.5v2zm2.5-4c1.38 0 2.64-.56 3.54-1.46 1.89 1.89 4.95 1.89 6.84 0 .9.9 2.16 1.46 3.54 1.46 2.49 0 4.5-2.01 4.5-4.5s-2.01-4.5-4.5-4.5c-1.38 0-2.64.56-3.54 1.46-1.89-1.89-4.95-1.89-6.84 0-.9-.9-2.16-1.46-3.54-1.46-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5zM12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z',
+  users: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z',
   mail: 'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z',
   map: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5.09L3.5 13c0 5.55 4.07 10.74 9.5 11.9v-5.5h-3zm6-6l-4 4v-10l-4-4v15.1C15.93 21.39 20 16.2 20 10l-4 1z',
 };
 
 export type IconName = keyof typeof iconPaths;
 
+// Icons that should be rendered as strokes (line-based) instead of fills
+// Only include actual line-based icons (open paths), not filled Material Design glyphs
+const strokeIcons = new Set<IconName>(['pulse', 'check']);
+
 export function getIconPath(name: IconName): string {
   return iconPaths[name] || '';
+}
+
+export function isStrokeIcon(name: IconName): boolean {
+  return strokeIcons.has(name);
 }
