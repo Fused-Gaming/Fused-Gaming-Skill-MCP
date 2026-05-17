@@ -10,8 +10,7 @@ import {
   Code,
   GitBranch,
   BarChart3,
-  Users,
-  Network
+  Users
 } from 'lucide-react';
 
 interface StatusResponse {

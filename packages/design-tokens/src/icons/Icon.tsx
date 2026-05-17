@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import type { IconProps, IconSize, IconColor } from '../types/icons';
+import type { IconProps, IconColor } from '../types/icons';
 import { getIcon } from './registry';
 import { ICON_SIZES } from '../types/icons';
 

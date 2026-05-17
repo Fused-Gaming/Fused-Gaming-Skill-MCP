@@ -15,7 +15,6 @@ import {
   Lightbulb,
   Sparkles,
   BarChart3,
-  GitBranch,
   Code
 } from 'lucide-react';
 

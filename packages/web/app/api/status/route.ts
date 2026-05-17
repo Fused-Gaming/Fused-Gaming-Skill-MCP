@@ -78,7 +78,7 @@ export async function GET(_request: NextRequest) {
           topology: agentsData.swarmMetadata?.topology || 'hierarchical-mesh',
           maxCapacity: agentsData.swarmMetadata?.maxAgents || 15,
         };
-      } catch (e) {
+      } catch {
         // Swarm data not available
       }
     }
@@ -98,7 +98,7 @@ export async function GET(_request: NextRequest) {
             createdAt: swarm.createdAt || stateData.timestamp,
           };
         }
-      } catch (e) {
+      } catch {
         // Swarm state not available
       }
     }
@@ -107,7 +107,7 @@ export async function GET(_request: NextRequest) {
     if (fs.existsSync(sessionGoalsPath)) {
       try {
         sessionGoals = JSON.parse(fs.readFileSync(sessionGoalsPath, 'utf-8'));
-      } catch (e) {
+      } catch {
         // Session goals not available
       }
     }
