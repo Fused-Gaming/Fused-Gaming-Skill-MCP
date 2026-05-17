@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Icon from './Icon';
 import GlassmorphCard from './GlassmorphCard';
 import PageFooter from './PageFooter';
@@ -71,8 +72,15 @@ export default function LandingPage() {
               transition={{ delay: 0.2, duration: 0.8 }}
               className="mb-8"
             >
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Icon name="pulse" size={56} color="#A855F7" />
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <Image
+                  src="/images/brand-logo.svg"
+                  alt="SyncPulse Logo"
+                  width={64}
+                  height={96}
+                  className="object-contain"
+                  priority
+                />
                 <div className="text-6xl font-bold glow-accent">SyncPulse</div>
               </div>
               <p className="text-2xl text-swarm-tertiary font-light">

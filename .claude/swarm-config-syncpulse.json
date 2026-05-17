@@ -1,0 +1,314 @@
+{
+  "swarm": {
+    "id": "syncpulse-design-enhancement-2026-05-17",
+    "name": "SyncPulse Sales Experience Enhancement",
+    "description": "4-agent hierarchical swarm for implementing cyberpunk/neon sales experience based on Issue #164 design tokens",
+    "initializationDate": "2026-05-17T00:00:00Z",
+    "status": "initialized",
+    "topology": "hierarchical-star",
+    "memoryNamespace": "coordination"
+  },
+
+  "coordinationHub": {
+    "namespace": "coordination",
+    "parentPath": "syncpulse-design-enhancement",
+    "artifacts": [
+      {
+        "id": "hub-registry",
+        "path": "coordination/syncpulse-design-enhancement/hub",
+        "purpose": "Central registry of all agent statuses, blockers, and coordination state",
+        "owner": "design-system-architect",
+        "readers": ["all-agents"],
+        "writers": ["design-system-architect"],
+        "updateFrequency": "on-status-change"
+      },
+      {
+        "id": "audit-results",
+        "path": "coordination/syncpulse-design-enhancement/audit-results",
+        "purpose": "Architect's design audit findings - GATES other agents",
+        "owner": "design-system-architect",
+        "readers": ["all-agents"],
+        "writers": ["design-system-architect"],
+        "blockingGate": true,
+        "blockedAgents": ["component-enhancement", "animation-effects", "sales-optimizer"]
+      },
+      {
+        "id": "component-specs",
+        "path": "coordination/syncpulse-design-enhancement/component-specs",
+        "purpose": "Enhanced component specifications (buttons, cards, inputs, hero) - GATES animation & sales agents",
+        "owner": "component-enhancement",
+        "readers": ["animation-effects", "sales-optimizer"],
+        "writers": ["component-enhancement"],
+        "blockingGate": true,
+        "blockedAgents": ["animation-effects", "sales-optimizer"]
+      },
+      {
+        "id": "animation-library",
+        "path": "coordination/syncpulse-design-enhancement/animation-library",
+        "purpose": "Motion and animation definitions for all components",
+        "owner": "animation-effects",
+        "readers": ["sales-optimizer"],
+        "writers": ["animation-effects"],
+        "blockingGate": true,
+        "blockedAgents": ["sales-optimizer"]
+      },
+      {
+        "id": "sales-plan",
+        "path": "coordination/syncpulse-design-enhancement/sales-plan",
+        "purpose": "Enhancement plan for each sales page",
+        "owner": "sales-optimizer",
+        "readers": ["all-agents"],
+        "writers": ["sales-optimizer"],
+        "blockingGate": false
+      },
+      {
+        "id": "progress",
+        "path": "coordination/syncpulse-design-enhancement/progress",
+        "purpose": "Shared progress tracking across all phases",
+        "owner": "design-system-architect",
+        "readers": ["all-agents"],
+        "writers": ["all-agents"],
+        "blockingGate": false
+      }
+    ]
+  },
+
+  "agents": [
+    {
+      "id": "design-system-architect",
+      "name": "Design System Architect",
+      "role": "Lead Coordinator",
+      "type": "coordinator",
+      "priority": 1,
+      "responsibilities": [
+        "Audit current design implementation against token spec",
+        "Analyze all sales pages for token compliance gaps",
+        "Create priority list for enhancements",
+        "Gate other agents until audit complete"
+      ],
+      "memoryBindings": {
+        "statusPath": "swarm/design-system-architect/status",
+        "progressPath": "swarm/design-system-architect/progress",
+        "outputPaths": [
+          "coordination/syncpulse-design-enhancement/audit-results",
+          "coordination/syncpulse-design-enhancement/hub"
+        ]
+      },
+      "dependencies": [],
+      "tasksBlocking": [
+        "component-enhancement",
+        "animation-effects",
+        "sales-optimizer"
+      ],
+      "taskSequence": [
+        "initialize-status",
+        "audit-design-tokens",
+        "analyze-sales-pages",
+        "identify-gaps",
+        "create-priority-list",
+        "write-audit-results",
+        "signal-completion"
+      ]
+    },
+    {
+      "id": "component-enhancement",
+      "name": "Component Enhancement Specialist",
+      "role": "Implementation Lead",
+      "type": "specialist",
+      "priority": 2,
+      "responsibilities": [
+        "Enhance button components with tokens",
+        "Update card components with glassmorphism",
+        "Style input fields with neon effects",
+        "Redesign hero sections",
+        "Update icons and badges"
+      ],
+      "memoryBindings": {
+        "statusPath": "swarm/component-enhancement/status",
+        "progressPath": "swarm/component-enhancement/progress",
+        "inputPaths": [
+          "coordination/syncpulse-design-enhancement/audit-results"
+        ],
+        "outputPaths": [
+          "coordination/syncpulse-design-enhancement/component-specs",
+          "coordination/syncpulse-design-enhancement/progress"
+        ]
+      },
+      "dependencies": [
+        {
+          "agent": "design-system-architect",
+          "artifactPath": "coordination/syncpulse-design-enhancement/audit-results",
+          "requiredField": "readyForImplementation",
+          "expectedValue": true
+        }
+      ],
+      "taskSequence": [
+        "initialize-status",
+        "wait-for-audit",
+        "read-audit-results",
+        "enhance-buttons",
+        "enhance-cards",
+        "enhance-inputs",
+        "enhance-hero",
+        "enhance-icons",
+        "write-component-specs",
+        "signal-completion"
+      ]
+    },
+    {
+      "id": "animation-effects",
+      "name": "Animation & Effects Specialist",
+      "role": "Motion Designer",
+      "type": "specialist",
+      "priority": 2,
+      "responsibilities": [
+        "Define cinematic motion library",
+        "Implement button animations",
+        "Create hero motion sequences",
+        "Add card interaction animations",
+        "Implement scanline and grid effects"
+      ],
+      "memoryBindings": {
+        "statusPath": "swarm/animation-effects/status",
+        "progressPath": "swarm/animation-effects/progress",
+        "inputPaths": [
+          "coordination/syncpulse-design-enhancement/audit-results",
+          "coordination/syncpulse-design-enhancement/component-specs"
+        ],
+        "outputPaths": [
+          "coordination/syncpulse-design-enhancement/animation-library",
+          "coordination/syncpulse-design-enhancement/progress"
+        ]
+      },
+      "dependencies": [
+        {
+          "agent": "design-system-architect",
+          "artifactPath": "coordination/syncpulse-design-enhancement/audit-results",
+          "requiredField": "readyForImplementation",
+          "expectedValue": true
+        },
+        {
+          "agent": "component-enhancement",
+          "artifactPath": "coordination/syncpulse-design-enhancement/component-specs",
+          "requiredField": "readyForImplementation",
+          "expectedValue": true
+        }
+      ],
+      "taskSequence": [
+        "initialize-status",
+        "wait-for-audit",
+        "wait-for-component-specs",
+        "read-component-specs",
+        "define-motion-library",
+        "implement-button-animations",
+        "implement-hero-motion",
+        "implement-card-animations",
+        "implement-input-animations",
+        "implement-overlay-effects",
+        "write-animation-library",
+        "signal-completion"
+      ]
+    },
+    {
+      "id": "sales-optimizer",
+      "name": "Sales Page Optimizer",
+      "role": "Experience Designer",
+      "type": "specialist",
+      "priority": 3,
+      "responsibilities": [
+        "Enhance dashboard page with components and animations",
+        "Enhance sales page with maximum visual impact",
+        "Enhance skills page with consistency",
+        "Verify cross-page consistency",
+        "Optimize for visual impact and accessibility"
+      ],
+      "memoryBindings": {
+        "statusPath": "swarm/sales-optimizer/status",
+        "progressPath": "swarm/sales-optimizer/progress",
+        "inputPaths": [
+          "coordination/syncpulse-design-enhancement/audit-results",
+          "coordination/syncpulse-design-enhancement/component-specs",
+          "coordination/syncpulse-design-enhancement/animation-library"
+        ],
+        "outputPaths": [
+          "coordination/syncpulse-design-enhancement/sales-plan",
+          "coordination/syncpulse-design-enhancement/progress"
+        ]
+      },
+      "dependencies": [
+        {
+          "agent": "design-system-architect",
+          "artifactPath": "coordination/syncpulse-design-enhancement/audit-results",
+          "requiredField": "readyForImplementation",
+          "expectedValue": true
+        },
+        {
+          "agent": "component-enhancement",
+          "artifactPath": "coordination/syncpulse-design-enhancement/component-specs",
+          "requiredField": "readyForImplementation",
+          "expectedValue": true
+        },
+        {
+          "agent": "animation-effects",
+          "artifactPath": "coordination/syncpulse-design-enhancement/animation-library",
+          "requiredField": "readyForImplementation",
+          "expectedValue": true
+        }
+      ],
+      "taskSequence": [
+        "initialize-status",
+        "wait-for-audit",
+        "wait-for-component-specs",
+        "wait-for-animation-library",
+        "read-all-artifacts",
+        "enhance-dashboard-page",
+        "enhance-sales-page",
+        "enhance-skills-page",
+        "verify-consistency",
+        "optimize-visual-impact",
+        "validate-accessibility",
+        "write-sales-plan",
+        "signal-completion"
+      ]
+    }
+  ],
+
+  "resourceAllocation": {
+    "totalAgents": 4,
+    "concurrency": {
+      "architect": 1,
+      "specialists": 3,
+      "maxParallel": 4
+    },
+    "timeEstimates": {
+      "phase1-audit": "45-60 minutes",
+      "phase2-design": "30-45 minutes (parallel)",
+      "phase3-implementation": "120-180 minutes (parallel)",
+      "phase4-validation": "30-45 minutes",
+      "totalDuration": "4-6 hours"
+    }
+  },
+
+  "communicationProtocol": {
+    "method": "memory-driven",
+    "namespace": "coordination",
+    "statusUpdateTriggers": [
+      "task-start",
+      "task-completion",
+      "blocker-encountered",
+      "artifact-written"
+    ],
+    "blockingMechanism": {
+      "type": "memory-gate",
+      "pollInterval": 10000,
+      "timeout": 600000
+    }
+  },
+
+  "successCriteria": {
+    "phase1": "Audit complete, audit-results written, readyForImplementation = true",
+    "phase2": "Component specs and animation library locked, both readyForImplementation = true",
+    "phase3": "All sales pages enhanced, consistency verified",
+    "phase4": "Design system compliance 100%, accessibility validated, ready for deployment"
+  }
+}
