@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Icon from './Icon';
 import GlassmorphCard from './GlassmorphCard';
 import Button from './Button';
