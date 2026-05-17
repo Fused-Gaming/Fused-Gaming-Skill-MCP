@@ -2,20 +2,46 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+// Resolve the actual repository root (not the workspace directory)
+function getRepoRoot(): string {
+  const workspaceRoot = process.cwd();
+
+  // If we're in the web workspace (packages/web), go up to repo root
+  if (workspaceRoot.endsWith('packages/web') || workspaceRoot.endsWith('packages\\web')) {
+    return path.resolve(workspaceRoot, '../../');
+  }
+
+  // Otherwise, try to find the repo root by walking up to find .claude-flow
+  let current = workspaceRoot;
+  for (let i = 0; i < 5; i++) {
+    if (fs.existsSync(path.join(current, '.claude-flow'))) {
+      return current;
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break; // Reached filesystem root
+    current = parent;
+  }
+
+  // Fallback to workspace root
+  return workspaceRoot;
+}
+
 export async function GET(_request: NextRequest) {
   try {
-    const projectRoot = process.cwd();
+    const projectRoot = getRepoRoot();
 
     // Load project metadata
     const versionJsonPath = path.join(projectRoot, 'VERSION.json');
     const packageJsonPath = path.join(projectRoot, 'package.json');
     const agentsStorePath = path.join(projectRoot, '.claude-flow', 'agents', 'store.json');
     const swarmStatePath = path.join(projectRoot, '.claude-flow', 'swarm', 'swarm-state.json');
+    const sessionGoalsPath = path.join(projectRoot, '.claude-flow', 'session', 'goals.json');
 
     let projectVersion = '1.0.0';
     let packageInfo: any = {};
     let agentsInfo: any = { count: 0, agents: [] };
     let swarmInfo: any = null;
+    let sessionGoals: any = null;
 
     // Load version info
     if (fs.existsSync(versionJsonPath)) {
@@ -72,6 +98,15 @@ export async function GET(_request: NextRequest) {
         }
       } catch (e) {
         // Swarm state not available
+      }
+    }
+
+    // Load session goals
+    if (fs.existsSync(sessionGoalsPath)) {
+      try {
+        sessionGoals = JSON.parse(fs.readFileSync(sessionGoalsPath, 'utf-8'));
+      } catch (e) {
+        // Session goals not available
       }
     }
 
@@ -236,6 +271,15 @@ export async function GET(_request: NextRequest) {
         state: swarmInfo,
       },
       session: sessionInfo,
+      sessionGoals: sessionGoals || {
+        sessionId: 'not-initialized',
+        timestamp: new Date().toISOString(),
+        branch: 'unknown',
+        goals: [],
+        mergeChecklist: {},
+        progress: { goalsCompleted: 0, checklistItemsCompleted: 0, overallProgress: 0 },
+        commits: [],
+      },
       timeline,
       guidance,
     });
