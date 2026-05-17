@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import VersionBadge from './VersionBadge';
 import Icon from './Icon';
 import GlassmorphCard from './GlassmorphCard';
+import Breadcrumb from './Breadcrumb';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -55,6 +56,7 @@ export default function LandingPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark flex flex-col">
+      <Breadcrumb items={[]} showVersion={true} showStatus={true} />
       {/* Hero Section */}
       <section className="flex-1 flex items-center justify-center px-6 py-20">
         <div className="max-w-4xl w-full">

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import Icon from '@/components/Icon';
+import Breadcrumb from '@/components/Breadcrumb';
 import PricingPlans from '@/components/PricingPlans';
 import FeatureGrid from '@/components/FeatureGrid';
 import FeaturedSection from '@/components/FeaturedSection';
@@ -17,6 +18,7 @@ export default function SalesPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark">
+      <Breadcrumb items={[{ label: 'Sales', href: '/sales' }]} showVersion={true} showStatus={true} />
       {/* Navigation */}
       <header className="border-b border-swarm-accent/20 sticky top-0 z-40 glass">
         <div className="max-w-7xl mx-auto px-6 py-4">

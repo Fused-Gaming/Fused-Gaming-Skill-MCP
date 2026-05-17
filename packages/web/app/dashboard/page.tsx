@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Icon from '@/components/Icon';
+import Breadcrumb from '@/components/Breadcrumb';
 import SwarmVisualizer from '@/components/SwarmVisualizer';
 import RoadmapEditor from '@/components/RoadmapEditor';
 import TaskMonitor from '@/components/TaskMonitor';
@@ -20,6 +21,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-swarm-dark via-slate-900 to-swarm-dark">
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/dashboard' }]} showVersion={true} showStatus={true} />
       {/* Header */}
       <header className="border-b border-swarm-accent/20 sticky top-0 z-40 glass">
         <div className="max-w-7xl mx-auto px-6 py-6">
