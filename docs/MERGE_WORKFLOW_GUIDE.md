@@ -380,8 +380,39 @@ Link standardized checklist:
 
 ---
 
+## Recent Updates (2026-05-17)
+
+### New Documentation
+- ✅ Standardized PR template with embedded checklist
+- ✅ Comprehensive 5-phase merge checklist (136+ items)
+- ✅ Merge workflow integration guide
+- ✅ Publication branch tagging procedures
+- ✅ Label checklist for issues and PRs (9+ categories)
+
+### Updated Components
+- ✅ Breadcrumb component (3 design variants)
+- ✅ GlassmorphCard (Tailwind opacity fix)
+- ✅ Dashboard integration
+- ✅ Navigation integration
+
+### Checklist Template Enhancements
+1. **Publication Phase** - Version tagging, release branches, artifact management
+2. **Label System** - Priority, Type, Status, Area, Review labels for issues
+3. **Label System** - Type, Area, Review, Size, Release labels for PRs
+4. **Implementation Tracking** - Code, testing, documentation, QA checklists
+
+### Key Metrics
+- **Total Phases:** 5 (Validation, Testing, Docs, Review, Merge)
+- **Total Checklist Items:** 136+
+- **Issue Label Categories:** 7+
+- **PR Label Categories:** 5+
+- **Recent Commits:** 5 (all merged to branch)
+
+---
+
 ## See Also
 
 - Full checklist: `docs/PR_MERGE_CHECKLIST.md`
 - GitHub PR template: `.github/pull_request_template.md`
 - Project standards: `CLAUDE.md`
+- Current branch: `claude/resolve-comments-pr-BzLJY`
