@@ -13,7 +13,7 @@
         "progressKey": "swarm/core-agent/progress",
         "role": "core-agent",
         "statusKey": "swarm/core-agent/status",
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "targetPackages": [
           "mcp-core",
           "mcp-cli",
@@ -34,7 +34,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "skills-agent",
         "branch": "fix/readme-skills",
         "targetPackages": "all-skill-packages",
@@ -56,7 +56,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "tools-agent",
         "branch": "fix/readme-tools",
         "targetPackages": "all-tool-packages",
@@ -78,7 +78,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "test-agent",
         "branch": "claude/design-system-orchestration-kLw4W",
         "targetPackages": [
@@ -105,7 +105,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "developer-agent",
         "branch": "claude/implement-limj-package-6WZpc",
         "targetPackages": [
@@ -132,7 +132,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "validator-agent",
         "branch": "claude/setup-swarm-session-98Rwz",
         "targetPackages": [
@@ -159,7 +159,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "benchmark-agent",
         "branch": "claude/setup-swarm-session-98Rwz",
         "targetPackages": "all",
@@ -190,7 +190,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "coordinator-agent",
         "branch": "main",
         "targetPackages": "all",
