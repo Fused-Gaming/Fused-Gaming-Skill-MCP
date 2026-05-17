@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown, LogOut, LayoutDashboard } from 'lucide-react';
 import VersionBadge from './VersionBadge';
+import Breadcrumb, { BreadcrumbItem } from './Breadcrumb';
 
 interface NavigationProps {
   isAuthenticated?: boolean;
@@ -13,6 +14,8 @@ interface NavigationProps {
   onLogout?: () => void;
   onLogin?: () => void;
   onMagicLink?: () => void;
+  breadcrumbs?: BreadcrumbItem[];
+  showBreadcrumbs?: boolean;
 }
 
 export default function Navigation({
@@ -21,6 +24,8 @@ export default function Navigation({
   onLogout = () => {},
   onLogin = () => {},
   onMagicLink = () => {},
+  breadcrumbs = [],
+  showBreadcrumbs = false,
 }: NavigationProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -277,6 +282,11 @@ export default function Navigation({
           )}
         </AnimatePresence>
       </div>
+
+      {/* Breadcrumb Navigation */}
+      {showBreadcrumbs && breadcrumbs.length > 0 && (
+        <Breadcrumb items={breadcrumbs} variant="compact" showVersion={false} showStatus={false} />
+      )}
     </nav>
   );
 }
