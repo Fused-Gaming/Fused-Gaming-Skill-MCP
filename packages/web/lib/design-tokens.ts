@@ -26,6 +26,13 @@ export const iconPaths: Record<string, string> = {
 
 export type IconName = keyof typeof iconPaths;
 
+// Icons that should be rendered as strokes (line-based) instead of fills
+const strokeIcons = new Set<IconName>(['pulse', 'check', 'code', 'brush']);
+
 export function getIconPath(name: IconName): string {
   return iconPaths[name] || '';
+}
+
+export function isStrokeIcon(name: IconName): boolean {
+  return strokeIcons.has(name);
 }

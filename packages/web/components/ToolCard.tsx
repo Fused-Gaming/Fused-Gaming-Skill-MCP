@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
+import Icon from './Icon';
+import { type IconName } from '@/lib/design-tokens';
 
 interface ToolCardProps {
   name: string;
   description: string;
-  icon: string;
+  icon: IconName;
   url?: string;
   tags?: string[];
   status?: 'stable' | 'beta' | 'new';
@@ -35,7 +37,7 @@ export default function ToolCard({
       <div className="h-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6 hover:border-swarm-accent/50 transition-all duration-300 glass">
         {/* Icon and Header */}
         <div className="flex items-start justify-between mb-4">
-          <div className="text-4xl">{icon}</div>
+          <Icon name={icon} size={40} color="#A855F7" />
           {url && (
             <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-swarm-accent transition-colors opacity-0 group-hover:opacity-100" />
           )}
