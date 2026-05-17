@@ -11,7 +11,16 @@ interface IconProps {
 
 export default function Icon({ name, size = 24, className = '', color }: IconProps) {
   const iconPath = getIconPath(name);
-  if (!iconPath) return null;
+  if (!iconPath) {
+    return (
+      <span
+        className={`inline-flex items-center justify-center text-xs font-bold ${color ? '' : 'text-current'} ${className}`}
+        style={color ? { color, width: size, height: size } : { width: size, height: size }}
+      >
+        ?
+      </span>
+    );
+  }
 
   const isStroke = isStrokeIcon(name);
 
