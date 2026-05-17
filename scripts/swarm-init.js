@@ -33,6 +33,10 @@ console.log(`   - Config: ${path.relative(projectRoot, configPath)}`);
 console.log(`   - Swarm State: ${path.relative(projectRoot, swarmStatePath)}`);
 console.log(`   - Agents Store: ${path.relative(projectRoot, agentsStorePath)}`);
 
+// Load agents configuration first for capacity validation
+const agentsStore = JSON.parse(fs.readFileSync(agentsStorePath, 'utf-8'));
+const agents = Object.values(agentsStore.agents);
+
 // Validate and reinitialize swarm state if needed
 function validateOrCreateSwarmState() {
   let swarmState = null;
@@ -49,8 +53,15 @@ function validateOrCreateSwarmState() {
         const swarm = stateData.swarms[swarmId];
         // Check if swarm has valid metadata
         if (swarm && swarm.topology && swarm.status) {
-          isValid = true;
-          swarmState = stateData;
+          // Validate that loaded agents don't exceed swarm capacity
+          const agentCount = agents.length;
+          const maxAgents = swarm.maxAgents || 3;
+          if (agentCount <= maxAgents) {
+            isValid = true;
+            swarmState = stateData;
+          } else {
+            previousSwarmId = swarmId;
+          }
         } else {
           previousSwarmId = swarmId;
         }
@@ -114,10 +125,6 @@ function validateOrCreateSwarmState() {
 
   return swarmState;
 }
-
-// Load agents configuration
-const agentsStore = JSON.parse(fs.readFileSync(agentsStorePath, 'utf-8'));
-const agents = Object.values(agentsStore.agents);
 
 console.log(`\n👥 Loaded ${agents.length} Agents:`);
 agents.forEach((agent, index) => {
