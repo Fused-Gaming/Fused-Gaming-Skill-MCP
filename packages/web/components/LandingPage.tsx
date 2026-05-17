@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Icon from './Icon';
 import GlassmorphCard from './GlassmorphCard';
 import PageFooter from './PageFooter';
 
@@ -74,7 +73,7 @@ export default function LandingPage() {
             >
               <div className="flex items-center justify-center gap-4 mb-4">
                 <Image
-                  src="/images/brand-logo.png"
+                  src="/images/brand-logo.svg"
                   alt="SyncPulse Logo"
                   width={64}
                   height={96}

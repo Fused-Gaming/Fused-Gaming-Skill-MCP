@@ -79,7 +79,7 @@ export default function Navigation({
             onClick={() => router.push('/')}
           >
             <Image
-              src="/images/brand-logo.png"
+              src="/images/brand-logo.svg"
               alt="SyncPulse Logo"
               width={32}
               height={48}
