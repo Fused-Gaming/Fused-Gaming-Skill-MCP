@@ -57,7 +57,7 @@ export class LicenseValidator {
       }
 
       // Cache the validated license
-      LicenseStorage.saveLicenseCache(payload);
+      LicenseStorage.saveLicenseCache(payload as unknown as Record<string, unknown>);
 
       return {
         valid: true,
@@ -117,9 +117,9 @@ export class LicenseValidator {
    * Does not verify signature, but checks expiration with grace period
    */
   static isOfflineValid(): OfflineValidationResult {
-    const cachedPayload = LicenseStorage.loadLicenseCache();
+    const cachedData = LicenseStorage.loadLicenseCache();
 
-    if (!cachedPayload) {
+    if (!cachedData) {
       return {
         valid: false,
         cacheValid: false,
@@ -127,6 +127,7 @@ export class LicenseValidator {
       };
     }
 
+    const cachedPayload = cachedData as unknown as LicensePayload;
     const expirationStatus = this.checkExpiration(cachedPayload);
 
     // Allow offline validation during grace period

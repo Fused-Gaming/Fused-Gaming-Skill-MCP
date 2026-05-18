@@ -64,7 +64,7 @@ export function initializeLicense(): string {
   // Validate and cache the license for offline use
   const result = LicenseValidator.validateLicense(trialLicense);
   if (result.valid && result.payload) {
-    LicenseStorage.saveLicenseCache(result.payload as Record<string, unknown>);
+    LicenseStorage.saveLicenseCache(result.payload as unknown as Record<string, unknown>);
   }
 
   return trialLicense;

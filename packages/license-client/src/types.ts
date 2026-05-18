@@ -44,6 +44,7 @@ export interface CommercialLicenseOptions {
   features: LicenseFeatures;
   licenseKey: string;
   machineId?: string;
+  version?: string;
 }
 
 export interface LicenseConfig {
