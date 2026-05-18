@@ -1,0 +1,158 @@
+{
+  "swarm_name": "SyncPulse Sales Experience Enhancement",
+  "initialization_date": "2026-05-17",
+  "swarm_type": "hierarchical",
+  "agent_count": 4,
+  "memory_namespace": "coordination",
+  "target_completion": "2026-05-17",
+
+  "agents": [
+    {
+      "id": "alpha",
+      "name": "Design System Architect",
+      "role": "Lead Coordinator",
+      "phase": "Phase 1: Audit & Planning",
+      "duration_minutes": 30,
+      "memory_path": "swarm/design-architect",
+      "status_transitions": ["INITIALIZED", "STARTED", "COMPLETE"],
+      "dependencies": [],
+      "key_tasks": [
+        "Audit design tokens",
+        "Review sales pages",
+        "Create gap analysis",
+        "Coordinate team"
+      ],
+      "artifacts": [
+        "swarm/shared/design-audit",
+        "swarm/shared/token-gaps",
+        "swarm/shared/enhancement-priority"
+      ]
+    },
+    {
+      "id": "beta",
+      "name": "Component Enhancement Specialist",
+      "role": "UI Component Developer",
+      "phase": "Phase 2: Component Enhancement",
+      "duration_minutes": 45,
+      "memory_path": "swarm/component-specialist",
+      "status_transitions": ["INITIALIZED", "AWAITING_GAPS", "STARTED", "COMPLETE"],
+      "dependencies": ["alpha/token-gaps"],
+      "key_tasks": [
+        "Enhance buttons",
+        "Enhance cards",
+        "Enhance inputs",
+        "Create shadow/glow system",
+        "Validate components"
+      ],
+      "artifacts": [
+        "swarm/shared/enhanced-buttons",
+        "swarm/shared/enhanced-cards",
+        "swarm/shared/enhanced-inputs",
+        "swarm/shared/shadow-glow-system"
+      ]
+    },
+    {
+      "id": "gamma",
+      "name": "Animation & Effects Specialist",
+      "role": "Motion & VFX Designer",
+      "phase": "Phase 3: Animation & Effects",
+      "duration_minutes": 60,
+      "memory_path": "swarm/animation-specialist",
+      "status_transitions": ["INITIALIZED", "AWAITING_COMPONENTS", "STARTED", "COMPLETE"],
+      "dependencies": ["beta/enhanced-buttons", "beta/enhanced-cards"],
+      "key_tasks": [
+        "Create keyframe animations",
+        "Define motion specifications",
+        "Design hero animations",
+        "Design CTA animations",
+        "Define micro-interactions",
+        "Validate animations"
+      ],
+      "artifacts": [
+        "swarm/shared/keyframes-library",
+        "swarm/shared/easing-functions",
+        "swarm/shared/hero-animation-patterns",
+        "swarm/shared/cta-animation-patterns",
+        "swarm/shared/microinteraction-specs"
+      ]
+    },
+    {
+      "id": "delta",
+      "name": "Sales Page Optimizer",
+      "role": "Integration & Optimization",
+      "phase": "Phase 4: Page Implementation",
+      "duration_minutes": 45,
+      "memory_path": "swarm/sales-optimizer",
+      "status_transitions": ["INITIALIZED", "AWAITING_ARTIFACTS", "STARTED", "COMPLETE"],
+      "dependencies": ["alpha/complete", "beta/complete", "gamma/complete"],
+      "key_tasks": [
+        "Enhance dashboard page",
+        "Enhance skills page",
+        "Enhance sales page",
+        "Enhance landing/contact pages",
+        "Optimize CTA buttons",
+        "Validate consistency"
+      ],
+      "artifacts": [
+        "swarm/shared/page-dashboard-updates",
+        "swarm/shared/page-skills-updates",
+        "swarm/shared/page-sales-updates",
+        "swarm/shared/page-landing-updates",
+        "swarm/shared/cta-optimization-results"
+      ]
+    }
+  ],
+
+  "objective": {
+    "title": "Enhance SyncPulse sales experience with issue #164 design tokens",
+    "description": "Implement neon aesthetics, glassmorphism, and cinematic animations across all customer-facing pages",
+    "reference": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues/164",
+    "key_elements": [
+      "Neon color palette",
+      "Glassmorphism effects",
+      "Glow/shadow system",
+      "Cinematic animations",
+      "Holographic gradients",
+      "Scanline effects",
+      "Pulse animations"
+    ]
+  },
+
+  "target_files": {
+    "design_tokens": "packages/skills/frontend-design/src/design-tokens.ts",
+    "pages": [
+      "packages/web/app/dashboard/page.tsx",
+      "packages/web/app/skills/page.tsx",
+      "packages/web/app/sales/page.tsx",
+      "packages/web/app/contact-sales/page.tsx",
+      "packages/web/app/landing/page.tsx"
+    ],
+    "components": "packages/web/components/"
+  },
+
+  "success_criteria": {
+    "design_coherence": "100% of sales pages use issue #164 color palette",
+    "component_quality": "8+ components enhanced with neon/glassmorphism",
+    "animation_polish": "Hero sections + CTAs have cinematic animations",
+    "code_quality": "Build/lint/typecheck all passing",
+    "sales_impact": "Compelling visual experience across all pages"
+  },
+
+  "timeline": {
+    "phase_1_audit": "30 minutes",
+    "phase_2_components": "45 minutes",
+    "phase_3_animations": "60 minutes",
+    "phase_4_integration": "45 minutes",
+    "total_estimated": "180 minutes (3 hours)"
+  },
+
+  "validation_checkpoints": [
+    "Alpha audit complete → Beta ready",
+    "Beta components complete → Gamma ready",
+    "Gamma animations complete → Delta ready",
+    "Delta integration complete → Build validation",
+    "npm run build PASSING",
+    "npm run lint PASSING",
+    "npm run typecheck PASSING"
+  ]
+}

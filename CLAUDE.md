@@ -1,5 +1,59 @@
 # CLAUDE.md
 
+## 🚀 Startup Instructions - Run on Session Start
+
+### 1. Install Dependencies
+```bash
+npm install --package-lock-only --ignore-scripts
+npm ci
+npm run build
+```
+
+### 2. Verify Installation
+```bash
+npm run lint
+npm run typecheck
+```
+
+### 3. Configure Environment
+Create `.env.local` if needed:
+```bash
+# Add API keys and environment variables for development
+# Reference: .env.example or docs/CONTRIBUTING.md
+```
+
+### 4. Initialize Git Session
+```bash
+git status
+git remote -v
+git branch -a
+```
+
+### 5. Setup Development Branch
+```bash
+# If working on feature: ensure on correct development branch
+# Example: git checkout claude/inventory-design-system-ko0SC
+git branch --show-current
+```
+
+### 6. Initialize Swarm Orchestration
+The project uses multi-agent coordination. Key components:
+- **Package Structure**: Monorepo with 60+ workspace packages
+- **MCP Skills**: Design system, orchestration, email workflows
+- **Web Dashboard**: Next.js 14 App Router with Framer Motion
+- **Performance Benchmarks**: SyncPulse v0.2.2 with 4/4 targets passing
+- **CI/CD**: GitHub Actions (Node 20.x, 22.x LTS matrix)
+
+### 7. Pre-Task Checklist
+Before starting any task:
+- [ ] Run `npm run build` to verify no build errors
+- [ ] Check `git status` for uncommitted changes
+- [ ] Confirm working on correct development branch
+- [ ] Review CLAUDE.md Agent Notes for recent constraints
+- [ ] Check open PRs and GitHub issues for context
+
+---
+
 ## Agent Notes (2026-04-21, README roadmap + open PR/milestone reindex)
 
 ### What Was Updated

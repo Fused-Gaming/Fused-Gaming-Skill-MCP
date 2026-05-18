@@ -1,9 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Icon from './Icon';
+import type { IconName } from '@/lib/design-tokens';
 
 interface Feature {
-  icon: string;
+  icon: IconName;
   name: string;
   description: string;
   badge?: string;
@@ -11,37 +13,37 @@ interface Feature {
 
 const features: Feature[] = [
   {
-    icon: '🐝',
+    icon: 'hexCore',
     name: 'Swarm Orchestration',
     description: 'Coordinate multiple AI agents with intelligent task distribution and dependency management.',
     badge: 'Core Feature',
   },
   {
-    icon: '📊',
+    icon: 'chart',
     name: 'Real-time Monitoring',
     description: 'Live dashboards showing agent status, performance metrics, and system health at a glance.',
     badge: 'Premium',
   },
   {
-    icon: '⚡',
+    icon: 'zap',
     name: 'Performance Optimization',
     description: 'Automatic load balancing, resource allocation, and latency optimization across all agents.',
     badge: 'AI-Powered',
   },
   {
-    icon: '🔄',
+    icon: 'grid',
     name: 'Seamless Integration',
     description: 'Connect to any LLM, API, or tool. Built-in adapters for popular platforms and custom endpoints.',
     badge: 'Extensible',
   },
   {
-    icon: '🛡️',
+    icon: 'shield',
     name: 'Enterprise Security',
     description: 'End-to-end encryption, role-based access control, audit logs, and compliance certifications.',
     badge: 'Enterprise',
   },
   {
-    icon: '📈',
+    icon: 'trendUp',
     name: 'Advanced Analytics',
     description: 'Deep insights into agent behavior, cost analysis, performance trends, and optimization recommendations.',
     badge: 'Analytics',
@@ -121,9 +123,9 @@ export default function FeatureGrid({
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ type: 'spring', stiffness: 200 }}
-                  className="text-5xl mb-4 inline-block"
+                  className="mb-4 inline-block"
                 >
-                  {feature.icon}
+                  <Icon name={feature.icon} size={40} color="#A855F7" />
                 </motion.div>
 
                 {/* Badge */}

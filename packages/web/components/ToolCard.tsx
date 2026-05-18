@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
+import Icon from './Icon';
+import { type IconName, iconPaths } from '@/lib/design-tokens';
 
 interface ToolCardProps {
   name: string;
   description: string;
-  icon: string;
+  icon: IconName;
   url?: string;
   tags?: string[];
   status?: 'stable' | 'beta' | 'new';
@@ -24,6 +26,8 @@ export default function ToolCard({
     new: 'bg-blue-500/20 text-blue-300'
   };
 
+  const hasValidIcon = iconPaths[icon] && iconPaths[icon].trim().length > 0;
+
   return (
     <motion.a
       href={url || '#'}
@@ -32,18 +36,24 @@ export default function ToolCard({
       whileHover={{ y: -4, scale: 1.02 }}
       className="group block h-full"
     >
-      <div className="h-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6 hover:border-swarm-accent/50 transition-all duration-300 glass">
+      <div className="h-full bg-gradient-to-br from-[#050508] to-[#0a0a0f] border border-white/[0.08] rounded-lg p-6 hover:border-white/[0.15] transition-all duration-300 glass backdrop-blur-[22px]">
         {/* Icon and Header */}
         <div className="flex items-start justify-between mb-4">
-          <div className="text-4xl">{icon}</div>
+          {hasValidIcon ? (
+            <Icon name={icon} size={40} color="#A855F7" />
+          ) : (
+            <div className="w-10 h-10 rounded-lg bg-swarm-accent/20 flex items-center justify-center text-sm font-semibold text-swarm-accent">
+              {name.charAt(0).toUpperCase()}
+            </div>
+          )}
           {url && (
-            <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-swarm-accent transition-colors opacity-0 group-hover:opacity-100" />
+            <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-[#667eea] transition-colors opacity-0 group-hover:opacity-100" />
           )}
         </div>
 
         {/* Title and Status */}
         <div className="mb-3">
-          <h3 className="text-lg font-semibold text-white group-hover:text-swarm-accent transition-colors">
+          <h3 className="text-lg font-semibold text-white group-hover:text-[#667eea] transition-colors">
             {name}
           </h3>
           {status && (
@@ -54,7 +64,7 @@ export default function ToolCard({
         </div>
 
         {/* Description */}
-        <p className="text-sm text-slate-300 mb-4 line-clamp-3">
+        <p className="text-sm text-white/70 mb-4 line-clamp-3">
           {description}
         </p>
 
@@ -64,7 +74,7 @@ export default function ToolCard({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-1 text-xs bg-slate-700/50 text-slate-300 rounded border border-slate-600/50"
+                className="px-2 py-1 text-xs bg-white/5 text-white/70 rounded border border-white/[0.1]"
               >
                 {tag}
               </span>

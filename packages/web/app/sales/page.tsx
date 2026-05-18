@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import Icon from '@/components/Icon';
+import PageFooter from '@/components/PageFooter';
 import PricingPlans from '@/components/PricingPlans';
 import FeatureGrid from '@/components/FeatureGrid';
 import FeaturedSection from '@/components/FeaturedSection';
@@ -20,8 +22,9 @@ export default function SalesPage() {
       <header className="border-b border-swarm-accent/20 sticky top-0 z-40 glass">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold glow-accent">⚡ SyncPulse</h1>
+            <div className="flex items-center gap-2">
+              <Icon name="pulse" size={28} color="#A855F7" />
+              <h1 className="text-3xl font-bold glow-accent">SyncPulse</h1>
             </div>
             <nav className="hidden md:flex items-center gap-8">
               <a
@@ -168,9 +171,8 @@ export default function SalesPage() {
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 3, repeat: Infinity }}
-                  className="text-7xl"
                 >
-                  🎬
+                  <Icon name="play" size={64} color="#A855F7" />
                 </motion.div>
               </div>
             </div>
@@ -236,111 +238,17 @@ export default function SalesPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-700/50 py-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <h3 className="font-bold text-white mb-4">Product</h3>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Security
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold text-white mb-4">Company</h3>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Careers
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold text-white mb-4">Resources</h3>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    API Reference
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Community
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold text-white mb-4">Legal</h3>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Terms
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-swarm-accent transition-colors">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-slate-700/50 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-slate-400 text-sm">
-                © 2026 SyncPulse. All rights reserved.
-              </p>
-              <div className="flex gap-6">
-                <a href="#" className="text-slate-400 hover:text-swarm-accent transition-colors">
-                  Twitter
-                </a>
-                <a href="#" className="text-slate-400 hover:text-swarm-accent transition-colors">
-                  LinkedIn
-                </a>
-                <a href="#" className="text-slate-400 hover:text-swarm-accent transition-colors">
-                  GitHub
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <PageFooter
+        items={[{ label: 'Sales', href: '/sales' }]}
+        showVersion={true}
+        showStatus={true}
+        showCopyright={true}
+        links={[
+          { label: 'Privacy', href: '#' },
+          { label: 'Terms', href: '#' },
+          { label: 'Contact', href: '#' },
+        ]}
+      />
 
       {/* Contact Modal */}
       {showContactModal && (
