@@ -1,5 +1,7 @@
 // Icon type definitions for the SyncPulse design system
 
+import type React from 'react';
+
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type IconColor = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'neutral';
 export type IconVariant = 'outline' | 'solid' | 'duotone';
