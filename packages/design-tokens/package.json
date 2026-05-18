@@ -37,6 +37,10 @@
     "./agents": {
       "types": "./dist/tokens/agents.d.ts",
       "import": "./dist/tokens/agents.js"
+    },
+    "./icons": {
+      "types": "./dist/icons/index.d.ts",
+      "import": "./dist/icons/index.js"
     }
   },
   "files": [

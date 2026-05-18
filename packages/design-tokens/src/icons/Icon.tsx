@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import type { IconProps, IconColor } from '../types/icons';
-import { getIcon } from './registry';
-import { ICON_SIZES } from '../types/icons';
+import type { IconProps, IconColor } from '../types/icons.js';
+import { getIcon } from './registry.js';
+import { ICON_SIZES } from '../types/icons.js';
 
 /**
  * Color CSS variable mappings for semantic icon colors

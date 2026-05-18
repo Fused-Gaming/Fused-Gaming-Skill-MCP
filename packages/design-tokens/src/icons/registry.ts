@@ -3,7 +3,7 @@
  * Maps icon names to their SVG content for efficient rendering
  */
 
-import type { IconName, IconDefinition } from '../types/icons';
+import type { IconName, IconDefinition } from '../types/icons.js';
 
 // Navigation Icons
 const homeIcon = '<path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-7h6v7"/>';
