@@ -1,0 +1,365 @@
+{
+  "swarms": {
+    "swarm-1779148451497-4q4dn": {
+      "swarmId": "swarm-1779148451497-4q4dn",
+      "topology": "balanced",
+      "maxAgents": 24,
+      "status": "running",
+      "agents": [
+        {
+          "id": "agent-coreAgents-1",
+          "role": "coordinator",
+          "group": "coreAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-coreAgents-2",
+          "role": "memory-manager",
+          "group": "coreAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-coreAgents-3",
+          "role": "metrics-collector",
+          "group": "coreAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-executionAgents-1",
+          "role": "task-executor",
+          "group": "executionAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-executionAgents-2",
+          "role": "code-generator",
+          "group": "executionAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-executionAgents-3",
+          "role": "tester",
+          "group": "executionAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-executionAgents-4",
+          "role": "task-executor",
+          "group": "executionAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-executionAgents-5",
+          "role": "code-generator",
+          "group": "executionAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-executionAgents-6",
+          "role": "tester",
+          "group": "executionAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-executionAgents-7",
+          "role": "task-executor",
+          "group": "executionAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-executionAgents-8",
+          "role": "code-generator",
+          "group": "executionAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-optimizationAgents-1",
+          "role": "performance-optimizer",
+          "group": "optimizationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-optimizationAgents-2",
+          "role": "topology-optimizer",
+          "group": "optimizationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-optimizationAgents-3",
+          "role": "resource-allocator",
+          "group": "optimizationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-optimizationAgents-4",
+          "role": "performance-optimizer",
+          "group": "optimizationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-automationAgents-1",
+          "role": "github-automation",
+          "group": "automationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-automationAgents-2",
+          "role": "workflow-manager",
+          "group": "automationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-automationAgents-3",
+          "role": "release-coordinator",
+          "group": "automationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-automationAgents-4",
+          "role": "github-automation",
+          "group": "automationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-automationAgents-5",
+          "role": "workflow-manager",
+          "group": "automationAgents",
+          "status": "running"
+        },
+        {
+          "id": "agent-automationAgents-6",
+          "role": "release-coordinator",
+          "group": "automationAgents",
+          "status": "running"
+        }
+      ],
+      "agentDetails": [
+        {
+          "id": "agent-coreAgents-1",
+          "role": "coordinator",
+          "group": "coreAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 130.37646373033397,
+          "errorLog": []
+        },
+        {
+          "id": "agent-coreAgents-2",
+          "role": "memory-manager",
+          "group": "coreAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 125.82403311893464,
+          "errorLog": []
+        },
+        {
+          "id": "agent-coreAgents-3",
+          "role": "metrics-collector",
+          "group": "coreAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 55.67064291605766,
+          "errorLog": []
+        },
+        {
+          "id": "agent-executionAgents-1",
+          "role": "task-executor",
+          "group": "executionAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 108.36370410125025,
+          "errorLog": []
+        },
+        {
+          "id": "agent-executionAgents-2",
+          "role": "code-generator",
+          "group": "executionAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 83.02197230012138,
+          "errorLog": []
+        },
+        {
+          "id": "agent-executionAgents-3",
+          "role": "tester",
+          "group": "executionAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 120.90476101225187,
+          "errorLog": []
+        },
+        {
+          "id": "agent-executionAgents-4",
+          "role": "task-executor",
+          "group": "executionAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 57.10827052815419,
+          "errorLog": []
+        },
+        {
+          "id": "agent-executionAgents-5",
+          "role": "code-generator",
+          "group": "executionAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 148.15845922552057,
+          "errorLog": []
+        },
+        {
+          "id": "agent-executionAgents-6",
+          "role": "tester",
+          "group": "executionAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 124.0874926011823,
+          "errorLog": []
+        },
+        {
+          "id": "agent-executionAgents-7",
+          "role": "task-executor",
+          "group": "executionAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 67.44411486594515,
+          "errorLog": []
+        },
+        {
+          "id": "agent-executionAgents-8",
+          "role": "code-generator",
+          "group": "executionAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 104.02853616137318,
+          "errorLog": []
+        },
+        {
+          "id": "agent-optimizationAgents-1",
+          "role": "performance-optimizer",
+          "group": "optimizationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 52.88333453241092,
+          "errorLog": []
+        },
+        {
+          "id": "agent-optimizationAgents-2",
+          "role": "topology-optimizer",
+          "group": "optimizationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 52.516240405559934,
+          "errorLog": []
+        },
+        {
+          "id": "agent-optimizationAgents-3",
+          "role": "resource-allocator",
+          "group": "optimizationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 81.2563933935312,
+          "errorLog": []
+        },
+        {
+          "id": "agent-optimizationAgents-4",
+          "role": "performance-optimizer",
+          "group": "optimizationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 59.09215515488462,
+          "errorLog": []
+        },
+        {
+          "id": "agent-automationAgents-1",
+          "role": "github-automation",
+          "group": "automationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 52.70129747966834,
+          "errorLog": []
+        },
+        {
+          "id": "agent-automationAgents-2",
+          "role": "workflow-manager",
+          "group": "automationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 51.1754402277226,
+          "errorLog": []
+        },
+        {
+          "id": "agent-automationAgents-3",
+          "role": "release-coordinator",
+          "group": "automationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 142.63204228106156,
+          "errorLog": []
+        },
+        {
+          "id": "agent-automationAgents-4",
+          "role": "github-automation",
+          "group": "automationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 101.54850994433673,
+          "errorLog": []
+        },
+        {
+          "id": "agent-automationAgents-5",
+          "role": "workflow-manager",
+          "group": "automationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 126.33256529169977,
+          "errorLog": []
+        },
+        {
+          "id": "agent-automationAgents-6",
+          "role": "release-coordinator",
+          "group": "automationAgents",
+          "status": "running",
+          "tasksCompleted": 0,
+          "lastHeartbeat": 1779148451497,
+          "memoryUsageMB": 74.6508896126322,
+          "errorLog": []
+        }
+      ],
+      "config": {
+        "mode": "raft",
+        "heartbeatInterval": 5000,
+        "electionTimeout": 15000,
+        "snapshotInterval": 10000
+      },
+      "createdAt": "2026-05-18T23:54:11.497Z",
+      "updatedAt": "2026-05-18T23:54:11.497Z",
+      "metrics": {
+        "totalTasksCompleted": 0,
+        "averageMemoryUsageMB": 91,
+        "healthyAgents": 21,
+        "unhealthyAgents": 0
+      }
+    }
+  },
+  "version": "3.0.0"
+}

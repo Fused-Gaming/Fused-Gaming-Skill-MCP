@@ -1,18 +1,200 @@
 {
-  "timestamp": "2026-04-18T17:50:29.316Z",
-  "processes": {
-    "agentic_flow": 0,
-    "mcp_server": 0,
-    "estimated_agents": 0
-  },
-  "swarm": {
-    "active": false,
-    "agent_count": 0,
-    "coordination_active": false
-  },
-  "integration": {
-    "agentic_flow_active": false,
-    "mcp_active": false
-  },
-  "_initialized": true
+  "swarmId": "swarm-1779148451497-4q4dn",
+  "initTime": 1779148451498,
+  "agentMetrics": [
+    {
+      "agentId": "agent-coreAgents-1",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 130.37646373033397,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-coreAgents-2",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 125.82403311893464,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-coreAgents-3",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 55.67064291605766,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-executionAgents-1",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 108.36370410125025,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-executionAgents-2",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 83.02197230012138,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-executionAgents-3",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 120.90476101225187,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-executionAgents-4",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 57.10827052815419,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-executionAgents-5",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 148.15845922552057,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-executionAgents-6",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 124.0874926011823,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-executionAgents-7",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 67.44411486594515,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-executionAgents-8",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 104.02853616137318,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-optimizationAgents-1",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 52.88333453241092,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-optimizationAgents-2",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 52.516240405559934,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-optimizationAgents-3",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 81.2563933935312,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-optimizationAgents-4",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 59.09215515488462,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-automationAgents-1",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 52.70129747966834,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-automationAgents-2",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 51.1754402277226,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-automationAgents-3",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 142.63204228106156,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-automationAgents-4",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 101.54850994433673,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-automationAgents-5",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 126.33256529169977,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    },
+    {
+      "agentId": "agent-automationAgents-6",
+      "tasksCompleted": 0,
+      "successRate": 100,
+      "averageTaskTime": 0,
+      "memoryUsageMB": 74.6508896126322,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1779148451498
+    }
+  ],
+  "systemMetrics": {
+    "cpuUsage": 45,
+    "memoryUsagePercent": 35,
+    "activeConnections": 21
+  }
 }
