@@ -36,6 +36,13 @@ export class LicenseValidator {
   }
 
   /**
+   * Check if using the default (embedded) public key
+   */
+  private static isDefaultPublicKey(): boolean {
+    return this.publicKey === DEFAULT_PUBLIC_KEY;
+  }
+
+  /**
    * Validate a license token (online validation with signature verification)
    * @param token - The license token to validate
    * @param checkMachineBinding - Whether to verify machine binding (default: true)
@@ -46,6 +53,16 @@ export class LicenseValidator {
       const payload = jwt.verify(token, this.publicKey, {
         algorithms: ['RS256']
       }) as LicensePayload;
+
+      // Security: Reject commercial/team/enterprise licenses signed with default (embedded) key
+      // Paid licenses must be verified with server-side keys, not client-embedded keys
+      if (['commercial', 'team', 'enterprise'].includes(payload.type) && this.isDefaultPublicKey()) {
+        return {
+          valid: false,
+          error: 'Paid licenses must be verified with server-side keys, not embedded client keys',
+          payload
+        };
+      }
 
       // Check expiration
       const expirationStatus = this.checkExpiration(payload);
@@ -141,6 +158,16 @@ export class LicenseValidator {
     }
 
     const cachedPayload = cachedData as unknown as LicensePayload;
+
+    // Security: Reject commercial/team/enterprise licenses cached from default (embedded) key
+    if (['commercial', 'team', 'enterprise'].includes(cachedPayload.type) && this.isDefaultPublicKey()) {
+      return {
+        valid: false,
+        cacheValid: false,
+        cachedPayload,
+        error: 'Paid licenses must be verified with server-side keys, not embedded client keys'
+      };
+    }
 
     // Check machine binding
     if (!this.verifyMachineBinding(cachedPayload)) {
