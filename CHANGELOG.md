@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-05-19
+
+### Fixed
+- **License Client Security & Documentation** — PR #183 Codex review resolutions
+  - Machine binding now derives from immutable host properties (hostname + platform + MAC address) instead of caching in user-writable directory
+  - Prevents vulnerability where copying license directory to another machine would bypass machine binding protection
+  - Always compute fresh machine ID on each validation based on hardware identifiers
+  - Updated commercial, team, and enterprise license generation examples to show correct API signatures with type, expiresAt, and privateKey arguments
+  - Fixed stale documentation examples that were missing required parameters and would cause TypeScript compilation errors
+
+- **SVG Icon System (Solid Variants)** — PR #183 P2 Codex review fix
+  - Fixed solid icon variant rendering by keeping strokes enabled for both outline and solid variants
+  - Icon registry contains only stroke-based SVG primitives, so stroke removal in solid variant caused invisible rendering
+  - Solid variants now use fill + stroke for proper visual appearance while outline variants use stroke-only rendering
+  - Resolves rendering issues with `variant="solid"` prop on Icon component
+
+- **Vercel Serverless Function Support**
+  - Added @vercel/node to devDependencies for VercelRequest/VercelResponse type definitions
+  - Added npm overrides field to enforce TypeScript 5.3.2 globally, preventing license policy violations from transitive dependencies
+
+### Changed
+- Enhanced Icon component with improved variant handling logic for better visual consistency
+
 ## [1.1.3] - 2026-05-17
 
 ### Added

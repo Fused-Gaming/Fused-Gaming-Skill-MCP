@@ -229,6 +229,100 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Get Started Today Section */}
+      <section id="get-started" className="relative py-24 px-6 border-t border-slate-800/50">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Get Started <span className="glow-accent">Today</span>
+            </h2>
+            <p className="text-lg text-slate-300">
+              Install SyncPulse in seconds. Start with a 14-day free trial—no credit card required.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/50 border border-slate-700/50 rounded-xl p-8 overflow-hidden group hover:border-swarm-accent/30 transition-all duration-300">
+              {/* Code Block Background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-swarm-accent/0 via-swarm-accent/5 to-swarm-accent/0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+              <div className="relative z-10">
+                {/* Label */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-3 h-3 bg-red-500 rounded-full" />
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+                  <div className="w-3 h-3 bg-green-500 rounded-full" />
+                  <span className="ml-auto text-xs text-slate-400 font-mono">npm install</span>
+                </div>
+
+                {/* Code */}
+                <pre className="font-mono text-sm text-slate-200 mb-6 overflow-x-auto">
+                  <code>{`npm install -g @h4shed/mcp-cli\n\n# Initialize your first MCP server\nfused-gaming-mcp init\n\n# List available skills\nfused-gaming-mcp list`}</code>
+                </pre>
+
+                {/* Copy Button */}
+                <div className="flex gap-3 flex-col sm:flex-row">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      const code = 'npm install -g @h4shed/mcp-cli';
+                      navigator.clipboard.writeText(code);
+                    }}
+                    className="group/btn flex-1 px-6 py-3 bg-gradient-to-r from-swarm-accent to-swarm-accent/80 text-black font-semibold rounded-lg hover:shadow-lg hover:shadow-swarm-accent/50 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copy Install Command
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => window.open('https://docs.syncpulse.io/getting-started', '_blank')}
+                    className="flex-1 px-6 py-3 bg-slate-800/50 text-white font-semibold rounded-lg border border-slate-700/50 hover:border-swarm-accent/50 transition-all duration-300 hover:shadow-lg hover:shadow-swarm-accent/10 flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    View Docs
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional info */}
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+              <div>
+                <div className="text-2xl font-bold text-swarm-accent mb-2">14 Days</div>
+                <p className="text-sm text-slate-400">Free trial period</p>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-swarm-accent mb-2">No Card</div>
+                <p className="text-sm text-slate-400">Zero upfront cost</p>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-swarm-accent mb-2">1 Minute</div>
+                <p className="text-sm text-slate-400">Full setup time</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Pricing Section (Placeholder) */}
       <section id="pricing" className="relative py-24 px-6 border-t border-slate-800/50">
         <div className="max-w-6xl mx-auto text-center">

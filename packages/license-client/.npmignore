@@ -1,0 +1,7 @@
+src/
+tests/
+*.test.ts
+coverage/
+jest.config.mjs
+tsconfig.json
+.eslintignore

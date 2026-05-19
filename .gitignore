@@ -139,6 +139,7 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 # Claude Flow & Agent Infrastructure
+**/.claude-flow/
 .claude-flow/cache
 .claude-flow/logs
 .claude-flow/tmp

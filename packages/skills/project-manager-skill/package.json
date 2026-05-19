@@ -1,6 +1,6 @@
 {
   "name": "@fused-gaming/skill-project-manager-skill",
-  "version": "1.0.0",
+  "version": "1.0.23",
   "description": "Task and project management skill for tracking work items and team collaboration",
   "type": "module",
   "main": "./dist/index.js",
