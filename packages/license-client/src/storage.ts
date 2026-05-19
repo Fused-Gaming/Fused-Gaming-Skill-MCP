@@ -6,7 +6,6 @@ import { createHash } from 'crypto';
 const LICENSE_DIR = path.join(os.homedir(), '.syncpulse');
 const LICENSE_FILE = path.join(LICENSE_DIR, 'license.jwt');
 const LICENSE_CACHE = path.join(LICENSE_DIR, 'license.json');
-const MACHINE_ID_FILE = path.join(LICENSE_DIR, 'machine-id');
 
 export class LicenseStorage {
   static ensureDirectory(): void {
@@ -55,22 +54,30 @@ export class LicenseStorage {
   }
 
   static getMachineId(): string {
-    this.ensureDirectory();
-    
-    if (fs.existsSync(MACHINE_ID_FILE)) {
-      return fs.readFileSync(MACHINE_ID_FILE, 'utf-8').trim();
-    }
-
-    const machineId = this.generateMachineId();
-    fs.writeFileSync(MACHINE_ID_FILE, machineId, { mode: 0o600 });
-    return machineId;
+    return this.generateMachineId();
   }
 
   private static generateMachineId(): string {
     const hostname = os.hostname();
     const platform = os.platform();
-    const timestamp = Date.now().toString();
-    const combined = `${hostname}-${platform}-${timestamp}`;
+
+    // Get MAC address of first non-loopback interface for hardware-specific binding
+    const networkInterfaces = os.networkInterfaces();
+    let macAddress = '';
+
+    for (const [, addresses] of Object.entries(networkInterfaces)) {
+      if (!addresses) continue;
+      for (const addr of addresses) {
+        if (addr.family === 'IPv4' && !addr.internal) {
+          macAddress = addr.mac;
+          break;
+        }
+      }
+      if (macAddress) break;
+    }
+
+    // Derive from hardware identifiers; don't use timestamp (which changes on each call)
+    const combined = `${hostname}-${platform}-${macAddress}`;
     return createHash('sha256').update(combined).digest('hex').substring(0, 16);
   }
 

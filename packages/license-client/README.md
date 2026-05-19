@@ -95,40 +95,66 @@ const extendedTrial = LicenseGenerator.generateTrialLicense({ days: 30 });
 ```typescript
 import { LicenseGenerator } from '@h4shed/license-client';
 
-const commercialToken = LicenseGenerator.generateCommercialLicense({
-  customerId: 'cust_abc123',
-  email: 'user@company.com',
-  licenseKey: 'syncpulse_prod_key',
-  features: {
-    concurrent_agents: 5,
-    storage_gb: 100,
-    team_members: 1,
-    priority_support: true,
-    custom_branding: false
-  }
-});
+const commercialToken = LicenseGenerator.generateCommercialLicense(
+  {
+    type: 'commercial',
+    expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
+    licenseKey: 'syncpulse_prod_key',
+    version: '1.2.0',
+    features: {
+      concurrent_agents: 5,
+      storage_gb: 100,
+      team_members: 1,
+      priority_support: true,
+      custom_branding: false
+    }
+  },
+  privateKey // RS256 private key for signing
+);
 ```
 
 ### Generate Team Licenses
 
 ```typescript
-const teamToken = LicenseGenerator.generateTeamLicense(
-  'team_cust_123',
-  'team@company.com'
-);
+import { LicenseGenerator } from '@h4shed/license-client';
 
-// Includes: 10 concurrent agents, 500GB storage, 5 team members
+const teamToken = LicenseGenerator.generateTeamLicense(
+  {
+    expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
+    licenseKey: 'syncpulse_team_key',
+    version: '1.2.0',
+    features: {
+      concurrent_agents: 10,
+      storage_gb: 500,
+      team_members: 5,
+      priority_support: true,
+      custom_branding: false
+    }
+  },
+  privateKey // RS256 private key for signing
+);
 ```
 
 ### Generate Enterprise Licenses
 
 ```typescript
-const enterpriseToken = LicenseGenerator.generateEnterpriseLicense(
-  'enterprise_cust_123',
-  'admin@enterprise.com'
-);
+import { LicenseGenerator } from '@h4shed/license-client';
 
-// Includes: 100 concurrent agents, 5TB storage, 1000 team members, custom branding
+const enterpriseToken = LicenseGenerator.generateEnterpriseLicense(
+  {
+    expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
+    licenseKey: 'syncpulse_enterprise_key',
+    version: '1.2.0',
+    features: {
+      concurrent_agents: 100,
+      storage_gb: 5000,
+      team_members: 1000,
+      priority_support: true,
+      custom_branding: true
+    }
+  },
+  privateKey // RS256 private key for signing
+);
 ```
 
 ### Validate License (Online)
