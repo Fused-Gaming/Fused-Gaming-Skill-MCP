@@ -412,8 +412,8 @@ app.get('/dashboard', async (req, res) => {
 # Watch status with auto-refresh
 ./scripts/monitor-status.sh
 
-# Export current status
-node scripts/export-metrics.cjs json > status-$(date +%s).json
+# Export current status to timestamped file
+node scripts/export-metrics.cjs json
 
 # Test endpoint availability
 ./scripts/test-endpoint.sh http://localhost:3000/status

@@ -55,9 +55,15 @@ EOF
   echo "✓ config.json created"
 fi
 
-# Validate configuration
+# Validate configuration (optional if dependencies available)
 echo "🔍 Validating configuration..."
-node scripts/validate-config.cjs config.json
+if command -v node &> /dev/null && node -e "require('ajv')" 2>/dev/null; then
+  node scripts/validate-config.cjs config.json
+else
+  echo "⚠️  Skipping validation (ajv not available in root node_modules)"
+  echo "   Install dependencies in your project: npm install"
+  echo "   Then validate: node scripts/validate-config.cjs config.json"
+fi
 
 echo ""
 echo "✅ Setup Complete!"
