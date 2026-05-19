@@ -7,8 +7,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-05-19
+
+### Fixed
+- **License Client Security & Documentation** — PR #183 Codex review resolutions
+  - Machine binding now derives from immutable host properties (hostname + platform + MAC address) instead of caching in user-writable directory
+  - Prevents vulnerability where copying license directory to another machine would bypass machine binding protection
+  - Always compute fresh machine ID on each validation based on hardware identifiers
+  - Updated commercial, team, and enterprise license generation examples to show correct API signatures with type, expiresAt, and privateKey arguments
+  - Fixed stale documentation examples that were missing required parameters and would cause TypeScript compilation errors
+
+- **SVG Icon System (Solid Variants)** — PR #183 P2 Codex review fix
+  - Fixed solid icon variant rendering by keeping strokes enabled for both outline and solid variants
+  - Icon registry contains only stroke-based SVG primitives, so stroke removal in solid variant caused invisible rendering
+  - Solid variants now use fill + stroke for proper visual appearance while outline variants use stroke-only rendering
+  - Resolves rendering issues with `variant="solid"` prop on Icon component
+
+- **Vercel Serverless Function Support**
+  - Added @vercel/node to devDependencies for VercelRequest/VercelResponse type definitions
+  - Added npm overrides field to enforce TypeScript 5.3.2 globally, preventing license policy violations from transitive dependencies
+
+### Changed
+- Enhanced Icon component with improved variant handling logic for better visual consistency
+
+## [1.1.3] - 2026-05-17
+
 ### Added
-- **Auth Architecture Enhancement (v1.0.6)** — PR #166 security and functionality improvements
+- **Standardized PR Merge Workflow (v1.0)** — Comprehensive documentation and templates for consistent development practices
+  - `.github/pull_request_template.md` — Auto-populated PR template with 5-phase merge checklist
+  - `docs/PR_MERGE_CHECKLIST.md` — 136+ verification items across validation, testing, documentation, review, and merge execution phases
+  - `docs/MERGE_WORKFLOW_GUIDE.md` — Team reference guide with commands, metrics, customization examples, and adoption strategy
+  - Publication branch tagging procedures with version numbering (semantic versioning v[X.Y.Z])
+  - Comprehensive label checklist system (7+ issue categories, 5+ PR categories)
+  - Phase timeline with command sequences for each workflow stage
+  - Benchmark metrics template and performance tracking guidelines
+  - Migration guide and breaking change documentation standards
+  - Post-merge verification and release notes procedures
+
+### Fixed
+- **Tailwind CSS Opacity Compatibility (GlassmorphCard)** — PR #186 Codex review resolution
+  - Changed unsupported `border-white/8` to valid arbitrary opacity `border-white/[0.08]`
+  - Updated hover state from `hover:border-purple-500/50` to `hover:border-white/[0.12]` for consistency
+  - Ensures proper translucent border rendering without Tailwind build warnings
+
+### Changed
+- Enhanced breadcrumb component with three design variants (default, compact, minimal)
+- Updated dashboard and navigation pages to use standardized breadcrumb component
+- Improved PR template with implementation checklist for code/testing/documentation/QA tracking
+- Added session achievement documentation to checklists with commit tracking
+
+### Documentation
+- All PR merge workflow documentation integrated into version-controlled references
+- Label system standardized across issues and PRs for consistent project organization
+- Release procedures documented with explicit steps for version tagging and publication
+- Team adoption guidelines with metrics tracking and retrospective process
+
+## [1.1.2] - 2026-05-16
+
+### Performance
+- **SyncPulse v0.2.2 Benchmark Results** — Comprehensive performance validation across all critical operations
   - JWT-based session management with stateless authentication
   - User account creation via `SessionStore.createUser()` method
   - Rate limiting on signup and contact form endpoints (5 requests/min and 10 requests/min respectively)
@@ -32,6 +89,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced JWT token cookie generation and session management across auth endpoints
 - Fixed CONTRIBUTING.md SKILLS_GUIDE reference path from `docs/guides/SKILLS_GUIDE.md` to `docs/SKILLS_GUIDE.md`
 - Updated Node.js version requirement from 18+ to 20.x (tested on 20.x and 22.x LTS) in documentation
+
+## [1.1.2] - 2026-05-16
+
+### Performance
+- **SyncPulse v0.2.2 Benchmark Results** — Comprehensive performance validation across all critical operations
+  - **Cache Operations**: 0.002ms average (447k ops/sec) — Target: <1ms ✓
+  - **Vector Search (1K entries)**: 4.5ms average (220 ops/sec) — Target: <10ms ✓
+  - **Vector Search (10K entries)**: 45.7ms average (22 ops/sec) — Target: <50ms ✓
+  - **Swarm Task Assignment (5 agents)**: 0.0018ms average (559k ops/sec) — Target: <1ms ✓
+  - **Memory Usage**: 617.72MB heap (stable) with 1.81MB external resources
+  - **Status**: 4 of 4 primary targets passing; Ready for production deployment
+
+### Changed
+- **Design System Integration** — SyncPulse v2.0 glassmorphism design system with SVG icons
+  - Integrated purple neon theme (#A855F7) across all web pages
+  - Replaced emoji with configurable SVG icon system (20+ icons)
+  - Added breadcrumb navigation with dynamic version/status badges
+  - Implemented PageFooter component for consistent footer/nav structure
+  - All pages now use consistent design tokens from version manifest
+
+### Security
+- No new vulnerabilities introduced; maintained security baseline from v1.1.1
 
 ## [1.1.1] - 2026-05-16
 

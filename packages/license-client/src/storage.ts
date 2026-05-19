@@ -1,218 +1,100 @@
-/**
- * License Storage Handler
- * Manages license file persistence in ~/.syncpulse directory
- */
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
+import { createHash } from 'crypto';
 
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
-import { LicensePayload } from './types.js';
-import crypto from 'crypto';
-
-const STORAGE_DIR = path.join(os.homedir(), '.syncpulse');
-const LICENSE_FILE = path.join(STORAGE_DIR, 'license.jwt');
-const LICENSE_CACHE_FILE = path.join(STORAGE_DIR, 'license.json');
-const MACHINE_ID_FILE = path.join(STORAGE_DIR, 'machine-id');
+const LICENSE_DIR = path.join(os.homedir(), '.syncpulse');
+const LICENSE_FILE = path.join(LICENSE_DIR, 'license.jwt');
+const LICENSE_CACHE = path.join(LICENSE_DIR, 'license.json');
 
 export class LicenseStorage {
-  /**
-   * Get the storage directory path
-   */
-  static getStoragePath(): string {
-    return STORAGE_DIR;
-  }
-
-  /**
-   * Ensure storage directory exists with proper permissions
-   */
-  static ensureStorageDirectory(): void {
-    try {
-      if (!fs.existsSync(STORAGE_DIR)) {
-        fs.mkdirSync(STORAGE_DIR, { recursive: true, mode: 0o700 });
-      }
-
-      // Ensure directory has restrictive permissions (0700 = rwx------)
-      fs.chmodSync(STORAGE_DIR, 0o700);
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      throw new Error(`Failed to create license storage directory: ${errorMessage}`);
+  static ensureDirectory(): void {
+    if (!fs.existsSync(LICENSE_DIR)) {
+      fs.mkdirSync(LICENSE_DIR, { recursive: true, mode: 0o700 });
     }
   }
 
-  /**
-   * Save license JWT token to storage
-   */
   static saveLicense(token: string): void {
-    try {
-      this.ensureStorageDirectory();
-
-      // Write with restrictive permissions (0600 = rw-------)
-      fs.writeFileSync(LICENSE_FILE, token, {
-        mode: 0o600,
-        encoding: 'utf-8'
-      });
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      throw new Error(`Failed to save license: ${errorMessage}`);
-    }
+    this.ensureDirectory();
+    fs.writeFileSync(LICENSE_FILE, token, { mode: 0o600 });
   }
 
-  /**
-   * Load license JWT token from storage
-   */
   static loadLicense(): string | null {
-    try {
-      if (!fs.existsSync(LICENSE_FILE)) {
-        return null;
-      }
-
-      const token = fs.readFileSync(LICENSE_FILE, 'utf-8').trim();
-      return token || null;
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      throw new Error(`Failed to load license: ${errorMessage}`);
-    }
-  }
-
-  /**
-   * Save parsed license cache for offline validation
-   */
-  static saveLicenseCache(payload: LicensePayload): void {
-    try {
-      this.ensureStorageDirectory();
-
-      const cacheData = {
-        payload,
-        cached_at: new Date().toISOString(),
-        cache_version: 1
-      };
-
-      fs.writeFileSync(LICENSE_CACHE_FILE, JSON.stringify(cacheData, null, 2), {
-        mode: 0o600,
-        encoding: 'utf-8'
-      });
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      throw new Error(`Failed to save license cache: ${errorMessage}`);
-    }
-  }
-
-  /**
-   * Load parsed license cache
-   */
-  static loadLicenseCache(): LicensePayload | null {
-    try {
-      if (!fs.existsSync(LICENSE_CACHE_FILE)) {
-        return null;
-      }
-
-      const data = fs.readFileSync(LICENSE_CACHE_FILE, 'utf-8');
-      const parsed = JSON.parse(data);
-
-      if (parsed.payload) {
-        return parsed.payload;
-      }
-
-      return null;
-    } catch (_err) {
+    if (!fs.existsSync(LICENSE_FILE)) {
       return null;
     }
+    return fs.readFileSync(LICENSE_FILE, 'utf-8');
   }
 
-  /**
-   * Clear all license files and cache
-   */
-  static clearLicense(): void {
-    try {
-      if (fs.existsSync(LICENSE_FILE)) {
-        fs.unlinkSync(LICENSE_FILE);
-      }
-
-      if (fs.existsSync(LICENSE_CACHE_FILE)) {
-        fs.unlinkSync(LICENSE_CACHE_FILE);
-      }
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      throw new Error(`Failed to clear license: ${errorMessage}`);
+  static deleteLicense(): void {
+    if (fs.existsSync(LICENSE_FILE)) {
+      fs.unlinkSync(LICENSE_FILE);
     }
   }
 
-  /**
-   * Get or generate a consistent machine ID for this device
-   */
-  static getMachineId(): string {
-    try {
-      // Try to load existing machine ID
-      if (fs.existsSync(MACHINE_ID_FILE)) {
-        const machineId = fs.readFileSync(MACHINE_ID_FILE, 'utf-8').trim();
-        if (machineId) {
-          return machineId;
-        }
-      }
-
-      // Generate new machine ID based on system info
-      const machineId = this.generateMachineId();
-
-      // Save it for future use
-      this.ensureStorageDirectory();
-      fs.writeFileSync(MACHINE_ID_FILE, machineId, {
-        mode: 0o600,
-        encoding: 'utf-8'
-      });
-
-      return machineId;
-    } catch (_err) {
-      // If we can't persist, generate and return a temporary one
-      return this.generateMachineId();
-    }
-  }
-
-  /**
-   * Generate a unique machine ID based on system information
-   */
-  private static generateMachineId(): string {
-    try {
-      const hostname = os.hostname();
-      const platform = os.platform();
-      const arch = os.arch();
-      const userInfo = os.userInfo();
-
-      // Combine system identifiers
-      const identifier = `${hostname}-${platform}-${arch}-${userInfo.uid}`;
-
-      // Hash it to create a consistent but anonymized ID
-      const hash = crypto
-        .createHash('sha256')
-        .update(identifier)
-        .digest('hex')
-        .substring(0, 32);
-
-      return `machine_${hash}`;
-    } catch {
-      // Fallback: generate random ID
-      return `machine_${crypto.randomBytes(16).toString('hex')}`;
-    }
-  }
-
-  /**
-   * Check if license file exists
-   */
   static hasLicense(): boolean {
     return fs.existsSync(LICENSE_FILE);
   }
 
-  /**
-   * Get license file modification time
-   */
-  static getLicenseModificationTime(): Date | null {
-    try {
-      if (fs.existsSync(LICENSE_FILE)) {
-        const stats = fs.statSync(LICENSE_FILE);
-        return stats.mtime;
-      }
+  static saveLicenseCache(cacheData: Record<string, unknown>): void {
+    this.ensureDirectory();
+    fs.writeFileSync(LICENSE_CACHE, JSON.stringify(cacheData, null, 2), { mode: 0o600 });
+  }
+
+  static loadLicenseCache(): Record<string, unknown> | null {
+    if (!fs.existsSync(LICENSE_CACHE)) {
       return null;
+    }
+    try {
+      const data = fs.readFileSync(LICENSE_CACHE, 'utf-8');
+      return JSON.parse(data);
     } catch {
       return null;
     }
+  }
+
+  static getMachineId(): string {
+    return this.generateMachineId();
+  }
+
+  private static generateMachineId(): string {
+    const hostname = os.hostname();
+    const platform = os.platform();
+
+    // Get MAC address of first non-loopback interface for hardware-specific binding
+    // Sort by interface name to ensure deterministic ordering across reboots
+    const networkInterfaces = os.networkInterfaces();
+    const sortedInterfaceNames = Object.keys(networkInterfaces).sort();
+    let macAddress = '';
+
+    for (const name of sortedInterfaceNames) {
+      const addresses = networkInterfaces[name];
+      if (!addresses) continue;
+      for (const addr of addresses) {
+        if (addr.family === 'IPv4' && !addr.internal) {
+          macAddress = addr.mac;
+          break;
+        }
+      }
+      if (macAddress) break;
+    }
+
+    // Derive from hardware identifiers; don't use timestamp (which changes on each call)
+    const combined = `${hostname}-${platform}-${macAddress}`;
+    return createHash('sha256').update(combined).digest('hex').substring(0, 16);
+  }
+
+  static clearCache(): void {
+    if (fs.existsSync(LICENSE_CACHE)) {
+      fs.unlinkSync(LICENSE_CACHE);
+    }
+  }
+
+  static getStoragePath(): string {
+    return LICENSE_DIR;
+  }
+
+  static ensureStorageDirectory(): void {
+    this.ensureDirectory();
   }
 }

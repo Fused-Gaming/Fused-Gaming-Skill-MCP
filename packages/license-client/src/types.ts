@@ -1,8 +1,3 @@
-/**
- * SyncPulse License Client Types
- * Defines the structure of license payloads, validation results, and feature sets
- */
-
 export type LicenseType = 'trial' | 'commercial' | 'team' | 'enterprise';
 
 export interface LicenseFeatures {
@@ -13,12 +8,6 @@ export interface LicenseFeatures {
   custom_branding: boolean;
 }
 
-export interface LicenseActivation {
-  activated_at: string;
-  machine_id: string;
-  license_key: string;
-}
-
 export interface LicensePayload {
   type: LicenseType;
   issued_at: string;
@@ -26,10 +15,12 @@ export interface LicensePayload {
   product: string;
   version: string;
   features: LicenseFeatures;
-  activation?: LicenseActivation;
-  iss?: string;
   sub?: string;
-  trial_days?: number;
+  activation?: {
+    activated_at: string;
+    machine_id: string;
+    license_key: string;
+  };
 }
 
 export interface ValidationResult {
@@ -40,12 +31,41 @@ export interface ValidationResult {
   inGracePeriod?: boolean;
 }
 
+export interface TrialLicenseOptions {
+  days?: number;
+  product?: string;
+  version?: string;
+}
+
+export interface CommercialLicenseOptions {
+  type: LicenseType;
+  email: string;
+  issuedAt: Date;
+  expiresAt: Date;
+  features: LicenseFeatures;
+  licenseKey: string;
+  machineId?: string;
+  version?: string;
+}
+
+export interface LicenseConfig {
+  privateKeyPath?: string;
+  publicKeyPath?: string;
+  storagePath?: string;
+}
+
+export interface GracePeriodStatus {
+  inGracePeriod: boolean;
+  daysRemaining: number;
+  expiresAt: string;
+}
+
 export interface ExpirationStatus {
   expired: boolean;
   daysRemaining: number;
   inGracePeriod: boolean;
   expiresAt: Date;
-  gracePeriodEndsAt?: Date;
+  gracePeriodEndsAt: Date;
 }
 
 export interface OfflineValidationResult {
@@ -56,30 +76,9 @@ export interface OfflineValidationResult {
   warnings?: string[];
 }
 
-export interface LicenseGeneratorOptions {
-  days?: number;
-  machineId?: string;
-  productVersion?: string;
-}
-
-export interface TrialLicenseOptions extends LicenseGeneratorOptions {
-  days?: number;
-}
-
-export interface CommercialLicenseOptions extends LicenseGeneratorOptions {
-  customerId: string;
-  email: string;
-  licenseKey: string;
-  features?: Partial<LicenseFeatures>;
-}
-
-export interface ActivationInfo {
-  machine_id: string;
-  timestamp: string;
-  license_key: string;
-}
-
 export enum GracePeriodDays {
   TRIAL_GRACE = 7,
-  COMMERCIAL_GRACE = 7
+  COMMERCIAL_GRACE = 14,
+  TEAM_GRACE = 21,
+  ENTERPRISE_GRACE = 30,
 }

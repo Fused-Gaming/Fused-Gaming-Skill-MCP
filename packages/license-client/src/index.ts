@@ -58,9 +58,15 @@ export function validateOffline() {
  * Initialize license storage (called on first install)
  */
 export function initializeLicense(): string {
-  LicenseStorage.ensureStorageDirectory();
   const trialLicense = LicenseGenerator.generateTrialLicense({ days: 14 });
   LicenseStorage.saveLicense(trialLicense);
+
+  // Validate and cache the license for offline use
+  const result = LicenseValidator.validateLicense(trialLicense);
+  if (result.valid && result.payload) {
+    LicenseStorage.saveLicenseCache(result.payload as unknown as Record<string, unknown>);
+  }
+
   return trialLicense;
 }
 
@@ -85,7 +91,8 @@ export function activateLicense(token: string): boolean {
  * Clear stored license
  */
 export function clearStoredLicense(): void {
-  LicenseStorage.clearLicense();
+  LicenseStorage.deleteLicense();
+  LicenseStorage.clearCache();
 }
 
 /**

@@ -23,7 +23,7 @@
 ## 🎯 OVERVIEW
 
 ### System Goals
-1. **Zero friction**: Install with `npm install -g @h4shed/syncpulse`
+1. **Zero friction**: Install with `npm install -g @h4shed/mcp-cli`
 2. **Free trial**: 14-day default, no credit card required
 3. **Flexible licensing**: Monthly, annual, or perpetual options
 4. **Offline capable**: Validate licenses without internet
@@ -62,14 +62,14 @@
 ### Trial Period
 - **Duration**: 14 days (configurable)
 - **Start**: First install date
-- **Grace Period**: 7 days after expiration
+- **Grace Period**: 7 days after expiration (remains usable with warnings)
 - **Cost**: FREE - No credit card required
 
 ### Trial License Generation
 
 #### Step 1: Install Detection
 ```typescript
-// When user runs: npm install -g @h4shed/syncpulse
+// When user runs: npm install -g @h4shed/mcp-cli (or skill-syncpulse)
 // On first run, generate trial license
 
 const licenseDir = path.join(os.homedir(), '.syncpulse');
@@ -188,7 +188,7 @@ Payload:
   }
 }
 
-Signature: HMAC-SHA256(header.payload, secret_key)
+Signature: RS256(header.payload, private_key)
 ```
 
 ### License Key Validation
@@ -446,15 +446,16 @@ Day -30 (30 days before): Email reminder
 Day -7 (7 days before): Dashboard notification + email
 Day -1 (1 day before): Final reminder
 
-Day 0 (EXPIRED):
-  ✓ Grace period: 7 days
+Day 0 (TRIAL EXPIRES):
+  ✓ Grace period begins (7 days)
   ✓ App continues to work
-  ✓ Warning on every command
+  ✓ Strong warning on every command
   ✓ Renewal button in CLI & dashboard
+  ✓ Email reminder sent
 
-Day 7 (GRACE EXPIRED):
-  ✗ Application unusable
-  ✗ User must renew
+Day 7 (GRACE PERIOD EXPIRES):
+  ✗ Application becomes unusable
+  ✗ User must renew or license expires
   ✗ One-click renewal from CLI:
     syncpulse license:renew
 ```

@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-svg-generator",
-  "version": "1.0.2",
+  "version": "1.0.23",
   "description": "Generate SVG assets and icon concepts from structured prompts.",
   "type": "module",
   "main": "./dist/index.js",

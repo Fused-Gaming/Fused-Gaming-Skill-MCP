@@ -17,7 +17,7 @@ All icons are built with a consistent 24x24 viewBox and support stroke-based (ou
 ## Installation
 
 ```bash
-npm install @syncpulse/design-tokens
+npm install @h4shed/design-tokens
 ```
 
 ## Quick Start
@@ -25,7 +25,7 @@ npm install @syncpulse/design-tokens
 ### Basic Usage
 
 ```tsx
-import { Icon } from '@syncpulse/design-tokens';
+import { Icon } from '@h4shed/design-tokens/icons';
 
 // Basic icon
 <Icon name="home" />
@@ -42,7 +42,7 @@ import { Icon } from '@syncpulse/design-tokens';
 Display multiple icons in a responsive grid:
 
 ```tsx
-import { Icon, IconGrid, IconBox } from '@syncpulse/design-tokens';
+import { Icon, IconGrid, IconBox } from '@h4shed/design-tokens/icons';
 
 <IconGrid columns={4}>
   <IconBox
@@ -232,7 +232,7 @@ Always include proper ARIA labels:
 Full TypeScript support with type checking:
 
 ```typescript
-import type { IconName, IconSize, IconColor } from '@syncpulse/design-tokens';
+import type { IconName, IconSize, IconColor } from '@h4shed/design-tokens/icons';
 
 const iconName: IconName = 'home'; // Type-safe
 const size: IconSize = 'lg';
@@ -244,7 +244,7 @@ const color: IconColor = 'primary';
 Access icons programmatically:
 
 ```typescript
-import { iconRegistry, getAllIconNames, getIconsByCategory } from '@syncpulse/design-tokens';
+import { iconRegistry, getAllIconNames, getIconsByCategory } from '@h4shed/design-tokens/icons';
 
 // Get all icon names
 const allIcons = getAllIconNames();

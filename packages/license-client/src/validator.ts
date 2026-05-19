@@ -9,13 +9,13 @@ import { LicenseStorage } from './storage.js';
 
 // Public key for RS256 verification (for production, load from environment)
 const DEFAULT_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2Z3qX2BTLS39R3wvUL3p
-+ZnwvXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3
-qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3
-qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3
-qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3
-qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3qXL3
-QIDAQAB
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA8TPsAesQnyM4Yy0W3ls2
+IdIV8OQvA8iEInB35R0ZJrtqGUi6QLwEiC6ARZlB8rxW3wOLER8l9m9qc77zsz5+
+AYmNwS1bxx+L5jHgVAU5J3Tmme8YbMs2UIlkcUNYv1YVtsV8zWaT78OLC+uhMUzm
+9Z9oai3BSyVA7AWQ54mp+n80WaIhasGpdYVChslzaKbcP3gISav8dv9QT9gJlHXq
+QEyGiCpXaaTaQlFBETUfC/Idb98Em/fbxbYO5pxiE6LxrpTKWz09XefH8X3iA/w5
+oD35hZk4EAH8nK/4fFeu2pN8teUfk6Ywet+NnrTVzaqhGsLRlb77mno/0vKHsOqT
+eQIDAQAB
 -----END PUBLIC KEY-----`;
 
 export class LicenseValidator {
@@ -37,8 +37,10 @@ export class LicenseValidator {
 
   /**
    * Validate a license token (online validation with signature verification)
+   * @param token - The license token to validate
+   * @param checkMachineBinding - Whether to verify machine binding (default: true)
    */
-  static validateLicense(token: string): ValidationResult {
+  static validateLicense(token: string, checkMachineBinding = true): ValidationResult {
     try {
       // Verify JWT signature
       const payload = jwt.verify(token, this.publicKey, {
@@ -56,8 +58,17 @@ export class LicenseValidator {
         };
       }
 
-      // Cache the validated license
-      LicenseStorage.saveLicenseCache(payload);
+      // Verify machine binding (if enabled)
+      if (checkMachineBinding && !this.verifyMachineBinding(payload)) {
+        return {
+          valid: false,
+          error: `License is bound to a different machine. Current: ${this.getMachineId()}`,
+          payload
+        };
+      }
+
+      // Cache the validated license after all validations pass
+      LicenseStorage.saveLicenseCache(payload as unknown as Record<string, unknown>);
 
       return {
         valid: true,
@@ -66,17 +77,14 @@ export class LicenseValidator {
         inGracePeriod: expirationStatus.inGracePeriod
       };
     } catch (err: unknown) {
-      let errorMessage = 'Invalid license format';
-
-      if (err instanceof jwt.TokenExpiredError) {
-        errorMessage = 'License token expired';
-      } else if (err instanceof jwt.JsonWebTokenError) {
-        errorMessage = `Invalid JWT: ${err.message}`;
-      } else if (err instanceof Error) {
-        errorMessage = err.message;
-      } else {
-        errorMessage = String(err);
-      }
+      const errorMessage =
+        err instanceof jwt.TokenExpiredError
+          ? 'License token expired'
+          : err instanceof jwt.JsonWebTokenError
+            ? `Invalid JWT: ${err.message}`
+            : err instanceof Error
+              ? err.message
+              : String(err);
 
       return {
         valid: false,
@@ -92,10 +100,15 @@ export class LicenseValidator {
     const now = new Date();
     const expiresAt = new Date(payload.expires_at);
 
-    let gracePeriodDays = GracePeriodDays.COMMERCIAL_GRACE;
-    if (payload.type === 'trial') {
-      gracePeriodDays = GracePeriodDays.TRIAL_GRACE;
+    if (isNaN(expiresAt.getTime())) {
+      throw new Error(`Invalid expiration date: ${payload.expires_at}`);
     }
+
+    const gracePeriodDays =
+      payload.type === 'trial' ? GracePeriodDays.TRIAL_GRACE :
+      payload.type === 'team' ? GracePeriodDays.TEAM_GRACE :
+      payload.type === 'enterprise' ? GracePeriodDays.ENTERPRISE_GRACE :
+      GracePeriodDays.COMMERCIAL_GRACE;
 
     const gracePeriodEndsAt = new Date(expiresAt.getTime() + gracePeriodDays * 24 * 60 * 60 * 1000);
 
@@ -114,12 +127,12 @@ export class LicenseValidator {
 
   /**
    * Validate offline using cached license
-   * Does not verify signature, but checks expiration with grace period
+   * Does not verify signature, but checks expiration with grace period and machine binding
    */
   static isOfflineValid(): OfflineValidationResult {
-    const cachedPayload = LicenseStorage.loadLicenseCache();
+    const cachedData = LicenseStorage.loadLicenseCache();
 
-    if (!cachedPayload) {
+    if (!cachedData) {
       return {
         valid: false,
         cacheValid: false,
@@ -127,7 +140,30 @@ export class LicenseValidator {
       };
     }
 
-    const expirationStatus = this.checkExpiration(cachedPayload);
+    const cachedPayload = cachedData as unknown as LicensePayload;
+
+    // Check machine binding
+    if (!this.verifyMachineBinding(cachedPayload)) {
+      return {
+        valid: false,
+        cacheValid: false,
+        cachedPayload,
+        error: `License is bound to a different machine. Current: ${this.getMachineId()}`
+      };
+    }
+
+    let expirationStatus: ExpirationStatus;
+    try {
+      expirationStatus = this.checkExpiration(cachedPayload);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      return {
+        valid: false,
+        cacheValid: false,
+        cachedPayload,
+        error: `Invalid cached license: ${errorMessage}`
+      };
+    }
 
     // Allow offline validation during grace period
     if (expirationStatus.inGracePeriod) {
@@ -217,21 +253,34 @@ export class LicenseValidator {
   }
 
   /**
-   * Validate with machine ID binding
+   * Validate with machine ID binding (supports both local and remote validation)
+   * @param token - The license token to validate
+   * @param expectedMachineId - Optional machine ID for remote validation; if not provided, validates against current machine
    */
   static validateWithMachineBinding(token: string, expectedMachineId?: string): ValidationResult {
-    const result = this.validateLicense(token);
+    // Skip automatic machine binding check; we'll handle it explicitly
+    const result = this.validateLicense(token, false);
 
     if (!result.valid || !result.payload) {
       return result;
     }
 
-    const machineToCheck = expectedMachineId || this.getMachineId();
+    const licenseMachineId = result.payload.activation?.machine_id;
 
-    if (!this.verifyMachineBinding(result.payload)) {
+    // If expectedMachineId is provided, check against it (remote/API validation)
+    if (expectedMachineId) {
+      if (!licenseMachineId || licenseMachineId !== expectedMachineId) {
+        return {
+          valid: false,
+          error: `License is bound to machine ${licenseMachineId || 'unbound'}, expected ${expectedMachineId}`,
+          payload: result.payload
+        };
+      }
+    } else if (licenseMachineId && !this.verifyMachineBinding(result.payload)) {
+      // If no expectedMachineId but license has machine binding, verify against current machine (local validation)
       return {
         valid: false,
-        error: `License is bound to a different machine. Expected: ${machineToCheck}`,
+        error: `License is bound to a different machine. Current: ${this.getMachineId()}`,
         payload: result.payload
       };
     }

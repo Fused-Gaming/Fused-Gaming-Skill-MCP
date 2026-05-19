@@ -8,7 +8,7 @@ export {
   colors,
   type ColorValue,
   type AllColors
-} from './colors';
+} from './colors.js';
 
 // Typography tokens
 export {
@@ -19,7 +19,7 @@ export {
   type FontSize,
   type LineHeight,
   type LetterSpacing
-} from './typography';
+} from './typography.js';
 
 // Spacing tokens
 export {
@@ -28,7 +28,7 @@ export {
   componentSpacing,
   type SpacingValue,
   type SpacingKey
-} from './spacing';
+} from './spacing.js';
 
 // Shadow and glow tokens
 export {
@@ -36,7 +36,7 @@ export {
   shadowPresets,
   type ShadowKey,
   type ElevationLevel
-} from './shadows';
+} from './shadows.js';
 
 // Motion and animation tokens
 export {
@@ -46,14 +46,14 @@ export {
   type EasingKey,
   type AnimationKey,
   type KeyframeKey
-} from './motion';
+} from './motion.js';
 
 // Component tokens
 export {
   componentTokens,
   type ComponentToken,
   type ComponentName
-} from './components';
+} from './components.js';
 
 // Agent tokens
 export {
@@ -64,16 +64,16 @@ export {
   type AgentName,
   type AgentStatusType,
   type AgentIconSize
-} from './agents';
+} from './agents.js';
 
 // Import for designSystem object
-import { colors } from './colors';
-import { typography } from './typography';
-import { spacing, spacingSets, componentSpacing } from './spacing';
-import { shadows, shadowPresets } from './shadows';
-import { motion, keyframes } from './motion';
-import { componentTokens } from './components';
-import { agentTokens, agentStatus, agentCardPresets, agentIconSizes } from './agents';
+import { colors } from './colors.js';
+import { typography } from './typography.js';
+import { spacing, spacingSets, componentSpacing } from './spacing.js';
+import { shadows, shadowPresets } from './shadows.js';
+import { motion, keyframes } from './motion.js';
+import { componentTokens } from './components.js';
+import { agentTokens, agentStatus, agentCardPresets, agentIconSizes } from './agents.js';
 
 /**
  * Complete Design System Bundle

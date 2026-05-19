@@ -1,6 +1,6 @@
 {
   "name": "@fused-gaming/skill-multi-account-session-tracking",
-  "version": "1.0.0",
+  "version": "1.0.23",
   "description": "Extended framework for tracking Claude sessions across multiple accounts with unified metrics",
   "type": "module",
   "main": "./dist/index.js",

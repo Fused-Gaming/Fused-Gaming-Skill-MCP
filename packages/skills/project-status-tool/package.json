@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-project-status-tool",
-  "version": "1.0.2",
+  "version": "1.0.23",
   "description": "Summarize current project status, risks, and next actions.",
   "type": "module",
   "main": "./dist/index.js",

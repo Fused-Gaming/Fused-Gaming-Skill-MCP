@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/mcp",
-  "version": "1.1.2",
+  "version": "1.1.5",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
   "license": "Apache-2.0",
@@ -53,7 +53,11 @@
     "@types/node": "^20.12.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
+    "@vercel/node": "^3.2.6",
     "eslint": "^10.1.0",
+    "typescript": "^5.3.2"
+  },
+  "overrides": {
     "typescript": "^5.3.2"
   },
   "publishConfig": {

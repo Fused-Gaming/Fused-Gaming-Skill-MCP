@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ES2020",
-    "lib": ["ES2020"],
+    "lib": ["ES2020", "DOM"],
+    "jsx": "react-jsx",
     "moduleResolution": "bundler",
     "rootDir": "./",
     "outDir": "./dist",
@@ -23,6 +24,6 @@
     },
     "types": ["node"]
   },
-  "include": ["packages/**/src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "api"]
+  "include": ["packages/**/src/**/*.ts", "packages/**/src/**/*.tsx"],
+  "exclude": ["node_modules", "dist", "api", "**/*.stories.tsx"]
 }

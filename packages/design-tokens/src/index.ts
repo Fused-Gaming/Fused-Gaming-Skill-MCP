@@ -3,5 +3,5 @@
  * SyncPulse Design System - Complete Token System
  */
 
-export * from './tokens/index';
-export { designSystem } from './tokens/index';
+export * from './tokens/index.js';
+export { designSystem } from './tokens/index.js';

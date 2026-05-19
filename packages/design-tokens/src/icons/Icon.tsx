@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import type { IconProps, IconSize, IconColor } from '../types/icons';
-import { getIcon } from './registry';
-import { ICON_SIZES } from '../types/icons';
+import type { IconProps, IconColor } from '../types/icons.js';
+import { getIcon } from './registry.js';
+import { ICON_SIZES } from '../types/icons.js';
 
 /**
  * Color CSS variable mappings for semantic icon colors
@@ -56,19 +56,15 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>(
     const colorValue = colorMap[color];
 
     // Build additional attributes for different icon variants
-    const strokeAttrs =
-      variant === 'outline'
-        ? {
-            fill: 'none',
-            stroke: colorValue,
-            strokeWidth: iconDef.strokeWidth || 1.5,
-            strokeLinecap: 'round' as const,
-            strokeLinejoin: 'round' as const,
-          }
-        : {
-            fill: colorValue,
-            stroke: 'none',
-          };
+    // All icon definitions are stroke-based primitives, so we keep strokes enabled for both variants
+    // Solid variant uses fill + stroke for better visual appearance with outline primitives
+    const strokeAttrs = {
+      fill: variant === 'solid' ? colorValue : 'none',
+      stroke: colorValue,
+      strokeWidth: iconDef.strokeWidth || 1.5,
+      strokeLinecap: 'round' as const,
+      strokeLinejoin: 'round' as const,
+    };
 
     return (
       <svg
