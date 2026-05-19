@@ -56,19 +56,15 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>(
     const colorValue = colorMap[color];
 
     // Build additional attributes for different icon variants
-    const strokeAttrs =
-      variant === 'outline'
-        ? {
-            fill: 'none',
-            stroke: colorValue,
-            strokeWidth: iconDef.strokeWidth || 1.5,
-            strokeLinecap: 'round' as const,
-            strokeLinejoin: 'round' as const,
-          }
-        : {
-            fill: colorValue,
-            stroke: 'none',
-          };
+    // All icon definitions are stroke-based primitives, so we keep strokes enabled for both variants
+    // Solid variant uses fill + stroke for better visual appearance with outline primitives
+    const strokeAttrs = {
+      fill: variant === 'solid' ? colorValue : 'none',
+      stroke: colorValue,
+      strokeWidth: iconDef.strokeWidth || 1.5,
+      strokeLinecap: 'round' as const,
+      strokeLinejoin: 'round' as const,
+    };
 
     return (
       <svg
