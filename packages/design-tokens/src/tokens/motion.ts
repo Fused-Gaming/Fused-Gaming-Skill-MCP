@@ -177,6 +177,18 @@ export const keyframes = {
     }
   `,
 
+  // Pulse effect (opacity)
+  pulse: `
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+  `,
+
   // Pulse glow effect
   pulseGlow: `
     @keyframes pulseGlow {

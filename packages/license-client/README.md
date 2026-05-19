@@ -216,11 +216,11 @@ const hasLicense = LicenseStorage.hasLicense();
 const machineId = LicenseStorage.getMachineId();
 // → machine_abc123def456...
 
-// Clear license
-LicenseStorage.clearLicense();
+// Delete license token
+LicenseStorage.deleteLicense();
 
-// Get license modification time
-const mtime = LicenseStorage.getLicenseModificationTime();
+// Clear offline cache
+LicenseStorage.clearCache();
 ```
 
 ## License Payload Structure
