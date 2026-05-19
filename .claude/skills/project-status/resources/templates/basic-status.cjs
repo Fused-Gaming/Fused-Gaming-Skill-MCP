@@ -47,13 +47,28 @@ app.get('/status/gates', async (req, res) => {
   res.json(gates);
 });
 
+// Compliance status endpoint
+app.get('/status/compliance', async (req, res) => {
+  const compliance = await statusAPI.getComplianceStatus();
+  res.json(compliance);
+});
+
+// Metrics endpoint
+app.get('/status/metrics', async (req, res) => {
+  const metrics = await statusAPI.getMetrics();
+  res.json(metrics);
+});
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✓ Status API running on http://localhost:${PORT}`);
+  console.log(`  GET /health - Health check`);
   console.log(`  GET /status - Complete project status`);
   console.log(`  GET /status/agents - Agent swarm metrics`);
   console.log(`  GET /status/gates - Quality gate progression`);
+  console.log(`  GET /status/compliance - RFP compliance status`);
+  console.log(`  GET /status/metrics - Execution metrics`);
 });
 
 module.exports = app;
