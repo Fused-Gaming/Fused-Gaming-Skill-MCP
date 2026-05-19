@@ -1,0 +1,83 @@
+{
+  "project": "PeraltaCC",
+  "description": "Peralta Community College ERP Automation and Functional Alignment",
+  "rfpNumber": "25-26-09",
+  "deadline": "2026-05-22T15:00:00-07:00",
+  "gates": [
+    {
+      "id": 0,
+      "name": "Repository Observability",
+      "owner": "agent-docs-platform",
+      "criteria": [
+        "Git remotes configured",
+        "GitHub API accessible",
+        "CI workflows defined"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Documentation Platform Deployment",
+      "owner": "agent-docs-platform",
+      "criteria": [
+        "GitBook live on peralta.vln.gg",
+        "All sections render correctly",
+        "Navigation functional"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Technical Architecture & Methodology",
+      "owner": "agent-technical-architecture",
+      "criteria": [
+        "Claude Flow v3 methodology documented",
+        "Architecture diagrams created",
+        "Security design documented"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Proposal Content Completeness",
+      "owner": "agent-proposal-content",
+      "criteria": [
+        "All sections populated",
+        "Cross-references verified",
+        "Formatting consistent"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Compliance & Traceability",
+      "owner": "agent-compliance-delivery",
+      "criteria": [
+        "RTM complete with 100% coverage",
+        "Compliance checklist verified",
+        "Appendices organized"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Final Submission Readiness",
+      "owner": "agent-quality-assurance",
+      "criteria": [
+        "All previous gates passed",
+        "Professional formatting verified",
+        "PDF export successful",
+        "Sign-off obtained"
+      ]
+    }
+  ],
+  "agents": [
+    { "id": "agent-docs-platform", "role": "Documentation Lead", "priority": 1 },
+    { "id": "agent-proposal-content", "role": "Content Architect", "priority": 1 },
+    { "id": "agent-compliance-delivery", "role": "Compliance & Delivery", "priority": 1 },
+    { "id": "agent-technical-architecture", "role": "Technical Designer", "priority": 2 },
+    { "id": "agent-erp-integration", "role": "ERP Specialist", "priority": 2 },
+    { "id": "agent-project-management", "role": "Project Coordinator", "priority": 3 },
+    { "id": "agent-cost-financial", "role": "Financial Analyst", "priority": 2 },
+    { "id": "agent-quality-assurance", "role": "QA Gate Enforcer", "priority": 3 }
+  ],
+  "metricsInterval": 5000,
+  "cacheDuration": 30000,
+  "enableMetrics": true,
+  "storageType": "memory"
+}
