@@ -7,8 +7,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import {
-  withAuth,
-  withOptionalAuth,
   getAuthToken,
   verifyAuthToken,
   createAuthValidator,
@@ -172,7 +170,7 @@ export const getResource = async (
     name: 'Example Resource',
     owner: 'admin@example.com',
     createdAt: new Date(),
-    apiKey: 'secret-key-12345', // Sensitive data
+    _apiKey: 'secret-key-12345', // Sensitive data
   };
 
   // Admin gets full details
@@ -181,7 +179,7 @@ export const getResource = async (
   }
 
   // Regular user gets sanitized data
-  const { apiKey, ...publicData } = resource;
+  const { _apiKey, ...publicData } = resource;
   return NextResponse.json(publicData, { status: 200 });
 };
 

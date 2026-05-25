@@ -23,7 +23,7 @@ import {
   isPasswordChangeRequired,
   type AuthenticatedUser,
 } from '../auth-middleware';
-import { SessionStore } from '../session-store';
+import { SessionStore } from '@/lib/session-store';
 import { NextRequest } from 'next/server';
 
 /**
@@ -57,7 +57,6 @@ function createMockRequest(options: {
 
 describe('Auth Middleware', () => {
   let validToken: string;
-  let validUserId: string;
   let validEmail: string;
 
   beforeEach(() => {
@@ -68,7 +67,6 @@ describe('Auth Middleware', () => {
       true
     );
     validToken = result.token;
-    validUserId = `user_${Date.now()}`;
   });
 
   describe('Token Extraction', () => {
@@ -231,7 +229,7 @@ describe('Auth Middleware', () => {
     });
 
     it('withAuth should call handler when authenticated', async () => {
-      const handler = jest.fn(async (req, user) => new Response('OK'));
+      const handler = jest.fn(async (_req, _user) => new Response('OK'));
       const protected = withAuth(handler);
 
       const request = createMockRequest({

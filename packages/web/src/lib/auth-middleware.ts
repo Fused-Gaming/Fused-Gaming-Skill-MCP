@@ -17,7 +17,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { SessionStore } from './session-store';
+import { SessionStore } from '@/lib/session-store';
 
 /**
  * Authenticated user context attached to request
@@ -301,11 +301,11 @@ export function withOptionalAuth(
  * Useful for protectingEdge functions or middleware chains
  */
 export function createAuthValidator(options: AuthMiddlewareOptions = {}) {
-  return {
+  const validator = {
     /**
      * Validates token and returns user or null
      */
-    validate: (token: string | null): AuthenticatedUser | null => {
+    validate(token: string | null): AuthenticatedUser | null {
       const user = verifyAuthToken(token);
       if (!user) return null;
 
@@ -320,21 +320,23 @@ export function createAuthValidator(options: AuthMiddlewareOptions = {}) {
     /**
      * Extracts user from request
      */
-    extractUser: (request: NextRequest): AuthenticatedUser | null => {
+    extractUser(request: NextRequest): AuthenticatedUser | null {
       const token = getAuthToken(request);
-      return this.validate(token);
+      return validator.validate(token);
     },
 
     /**
      * Creates auth headers for requests
      */
-    createAuthHeader: (token: string): Record<string, string> => {
+    createAuthHeader(token: string): Record<string, string> {
       return {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       };
     },
   };
+
+  return validator;
 }
 
 /**
