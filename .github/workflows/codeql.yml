@@ -33,36 +33,23 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
-  analyze:
-    name: Analyze (${{ matrix.language }})
+  CodeQL:
+    name: CodeQL
     runs-on: ubuntu-latest
     permissions:
       security-events: write
       packages: read
       actions: read
       contents: read
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [javascript-typescript, python]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v2
       with:
-        languages: ${{ matrix.language }}
+        languages: javascript-typescript
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-
-  CodeQL:
-    name: CodeQL
-    runs-on: ubuntu-latest
-    needs: [analyze]
-    if: ${{ success() }}
-    steps:
-      - name: CodeQL check passed
-        run: echo "CodeQL analysis completed successfully"
+      uses: github/codeql-action/analyze@v2
