@@ -20,7 +20,7 @@
 import AdminJS from 'admin-bro';
 import AdminJSExpress from 'admin-bro-express';
 import AdminJSTypeORM from 'admin-bro-typeorm';
-import express, { Express, Router, Request, Response, NextFunction } from 'express';
+import type { Express, Router, Request, Response, NextFunction } from 'express';
 import { DataSource, Repository } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -562,9 +562,9 @@ export async function createDashboardHandler(
   swarmRepository: Repository<any>
 ) {
   return {
-    handler: async (context: any) => {
+    handler: async (_context: any) => {
       try {
-        const [taskCount, activeTaskCount, completedCount, agentCount, swarmCount] =
+        const [taskCount, activeTaskCount, completedCount, agentCount, _swarmCount] =
           await Promise.all([
             taskRepository.count(),
             taskRepository.count({ where: { status: 'running' } }),
@@ -676,7 +676,7 @@ export async function adminAuthMiddleware(
 
     (req as any).adminContext = context;
     next();
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Authentication error' });
   }
 }
@@ -763,7 +763,6 @@ export async function initializeAdminPanel(
   const agentRepository = dataSource.getRepository('Agent');
   const swarmRepository = dataSource.getRepository('Swarm');
   const adminUserRepository = dataSource.getRepository('AdminUser');
-  const auditRepository = dataSource.getRepository('AuditLog');
 
   // Create AdminJS instance
   const adminJs = new AdminJS({
