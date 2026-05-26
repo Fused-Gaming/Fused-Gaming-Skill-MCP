@@ -68,7 +68,7 @@ function extractTokenFromHeader(request: NextRequest): string | null {
   }
 
   const parts = authHeader.split(' ');
-  if (parts.length !== 2 || parts[0] !== 'Bearer') {
+  if (parts.length !== 2 || parts[0].toLowerCase() !== 'bearer') {
     return null;
   }
 
@@ -110,9 +110,8 @@ export function verifyAuthToken(token: string | null): AuthenticatedUser | null 
       return null;
     }
 
-    // Extract role from email or user metadata
-    // In production, store role in JWT payload or database
-    const role: 'admin' | 'user' = session.email.includes('admin') ? 'admin' : 'user';
+    // Extract role from session, default to 'user' if not set
+    const role: 'admin' | 'user' = session.role ?? 'user';
 
     // Calculate JWT timestamps
     const now = Math.floor(Date.now() / 1000);
@@ -145,9 +144,16 @@ function createAuthErrorResponse(
     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
   };
 
+  let errorMessage = 'Internal Server Error';
+  if (status === 401) {
+    errorMessage = 'Unauthorized';
+  } else if (status === 403) {
+    errorMessage = 'Forbidden';
+  }
+
   return NextResponse.json(
     {
-      error: status === 401 ? 'Unauthorized' : 'Forbidden',
+      error: errorMessage,
       message,
     },
     {

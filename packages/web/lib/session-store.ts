@@ -17,6 +17,7 @@ interface SessionData {
   createdAt: Date;
   expiresAt: Date;
   passwordChanged: boolean;
+  role: 'admin' | 'user';
 }
 
 interface MagicLinkToken {
@@ -32,6 +33,7 @@ interface UserData {
   userId: string;
   password?: string;
   passwordChanged?: boolean;
+  role?: 'admin' | 'user';
 }
 
 // In-memory storage (replace with database in production)
@@ -96,7 +98,7 @@ function base64UrlDecode(str: string): string {
  * Creates a JWT token for session authentication
  * Token is stateless and verifiable without session store lookup
  */
-function createJWT(userId: string, email: string, passwordChanged: boolean): { token: string; expiresIn: number } {
+function createJWT(userId: string, email: string, passwordChanged: boolean, role: 'admin' | 'user' = 'user'): { token: string; expiresIn: number } {
   const now = Math.floor(Date.now() / 1000);
   const expiresAt = now + JWT_EXPIRY;
 
@@ -109,6 +111,7 @@ function createJWT(userId: string, email: string, passwordChanged: boolean): { t
     sub: userId,
     email,
     passwordChanged,
+    role,
     iat: now,
     exp: expiresAt,
   };
@@ -135,7 +138,7 @@ function createJWT(userId: string, email: string, passwordChanged: boolean): { t
  * Verifies and decodes a JWT token
  * Returns null if invalid or expired
  */
-function verifyJWT(token: string): { userId: string; email: string; passwordChanged: boolean } | null {
+function verifyJWT(token: string): { userId: string; email: string; passwordChanged: boolean; role: 'admin' | 'user' } | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
@@ -170,6 +173,7 @@ function verifyJWT(token: string): { userId: string; email: string; passwordChan
       userId: payload.sub,
       email: payload.email,
       passwordChanged: payload.passwordChanged,
+      role: payload.role || 'user',
     };
   } catch (error) {
     console.error('JWT verification failed:', error);
@@ -188,9 +192,10 @@ export const SessionStore = {
   createSession(
     userId: string,
     email: string,
-    passwordChanged: boolean = false
+    passwordChanged: boolean = false,
+    role: 'admin' | 'user' = 'user'
   ): { token: string; expiresIn: number } {
-    return createJWT(userId, email, passwordChanged);
+    return createJWT(userId, email, passwordChanged, role);
   },
 
   /**
@@ -211,6 +216,7 @@ export const SessionStore = {
       createdAt: now,
       expiresAt,
       passwordChanged: decoded.passwordChanged,
+      role: decoded.role,
     };
   },
 
