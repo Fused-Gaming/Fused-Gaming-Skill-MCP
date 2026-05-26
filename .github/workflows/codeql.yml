@@ -59,3 +59,17 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
+
+  codeql-status:
+    name: CodeQL
+    needs: analyze
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check CodeQL analysis results
+        run: |
+          if [ "${{ needs.analyze.result }}" != "success" ]; then
+            echo "CodeQL analysis failed"
+            exit 1
+          fi
+          echo "CodeQL analysis passed"
