@@ -676,7 +676,7 @@ export async function adminAuthMiddleware(
 
     (req as any).adminContext = context;
     next();
-  } catch (_error) {
+  } catch {
     res.status(500).json({ error: 'Authentication error' });
   }
 }
