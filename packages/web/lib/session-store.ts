@@ -49,8 +49,8 @@ const DEMO_USER_EMAIL = 'demo@example.com';
 const DEMO_USER_PASSWORD = 'demo';
 const DEMO_USER_ID = 'user_demo';
 
-// Hash the demo password with bcrypt (10 salt rounds for security)
-const hashedDemoPassword = bcryptjs.hashSync(DEMO_USER_PASSWORD, 10);
+// Hash the demo password with bcrypt (12 salt rounds for security per OWASP)
+const hashedDemoPassword = bcryptjs.hashSync(DEMO_USER_PASSWORD, 12);
 
 usersMap.set(DEMO_USER_EMAIL, {
   email: DEMO_USER_EMAIL,
@@ -249,8 +249,8 @@ export const SessionStore = {
     const user = usersMap.get(email);
     if (!user) return false;
 
-    // Hash password with bcrypt (10 salt rounds)
-    user.password = bcryptjs.hashSync(newPassword, 10);
+    // Hash password with bcrypt (12 salt rounds per OWASP)
+    user.password = bcryptjs.hashSync(newPassword, 12);
     user.passwordChanged = true;
     return true;
   },
@@ -354,7 +354,7 @@ export const SessionStore = {
     usersMap.set(email, {
       email,
       userId,
-      password: bcryptjs.hashSync(password, 10),
+      password: bcryptjs.hashSync(password, 12),
       passwordChanged: true, // Password was set during signup
     });
 
