@@ -46,11 +46,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v5
 
-    - name: Initialize CodeQL
+    - name: Initialize CodeQL for JavaScript/TypeScript
       uses: github/codeql-action/init@v3
       with:
-        languages: javascript-typescript, python
-        build-mode: none
+        languages: javascript-typescript
+
+    - name: Initialize CodeQL for Python
+      uses: github/codeql-action/init@v3
+      with:
+        languages: python
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
