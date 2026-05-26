@@ -52,7 +52,6 @@ jobs:
         languages: |
           javascript-typescript
           python
-        build-mode: none
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
