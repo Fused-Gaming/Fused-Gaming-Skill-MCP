@@ -57,6 +57,7 @@ usersMap.set(DEMO_USER_EMAIL, {
   userId: DEMO_USER_ID,
   password: hashedDemoPassword,
   passwordChanged: false,
+  role: 'admin',
 });
 
 /**
@@ -188,14 +189,17 @@ export const SessionStore = {
   /**
    * Creates a new JWT session for a user
    * JWT tokens are stateless and don't require server-side storage
+   * Role is retrieved from user data if not explicitly provided
    */
   createSession(
     userId: string,
     email: string,
     passwordChanged: boolean = false,
-    role: 'admin' | 'user' = 'user'
+    role?: 'admin' | 'user'
   ): { token: string; expiresIn: number } {
-    return createJWT(userId, email, passwordChanged, role);
+    // Retrieve role from user data if not explicitly provided
+    const userRole = role ?? usersMap.get(email)?.role ?? 'user';
+    return createJWT(userId, email, passwordChanged, userRole);
   },
 
   /**

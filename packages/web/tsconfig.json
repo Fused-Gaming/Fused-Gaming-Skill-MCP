@@ -40,6 +40,8 @@
     "**/__tests__/**",
     "**/*.test.ts",
     "**/*.test.tsx",
-    "examples/**"
+    "examples/**",
+    "**/*.example.ts",
+    "**/*.example.tsx"
   ]
 }
