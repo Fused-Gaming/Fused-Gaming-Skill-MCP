@@ -1,0 +1,96 @@
+{
+  "version": "0.2.2",
+  "timestamp": 1780023489205,
+  "metrics": {
+    "cacheOps": {
+      "name": "CacheService.set",
+      "iterations": 10000,
+      "duration": 22.287600999999995,
+      "avg": 0.0022287600999999994,
+      "min": 0.0003179999998792482,
+      "max": 2.86916999999994,
+      "ops_per_sec": 448679.9633572048,
+      "target": 1,
+      "passed": true
+    },
+    "vectorSearch1K": {
+      "name": "VectorIndex.search (1K entries)",
+      "iterations": 100,
+      "duration": 431.52267800000004,
+      "avg": 4.315226780000001,
+      "min": 4.023682000000008,
+      "max": 5.566855000000032,
+      "ops_per_sec": 231.73753106899284,
+      "target": 10,
+      "passed": true
+    },
+    "vectorSearch10K": {
+      "name": "VectorIndex.search (10K entries)",
+      "iterations": 50,
+      "duration": 2335.5006869999997,
+      "avg": 46.710013739999994,
+      "min": 44.66852000000017,
+      "max": 51.194728999999825,
+      "ops_per_sec": 21.40868563144208,
+      "target": 50,
+      "passed": true
+    },
+    "vectorIndexSearch1K": {
+      "name": "VectorIndex.search (1K entries) - Direct",
+      "iterations": 100,
+      "duration": 1174.601912,
+      "avg": 11.746019120000001,
+      "min": 10.856045999999878,
+      "max": 21.053367999999864,
+      "ops_per_sec": 85.13522664860092,
+      "target": 10,
+      "passed": false
+    },
+    "vectorIndexSearch10K": {
+      "name": "VectorIndex.search (10K entries) - Direct",
+      "iterations": 50,
+      "duration": 5989.865134,
+      "avg": 119.79730267999999,
+      "min": 115.54525599999943,
+      "max": 131.49948699999914,
+      "ops_per_sec": 8.347433353079564,
+      "target": 50,
+      "passed": false
+    },
+    "vectorIndexSearch100K": {
+      "name": "VectorIndex.search (100K entries) - Stress",
+      "iterations": 10,
+      "duration": 10178.486413999999,
+      "avg": 1017.8486413999999,
+      "min": 979.9066579999999,
+      "max": 1079.3527020000001,
+      "ops_per_sec": 0.9824643461964541,
+      "target": 100,
+      "passed": false
+    },
+    "cacheRecovery": {},
+    "swarmAssignment": {
+      "name": "SwarmOrchestrator.assignTask (5 agents)",
+      "iterations": 1000,
+      "duration": 2.079541999999492,
+      "avg": 0.002079541999999492,
+      "min": 0.0014519999967887998,
+      "max": 0.09725099999923259,
+      "ops_per_sec": 480875.1157708016,
+      "target": 1,
+      "passed": true
+    },
+    "memoryUsage": {
+      "heapUsed": 617.54,
+      "heapTotal": 667.25,
+      "external": 1.81,
+      "arrayBuffers": 0.01
+    }
+  },
+  "targets": {
+    "cacheOps": true,
+    "vectorSearch1K": true,
+    "vectorSearch10K": true,
+    "swarmThroughput": true
+  }
+}

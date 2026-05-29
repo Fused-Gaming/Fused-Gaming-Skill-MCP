@@ -1,7 +1,7 @@
 {
   "swarms": {
-    "swarm-1779177608894-9zebq": {
-      "swarmId": "swarm-1779177608894-9zebq",
+    "swarm-1780023019423-urw5b": {
+      "swarmId": "swarm-1780023019423-urw5b",
       "topology": "balanced",
       "maxAgents": 24,
       "status": "running",
@@ -158,8 +158,8 @@
           "group": "coreAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608893,
-          "memoryUsageMB": 108.3763900309845,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 127.69098570825912,
           "errorLog": []
         },
         {
@@ -168,8 +168,8 @@
           "group": "coreAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 63.23785253626253,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 72.7053922258357,
           "errorLog": []
         },
         {
@@ -178,8 +178,8 @@
           "group": "coreAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 77.03932456973183,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 55.7516330145015,
           "errorLog": []
         },
         {
@@ -188,8 +188,8 @@
           "group": "executionAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 101.9452080190712,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 100.51997554501813,
           "errorLog": []
         },
         {
@@ -198,8 +198,8 @@
           "group": "executionAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 86.22718590760019,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 134.07458480633062,
           "errorLog": []
         },
         {
@@ -208,8 +208,8 @@
           "group": "executionAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 114.33023795981127,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 61.032596711017305,
           "errorLog": []
         },
         {
@@ -218,8 +218,8 @@
           "group": "executionAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 148.6774565913165,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 144.86173660802694,
           "errorLog": []
         },
         {
@@ -228,8 +228,8 @@
           "group": "executionAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 63.121562900278235,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 104.9214766593461,
           "errorLog": []
         },
         {
@@ -238,8 +238,8 @@
           "group": "executionAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 93.40335959980668,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 51.74047323914497,
           "errorLog": []
         },
         {
@@ -248,8 +248,8 @@
           "group": "executionAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 116.36526470220971,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 97.05132174390032,
           "errorLog": []
         },
         {
@@ -258,8 +258,8 @@
           "group": "executionAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 102.51255336173946,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 80.24369708356531,
           "errorLog": []
         },
         {
@@ -268,8 +268,8 @@
           "group": "optimizationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 73.23316433203395,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 61.64195727664696,
           "errorLog": []
         },
         {
@@ -278,8 +278,8 @@
           "group": "optimizationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 122.97449148108521,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 64.8418481170257,
           "errorLog": []
         },
         {
@@ -288,8 +288,8 @@
           "group": "optimizationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 53.43719168565697,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 147.0771640872138,
           "errorLog": []
         },
         {
@@ -298,8 +298,8 @@
           "group": "optimizationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 146.18625958117988,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 68.86051805681618,
           "errorLog": []
         },
         {
@@ -308,8 +308,8 @@
           "group": "automationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 133.9607853443884,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 114.72248348817608,
           "errorLog": []
         },
         {
@@ -318,8 +318,8 @@
           "group": "automationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 121.48507348252879,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 128.95207851664267,
           "errorLog": []
         },
         {
@@ -328,8 +328,8 @@
           "group": "automationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 70.46418588500316,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 147.2667883467655,
           "errorLog": []
         },
         {
@@ -338,8 +338,8 @@
           "group": "automationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 77.45260918237284,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 101.91737077953127,
           "errorLog": []
         },
         {
@@ -348,8 +348,8 @@
           "group": "automationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 61.67226358185116,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 65.51610651964532,
           "errorLog": []
         },
         {
@@ -358,8 +358,8 @@
           "group": "automationAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 53.66462854568974,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 81.52831736479669,
           "errorLog": []
         },
         {
@@ -368,8 +368,8 @@
           "group": "securityAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 52.96938508292903,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 106.83828473837951,
           "errorLog": []
         },
         {
@@ -378,8 +378,8 @@
           "group": "securityAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 87.3396792182201,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 144.52349174778686,
           "errorLog": []
         },
         {
@@ -388,8 +388,8 @@
           "group": "securityAgents",
           "status": "running",
           "tasksCompleted": 0,
-          "lastHeartbeat": 1779177608894,
-          "memoryUsageMB": 145.32216396375173,
+          "lastHeartbeat": 1780023019423,
+          "memoryUsageMB": 77.44974076015714,
           "errorLog": []
         }
       ],
@@ -399,16 +399,16 @@
         "electionTimeout": 15000,
         "snapshotInterval": 10000
       },
-      "createdAt": "2026-05-19T08:00:08.894Z",
-      "updatedAt": "2026-05-19T08:00:08.894Z",
+      "createdAt": "2026-05-29T02:50:19.423Z",
+      "updatedAt": "2026-05-29T02:50:19.423Z",
       "metrics": {
         "totalTasksCompleted": 0,
-        "averageMemoryUsageMB": 95,
+        "averageMemoryUsageMB": 98,
         "healthyAgents": 24,
         "unhealthyAgents": 0
       }
     }
   },
   "version": "3.0.1",
-  "lastReset": "2026-05-19T08:00:08.894Z"
+  "lastReset": "2026-05-29T02:50:19.423Z"
 }
