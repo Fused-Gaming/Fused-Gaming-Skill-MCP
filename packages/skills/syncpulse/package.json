@@ -13,7 +13,7 @@
     "test": "echo \"tests pending\""
   },
   "dependencies": {
-    "@h4shed/mcp-core": "^1.0.4",
+    "@h4shed/mcp-core": "^1.0.24",
     "nodemailer": "^6.9.13"
   },
   "devDependencies": {
