@@ -198,15 +198,13 @@ jobs:
 
 Please ensure:
 1. All skill packages are properly registered
-2. All tools are discoverable in \`packages/skills/*/src/tools/\`
-3. Registry is generated with: \`npm run registry:generate\`
+2. All tools are discoverable in packages/skills/*/src/tools/
+3. Registry is generated with: npm run registry:generate
 4. No duplicate or invalid package names exist
 
 Run locally:
-\`\`\`bash
 npm run registry:generate
-npm run registry:validate
-\`\`\``
+npm run registry:validate`
             })
 
       - name: Upload registry artifacts
