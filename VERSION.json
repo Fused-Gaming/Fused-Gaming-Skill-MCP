@@ -13,7 +13,7 @@
     "buildNumber": 1013
   },
   "packageInfo": {
-    "name": "@fused-gaming/mcp",
+    "name": "@h4shed/mcp",
     "scope": "fused-gaming",
     "publishedScope": "h4shed",
     "description": "Modular MCP server with scalable Claude skills",
@@ -22,20 +22,20 @@
   },
   "workspaces": {
     "core": {
-      "name": "@fused-gaming/mcp-core",
-      "version": "1.0.0"
+      "name": "@h4shed/mcp-core",
+      "version": "1.0.24"
     },
     "designTokens": {
-      "name": "@fused-gaming/design-tokens",
+      "name": "@h4shed/design-tokens",
       "version": "1.0.0"
     },
     "licenseClient": {
-      "name": "@fused-gaming/license-client",
+      "name": "@h4shed/license-client",
       "version": "1.0.0"
     },
     "cli": {
-      "name": "@fused-gaming/mcp-cli",
-      "version": "1.0.0",
+      "name": "@h4shed/mcp-cli",
+      "version": "1.0.24",
       "binaries": {
         "fused-gaming-mcp": "dist/index.js"
       }
@@ -63,87 +63,87 @@
     ],
     "skills": [
       {
-        "name": "@fused-gaming/skill-algorithmic-art",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-algorithmic-art",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-ascii-mockup",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-ascii-mockup",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-canvas-design",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-canvas-design",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-frontend-design",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-frontend-design",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-theme-factory",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-theme-factory",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-mcp-builder",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-mcp-builder",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-pre-deploy-validator",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-pre-deploy-validator",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-skill-creator",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-skill-creator",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-underworld-writer",
-        "version": "1.0.0",
+        "name": "@h4shed/skill-underworld-writer",
+        "version": "1.0.24",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-mermaid-terminal",
+        "name": "@h4shed/skill-mermaid-terminal",
         "version": "1.0.23",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-ux-journeymapper",
+        "name": "@h4shed/skill-ux-journeymapper",
         "version": "1.0.23",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-svg-generator",
+        "name": "@h4shed/skill-svg-generator",
         "version": "1.0.23",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-project-manager-skill",
+        "name": "@h4shed/skill-project-manager-skill",
+        "version": "1.0.24",
+        "published": true
+      },
+      {
+        "name": "@h4shed/skill-project-status-tool",
         "version": "1.0.23",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-project-status-tool",
+        "name": "@h4shed/skill-daily-review",
         "version": "1.0.23",
         "published": true
       },
       {
-        "name": "@fused-gaming/skill-daily-review",
+        "name": "@h4shed/multi-account-session-tracking",
         "version": "1.0.23",
         "published": true
       },
       {
-        "name": "@fused-gaming/multi-account-session-tracking",
-        "version": "1.0.23",
-        "published": true
-      },
-      {
-        "name": "@fused-gaming/skill-linkedin-master-journalist",
+        "name": "@h4shed/skill-linkedin-master-journalist",
         "version": "1.0.23",
         "published": true
       }

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+- **JWT-Based Endpoint Protection** — PR #229 introduces comprehensive authentication for sensitive API endpoints
+  - Implemented JWT-based Bearer token authentication with role-based access control (admin/user roles)
+  - Protected `/api/tasks`, `/api/swarms`, and `/api/roadmap` endpoints from unauthorized access
+  - Added `SessionStore` for in-memory JWT token management with automatic expiration cleanup
+  - Implemented `AuthenticationMiddleware` with role validation and optional auth flows
+  - Created comprehensive authentication documentation and security audit guidance
+  - Added type-safe API example implementations showing protected endpoint patterns
+
+### Changed
+- **AdminJS Dashboard Evaluation** — Comprehensive assessment of AdminJS as potential admin solution
+  - Evaluated AdminJS 7.3.x for admin panel replacement with production-ready POC code
+  - Created 6-8 week phased implementation plan with 9 granular permissions and RBAC setup
+  - Documented complete resource configurations (Tasks, Agents, Swarms, AdminUsers, AuditLogs)
+  - Recommendation: Partial adoption for phased enhancement of admin capabilities
+  - Full integration guide and example code published in `docs/ADMINJS_INTEGRATION_GUIDE.md`
+
+### Fixed
+- **TypeScript 7.0 Compatibility** — Added `ignoreDeprecations: "5.0"` to handle baseUrl deprecation warnings
+- **NPM Publish Investigation** — Documented expected UNMET DEPENDENCY warnings with file: protocol references
+  - Created comprehensive troubleshooting guide: `docs/NPM_PUBLISH_TROUBLESHOOTING.md`
+  - Verified monorepo dependency resolution follows npm workspace standards
+  - Provided pre-publish validation checklist and mitigation strategies
+
 ## [1.1.4] - 2026-05-19
 
 ### Fixed
