@@ -46,5 +46,6 @@ jobs:
     - uses: github/codeql-action/init@v3
       with:
         languages: javascript-typescript
+        build-mode: none
 
     - uses: github/codeql-action/analyze@v3
