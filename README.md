@@ -279,6 +279,7 @@ These packages are actively in development and will be published to npm:
 ## ✨ Key Features
 
 ✔️ **Orchestration & Coordination** — SyncPulse multi-agent coordination with 9 email workflow templates  
+✔️ **Security & Authentication** — JWT-based endpoint protection with role-based access control for sensitive APIs  
 ✔️ **Design Systems** — Complete design tokens, theming, and component documentation  
 ✔️ **Generative Art** — Algorithmic and NFT artwork generation with blockchain tools  
 ✔️ **Content Creation** — Autonomous article generation, social posts, and branded assets  

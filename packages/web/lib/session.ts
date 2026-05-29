@@ -3,6 +3,8 @@
  * Handles authentication token validation and session checks
  */
 
+import { SessionStore } from './session-store';
+
 /**
  * Session token type definition
  * Used for type-safe session validation
@@ -11,6 +13,17 @@ export interface SessionToken {
   value: string;
   expiresAt?: Date;
   userId?: string;
+  email?: string;
+  passwordChanged?: boolean;
+}
+
+/**
+ * Auth check result for API routes
+ */
+export interface AuthCheckResult {
+  isAuthenticated: boolean;
+  sessionToken?: SessionToken;
+  error?: string;
 }
 
 /**
@@ -127,4 +140,48 @@ export function setSessionCookie(token: string, expiresIn?: number): void {
   if (typeof document === 'undefined') return;
 
   document.cookie = createSessionTokenCookie(token, expiresIn);
+}
+
+/**
+ * Validates JWT token from Authorization header
+ * Used by API routes to check authentication
+ * @param authorizationHeader - The Authorization header value (e.g., "Bearer token")
+ * @returns AuthCheckResult with session details if valid
+ */
+export function validateJWTToken(authorizationHeader?: string): AuthCheckResult {
+  if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+    return {
+      isAuthenticated: false,
+      error: 'Missing or invalid Authorization header',
+    };
+  }
+
+  const token = authorizationHeader.substring(7); // Remove 'Bearer ' prefix
+
+  if (!isValidSessionToken(token)) {
+    return {
+      isAuthenticated: false,
+      error: 'Invalid token format',
+    };
+  }
+
+  const session = SessionStore.getSession(token);
+
+  if (!session) {
+    return {
+      isAuthenticated: false,
+      error: 'Invalid or expired token',
+    };
+  }
+
+  return {
+    isAuthenticated: true,
+    sessionToken: {
+      value: token,
+      userId: session.userId,
+      email: session.email,
+      passwordChanged: session.passwordChanged,
+      expiresAt: session.expiresAt,
+    },
+  };
 }

@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-vercel-nextjs-deployment",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vercel deployment optimization and Next.js framework integration for serverless applications",
   "type": "module",
   "main": "./dist/index.js",

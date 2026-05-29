@@ -17,6 +17,7 @@ interface SessionData {
   createdAt: Date;
   expiresAt: Date;
   passwordChanged: boolean;
+  role: 'admin' | 'user';
 }
 
 interface MagicLinkToken {
@@ -32,6 +33,7 @@ interface UserData {
   userId: string;
   password?: string;
   passwordChanged?: boolean;
+  role?: 'admin' | 'user';
 }
 
 // In-memory storage (replace with database in production)
@@ -47,14 +49,15 @@ const DEMO_USER_EMAIL = 'demo@example.com';
 const DEMO_USER_PASSWORD = 'demo';
 const DEMO_USER_ID = 'user_demo';
 
-// Hash the demo password with bcrypt (10 salt rounds for security)
-const hashedDemoPassword = bcryptjs.hashSync(DEMO_USER_PASSWORD, 10);
+// Hash the demo password with bcrypt (12 salt rounds for security per OWASP)
+const hashedDemoPassword = bcryptjs.hashSync(DEMO_USER_PASSWORD, 12);
 
 usersMap.set(DEMO_USER_EMAIL, {
   email: DEMO_USER_EMAIL,
   userId: DEMO_USER_ID,
   password: hashedDemoPassword,
   passwordChanged: false,
+  role: 'admin',
 });
 
 /**
@@ -96,7 +99,7 @@ function base64UrlDecode(str: string): string {
  * Creates a JWT token for session authentication
  * Token is stateless and verifiable without session store lookup
  */
-function createJWT(userId: string, email: string, passwordChanged: boolean): { token: string; expiresIn: number } {
+function createJWT(userId: string, email: string, passwordChanged: boolean, role: 'admin' | 'user' = 'user'): { token: string; expiresIn: number } {
   const now = Math.floor(Date.now() / 1000);
   const expiresAt = now + JWT_EXPIRY;
 
@@ -109,6 +112,7 @@ function createJWT(userId: string, email: string, passwordChanged: boolean): { t
     sub: userId,
     email,
     passwordChanged,
+    role,
     iat: now,
     exp: expiresAt,
   };
@@ -135,7 +139,7 @@ function createJWT(userId: string, email: string, passwordChanged: boolean): { t
  * Verifies and decodes a JWT token
  * Returns null if invalid or expired
  */
-function verifyJWT(token: string): { userId: string; email: string; passwordChanged: boolean } | null {
+function verifyJWT(token: string): { userId: string; email: string; passwordChanged: boolean; role: 'admin' | 'user' } | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
@@ -170,6 +174,7 @@ function verifyJWT(token: string): { userId: string; email: string; passwordChan
       userId: payload.sub,
       email: payload.email,
       passwordChanged: payload.passwordChanged,
+      role: payload.role || 'user',
     };
   } catch (error) {
     console.error('JWT verification failed:', error);
@@ -184,13 +189,17 @@ export const SessionStore = {
   /**
    * Creates a new JWT session for a user
    * JWT tokens are stateless and don't require server-side storage
+   * Role is retrieved from user data if not explicitly provided
    */
   createSession(
     userId: string,
     email: string,
-    passwordChanged: boolean = false
+    passwordChanged: boolean = false,
+    role?: 'admin' | 'user'
   ): { token: string; expiresIn: number } {
-    return createJWT(userId, email, passwordChanged);
+    // Retrieve role from user data if not explicitly provided
+    const userRole = role ?? usersMap.get(email)?.role ?? 'user';
+    return createJWT(userId, email, passwordChanged, userRole);
   },
 
   /**
@@ -211,6 +220,7 @@ export const SessionStore = {
       createdAt: now,
       expiresAt,
       passwordChanged: decoded.passwordChanged,
+      role: decoded.role,
     };
   },
 
@@ -239,8 +249,8 @@ export const SessionStore = {
     const user = usersMap.get(email);
     if (!user) return false;
 
-    // Hash password with bcrypt (10 salt rounds)
-    user.password = bcryptjs.hashSync(newPassword, 10);
+    // Hash password with bcrypt (12 salt rounds per OWASP)
+    user.password = bcryptjs.hashSync(newPassword, 12);
     user.passwordChanged = true;
     return true;
   },
@@ -344,7 +354,7 @@ export const SessionStore = {
     usersMap.set(email, {
       email,
       userId,
-      password: bcryptjs.hashSync(password, 10),
+      password: bcryptjs.hashSync(password, 12),
       passwordChanged: true, // Password was set during signup
     });
 

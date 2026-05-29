@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-canvas-design",
-  "version": "1.0.4",
+  "version": "1.0.24",
   "description": "Visual design generation for web with SVG and canvas rendering",
   "type": "module",
   "main": "./dist/index.js",

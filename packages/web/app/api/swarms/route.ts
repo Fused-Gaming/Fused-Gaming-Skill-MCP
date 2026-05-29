@@ -1,7 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { validateAuthMiddleware, isAdmin } from '@/lib/auth-middleware';
 
-export async function GET(_request: NextRequest) {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
   try {
+    // Validate authentication - GET requires authenticated user
+    const { user, error } = await validateAuthMiddleware(request);
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: error || 'Authentication token missing or invalid' },
+        { status: 401 }
+      );
+    }
+
     const swarms = [
       {
         id: 'production-swarm',
@@ -43,6 +56,27 @@ export async function GET(_request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate authentication - POST (mutations) require admin role
+    const { user, error } = await validateAuthMiddleware(request);
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: error || 'Authentication token missing or invalid' },
+        { status: 401 }
+      );
+    }
+
+    // Check for admin role - required for POST operations
+    if (!isAdmin(user)) {
+      return NextResponse.json(
+        {
+          error: 'Forbidden',
+          message: 'Only admin users can execute swarm actions',
+        },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
 
     return NextResponse.json({
