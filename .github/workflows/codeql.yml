@@ -34,13 +34,18 @@ env:
 
 jobs:
   analyze:
-    name: CodeQL
+    name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
       security-events: write
       packages: read
       actions: read
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, python]
+        build-mode: [none]
 
     steps:
     - name: Checkout repository
@@ -49,9 +54,16 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: |
-          javascript-typescript
-          python
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
+
+  codeql-status:
+    if: always()
+    runs-on: ubuntu-latest
+    needs: analyze
+    name: CodeQL
+    steps:
+      - run: exit ${{ job.status == 'success' && 0 || 1 }}
