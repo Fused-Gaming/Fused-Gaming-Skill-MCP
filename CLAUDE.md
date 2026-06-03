@@ -54,6 +54,51 @@ Before starting any task:
 
 ---
 
+## ⚠️ Critical: Package Scope Configuration
+
+**IMPORTANT**: There are THREE distinct scopes in this monorepo. Confusion between them causes npm publish failures.
+
+### Scope Configuration
+| Location | Scope | Purpose | Example |
+|----------|-------|---------|---------|
+| **VERSION.json** `.packageInfo.scope` | `fused-gaming` | Internal organization identifier | Config only, not used in publishing |
+| **VERSION.json** `.packageInfo.publishedScope` | `fused-gaming` | **npm publish scope** — must match npm account scope | Used to determine `@scope` in npm |
+| **package.json** `.name` | `@fused-gaming/...` | **Actual package name** — must match publishedScope | Published as `@fused-gaming/mcp-core` |
+
+### Validation Rules
+1. **ALWAYS ensure** `VERSION.json.packageInfo.publishedScope` equals the scope in all `package.json` names
+2. **ALWAYS ensure** workspace package names use `@{publishedScope}` prefix
+3. **NEVER use** different scopes in VERSION.json vs package.json (e.g., `@h4shed` in package.json but `publishedScope: "fused-gaming"` in VERSION.json)
+
+### Example: Version Bump Automation
+When running `npm version` or publish workflows:
+1. ✓ Check: `VERSION.json.publishedScope` is `fused-gaming`
+2. ✓ Verify: All `packages/*/package.json` have `"name": "@fused-gaming/..."`
+3. ✓ Validate: `scripts/preflight-publish-check.js` confirms scope consistency
+
+### What Broke (v1.2.0 Incident)
+- ❌ `VERSION.json` had `publishedScope: "h4shed"`
+- ❌ `package.json` files used `"name": "@h4shed/..."`
+- ❌ npm account doesn't own `@h4shed` scope
+- ✓ **Fix**: Changed all to `@fused-gaming` (matching npm account)
+
+### Prevention Checklist
+Before ANY version bump or release:
+```bash
+# 1. Verify VERSION.json scope
+jq '.packageInfo.publishedScope' VERSION.json
+# Should output: "fused-gaming"
+
+# 2. Check all package scopes
+grep -r '"name": "@' packages/*/package.json | head -5
+# Should all show: "@fused-gaming/"
+
+# 3. Match them
+# VERSION.json.publishedScope must equal scope in package.json names
+```
+
+---
+
 ## Agent Notes (2026-05-26, NPM Publish Investigation + Auth Endpoint Protection)
 
 ### What Was Completed
