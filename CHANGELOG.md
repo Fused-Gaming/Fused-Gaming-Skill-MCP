@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-03
+
+### Added
+- **24-Agent Swarm Orchestration with Raft Consensus** — Enterprise-scale distributed coordination
+  - Expanded from 3-agent baseline to configurable 24-agent hierarchical-mesh topology
+  - Implemented Raft 3.0.0 consensus protocol for fault-tolerant agent coordination
+  - Added auto-scaling capabilities with 15-agent maximum capacity
+  - Dynamic agent spawning and task distribution system
+  - Real-time agent health monitoring and status reporting
+  - Message-bus communication protocol with consensus-based coordination
+
+- **License System with Machine Binding** — Comprehensive license management and validation
+  - Hardware-based machine binding using immutable host properties (hostname + platform + MAC address)
+  - Support for commercial, team, and enterprise license tiers
+  - Type-safe API signatures with machine validation and expiration checking
+  - Automatic machine ID computation based on hardware identifiers
+  - License lifecycle management and renewal workflows
+
+- **Design System Orchestration** — Unified glassmorphism visual language
+  - Purple neon theme (#A855F7) integrated across all web interfaces
+  - Configurable SVG icon system with 25+ design tokens
+  - Breadcrumb navigation with dynamic version/status badges
+  - PageFooter component for consistent footer/navigation structure
+  - Design tokens documentation and component library
+
 ### Security
 - **JWT-Based Endpoint Protection** — PR #229 introduces comprehensive authentication for sensitive API endpoints
   - Implemented JWT-based Bearer token authentication with role-based access control (admin/user roles)
@@ -30,6 +55,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Created comprehensive troubleshooting guide: `docs/NPM_PUBLISH_TROUBLESHOOTING.md`
   - Verified monorepo dependency resolution follows npm workspace standards
   - Provided pre-publish validation checklist and mitigation strategies
+- **Skills Page Type System** — Fixed TypeScript type mismatch in icon rendering
+  - Corrected icon property type from React.ReactNode to IconName string type
+  - Removed unnecessary icon mapping layer that conflicted with Icon component design
+  - Ensured design-tokens-driven icon rendering for consistency
 
 ## [1.1.4] - 2026-05-19
 
