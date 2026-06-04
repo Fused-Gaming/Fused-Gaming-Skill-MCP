@@ -1,5 +1,5 @@
 {
-  "name": "@h4shed/skill-skill-creator",
+  "name": "@h4shed/skill-creator",
   "version": "1.0.24",
   "description": "Create custom skills and tools for the Fused Gaming MCP ecosystem",
   "type": "module",

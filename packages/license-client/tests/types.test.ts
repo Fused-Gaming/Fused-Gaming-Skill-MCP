@@ -59,7 +59,7 @@ describe('License Types', () => {
   describe('GracePeriodDays', () => {
     it('should have correct grace period values', () => {
       expect(GracePeriodDays.TRIAL_GRACE).toBe(7);
-      expect(GracePeriodDays.COMMERCIAL_GRACE).toBe(7);
+      expect(GracePeriodDays.COMMERCIAL_GRACE).toBe(14);
     });
   });
 

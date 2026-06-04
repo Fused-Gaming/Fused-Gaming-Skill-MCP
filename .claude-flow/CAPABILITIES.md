@@ -1,6 +1,6 @@
-# RuFlo V3 - Complete Capabilities Reference
+# syncpulse - Complete Capabilities Reference
 > Generated: 2026-04-18T17:50:29.314Z
-> Full documentation: https://github.com/ruvnet/claude-flow
+> Full documentation: https://github.com/fused-gaming/syncpulse
 
 ## 📋 Table of Contents
 
@@ -9,7 +9,7 @@
 3. [Available Agents (60+)](#available-agents)
 4. [CLI Commands (26 Commands, 140+ Subcommands)](#cli-commands)
 5. [Hooks System (27 Hooks + 12 Workers)](#hooks-system)
-6. [Memory & Intelligence (RuVector)](#memory--intelligence)
+6. [Memory & Intelligence (SyncVector)](#memory--intelligence)
 7. [Hive-Mind Consensus](#hive-mind-consensus)
 8. [Performance Targets](#performance-targets)
 9. [Integration Ecosystem](#integration-ecosystem)
@@ -18,7 +18,7 @@
 
 ## Overview
 
-RuFlo V3 is a domain-driven design architecture for multi-agent AI coordination with:
+syncpulse is a domain-driven design architecture for multi-agent AI coordination with:
 
 - **15-Agent Swarm Coordination** with hierarchical and mesh topologies
 - **HNSW Vector Search** - 150x-12,500x faster pattern retrieval

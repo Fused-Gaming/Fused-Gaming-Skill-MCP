@@ -54,6 +54,50 @@ Before starting any task:
 
 ---
 
+## ⚠️ Critical: Package Scope Configuration
+
+**IMPORTANT**: Monorepo scope must match the npm account's owned scopes. Mismatches cause npm publish 404 errors.
+
+### Scope Configuration (Correct for this project)
+| Location | Scope | Purpose | Note |
+|----------|-------|---------|------|
+| **VERSION.json** `.packageInfo.scope` | `h4shed` | Internal organization identifier | Config only, not used in publishing |
+| **VERSION.json** `.packageInfo.publishedScope` | `h4shed` | **npm publish scope** — MUST match npm account owned scope | This account owns `@h4shed` scope |
+| **package.json** `.name` | `@h4shed/...` | **Actual package name** — MUST match publishedScope | Published as `@h4shed/mcp-core` |
+
+### Validation Rules
+1. **ALWAYS ensure** `VERSION.json.packageInfo.publishedScope` matches an npm scope the account owns
+2. **ALWAYS ensure** all workspace package names use `@{publishedScope}` prefix
+3. **NEVER use** different scopes in VERSION.json vs package.json (prevents silent publish failures)
+
+### Example: Version Bump Automation
+When running `npm version` or publish workflows:
+1. ✓ Check: `VERSION.json.publishedScope` is `h4shed`
+2. ✓ Verify: All `packages/*/package.json` have `"name": "@h4shed/..."`
+3. ✓ Validate: `scripts/preflight-publish-check.js` confirms scope consistency
+
+### What Almost Broke (v1.2.0 Lesson)
+- ❌ Attempted to change scope from `@h4shed` to `@fused-gaming` without owning that scope
+- ❌ This caused npm publish 404 errors (scope doesn't exist in account)
+- ✓ **Prevention**: Verify npm account owns the target scope before changing VERSION.json
+
+### Prevention Checklist
+Before ANY version bump or release:
+```bash
+# 1. Verify VERSION.json scope matches account
+jq '.packageInfo.publishedScope' VERSION.json
+# Should output: "h4shed" (the account's owned scope)
+
+# 2. Check all package scopes
+grep -r '"name": "@' packages/*/package.json | head -5
+# Should all show: "@h4shed/"
+
+# 3. Match them
+# VERSION.json.publishedScope must equal scope in package.json names
+```
+
+---
+
 ## Agent Notes (2026-05-26, NPM Publish Investigation + Auth Endpoint Protection)
 
 ### What Was Completed

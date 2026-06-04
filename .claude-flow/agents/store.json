@@ -13,7 +13,7 @@
         "progressKey": "swarm/core-agent/progress",
         "role": "core-agent",
         "statusKey": "swarm/core-agent/status",
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "targetPackages": [
           "mcp-core",
           "mcp-cli",
@@ -34,7 +34,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "skills-agent",
         "branch": "fix/readme-skills",
         "targetPackages": "all-skill-packages",
@@ -56,7 +56,7 @@
       "health": 1,
       "taskCount": 0,
       "config": {
-        "swarmId": "swarm-1778667968272-jnt5n5",
+        "swarmId": "swarm-1779048367342-5gv27n",
         "role": "tools-agent",
         "branch": "fix/readme-tools",
         "targetPackages": "all-tool-packages",
@@ -70,7 +70,162 @@
       "domain": "fused-gaming-mcp",
       "model": "sonnet",
       "modelRoutedBy": "explicit"
+    },
+    "agent-1779041364456-dsgn01": {
+      "agentId": "agent-1779041364456-dsgn01",
+      "agentType": "design-system-tester",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "swarmId": "swarm-1779048367342-5gv27n",
+        "role": "test-agent",
+        "branch": "claude/design-system-orchestration-kLw4W",
+        "targetPackages": [
+          "design-tokens",
+          "license-client"
+        ],
+        "packageCount": 2,
+        "memoryNamespace": "v1.2.0-testing",
+        "statusKey": "swarm/design-agent/status",
+        "progressKey": "swarm/design-agent/progress",
+        "taskType": "add-comprehensive-tests",
+        "model": "sonnet",
+        "priority": "high"
+      },
+      "createdAt": "2026-05-17T17:54:00.000Z",
+      "domain": "fused-gaming-mcp",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1779041364456-limj01": {
+      "agentId": "agent-1779041364456-limj01",
+      "agentType": "limj-package-developer",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "swarmId": "swarm-1779048367342-5gv27n",
+        "role": "developer-agent",
+        "branch": "claude/implement-limj-package-6WZpc",
+        "targetPackages": [
+          "limj",
+          "core"
+        ],
+        "packageCount": 2,
+        "memoryNamespace": "v1.2.0-implementation",
+        "statusKey": "swarm/limj-agent/status",
+        "progressKey": "swarm/limj-agent/progress",
+        "taskType": "complete-implementation",
+        "model": "sonnet",
+        "priority": "high"
+      },
+      "createdAt": "2026-05-17T17:54:00.000Z",
+      "domain": "fused-gaming-mcp",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1779041364456-swrm01": {
+      "agentId": "agent-1779041364456-swrm01",
+      "agentType": "swarm-session-validator",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "swarmId": "swarm-1779048367342-5gv27n",
+        "role": "validator-agent",
+        "branch": "claude/setup-swarm-session-98Rwz",
+        "targetPackages": [
+          "swarm-init",
+          "hook-handler"
+        ],
+        "packageCount": 2,
+        "memoryNamespace": "v1.2.0-validation",
+        "statusKey": "swarm/swarm-agent/status",
+        "progressKey": "swarm/swarm-agent/progress",
+        "taskType": "validate-and-benchmark",
+        "model": "sonnet",
+        "priority": "critical"
+      },
+      "createdAt": "2026-05-17T17:54:00.000Z",
+      "domain": "fused-gaming-mcp",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1779041364456-perf01": {
+      "agentId": "agent-1779041364456-perf01",
+      "agentType": "performance-benchmarker",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "swarmId": "swarm-1779048367342-5gv27n",
+        "role": "benchmark-agent",
+        "branch": "claude/setup-swarm-session-98Rwz",
+        "targetPackages": "all",
+        "packageCount": 61,
+        "memoryNamespace": "v1.2.0-benchmarks",
+        "statusKey": "swarm/perf-agent/status",
+        "progressKey": "swarm/perf-agent/progress",
+        "taskType": "run-benchmarks",
+        "benchmarkTargets": [
+          "lint",
+          "typecheck",
+          "build",
+          "test",
+          "startup-time"
+        ],
+        "model": "sonnet",
+        "priority": "high"
+      },
+      "createdAt": "2026-05-17T17:54:00.000Z",
+      "domain": "fused-gaming-mcp",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1779041364456-rele01": {
+      "agentId": "agent-1779041364456-rele01",
+      "agentType": "release-coordinator",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "swarmId": "swarm-1779048367342-5gv27n",
+        "role": "coordinator-agent",
+        "branch": "main",
+        "targetPackages": "all",
+        "packageCount": 61,
+        "memoryNamespace": "v1.2.0-coordination",
+        "statusKey": "swarm/release-agent/status",
+        "progressKey": "swarm/release-agent/progress",
+        "taskType": "coordinate-release",
+        "coordinationTasks": [
+          "merge-planning",
+          "changelog-generation",
+          "release-notes-creation",
+          "version-bumping"
+        ],
+        "model": "sonnet",
+        "priority": "critical"
+      },
+      "createdAt": "2026-05-17T17:54:00.000Z",
+      "domain": "fused-gaming-mcp",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
     }
   },
-  "version": "3.0.0"
+  "swarmMetadata": {
+    "version": "3.0.0",
+    "expandedAt": "2026-05-17T17:54:00.000Z",
+    "previousAgentCount": 3,
+    "currentAgentCount": 7,
+    "topology": "hierarchical-mesh",
+    "maxAgents": 15,
+    "releaseVersion": "v1.2.0",
+    "releaseBranches": [
+      "claude/design-system-orchestration-kLw4W",
+      "claude/implement-limj-package-6WZpc",
+      "claude/setup-swarm-session-98Rwz"
+    ]
+  }
 }

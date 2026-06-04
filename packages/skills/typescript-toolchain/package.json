@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-typescript-toolchain",
-  "version": "1.0.1",
+  "version": "1.0.15",
   "description": "Advanced TypeScript configuration, type generation, and static analysis tooling",
   "type": "module",
   "main": "./dist/index.js",

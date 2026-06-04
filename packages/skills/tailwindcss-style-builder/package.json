@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-tailwindcss-style-builder",
-  "version": "1.0.1",
+  "version": "1.0.15",
   "description": "Tailwind CSS utility-first styling and design system builder for rapid UI development",
   "type": "module",
   "main": "./dist/index.js",

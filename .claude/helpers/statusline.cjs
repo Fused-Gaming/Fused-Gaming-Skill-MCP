@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * RuFlo V3 Statusline Generator (Optimized)
- * Displays real-time V3 implementation progress and system status
+ * syncpulse Statusline Generator (Optimized)
+ * Displays real-time syncpulse implementation progress and system status
  *
  * Usage: node statusline.cjs [--json] [--compact]
  *
@@ -630,7 +630,7 @@ function generateStatusline() {
       }
     }
   } catch { /* use default */ }
-  let header = c.bold + c.brightPurple + '\u258A RuFlo V' + pkgVersion + ' ' + c.reset;
+  let header = c.bold + c.brightPurple + '\u258A syncpulse ' + pkgVersion + ' ' + c.reset;
   header += (swarm.coordinationActive ? c.brightCyan : c.dim) + '\u25CF ' + c.brightCyan + git.name + c.reset;
   if (git.gitBranch) {
     header += '  ' + c.dim + '\u2502' + c.reset + '  ' + c.brightBlue + '\u23C7 ' + git.gitBranch + c.reset;

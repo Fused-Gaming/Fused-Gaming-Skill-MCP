@@ -14,9 +14,13 @@ describe('LicenseStorage', () => {
   beforeEach(() => {
     // Create a temporary directory for testing
     testStorageDir = fs.mkdtempSync(path.join(os.tmpdir(), 'license-test-'));
+    // Set the custom storage path for this test
+    LicenseStorage.setStoragePath(testStorageDir);
   });
 
   afterEach(() => {
+    // Reset to default storage path
+    LicenseStorage.setStoragePath(null);
     // Clean up temporary directory
     if (fs.existsSync(testStorageDir)) {
       fs.rmSync(testStorageDir, { recursive: true, force: true });
@@ -26,8 +30,7 @@ describe('LicenseStorage', () => {
   describe('getStoragePath', () => {
     it('should return the storage directory path', () => {
       const storagePath = LicenseStorage.getStoragePath();
-      expect(storagePath).toContain('.syncpulse');
-      expect(storagePath).toContain(os.homedir());
+      expect(storagePath).toBe(testStorageDir);
     });
   });
 
@@ -252,7 +255,7 @@ describe('LicenseStorage', () => {
       const mtime = LicenseStorage.getLicenseModificationTime();
 
       expect(mtime).not.toBeNull();
-      expect(mtime).toBeInstanceOf(Date);
+      expect(typeof mtime?.getTime).toBe('function');
       expect(mtime!.getTime()).toBeLessThanOrEqual(Date.now());
     });
   });

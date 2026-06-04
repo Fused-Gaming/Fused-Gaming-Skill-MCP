@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-syncpulse",
-  "version": "0.2.3",
+  "version": "0.2.13",
   "description": "SyncPulse - intelligent project state caching, multi-agent coordination, and secure email automation with 9 production-ready templated workflows",
   "type": "module",
   "main": "dist/index.js",

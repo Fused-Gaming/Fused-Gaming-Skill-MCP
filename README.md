@@ -10,7 +10,7 @@
 
 <div align="center"> 
 
-[![npm scope](https://img.shields.io/badge/npm-scope%20%40h4shed-red)](https://www.npmjs.com/~h4shed) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE) [![Publish to npm](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions/workflows/publish.yml) [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/typescript-5.3.2-blue)](https://www.typescriptlang.org/) [![npm](https://img.shields.io/badge/npm-%3E%3D8.0.0-red)](https://www.npmjs.com/)
+[![Version](https://img.shields.io/badge/version-v1.1.5-blue)](./CHANGELOG.md) [![npm scope](https://img.shields.io/badge/npm-scope%20%40h4shed-red)](https://www.npmjs.com/~h4shed) [![License](https://img.shields.io/badge/license-PPL%203.0.0%20%2B%20Commercial-brightgreen)](./LICENSE) [![Publish to npm](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/actions/workflows/publish.yml) [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/typescript-5.3.2-blue)](https://www.typescriptlang.org/) [![npm](https://img.shields.io/badge/npm-%3E%3D8.0.0-red)](https://www.npmjs.com/)
 
 </div>
 
@@ -24,6 +24,24 @@
 - **2 core infrastructure packages**
 
 All skills, tools, and infrastructure are documented with individual READMEs in their respective package directories. This root README provides a focused navigation index and quick-start guide.
+
+### 📜 Dual License Model
+
+**Fused Gaming MCP** is available under two flexible licensing options:
+
+1. **Prosperity Public License 3.0.0** (Free)
+   - ✅ Personal use, educational projects, open-source development
+   - ✅ Community forum support
+   - 📄 See [LICENSE](./LICENSE) for full details
+
+2. **Commercial License** (Paid)
+   - ✅ Commercial applications, closed-source products, SaaS platforms
+   - ✅ Tiered pricing: Startup ($500/yr), Growth ($5K/yr), Enterprise (custom)
+   - ✅ 30-day free trial available
+   - 📞 Priority support included
+   - 📄 See [COMMERCIAL_LICENSE.md](./COMMERCIAL_LICENSE.md) for full details
+
+**Starting your free trial?** Contact: jlucus916@gmail.com
 
 ### 🐝 SyncPulse Agent Orchestration (v0.2.2)
 **SyncPulse** brings enterprise-grade multi-agent orchestration with:

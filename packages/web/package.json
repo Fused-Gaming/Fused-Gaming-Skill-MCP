@@ -22,7 +22,7 @@
     "lucide-react": "^0.379.0",
     "clsx": "^2.1.0",
     "bcryptjs": "^2.4.3",
-    "@h4shed/skill-frontend-design": "^1.0.4"
+    "@h4shed/skill-frontend-design": "^1.0.24"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-storybook-component-library",
-  "version": "1.0.1",
+  "version": "1.0.15",
   "description": "Component library documentation and visual testing with Storybook integration",
   "type": "module",
   "main": "./dist/index.js",

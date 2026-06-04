@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-nft-generative-art",
-  "version": "1.0.1",
+  "version": "1.0.15",
   "description": "NFT artwork generation, metadata creation, and blockchain-ready asset creation",
   "type": "module",
   "main": "./dist/index.js",

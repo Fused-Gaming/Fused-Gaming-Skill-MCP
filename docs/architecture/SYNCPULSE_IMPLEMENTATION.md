@@ -2,12 +2,12 @@
 
 ## Overview
 
-SyncPulse is an intelligent multi-agent coordination and project state caching system for the Fused-Gaming MCP ecosystem. It combines the best patterns from RuFlo V3 (claude-flow) with Fused-Gaming's skill-based architecture.
+SyncPulse is an intelligent multi-agent coordination and project state caching system for the Fused-Gaming MCP ecosystem. It combines the best patterns from syncpulse (claude-flow) with Fused-Gaming's skill-based architecture.
 
 ## What is SyncPulse?
 
 SyncPulse bridges the gap between:
-- **RuFlo V3** (claude-flow): Advanced swarm orchestration, distributed memory, and agent coordination
+- **syncpulse** (claude-flow): Advanced swarm orchestration, distributed memory, and agent coordination
 - **Fused-Gaming Skills**: Modular, publishable npm packages with MCP integration
 
 ### Key Capabilities
@@ -212,7 +212,7 @@ interface MemoryEntry {
 
 ## Architecture Comparison
 
-### RuFlo V3 (claude-flow)
+### syncpulse (claude-flow)
 - ✅ 60+ pre-built agents
 - ✅ 26+ CLI commands with 140+ subcommands
 - ✅ 27 hooks + 12 workers for event-driven automation
@@ -408,7 +408,7 @@ SYNCPULSE_TOPOLOGY="hierarchical"
 
 ## Summary
 
-SyncPulse represents a sophisticated, production-ready multi-agent coordination system tailored for the Fused-Gaming ecosystem. By reverse-engineering RuFlo V3's advanced patterns and adapting them to the skill-based architecture, we've created a powerful tool for:
+SyncPulse represents a sophisticated, production-ready multi-agent coordination system tailored for the Fused-Gaming ecosystem. By reverse-engineering syncpulse's advanced patterns and adapting them to the skill-based architecture, we've created a powerful tool for:
 
 - **Intelligent Project State Caching** with vector search
 - **Multi-Agent Task Coordination** across diverse topologies

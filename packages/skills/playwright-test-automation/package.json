@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-playwright-test-automation",
-  "version": "1.0.1",
+  "version": "1.0.15",
   "description": "End-to-end testing automation framework for web applications with cross-browser support",
   "type": "module",
   "main": "./dist/index.js",
