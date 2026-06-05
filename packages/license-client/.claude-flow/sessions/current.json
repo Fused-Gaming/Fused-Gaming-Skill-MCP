@@ -1,0 +1,13 @@
+{
+  "id": "session-1779048367161",
+  "startedAt": "2026-05-17T20:06:07.161Z",
+  "platform": "linux",
+  "cwd": "/home/user/Fused-Gaming-Skill-MCP/packages/license-client",
+  "context": {},
+  "metrics": {
+    "edits": 0,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  }
+}

@@ -1,6 +1,6 @@
-# RuFlo V3 Helpers
+# syncpulse Helpers
 
-This directory contains helper scripts and utilities for V3 development.
+This directory contains helper scripts and utilities for syncpulse development.
 
 ## 🚀 Quick Start
 

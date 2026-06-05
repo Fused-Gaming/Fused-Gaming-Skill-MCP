@@ -103,6 +103,7 @@ jobs:
               const skillDirs = [
                 path.join('packages/skills', skill.name),
                 path.join('packages/skills', 'skill-' + skill.name),
+                path.join('packages/skills', skill.name + '-skill'),
               ];
 
               let found = false;
@@ -139,17 +140,26 @@ jobs:
             const skillsDir = 'packages/skills';
             const registry = JSON.parse(fs.readFileSync('registry/skills.json', 'utf-8'));
 
-            const diskSkills = new Set(
-              fs.readdirSync(skillsDir)
-                .filter(f => fs.statSync(path.join(skillsDir, f)).isDirectory())
-            );
+            // Build a map of packages to registry entries
+            const registeredPackages = new Map(registry.skills.map(s => [s.package, s]));
 
-            const registeredSkills = new Set(registry.skills.map(s => s.name));
+            // Check each skill directory for a package.json
+            const diskSkills = fs.readdirSync(skillsDir)
+              .filter(f => {
+                const fullPath = path.join(skillsDir, f);
+                return fs.statSync(fullPath).isDirectory() &&
+                       f !== '.claude-flow' &&  // Exclude non-skill directories
+                       fs.existsSync(path.join(fullPath, 'package.json'));
+              });
 
             let missing = 0;
             diskSkills.forEach(skill => {
-              if (!registeredSkills.has(skill)) {
-                console.error(\`⚠️  Unregistered skill on disk: \${skill}\`);
+              const pkgPath = path.join(skillsDir, skill, 'package.json');
+              const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+
+              // Check if this package is registered
+              if (!registeredPackages.has(pkg.name)) {
+                console.error(\`⚠️  Unregistered skill on disk: \${skill} (\${pkg.name})\`);
                 missing++;
               }
             });
@@ -194,19 +204,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `❌ **Registry Validation Failed**
-
-Please ensure:
-1. All skill packages are properly registered
-2. All tools are discoverable in \`packages/skills/*/src/tools/\`
-3. Registry is generated with: \`npm run registry:generate\`
-4. No duplicate or invalid package names exist
-
-Run locally:
-\`\`\`bash
-npm run registry:generate
-npm run registry:validate
-\`\`\``
+              body: "❌ **Registry Validation Failed**\n\nPlease ensure:\n1. All skill packages are properly registered\n2. All tools are discoverable in packages/skills/*/src/tools/\n3. Registry is generated with: npm run registry:generate\n4. No duplicate or invalid package names exist\n\nRun locally:\nnpm run registry:generate\nnpm run registry:validate"
             })
 
       - name: Upload registry artifacts

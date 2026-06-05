@@ -240,6 +240,52 @@ const handlers = {
       console.log('[WARN] Intelligence module not available. Run session-restore first.');
     }
   },
+
+  'swarm-init': async () => {
+    const { execSync } = require('child_process');
+    const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
+    try {
+      console.log('[SWARM] Initializing syncpulse swarm...');
+      const output = execSync('npm run swarm 2>&1', {
+        cwd: projectDir,
+        encoding: 'utf8',
+        maxBuffer: 10 * 1024 * 1024,
+        timeout: 30000
+      });
+      // Print swarm initialization output
+      const lines = output.trim().split('\n');
+      lines.forEach(line => {
+        if (line.trim()) console.log(line);
+      });
+      console.log('[SWARM] Swarm session initialized and ready');
+    } catch (e) {
+      console.log('[WARN] Swarm initialization encountered an error: ' + e.message);
+      console.log('[SWARM] Session continuing without swarm - you can initialize manually with: npm run swarm');
+    }
+  },
+
+  'goals-init': async () => {
+    const { execSync } = require('child_process');
+    const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
+    try {
+      console.log('[SESSION GOALS] Initializing session goals and merge checklist...');
+      const output = execSync('node .claude/helpers/session-goals.cjs', {
+        cwd: projectDir,
+        encoding: 'utf8',
+        maxBuffer: 5 * 1024 * 1024,
+        timeout: 10000
+      });
+      // Print goals initialization output
+      const lines = output.trim().split('\n');
+      lines.forEach(line => {
+        if (line.trim()) console.log(line);
+      });
+      console.log('[SESSION GOALS] Goals initialized and available at /status dashboard');
+    } catch (e) {
+      console.log('[WARN] Session goals initialization encountered an error: ' + e.message);
+      console.log('[SESSION GOALS] Session continuing - you can initialize manually with: node .claude/helpers/session-goals.cjs');
+    }
+  },
 };
 
 if (command && handlers[command]) {
@@ -251,7 +297,7 @@ if (command && handlers[command]) {
   } else if (command) {
     console.log('[OK] Hook: ' + command);
   } else {
-    console.log('Usage: hook-handler.cjs <route|pre-bash|post-edit|session-restore|session-end|pre-task|post-task|compact-manual|compact-auto|status|stats>');
+    console.log('Usage: hook-handler.cjs <route|pre-bash|post-edit|session-restore|session-end|pre-task|post-task|compact-manual|compact-auto|status|stats|swarm-init|goals-init>');
   }
 }
 

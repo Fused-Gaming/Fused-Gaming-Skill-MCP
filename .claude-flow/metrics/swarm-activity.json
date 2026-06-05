@@ -1,222 +1,222 @@
 {
-  "swarmId": "swarm-1779177608894-9zebq",
-  "initTime": 1779177608895,
+  "swarmId": "swarm-1779748881082-1ojoj",
+  "initTime": 1779748881083,
   "agentMetrics": [
     {
       "agentId": "agent-coreAgents-1",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 108.3763900309845,
+      "memoryUsageMB": 67.23565229829057,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-coreAgents-2",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 63.23785253626253,
+      "memoryUsageMB": 134.75225711668102,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-coreAgents-3",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 77.03932456973183,
+      "memoryUsageMB": 50.78589873951531,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-executionAgents-1",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 101.9452080190712,
+      "memoryUsageMB": 118.66655895665534,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-executionAgents-2",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 86.22718590760019,
+      "memoryUsageMB": 129.3351936537995,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-executionAgents-3",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 114.33023795981127,
+      "memoryUsageMB": 56.31499835197258,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-executionAgents-4",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 148.6774565913165,
+      "memoryUsageMB": 95.65298184403082,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-executionAgents-5",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 63.121562900278235,
+      "memoryUsageMB": 123.18566887106243,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-executionAgents-6",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 93.40335959980668,
+      "memoryUsageMB": 127.8882626854135,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-executionAgents-7",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 116.36526470220971,
+      "memoryUsageMB": 117.71696588928941,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-executionAgents-8",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 102.51255336173946,
+      "memoryUsageMB": 102.6388874742177,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-optimizationAgents-1",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 73.23316433203395,
+      "memoryUsageMB": 54.4546023471169,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-optimizationAgents-2",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 122.97449148108521,
+      "memoryUsageMB": 120.95898650620514,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-optimizationAgents-3",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 53.43719168565697,
+      "memoryUsageMB": 53.329118633230664,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-optimizationAgents-4",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 146.18625958117988,
+      "memoryUsageMB": 80.75843991826758,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-automationAgents-1",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 133.9607853443884,
+      "memoryUsageMB": 115.08772227241212,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-automationAgents-2",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 121.48507348252879,
+      "memoryUsageMB": 57.71411636920612,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-automationAgents-3",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 70.46418588500316,
+      "memoryUsageMB": 74.17327802432942,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-automationAgents-4",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 77.45260918237284,
+      "memoryUsageMB": 70.05549804493111,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-automationAgents-5",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 61.67226358185116,
+      "memoryUsageMB": 102.36048143111802,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-automationAgents-6",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 53.66462854568974,
+      "memoryUsageMB": 131.42344230665614,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-securityAgents-1",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 52.96938508292903,
+      "memoryUsageMB": 126.14242530394645,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-securityAgents-2",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 87.3396792182201,
+      "memoryUsageMB": 105.0135686194392,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     },
     {
       "agentId": "agent-securityAgents-3",
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
-      "memoryUsageMB": 145.32216396375173,
+      "memoryUsageMB": 115.1969779687256,
       "heartbeatCount": 0,
-      "lastHeartbeat": 1779177608895
+      "lastHeartbeat": 1779748881083
     }
   ],
   "systemMetrics": {
