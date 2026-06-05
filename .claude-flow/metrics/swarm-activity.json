@@ -88,6 +88,9 @@
       "tasksCompleted": 0,
       "successRate": 100,
       "averageTaskTime": 0,
+      "memoryUsageMB": 97.05132174390032,
+      "heartbeatCount": 0,
+      "lastHeartbeat": 1780023019424
       "memoryUsageMB": 117.71696588928941,
       "heartbeatCount": 0,
       "lastHeartbeat": 1779748881083

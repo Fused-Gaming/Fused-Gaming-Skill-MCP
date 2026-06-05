@@ -204,6 +204,17 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
+              body: `❌ **Registry Validation Failed**
+
+Please ensure:
+1. All skill packages are properly registered
+2. All tools are discoverable in packages/skills/*/src/tools/
+3. Registry is generated with: npm run registry:generate
+4. No duplicate or invalid package names exist
+
+Run locally:
+npm run registry:generate
+npm run registry:validate`
               body: "❌ **Registry Validation Failed**\n\nPlease ensure:\n1. All skill packages are properly registered\n2. All tools are discoverable in packages/skills/*/src/tools/\n3. Registry is generated with: npm run registry:generate\n4. No duplicate or invalid package names exist\n\nRun locally:\nnpm run registry:generate\nnpm run registry:validate"
             })
 
