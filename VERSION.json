@@ -1,4 +1,11 @@
 {
+  "version": "1.2.0-w2.0",
+  "releaseDate": "2026-05-21",
+  "status": "development",
+  "majorVersion": 1,
+  "minorVersion": 2,
+  "patchVersion": 0,
+  "prerelease": "w2.0",
   "version": "1.2.0",
   "releaseDate": "2026-06-03",
   "status": "stable",
@@ -10,6 +17,9 @@
     "nodeMinimum": "20.0.0",
     "npmMinimum": "8.0.0",
     "typescriptVersion": "5.3.2",
+    "buildNumber": 1014,
+    "sprintWeek": 2,
+    "sprintName": "Atomic Components & License CLI Phase"
     "buildNumber": 1024
   },
   "packageInfo": {
