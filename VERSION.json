@@ -1,16 +1,18 @@
 {
-  "version": "1.1.5",
-  "releaseDate": "2026-05-19",
-  "status": "stable",
+  "version": "1.2.0-w2.0",
+  "releaseDate": "2026-05-21",
+  "status": "development",
   "majorVersion": 1,
-  "minorVersion": 1,
-  "patchVersion": 5,
-  "prerelease": null,
+  "minorVersion": 2,
+  "patchVersion": 0,
+  "prerelease": "w2.0",
   "metadata": {
     "nodeMinimum": "20.0.0",
     "npmMinimum": "8.0.0",
     "typescriptVersion": "5.3.2",
-    "buildNumber": 1013
+    "buildNumber": 1014,
+    "sprintWeek": 2,
+    "sprintName": "Atomic Components & License CLI Phase"
   },
   "packageInfo": {
     "name": "@fused-gaming/mcp",
