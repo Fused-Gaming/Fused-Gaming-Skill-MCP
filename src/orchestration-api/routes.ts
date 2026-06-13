@@ -14,7 +14,7 @@ import { MetricsCollector } from './metrics.js';
 import { HealthCheckService } from './health.js';
 import { AgentBootstrapManager } from './agent-bootstrap.js';
 import { HNSWMemorySynchronizer } from './hnsw-memory-sync.js';
-import { requirePermission, requireRole } from './passport-auth-strategy.js';
+import { requirePermission } from './passport-auth-strategy.js';
 
 export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
   const router = Router();
