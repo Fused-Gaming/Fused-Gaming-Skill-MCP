@@ -49,7 +49,7 @@ export const localStrategy = new LocalStrategy(
     passwordField: 'password',
     passReqToCallback: true,
   },
-  (req: Request, email: string, password: string, done) => {
+  (req: Request, email: string, password: string, done: (err: Error | null, user?: AuthUser | false, info?: { message: string }) => void) => {
     // In production, validate against database
     // This is a simplified example
     if (validateCredentials(email, password)) {
@@ -71,7 +71,7 @@ export const localStrategy = new LocalStrategy(
  * Role-based access control middleware
  */
 export function requireRole(...allowedRoles: string[]) {
-  return (req: Request, res: any, next: any) => {
+  return (req: Request, res: { status: (code: number) => { json: (data: object) => void } }, next: () => void) => {
     if (!req.user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -92,7 +92,7 @@ export function requireRole(...allowedRoles: string[]) {
  * Permission-based access control middleware
  */
 export function requirePermission(...permissions: string[]) {
-  return (req: Request, res: any, next: any) => {
+  return (req: Request, res: { status: (code: number) => { json: (data: object) => void } }, next: () => void) => {
     if (!req.user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
