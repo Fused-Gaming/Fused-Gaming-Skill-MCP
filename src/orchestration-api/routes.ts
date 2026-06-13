@@ -14,6 +14,7 @@ import { MetricsCollector } from './metrics.js';
 import { HealthCheckService } from './health.js';
 import { AgentBootstrapManager } from './agent-bootstrap.js';
 import { HNSWMemorySynchronizer } from './hnsw-memory-sync.js';
+import { requirePermission, requireRole } from './passport-auth-strategy.js';
 
 export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
   const router = Router();
@@ -102,7 +103,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
    * GET /api/metrics
    * Get system and swarm metrics
    */
-  router.get('/metrics', (req: Request, res: Response) => {
+  router.get('/metrics', requirePermission('read:metrics'), (req: Request, res: Response) => {
     try {
       // Collect current metrics
       const agentCount = 12; // From swarm state
@@ -132,7 +133,7 @@ export function createApiRoutes(baseDir: string = '.claude-flow'): Router {
    * GET /api/metrics/history
    * Get metric history with filtering
    */
-  router.get('/metrics/history', (req: Request, res: Response) => {
+  router.get('/metrics/history', requirePermission('read:metrics'), (req: Request, res: Response) => {
     try {
       const limit = parseInt(req.query.limit as string) || 100;
       const metrics = metricsCollector.getMetrics(limit);

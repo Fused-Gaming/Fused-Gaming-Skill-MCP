@@ -17,8 +17,16 @@ export interface AuthUser {
   exp: number;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRY = '24h';
+
+if (!JWT_SECRET) {
+  throw new Error(
+    'JWT_SECRET environment variable is not set. ' +
+    'Set JWT_SECRET to a secure random string before running the application. ' +
+    'Example: JWT_SECRET=$(openssl rand -base64 32) npm start'
+  );
+}
 
 /**
  * JWT Strategy for token verification

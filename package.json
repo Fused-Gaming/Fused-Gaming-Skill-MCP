@@ -74,6 +74,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "files": [
+    "index.js",
+    "packages/core/dist/",
     "CHANGELOG.md",
     "docs/getting-started/QUICKSTART.md",
     "CONTRIBUTING.md",
