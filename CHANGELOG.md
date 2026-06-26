@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-06-14
+
+### Added
+- **Multi-Agent Swarm Release Orchestration** — Automated 1.3.0 release coordination
+  - Hierarchical-mesh swarm topology with 8 specialized agents
+  - Parallel execution of design system testing, performance benchmarking, and LIMJ implementation
+  - Automated README updates across 60+ workspace packages
+  - Swarm session validation with comprehensive coordination protocols
+  - Release-coordinator agent for version management and changelog generation
+
+- **Performance Benchmarking Suite** — Comprehensive system performance validation
+  - Lint, typecheck, build, test, and startup-time benchmarks
+  - Multi-package performance tracking and regression detection
+  - Automated performance metrics collection across full monorepo
+
+- **LIMJ Package Implementation** — Complete LIM JSON specification support
+  - Full implementation of LIMJ package within monorepo
+  - Integration with core MCP server
+  - Type-safe JSON schema validation
+
+### Changed
+- **TypeScript Configuration** — Updated TS6.0 compatibility
+  - Added `ignoreDeprecations: "6.0"` to suppress baseUrl deprecation warnings
+  - Maintained path alias support for @h4shed scoped packages
+  - Design tokens and package-level tsconfig alignment
+
+- **Documentation Standardization** — Consistent README structure
+  - Installation, development, and license sections across all packages
+  - Automated updates to skill and tool package documentation
+  - Improved package discovery and quick-start guidance
+
 ## [1.2.0] - 2026-06-03
 
 ### Added
