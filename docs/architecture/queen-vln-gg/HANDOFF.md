@@ -6,29 +6,44 @@ been scaffolded here (staged, not yet migrated), and what's left.
 
 ## What Queen is
 
-A separately-hosted, authenticated control plane at `queen.vln.gg` for the
-Fused Gaming / VLN.gg ecosystem. It is **not** the per-project onboarding
-dashboard — that's SyncPulse (see "Queen vs SyncPulse" below). Queen is the
-one central place that:
+**Queen** is the **ecosystem control and record platform** for the Fused Gaming platform.
+It is not an alternative to SyncPulse, nor a "commercial edition"—it is the authoritative
+backend system governing identity, licensing, package publishing, authorized distribution,
+usage reporting, and persistent ecosystem records.
 
-1. Receives usage + license telemetry reported by every deployed instance of
-   the `@h4shed` packages.
-2. Lets Fused Gaming staff log in (GitHub OAuth) to see agent/instance health,
-   license status, and issue/revoke licenses.
-3. Sits behind Cloudflare in front of the auth wall (Access policy / WAF),
-   not just app-level auth.
+Queen powers:
+1. **Identity & access control** — user and organization identity, operator/admin auth
+2. **License & entitlement engine** — free and commercial license issuance and validation
+3. **Package publishing & distribution** — publisher authorization, package metadata, release channels
+4. **Usage telemetry & reporting** — aggregated metrics from every SyncPulse instance
+5. **Audit & compliance** — durable audit logs, usage history, governance records
+6. **Persistent platform records** — system-of-record for users, orgs, agents, packages, licenses
 
-## Queen vs SyncPulse — the split (confirmed with user)
+Queen is hosted at `queen.vln.gg` behind Cloudflare authentication (Access policy / WAF).
 
-- **SyncPulse** = bundled onboarding experience shipped with every install of
-  the skill/CLI packages. First-run landing page, signup/login (magic-link +
-  password per `docs/architecture/IMPLEMENTATION_PLAN_SYNCPULSE_LANDING.md`),
-  guides a new user through setup and registering their instance. Lives in
-  `packages/web/` in this repo, deployed per-project/per-customer.
-- **Queen** = the one shared backend all those SyncPulse instances phone home
-  to. Aggregates license validation, usage metrics, and gives Fused Gaming
-  staff a single pane of glass across every instance, plus the ability to
-  manage/release paid licenses. New, separate repo: `fused-gaming/queen-vln-gg`.
+## SyncPulse vs Queen — the architectural split
+
+- **SyncPulse** = free adoption engine (what users interact with)
+  - Local dashboard and runtime
+  - Agent and skill execution
+  - Workflow orchestration
+  - Package discovery and installation
+  - Caches entitlements locally; gracefully offline where permitted
+  - Initiates free license activation with Queen at first run
+  - Reports permitted usage/telemetry events to Queen
+
+- **Queen** = ecosystem governance and monetization platform (what governs SyncPulse)
+  - Central identity and authentication
+  - Authoritative license and entitlement system
+  - Package publishing and version control
+  - Download authorization (free and paid)
+  - Usage reporting and dashboards for operators
+  - Audit logs and compliance records
+  - System-of-record persistence
+
+Both are essential; neither is subordinate to the other. SyncPulse drives adoption;
+Queen enables sustainable revenue through a portfolio of commercial licenses, paid packages,
+bundles, and subscriptions—not by restricting SyncPulse itself.
 
 ## Why this is staged here instead of in queen-vln-gg directly
 
