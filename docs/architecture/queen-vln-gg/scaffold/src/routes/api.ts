@@ -21,7 +21,7 @@ export function createApiRoutes(): Router {
     passport.authenticate('github', { session: false, failureRedirect: '/login?error=1' }),
     (req: Request, res: Response) => {
       const token = generateSessionToken(req.user as AuthUser);
-      res.redirect(`/dashboard#token=${token}`);
+      res.redirect(`/#token=${token}`);
     }
   );
 
@@ -67,7 +67,7 @@ export function createApiRoutes(): Router {
     passport.authenticate('api-key', { session: false }),
     async (req: Request, res: Response) => {
       const user = req.user as AuthUser;
-      const { type, issued_at, expires_at, product, version, features, machine_id, license_key } = req.body ?? {};
+      const { type, issued_at, expires_at, product, version, features, activation } = req.body ?? {};
 
       if (!type || !issued_at || !expires_at || !product) {
         return res.status(400).json({ error: 'type, issued_at, expires_at, product are required' });
@@ -80,8 +80,8 @@ export function createApiRoutes(): Router {
           product,
           version: version ?? null,
           features: features ?? {},
-          machine_id: machine_id ?? null,
-          license_key: license_key ?? null,
+          machine_id: activation?.machine_id ?? null,
+          license_key: activation?.license_key ?? null,
           issued_at,
           expires_at,
         },

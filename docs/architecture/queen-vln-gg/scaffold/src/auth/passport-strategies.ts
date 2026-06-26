@@ -151,12 +151,7 @@ export function requirePermission(...permissions: string[]) {
 }
 
 export function generateSessionToken(user: AuthUser): string {
-  const payload: AuthUser = {
-    ...user,
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
-  };
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRY });
+  return jwt.sign(user, JWT_SECRET, { expiresIn: JWT_EXPIRY });
 }
 
 export function registerStrategies(): void {
