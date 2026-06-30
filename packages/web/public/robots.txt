@@ -46,7 +46,11 @@ Disallow: /
 User-agent: MJ12bot
 Disallow: /
 
-# Sitemap locations for different subdomains
+# Sitemap locations - host-specific to avoid off-host URL rejection
+# Primary domain sitemap
 Sitemap: https://vln.gg/sitemap.xml
-Sitemap: https://skill.vln.gg/sitemap.xml
-Sitemap: https://sync.vln.gg/sitemap.xml
+
+# Skill subdomain sitemap (contains only skill.vln.gg URLs)
+Sitemap: https://skill.vln.gg/sitemap-skill.xml
+
+# Sync subdomain is protected and not indexed
