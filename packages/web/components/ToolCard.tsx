@@ -35,7 +35,13 @@ export default function ToolCard({
   };
 
   const hasValidIcon = iconPaths[icon] && iconPaths[icon].trim().length > 0;
-  const packageName = `@h4shed/skill-${name.toLowerCase().replace(/\s+/g, '-')}`;
+  // Generate package name: remove punctuation and replace whitespace with hyphens
+  const slug = name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove punctuation (keep only word chars, whitespace, hyphens)
+    .replace(/\s+/g, '-') // Replace whitespace with hyphens
+    .replace(/-+/g, '-'); // Collapse multiple hyphens to single
+  const packageName = `@h4shed/skill-${slug}`;
   const installCommand = `npm install ${packageName}`;
   const npmUrl = `https://www.npmjs.com/package/${packageName}`;
 
