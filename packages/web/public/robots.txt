@@ -6,10 +6,10 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /admin/
-Disallow: /dashboard/
+Disallow: /dashboard
+Disallow: /private/
 Disallow: /.next/
 Disallow: /_next/
-Disallow: /private/
 Crawl-delay: 1
 Request-rate: 30/60
 
@@ -18,6 +18,8 @@ User-agent: Googlebot
 Allow: /
 Disallow: /api/
 Disallow: /admin/
+Disallow: /dashboard
+Disallow: /private/
 Disallow: /.next/
 Disallow: /_next/
 
@@ -26,6 +28,8 @@ User-agent: Bingbot
 Allow: /
 Disallow: /api/
 Disallow: /admin/
+Disallow: /dashboard
+Disallow: /private/
 Disallow: /.next/
 Disallow: /_next/
 
