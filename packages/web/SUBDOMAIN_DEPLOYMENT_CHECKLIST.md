@@ -53,17 +53,22 @@ Complete this checklist to ensure both `skill.vln.gg` and `sync.vln.gg` are prop
   # Test primary domain
   curl -I https://vln.gg/
   
-  # Test skill subdomain
-  curl -I https://skill.vln.gg/
-  curl https://skill.vln.gg/ | grep -i "skills"
+  # Test skill subdomain (follow redirect from / to /skills)
+  curl -I -L https://skill.vln.gg/
+  curl -L https://skill.vln.gg/ | grep -i "skills"
   
-  # Test sync subdomain
-  curl -I https://sync.vln.gg/
-  curl https://sync.vln.gg/ | grep -i "syncpulse"
+  # Or test directly with /skills path
+  curl -I https://skill.vln.gg/skills
+  curl https://skill.vln.gg/skills | grep -i "skills"
+  
+  # Test sync subdomain (follow redirect for authenticated users)
+  curl -I -L https://sync.vln.gg/
+  curl -I https://sync.vln.gg/api/health
   ```
-  - [ ] All endpoints return HTTP 200
+  - [ ] All endpoints return HTTP 200 (after following redirects with `-L`)
   - [ ] Correct content on each subdomain
   - [ ] CORS headers present for API routes
+  - [ ] Middleware redirects working: skill.vln.gg/ → /skills, sync.vln.gg/ → /dashboard (auth)
 
 ## Responsive Design Verification
 
