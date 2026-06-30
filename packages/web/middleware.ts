@@ -17,6 +17,7 @@ const PUBLIC_ROUTES = [
   '/terms',
   '/robots.txt',
   '/sitemap.xml',
+  '/sitemap-skill.xml',
   '/ads.txt',
   '/app-ads.txt',
   '/.well-known',
