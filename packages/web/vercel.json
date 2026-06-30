@@ -6,6 +6,10 @@
     "NEXT_PUBLIC_API_URL": {
       "description": "Backend API URL for SyncPulse endpoints",
       "required": false
+    },
+    "NEXT_PUBLIC_DOMAIN": {
+      "description": "Current domain (sync.vln.gg or skill.vln.gg)",
+      "required": false
     }
   },
   "rewrites": [
@@ -41,8 +45,18 @@
         {
           "key": "X-Frame-Options",
           "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Viewport",
+          "value": "width=device-width, initial-scale=1, viewport-fit=cover"
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "packages/web/app/api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  }
 }

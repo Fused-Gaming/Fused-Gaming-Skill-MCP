@@ -1,10 +1,22 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Navigation from '@/components/Navigation';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'SyncPulse Swarm Controller',
   description: 'Artistic control interface for agent swarms',
+  metadataBase: new URL('https://vln.gg'),
+  alternates: {
+    canonical: 'https://vln.gg',
+  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  maximumScale: 5,
+  minimumScale: 1,
 };
 
 export default function RootLayout({
