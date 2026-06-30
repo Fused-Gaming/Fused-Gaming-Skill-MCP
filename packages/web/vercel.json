@@ -6,6 +6,10 @@
     "NEXT_PUBLIC_API_URL": {
       "description": "Backend API URL for SyncPulse endpoints",
       "required": false
+    },
+    "NEXT_PUBLIC_DOMAIN": {
+      "description": "Current domain (sync.vln.gg or skill.vln.gg)",
+      "required": false
     }
   },
   "rewrites": [
@@ -16,17 +20,38 @@
   ],
   "redirects": [
     {
-      "source": "/dashboard",
+      "source": "/swarm",
       "destination": "/",
       "permanent": false
     },
     {
-      "source": "/swarm",
+      "source": "/swarm/:path*",
       "destination": "/",
       "permanent": false
     }
   ],
   "headers": [
+    {
+      "source": "/dashboard(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Viewport",
+          "value": "width=device-width, initial-scale=1, viewport-fit=cover"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
@@ -41,8 +66,18 @@
         {
           "key": "X-Frame-Options",
           "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Viewport",
+          "value": "width=device-width, initial-scale=1, viewport-fit=cover"
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "app/api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  }
 }

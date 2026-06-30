@@ -17,6 +17,7 @@ interface ToolCategory {
     url?: string;
     tags?: string[];
     status?: 'stable' | 'beta' | 'new';
+    useCases?: string[];
   }>;
 }
 
@@ -32,7 +33,13 @@ const toolCategories: ToolCategory[] = [
         icon: 'palette',
         url: 'https://www.npmjs.com/package/@h4shed/skill-algorithmic-art',
         tags: ['generative', 'p5.js', 'visualization'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Create generative art and visual compositions',
+          'Build interactive data visualizations',
+          'Generate procedural textures and patterns',
+          'Design animated visual effects'
+        ]
       },
       {
         name: 'Canvas Design',
@@ -40,7 +47,13 @@ const toolCategories: ToolCategory[] = [
         icon: 'brush',
         url: 'https://www.npmjs.com/package/@h4shed/skill-canvas-design',
         tags: ['svg', 'graphics', 'design'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Create scalable vector graphics and logos',
+          'Design responsive SVG icons and assets',
+          'Build custom data visualization charts',
+          'Generate animated SVG illustrations'
+        ]
       },
       {
         name: 'Frontend Design',
@@ -48,7 +61,13 @@ const toolCategories: ToolCategory[] = [
         icon: 'code',
         url: 'https://www.npmjs.com/package/@h4shed/skill-frontend-design',
         tags: ['html', 'css', 'components'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Prototype interactive UI components',
+          'Build responsive HTML/CSS layouts',
+          'Create component libraries and style guides',
+          'Design and test component interactions'
+        ]
       },
       {
         name: 'Theme Factory',
@@ -56,7 +75,13 @@ const toolCategories: ToolCategory[] = [
         icon: 'palette',
         url: 'https://www.npmjs.com/package/@h4shed/skill-theme-factory',
         tags: ['design-system', 'theming', 'tokens'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Generate design systems from token definitions',
+          'Create theme variants automatically',
+          'Maintain consistent design tokens across projects',
+          'Build multi-brand theme systems'
+        ]
       },
       {
         name: 'ASCII Mockup',
@@ -64,14 +89,26 @@ const toolCategories: ToolCategory[] = [
         icon: 'mobile',
         url: 'https://www.npmjs.com/package/@h4shed/skill-ascii-mockup',
         tags: ['wireframing', 'ascii', 'mobile'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Create quick mobile wireframes in terminal',
+          'Design layouts for various screen sizes',
+          'Prototype user interfaces rapidly',
+          'Document interface flows with ASCII diagrams'
+        ]
       },
       {
         name: 'SVG Generator',
         description: 'Automated SVG asset generation and manipulation',
         icon: 'settings',
         tags: ['svg', 'automation', 'graphics'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Batch generate SVG assets from templates',
+          'Automate icon set creation',
+          'Transform and optimize existing SVGs',
+          'Generate responsive image variants'
+        ]
       }
     ]
   },
@@ -86,15 +123,27 @@ const toolCategories: ToolCategory[] = [
         icon: 'wrench',
         url: 'https://www.npmjs.com/package/@h4shed/skill-mcp-builder',
         tags: ['mcp', 'scaffolding', 'generator'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Scaffold new MCP servers from templates',
+          'Generate boilerplate skill structures',
+          'Create type-safe MCP configurations',
+          'Accelerate MCP development workflows'
+        ]
       },
       {
         name: 'Skill Creator',
         description: 'Custom skill builder with full MCP integration',
         icon: 'zap',
-        url: 'https://www.npmjs.com/package/@h4shed/skill-skill-creator',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-creator',
         tags: ['mcp', 'skills', 'generator'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Create custom skills for AI agents',
+          'Build MCP-compatible tool packages',
+          'Generate skill documentation automatically',
+          'Integrate external APIs as skills'
+        ]
       },
       {
         name: 'Pre-Deploy Validator',
@@ -102,21 +151,40 @@ const toolCategories: ToolCategory[] = [
         icon: 'check',
         url: 'https://www.npmjs.com/package/@h4shed/skill-pre-deploy-validator',
         tags: ['validation', 'deployment', 'checks'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Validate deployment configurations',
+          'Run pre-flight dependency checks',
+          'Verify environment variable setup',
+          'Prevent deployment failures'
+        ]
       },
       {
         name: 'Project Manager',
         description: 'Project planning and management tools',
         icon: 'document',
         tags: ['project', 'management', 'planning'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Plan and track project milestones',
+          'Manage team workflows and tasks',
+          'Generate project documentation',
+          'Monitor project progress and metrics'
+        ]
       },
       {
         name: 'Mermaid Terminal',
         description: 'Real-time diagram generation in terminal',
         icon: 'chart',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-mermaid-terminal',
         tags: ['diagrams', 'visualization', 'terminal'],
-        status: 'new'
+        status: 'new',
+        useCases: [
+          'Generate flowcharts in the terminal',
+          'Create sequence and class diagrams',
+          'Visualize system architecture',
+          'Document processes with ASCII diagrams'
+        ]
       }
     ]
   },
@@ -131,28 +199,54 @@ const toolCategories: ToolCategory[] = [
         icon: 'mail',
         url: 'https://www.npmjs.com/package/@h4shed/skill-syncpulse',
         tags: ['email', 'agents', 'automation', 'templates'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Automate multi-agent coordination workflows',
+          'Generate and send templated emails at scale',
+          'Create custom agent communication patterns',
+          'Monitor and log agent interactions'
+        ]
       },
       {
         name: 'Daily Review',
         description: 'Automated daily review and summary generation',
         icon: 'document',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-daily-review',
         tags: ['automation', 'review', 'summary'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Generate daily summary reports automatically',
+          'Compile project progress updates',
+          'Create team standup documents',
+          'Track daily metrics and analytics'
+        ]
       },
       {
         name: 'Multi-Account Session Tracking',
         description: 'Track and manage multiple account sessions',
         icon: 'users',
         tags: ['accounts', 'sessions', 'tracking'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Monitor sessions across multiple accounts',
+          'Manage distributed authentication',
+          'Track user activity and sessions',
+          'Implement multi-tenant session management'
+        ]
       },
       {
         name: 'LinkedIn Master Journalist',
         description: 'AI-powered LinkedIn content creation and automation',
         icon: 'document',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-linkedin-master-journalist',
         tags: ['linkedin', 'content', 'ai'],
-        status: 'new'
+        status: 'new',
+        useCases: [
+          'Generate and publish LinkedIn posts automatically',
+          'Create professional content calendars',
+          'Automate engagement and networking',
+          'Schedule multi-day content campaigns'
+        ]
       }
     ]
   },
@@ -166,14 +260,27 @@ const toolCategories: ToolCategory[] = [
         description: 'Map and visualize user experience journeys',
         icon: 'map',
         tags: ['ux', 'journey', 'visualization'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Map user journeys and touchpoints',
+          'Identify UX pain points and bottlenecks',
+          'Visualize customer experience flows',
+          'Document user interaction patterns'
+        ]
       },
       {
         name: 'Project Status Tool',
         description: 'Real-time project status monitoring and reporting',
         icon: 'chart',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-project-status-tool',
         tags: ['status', 'monitoring', 'reporting'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Monitor real-time project metrics',
+          'Generate status reports automatically',
+          'Track project health indicators',
+          'Alert on status changes and milestones'
+        ]
       }
     ]
   },
@@ -186,15 +293,29 @@ const toolCategories: ToolCategory[] = [
         name: 'NFT Generative Art',
         description: 'NFT artwork generation and blockchain assets',
         icon: 'palette',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-nft-generative-art',
         tags: ['nft', 'blockchain', 'generative'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Generate unique NFT artwork collections',
+          'Create dynamic NFT metadata',
+          'Automate minting workflows',
+          'Build generative art on-chain'
+        ]
       },
       {
         name: 'Smart Contract Tools',
         description: 'Hardhat, Truffle, and Foundry integration',
         icon: 'settings',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-smart-contract-tools',
         tags: ['solidity', 'contracts', 'web3'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Develop and test smart contracts',
+          'Deploy contracts to multiple networks',
+          'Generate contract ABIs and type definitions',
+          'Automate contract verification and deployment'
+        ]
       }
     ]
   },
@@ -209,14 +330,26 @@ const toolCategories: ToolCategory[] = [
         icon: 'document',
         url: 'https://www.npmjs.com/package/@h4shed/skill-underworld-writer',
         tags: ['writing', 'narrative', 'character'],
-        status: 'stable'
+        status: 'stable',
+        useCases: [
+          'Generate character backgrounds and profiles',
+          'Create world-building documentation',
+          'Write narrative and story content',
+          'Build character relationship maps'
+        ]
       },
       {
         name: 'Agentic Flow DevKit',
         description: 'Agentic orchestration GUI and A/B-roll planning',
         icon: 'play',
         tags: ['orchestration', 'video', 'editing'],
-        status: 'new'
+        status: 'new',
+        useCases: [
+          'Orchestrate multi-agent workflows visually',
+          'Plan video A/B-roll and editing sequences',
+          'Design complex agent interaction flows',
+          'Create production timelines and storyboards'
+        ]
       }
     ]
   },
@@ -230,14 +363,26 @@ const toolCategories: ToolCategory[] = [
         description: 'Vercel deployment and Next.js integration',
         icon: 'zap',
         tags: ['vercel', 'nextjs', 'deployment'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Deploy Next.js apps to Vercel',
+          'Configure custom domains and subdomains',
+          'Set up preview deployments',
+          'Manage environment variables and secrets'
+        ]
       },
       {
         name: 'Style Dictionary System',
         description: 'Design tokens and cross-platform theming',
         icon: 'palette',
         tags: ['tokens', 'theming', 'design-system'],
-        status: 'beta'
+        status: 'beta',
+        useCases: [
+          'Build design token systems',
+          'Generate cross-platform theme files',
+          'Maintain consistent design language',
+          'Export tokens to multiple formats (CSS, JS, JSON)'
+        ]
       }
     ]
   }
@@ -296,7 +441,15 @@ export default function SkillsPage() {
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.05 }}
                   >
-                    <ToolCard {...tool} />
+                    <ToolCard
+                      name={tool.name}
+                      description={tool.description}
+                      icon={tool.icon}
+                      url={tool.url}
+                      tags={tool.tags}
+                      status={tool.status}
+                      useCases={tool.useCases}
+                    />
                   </motion.div>
                 ))}
               </div>

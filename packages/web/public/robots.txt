@@ -1,0 +1,56 @@
+# SyncPulse Robots Configuration
+# Controls search engine crawler access across all subdomains
+
+# Default rules for all crawlers
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /private/
+Disallow: /.next/
+Disallow: /_next/
+Crawl-delay: 1
+Request-rate: 30/60
+
+# Google-specific rules
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /private/
+Disallow: /.next/
+Disallow: /_next/
+
+# Bing-specific rules
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /private/
+Disallow: /.next/
+Disallow: /_next/
+
+# Block specific bots that consume resources
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap locations - host-specific to avoid off-host URL rejection
+# Primary domain sitemap
+Sitemap: https://vln.gg/sitemap.xml
+
+# Skill subdomain sitemap (contains only skill.vln.gg URLs)
+Sitemap: https://skill.vln.gg/sitemap-skill.xml
+
+# Sync subdomain is protected and not indexed

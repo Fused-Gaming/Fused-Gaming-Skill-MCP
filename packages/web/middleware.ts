@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Public routes that do NOT require authentication
- * Includes landing/login pages, health checks, and auth callbacks
+ * Includes landing/login pages, health checks, auth callbacks, public catalogs, and SEO/legal pages
  */
 const PUBLIC_ROUTES = [
   '/auth/login',
@@ -12,6 +12,15 @@ const PUBLIC_ROUTES = [
   '/landing',
   '/sales',
   '/contact-sales',
+  '/skills',
+  '/privacy',
+  '/terms',
+  '/robots.txt',
+  '/sitemap.xml',
+  '/sitemap-skill.xml',
+  '/ads.txt',
+  '/app-ads.txt',
+  '/.well-known',
   '/api/auth',
   '/api/health',
   '/api/contact-sales',
@@ -98,11 +107,29 @@ function matchesRoutes(pathname: string, routes: string[]): boolean {
 }
 
 /**
+ * Extracts the subdomain from the request host
+ * Examples:
+ *  - skill.vln.gg -> 'skill'
+ *  - sync.vln.gg -> 'sync'
+ *  - localhost:3000 -> null
+ */
+function getSubdomain(host: string): string | null {
+  const parts = host.split('.');
+  // If there are 3+ parts (subdomain.domain.tld), return the subdomain
+  if (parts.length >= 3) {
+    return parts[0];
+  }
+  return null;
+}
+
+/**
  * Main middleware function
- * Handles authentication, authorization, CORS, and security headers
+ * Handles authentication, authorization, CORS, security headers, and subdomain routing
  */
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const host = request.headers.get('host') || '';
+  const subdomain = getSubdomain(host);
   const sessionToken = request.cookies.get('sessionToken')?.value || '';
   const isAuthenticated = isValidJWT(sessionToken);
 
@@ -146,9 +173,28 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
+  // SUBDOMAIN ROUTING
+  // skill.vln.gg -> /skills
+  // sync.vln.gg -> /dashboard (authenticated) or / (unauthenticated)
+  if (subdomain === 'skill' && pathname === '/') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/skills';
+    return NextResponse.redirect(url);
+  }
+
+  if (subdomain === 'sync' && pathname === '/') {
+    if (isAuthenticated) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
+    // Unauthenticated users stay at landing/login
+  }
+
   // PROBLEM 2: Magic link pages not in allowlist
   // Root path (/) handling - special case for landing vs dashboard
-  if (pathname === '/') {
+  // Only skip the dashboard redirect for skill/sync subdomains; all others use default behavior
+  if (pathname === '/' && subdomain !== 'skill' && subdomain !== 'sync') {
     if (isAuthenticated) {
       // Authenticated users go to dashboard
       const url = request.nextUrl.clone();

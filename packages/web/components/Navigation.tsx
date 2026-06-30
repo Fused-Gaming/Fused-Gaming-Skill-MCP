@@ -109,7 +109,7 @@ export default function Navigation({
           )}
 
           {/* Right Side: Version Badge + Auth Buttons */}
-          <div className="hidden items-center gap-4 md:flex">
+          <div className="hidden items-center gap-6 md:flex">
             <VersionBadge variant="small" />
 
             {!isAuthenticated ? (
@@ -121,16 +121,16 @@ export default function Navigation({
                   onClick={onLogin}
                   className="text-sm font-medium text-white/70 transition-colors hover:text-[#667eea]"
                 >
-                  Login
+                  Sign In
                 </motion.button>
                 <motion.button
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.25 }}
                   onClick={onMagicLink}
-                  className="rounded-lg border border-[#667eea]/50 bg-[#667eea]/10 px-4 py-2 text-sm font-medium text-[#667eea] transition-all hover:bg-[#667eea]/20 hover:shadow-lg hover:shadow-[#667eea]/20"
+                  className="rounded-lg border border-[#667eea]/50 bg-[#667eea]/10 px-6 py-2 text-sm font-medium text-[#667eea] transition-all hover:bg-[#667eea]/20 hover:shadow-lg hover:shadow-[#667eea]/20"
                 >
-                  Magic Link
+                  Get Started
                 </motion.button>
               </>
             ) : (
@@ -218,7 +218,7 @@ export default function Navigation({
                 ))}
 
               {/* Mobile Auth Buttons */}
-              <div className="border-t border-white/[0.1] pt-4 mt-4 space-y-2">
+              <div className="border-t border-white/[0.1] pt-4 mt-4 space-y-3">
                 {!isAuthenticated ? (
                   <>
                     <button
@@ -226,9 +226,9 @@ export default function Navigation({
                         onLogin();
                         closeMenu();
                       }}
-                      className="block w-full px-4 py-2 text-left text-sm text-white/70 transition-colors hover:text-[#667eea]"
+                      className="block w-full px-4 py-2 text-left text-sm font-medium text-white/70 transition-colors hover:text-[#667eea]"
                     >
-                      Login
+                      Sign In
                     </button>
                     <button
                       onClick={() => {
@@ -237,7 +237,7 @@ export default function Navigation({
                       }}
                       className="w-full rounded-lg border border-[#667eea]/50 bg-[#667eea]/10 px-4 py-2 text-sm font-medium text-[#667eea] transition-all hover:bg-[#667eea]/20"
                     >
-                      Magic Link
+                      Get Started
                     </button>
                   </>
                 ) : (
@@ -245,7 +245,7 @@ export default function Navigation({
                     <a
                       href="/dashboard"
                       onClick={closeMenu}
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-white/70 transition-colors hover:text-[#667eea]"
+                      className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-white/70 transition-colors hover:text-[#667eea]"
                     >
                       <LayoutDashboard size={16} />
                       Dashboard
@@ -255,7 +255,7 @@ export default function Navigation({
                         handleLogoutClick();
                         closeMenu();
                       }}
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-white/70 transition-colors hover:text-red-400"
+                      className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-white/70 transition-colors hover:text-red-400"
                     >
                       <LogOut size={16} />
                       Logout

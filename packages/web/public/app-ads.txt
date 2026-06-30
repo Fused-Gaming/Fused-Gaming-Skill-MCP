@@ -1,0 +1,8 @@
+# App Ads.txt
+# Format: seller_account_id,seller_name,inventory_type,seller_decision_url
+
+# Mobile app advertising configuration
+# SyncPulse does not currently have mobile advertising partnerships
+# This file is maintained for future advertising integration
+
+# For more information, visit: https://iabtechlab.com/ads-txt/
