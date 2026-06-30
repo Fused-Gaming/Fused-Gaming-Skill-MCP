@@ -25,7 +25,9 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className="bg-swarm-dark text-white overflow-x-hidden">
         <Navigation />
-        {children}
+        <div className="pt-4">
+          {children}
+        </div>
       </body>
     </html>
   );

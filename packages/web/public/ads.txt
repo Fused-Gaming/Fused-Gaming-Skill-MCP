@@ -1,0 +1,8 @@
+# Authorized Digital Sellers (ads.txt)
+# Format: seller_account_id,seller_name,inventory_type,seller_decision_url
+
+# SyncPulse does not currently have advertising partners
+# If partnerships are established in the future, entries will be added here
+# in accordance with the Trustworthy Accountability Group (TAG) standards
+
+# For more information, visit: https://iabtechlab.com/ads-txt/

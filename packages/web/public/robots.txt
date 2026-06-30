@@ -1,0 +1,48 @@
+# SyncPulse Robots Configuration
+# Controls search engine crawler access across all subdomains
+
+# Default rules for all crawlers
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /.next/
+Disallow: /_next/
+Disallow: /private/
+Crawl-delay: 1
+Request-rate: 30/60
+
+# Google-specific rules
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /.next/
+Disallow: /_next/
+
+# Bing-specific rules
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /.next/
+Disallow: /_next/
+
+# Block specific bots that consume resources
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap locations for different subdomains
+Sitemap: https://vln.gg/sitemap.xml
+Sitemap: https://skill.vln.gg/sitemap.xml
+Sitemap: https://sync.vln.gg/sitemap.xml

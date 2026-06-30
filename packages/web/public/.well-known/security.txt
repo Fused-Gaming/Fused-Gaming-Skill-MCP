@@ -1,0 +1,7 @@
+Contact: security@vln.gg
+Expires: 2026-12-31T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://vln.gg/.well-known/security.txt
+Policy: https://vln.gg/security-policy
+Acknowledgments: https://vln.gg/security-acknowledgments
+Hiring: https://vln.gg/careers
