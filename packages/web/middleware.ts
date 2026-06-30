@@ -185,7 +185,8 @@ export function middleware(request: NextRequest) {
 
   // PROBLEM 2: Magic link pages not in allowlist
   // Root path (/) handling - special case for landing vs dashboard
-  if (pathname === '/' && !subdomain) {
+  // Only skip the dashboard redirect for skill/sync subdomains; all others use default behavior
+  if (pathname === '/' && subdomain !== 'skill' && subdomain !== 'sync') {
     if (isAuthenticated) {
       // Authenticated users go to dashboard
       const url = request.nextUrl.clone();
