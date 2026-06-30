@@ -21,12 +21,12 @@
   "redirects": [
     {
       "source": "/swarm",
-      "destination": "/dashboard",
+      "destination": "/",
       "permanent": false
     },
     {
       "source": "/swarm/:path*",
-      "destination": "/dashboard/:path*",
+      "destination": "/",
       "permanent": false
     }
   ],
