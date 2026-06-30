@@ -6,9 +6,6 @@ export const metadata: Metadata = {
   title: 'SyncPulse Swarm Controller',
   description: 'Artistic control interface for agent swarms',
   metadataBase: new URL('https://vln.gg'),
-  alternates: {
-    canonical: 'https://vln.gg',
-  },
 };
 
 export const viewport: Viewport = {
