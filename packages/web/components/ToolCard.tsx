@@ -35,15 +35,20 @@ export default function ToolCard({
   };
 
   const hasValidIcon = iconPaths[icon] && iconPaths[icon].trim().length > 0;
-  // Generate package name: remove punctuation and replace whitespace with hyphens
-  const slug = name
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // Remove punctuation (keep only word chars, whitespace, hyphens)
-    .replace(/\s+/g, '-') // Replace whitespace with hyphens
-    .replace(/-+/g, '-'); // Collapse multiple hyphens to single
-  const packageName = `@h4shed/skill-${slug}`;
-  const installCommand = `npm install ${packageName}`;
-  const npmUrl = `https://www.npmjs.com/package/${packageName}`;
+
+  // Extract package name from npm URL if provided, or generate from tool name
+  let packageName = '';
+  let npmUrl = url || '';
+
+  if (npmUrl) {
+    // Extract package name from npm URL: https://www.npmjs.com/package/@h4shed/skill-xyz -> @h4shed/skill-xyz
+    const match = npmUrl.match(/npmjs\.com\/package\/([@\w\/\-]+)/);
+    if (match) {
+      packageName = match[1];
+    }
+  }
+
+  const installCommand = packageName ? `npm install ${packageName}` : '';
 
   const copyToClipboard = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -121,25 +126,27 @@ export default function ToolCard({
               className="border-t border-white/[0.1] pt-4 mt-4 space-y-4"
             >
               {/* Installation Command */}
-              <div>
-                <p className="text-xs font-semibold text-white/60 mb-2">Installation</p>
-                <div className="flex items-center gap-2 bg-black/40 rounded-lg px-3 py-2 border border-white/[0.1]">
-                  <code className="text-xs text-[#667eea] flex-1 font-mono">
-                    {installCommand}
-                  </code>
-                  <button
-                    onClick={copyToClipboard}
-                    className="p-1 hover:bg-white/10 rounded transition-colors"
-                    title="Copy to clipboard"
-                  >
-                    {copied ? (
-                      <Check className="w-4 h-4 text-green-400" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-white/60" />
-                    )}
-                  </button>
+              {installCommand && (
+                <div>
+                  <p className="text-xs font-semibold text-white/60 mb-2">Installation</p>
+                  <div className="flex items-center gap-2 bg-black/40 rounded-lg px-3 py-2 border border-white/[0.1]">
+                    <code className="text-xs text-[#667eea] flex-1 font-mono">
+                      {installCommand}
+                    </code>
+                    <button
+                      onClick={copyToClipboard}
+                      className="p-1 hover:bg-white/10 rounded transition-colors"
+                      title="Copy to clipboard"
+                    >
+                      {copied ? (
+                        <Check className="w-4 h-4 text-green-400" />
+                      ) : (
+                        <Copy className="w-4 h-4 text-white/60" />
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Use Cases */}
               {useCases.length > 0 && (
@@ -156,25 +163,27 @@ export default function ToolCard({
                 </div>
               )}
 
-              {/* NPM Link */}
+              {/* Links */}
               <div className="flex gap-2 pt-2">
-                <a
-                  href={npmUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#667eea]/10 hover:bg-[#667eea]/20 border border-[#667eea]/30 rounded-lg text-sm text-[#667eea] font-medium transition-all"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  View on npm
-                </a>
-                {url && (
+                {npmUrl && (
+                  <a
+                    href={npmUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#667eea]/10 hover:bg-[#667eea]/20 border border-[#667eea]/30 rounded-lg text-sm text-[#667eea] font-medium transition-all"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    View on npm
+                  </a>
+                )}
+                {url && url !== npmUrl && (
                   <a
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/[0.15] rounded-lg text-sm text-white/70 font-medium transition-all"
+                    className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/[0.15] rounded-lg text-sm text-white/70 font-medium transition-all`}
                   >
                     <ExternalLink className="w-4 h-4" />
                     Docs

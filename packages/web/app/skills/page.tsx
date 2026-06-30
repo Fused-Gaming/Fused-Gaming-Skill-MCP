@@ -135,7 +135,7 @@ const toolCategories: ToolCategory[] = [
         name: 'Skill Creator',
         description: 'Custom skill builder with full MCP integration',
         icon: 'zap',
-        url: 'https://www.npmjs.com/package/@h4shed/skill-skill-creator',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-creator',
         tags: ['mcp', 'skills', 'generator'],
         status: 'stable',
         useCases: [
@@ -176,6 +176,7 @@ const toolCategories: ToolCategory[] = [
         name: 'Mermaid Terminal',
         description: 'Real-time diagram generation in terminal',
         icon: 'chart',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-mermaid-terminal',
         tags: ['diagrams', 'visualization', 'terminal'],
         status: 'new',
         useCases: [
@@ -210,6 +211,7 @@ const toolCategories: ToolCategory[] = [
         name: 'Daily Review',
         description: 'Automated daily review and summary generation',
         icon: 'document',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-daily-review',
         tags: ['automation', 'review', 'summary'],
         status: 'beta',
         useCases: [
@@ -236,6 +238,7 @@ const toolCategories: ToolCategory[] = [
         name: 'LinkedIn Master Journalist',
         description: 'AI-powered LinkedIn content creation and automation',
         icon: 'document',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-linkedin-master-journalist',
         tags: ['linkedin', 'content', 'ai'],
         status: 'new',
         useCases: [
@@ -269,6 +272,7 @@ const toolCategories: ToolCategory[] = [
         name: 'Project Status Tool',
         description: 'Real-time project status monitoring and reporting',
         icon: 'chart',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-project-status-tool',
         tags: ['status', 'monitoring', 'reporting'],
         status: 'beta',
         useCases: [
@@ -289,6 +293,7 @@ const toolCategories: ToolCategory[] = [
         name: 'NFT Generative Art',
         description: 'NFT artwork generation and blockchain assets',
         icon: 'palette',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-nft-generative-art',
         tags: ['nft', 'blockchain', 'generative'],
         status: 'beta',
         useCases: [
@@ -302,6 +307,7 @@ const toolCategories: ToolCategory[] = [
         name: 'Smart Contract Tools',
         description: 'Hardhat, Truffle, and Foundry integration',
         icon: 'settings',
+        url: 'https://www.npmjs.com/package/@h4shed/skill-smart-contract-tools',
         tags: ['solidity', 'contracts', 'web3'],
         status: 'beta',
         useCases: [
