@@ -18,18 +18,7 @@
       "destination": "/api/:path*"
     }
   ],
-  "redirects": [
-    {
-      "source": "/dashboard",
-      "destination": "/",
-      "permanent": false
-    },
-    {
-      "source": "/swarm",
-      "destination": "/",
-      "permanent": false
-    }
-  ],
+  "redirects": [],
   "headers": [
     {
       "source": "/(.*)",
