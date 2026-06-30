@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Public routes that do NOT require authentication
- * Includes landing/login pages, health checks, and auth callbacks
+ * Includes landing/login pages, health checks, auth callbacks, and public catalogs
  */
 const PUBLIC_ROUTES = [
   '/auth/login',
@@ -12,6 +12,7 @@ const PUBLIC_ROUTES = [
   '/landing',
   '/sales',
   '/contact-sales',
+  '/skills',
   '/api/auth',
   '/api/health',
   '/api/contact-sales',

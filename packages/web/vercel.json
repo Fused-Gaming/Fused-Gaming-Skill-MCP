@@ -54,7 +54,7 @@
     }
   ],
   "functions": {
-    "packages/web/app/api/**/*.ts": {
+    "app/api/**/*.ts": {
       "memory": 1024,
       "maxDuration": 60
     }
