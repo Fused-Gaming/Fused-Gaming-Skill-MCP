@@ -2,11 +2,11 @@
   "version": "1.0.0",
   "server": {
     "name": "fused-gaming-mcp",
-    "displayName": "Fused Gaming MCP",
-    "description": "Modular MCP server with scalable Claude skills for creative design, development, and automation",
+    "displayName": "Fused Gaming MCP — 30+ Enterprise AI Skills",
+    "description": "Complete ecosystem: 31 AI skills + 28 developer tools for creative design, development, automation, and AI orchestration",
     "version": "1.3.0",
     "author": {
-      "name": "Fused Gaming",
+      "name": "Fused Gaming + VLN Security",
       "email": "info@fused-gaming.io",
       "url": "https://fused-gaming.io"
     },
@@ -27,7 +27,10 @@
       "design",
       "development",
       "tools",
-      "automation"
+      "automation",
+      "orchestration",
+      "syncpulse",
+      "agent-coordination"
     ]
   },
   "transport": {
@@ -45,10 +48,20 @@
     }
   },
   "skills": {
+    "categories": {
+      "design": ["algorithmic-art", "ascii-mockup", "canvas-design", "frontend-design", "svg-generator", "theme-factory", "ux-journeymapper", "tailwindcss-style-builder"],
+      "development": ["mcp-builder", "skill-creator", "typescript-toolchain", "vite-module-bundler", "vercel-nextjs-deployment", "storybook-component-library"],
+      "automation": ["pre-deploy-validator", "playwright-test-automation", "daily-review-skill", "project-manager", "project-status-tool"],
+      "content": ["linkedin-master-journalist", "underworld-writer-skill", "agentic-flow-devkit"],
+      "blockchain": ["nft-generative-art", "smart-contract-tools"],
+      "orchestration": ["syncpulse", "syncpulse-hub", "multi-account-session-tracking-skill"],
+      "infrastructure": ["mermaid-terminal", "style-dictionary-system"]
+    },
     "enabled": [
       {
         "name": "algorithmic-art",
         "displayName": "Algorithmic Art",
+        "category": "design",
         "description": "Generate algorithmic and generative art using p5.js with seeded randomness, flow fields, and particle systems",
         "version": "1.0.0",
         "tools": [
@@ -58,50 +71,13 @@
             "inputSchema": {
               "type": "object",
               "properties": {
-                "style": {
-                  "type": "string",
-                  "description": "Art style: flow-field, particle-system, fractal, or noise-based"
-                },
-                "width": {
-                  "type": "number",
-                  "description": "Canvas width in pixels",
-                  "default": 800
-                },
-                "height": {
-                  "type": "number",
-                  "description": "Canvas height in pixels",
-                  "default": 600
-                },
-                "seed": {
-                  "type": "number",
-                  "description": "Random seed for reproducibility"
-                },
-                "complexity": {
-                  "type": "number",
-                  "description": "Complexity level 1-10",
-                  "default": 5
-                }
+                "style": { "type": "string", "enum": ["flow-field", "particle-system", "fractal", "noise-based"], "description": "Art style" },
+                "width": { "type": "number", "description": "Canvas width (px)", "default": 800 },
+                "height": { "type": "number", "description": "Canvas height (px)", "default": 600 },
+                "seed": { "type": "number", "description": "Random seed for reproducibility" },
+                "complexity": { "type": "number", "description": "Complexity 1-10", "default": 5 }
               },
               "required": ["style"]
-            }
-          },
-          {
-            "name": "create-flow-field",
-            "description": "Create a flow field visualization",
-            "inputSchema": {
-              "type": "object",
-              "properties": {
-                "gridSize": {
-                  "type": "number",
-                  "description": "Size of grid cells",
-                  "default": 20
-                },
-                "scale": {
-                  "type": "number",
-                  "description": "Noise scale",
-                  "default": 0.01
-                }
-              }
             }
           }
         ]
@@ -109,27 +85,18 @@
       {
         "name": "ascii-mockup",
         "displayName": "ASCII Mockup",
+        "category": "design",
         "description": "Create mobile-first wireframes and mockups using ASCII art",
         "version": "1.0.0",
         "tools": [
           {
             "name": "generate-mockup",
-            "description": "Generate ASCII wireframe mockup for mobile or desktop",
+            "description": "Generate ASCII wireframe mockup",
             "inputSchema": {
               "type": "object",
               "properties": {
-                "layout": {
-                  "type": "string",
-                  "enum": ["mobile", "tablet", "desktop"],
-                  "description": "Device layout type"
-                },
-                "sections": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "Wireframe sections to include"
-                }
+                "layout": { "type": "string", "enum": ["mobile", "tablet", "desktop"], "description": "Device type" },
+                "sections": { "type": "array", "items": {"type": "string"}, "description": "Wireframe sections" }
               },
               "required": ["layout"]
             }
@@ -139,6 +106,7 @@
       {
         "name": "canvas-design",
         "displayName": "Canvas Design",
+        "category": "design",
         "description": "Generate visual designs and export to PNG/PDF",
         "version": "1.0.0",
         "tools": [
@@ -148,18 +116,9 @@
             "inputSchema": {
               "type": "object",
               "properties": {
-                "type": {
-                  "type": "string",
-                  "description": "Design type: illustration, icon, pattern, or layout"
-                },
-                "width": {
-                  "type": "number",
-                  "default": 800
-                },
-                "height": {
-                  "type": "number",
-                  "default": 600
-                }
+                "type": { "type": "string", "enum": ["illustration", "icon", "pattern", "layout"], "description": "Design type" },
+                "width": { "type": "number", "default": 800 },
+                "height": { "type": "number", "default": 600 }
               },
               "required": ["type"]
             }
@@ -167,39 +126,581 @@
         ]
       },
       {
+        "name": "svg-generator",
+        "displayName": "SVG Asset Generator",
+        "category": "design",
+        "description": "Generate SVG assets and icon concepts from structured prompts",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-svg-asset",
+            "description": "Generate SVG assets and icons",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "assetType": { "type": "string", "enum": ["icon", "illustration", "decoration"], "description": "Asset type" },
+                "prompt": { "type": "string", "description": "Description of desired asset" },
+                "style": { "type": "string", "enum": ["minimalist", "detailed", "abstract"], "description": "Visual style" }
+              },
+              "required": ["assetType", "prompt"]
+            }
+          }
+        ]
+      },
+      {
         "name": "frontend-design",
         "displayName": "Frontend Design",
-        "description": "Design and prototype frontend components and layouts",
+        "category": "design",
+        "description": "Design and prototype frontend components and layouts with React/Vue",
         "version": "1.0.0",
-        "tools": []
+        "tools": [
+          {
+            "name": "design-component",
+            "description": "Design frontend component with code generation",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "componentName": { "type": "string", "description": "Component name" },
+                "framework": { "type": "string", "enum": ["react", "vue", "svelte"], "description": "UI framework" },
+                "purpose": { "type": "string", "description": "Component purpose/functionality" }
+              },
+              "required": ["componentName", "framework"]
+            }
+          }
+        ]
       },
       {
         "name": "theme-factory",
         "displayName": "Theme Factory",
+        "category": "design",
         "description": "Generate customizable design system themes and color palettes",
         "version": "1.0.0",
-        "tools": []
+        "tools": [
+          {
+            "name": "generate-theme",
+            "description": "Generate design system theme",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "brandColor": { "type": "string", "description": "Primary brand color (hex)" },
+                "style": { "type": "string", "enum": ["light", "dark", "auto"], "description": "Theme style" },
+                "format": { "type": "string", "enum": ["css", "tailwind", "sass", "json"], "description": "Output format" }
+              },
+              "required": ["brandColor"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ux-journeymapper",
+        "displayName": "UX Journey Mapper",
+        "category": "design",
+        "description": "User journey mapping and experience design visualization",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "map-user-journey",
+            "description": "Create user journey map",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "persona": { "type": "string", "description": "User persona name" },
+                "goal": { "type": "string", "description": "User goal/task" },
+                "touchpoints": { "type": "array", "items": {"type": "string"}, "description": "Interaction touchpoints" }
+              },
+              "required": ["persona", "goal"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "tailwindcss-style-builder",
+        "displayName": "Tailwind CSS Builder",
+        "category": "design",
+        "description": "Utility-first styling and design system builder with Tailwind CSS",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "build-tailwind-styles",
+            "description": "Generate Tailwind CSS configuration and utilities",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "designTokens": { "type": "object", "description": "Design token definitions" },
+                "customUtilities": { "type": "array", "items": {"type": "string"}, "description": "Custom utilities to generate" }
+              }
+            }
+          }
+        ]
       },
       {
         "name": "mcp-builder",
         "displayName": "MCP Builder",
-        "description": "Create and configure MCP servers and tools",
+        "category": "development",
+        "description": "Create and configure MCP servers and tools scaffolding",
         "version": "1.0.0",
-        "tools": []
-      },
-      {
-        "name": "pre-deploy-validator",
-        "displayName": "Pre-Deploy Validator",
-        "description": "Validate applications before deployment",
-        "version": "1.0.0",
-        "tools": []
+        "tools": [
+          {
+            "name": "scaffold-mcp-server",
+            "description": "Scaffold a new MCP server project",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "serverName": { "type": "string", "description": "MCP server name" },
+                "language": { "type": "string", "enum": ["typescript", "python", "rust"], "description": "Programming language" },
+                "capabilities": { "type": "array", "items": {"type": "string", "enum": ["tools", "resources", "prompts"]}, "description": "Capabilities to include" }
+              },
+              "required": ["serverName", "language"]
+            }
+          }
+        ]
       },
       {
         "name": "skill-creator",
         "displayName": "Skill Creator",
-        "description": "Create new Claude skills and MCP tools",
+        "category": "development",
+        "description": "Create new Claude skills and MCP tool definitions with validation",
         "version": "1.0.0",
-        "tools": []
+        "tools": [
+          {
+            "name": "create-skill",
+            "description": "Create a new Claude skill",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "skillName": { "type": "string", "description": "Skill name" },
+                "description": { "type": "string", "description": "Skill description" },
+                "tools": { "type": "array", "items": {"type": "object"}, "description": "Tool definitions" }
+              },
+              "required": ["skillName", "description"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "typescript-toolchain",
+        "displayName": "TypeScript Toolchain",
+        "category": "development",
+        "description": "Advanced TypeScript configuration, analysis, and optimization",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "analyze-typescript",
+            "description": "Analyze TypeScript project and configuration",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "projectPath": { "type": "string", "description": "Path to tsconfig.json" },
+                "analysisType": { "type": "string", "enum": ["config", "types", "performance"], "description": "Analysis type" }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "vite-module-bundler",
+        "displayName": "Vite Module Bundler",
+        "category": "development",
+        "description": "Next-generation JavaScript module bundler with lightning-fast builds",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "build-with-vite",
+            "description": "Build project with Vite",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "projectPath": { "type": "string", "description": "Project root" },
+                "targetEnv": { "type": "string", "enum": ["development", "production"], "description": "Build environment" }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "vercel-nextjs-deployment",
+        "displayName": "Vercel Next.js Deployment",
+        "category": "development",
+        "description": "Vercel deployment and Next.js project integration",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "deploy-to-vercel",
+            "description": "Deploy Next.js app to Vercel",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "projectName": { "type": "string", "description": "Vercel project name" },
+                "branch": { "type": "string", "description": "Git branch to deploy", "default": "main" }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "storybook-component-library",
+        "displayName": "Storybook Component Library",
+        "category": "development",
+        "description": "Interactive component documentation and isolated development environment",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-storybook-stories",
+            "description": "Generate Storybook story files",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "componentPath": { "type": "string", "description": "Component file path" }
+              },
+              "required": ["componentPath"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "pre-deploy-validator",
+        "displayName": "Pre-Deploy Validator",
+        "category": "automation",
+        "description": "Validate applications before deployment with security and performance checks",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "validate-deployment",
+            "description": "Run pre-deployment validation checks",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "projectPath": { "type": "string", "description": "Project root path" },
+                "checkTypes": { "type": "array", "items": {"type": "string", "enum": ["security", "performance", "types", "lint", "tests"]}, "description": "Validation types" }
+              },
+              "required": ["projectPath"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "playwright-test-automation",
+        "displayName": "Playwright Test Automation",
+        "category": "automation",
+        "description": "End-to-end testing framework for web applications with cross-browser support",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-e2e-tests",
+            "description": "Generate Playwright E2E tests",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "siteUrl": { "type": "string", "description": "Website URL to test" },
+                "scenarioDescription": { "type": "string", "description": "Test scenario description" },
+                "browsers": { "type": "array", "items": {"type": "string", "enum": ["chromium", "firefox", "webkit"]}, "description": "Browsers to test" }
+              },
+              "required": ["siteUrl", "scenarioDescription"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "daily-review-skill",
+        "displayName": "Daily Review",
+        "category": "automation",
+        "description": "Daily reflection and productivity tracking with session analytics",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "log-session",
+            "description": "Log work session with metrics",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string", "description": "Session title" },
+                "durationMinutes": { "type": "number", "description": "Session duration (minutes)" },
+                "focusScore": { "type": "number", "description": "Focus quality 0-10" },
+                "category": { "type": "string", "enum": ["coding", "design", "writing", "meeting", "research"], "description": "Session category" },
+                "output": { "type": "string", "description": "Session deliverables" }
+              },
+              "required": ["title", "durationMinutes", "focusScore"]
+            }
+          },
+          {
+            "name": "generate-daily-review",
+            "description": "Generate daily productivity review",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "date": { "type": "string", "description": "Review date (YYYY-MM-DD)" }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "project-manager",
+        "displayName": "Project Manager",
+        "category": "automation",
+        "description": "Project planning and execution orchestration with task tracking",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "create-project-plan",
+            "description": "Create project plan with milestones",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "projectName": { "type": "string", "description": "Project name" },
+                "objectives": { "type": "array", "items": {"type": "string"}, "description": "Project objectives" },
+                "timeline": { "type": "string", "description": "Timeline (e.g., '8 weeks')" }
+              },
+              "required": ["projectName", "objectives"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "project-status-tool",
+        "displayName": "Project Status Tracker",
+        "category": "automation",
+        "description": "Project status tracking and reporting with progress metrics",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "update-project-status",
+            "description": "Update project status",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "projectId": { "type": "string", "description": "Project identifier" },
+                "status": { "type": "string", "enum": ["planning", "in-progress", "blocked", "complete"], "description": "Project status" },
+                "progress": { "type": "number", "description": "Progress percentage 0-100" },
+                "blockers": { "type": "array", "items": {"type": "string"}, "description": "Current blockers" }
+              },
+              "required": ["projectId", "status"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "linkedin-master-journalist",
+        "displayName": "LinkedIn Master Journalist",
+        "category": "content",
+        "description": "LinkedIn article generation, dual posts, and branded cover creation",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-linkedin-content",
+            "description": "Generate LinkedIn article and posts",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "topic": { "type": "string", "description": "Content topic" },
+                "tone": { "type": "string", "enum": ["professional", "inspirational", "educational", "thought-leadership"], "description": "Content tone" },
+                "includeImages": { "type": "boolean", "description": "Generate branded images" }
+              },
+              "required": ["topic"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "underworld-writer-skill",
+        "displayName": "Underworld Writer",
+        "category": "content",
+        "description": "Character and world narrative generation for fiction writing",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-character",
+            "description": "Generate character with backstory",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "characterRole": { "type": "string", "description": "Character role/archetype" },
+                "worldSetting": { "type": "string", "description": "World/setting context" }
+              },
+              "required": ["characterRole"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "agentic-flow-devkit",
+        "displayName": "Agentic Flow DevKit",
+        "category": "content",
+        "description": "Agentic orchestration GUI and trailer A/B-roll planning",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "plan-content-flow",
+            "description": "Plan content production flow",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "contentType": { "type": "string", "enum": ["video", "audio", "article", "social"], "description": "Content type" },
+                "stages": { "type": "array", "items": {"type": "string"}, "description": "Production stages" }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "nft-generative-art",
+        "displayName": "NFT Generative Art",
+        "category": "blockchain",
+        "description": "NFT artwork generation and blockchain metadata creation",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-nft-artwork",
+            "description": "Generate NFT artwork with metadata",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "collectionName": { "type": "string", "description": "NFT collection name" },
+                "artworkCount": { "type": "number", "description": "Number of artworks" },
+                "traits": { "type": "array", "items": {"type": "string"}, "description": "Artwork traits" }
+              },
+              "required": ["collectionName"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "smart-contract-tools",
+        "displayName": "Smart Contract Tools",
+        "category": "blockchain",
+        "description": "Smart contract development with Hardhat, Truffle, and Foundry",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-smart-contract",
+            "description": "Generate Solidity smart contract",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "contractType": { "type": "string", "enum": ["token", "nft", "dao", "defi"], "description": "Contract type" },
+                "framework": { "type": "string", "enum": ["hardhat", "truffle", "foundry"], "description": "Development framework" }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "syncpulse",
+        "displayName": "SyncPulse Orchestrator",
+        "category": "orchestration",
+        "description": "Multi-agent coordination with 9 email workflow templates and vector search optimization",
+        "version": "0.2.2",
+        "tools": [
+          {
+            "name": "coordinate-agents",
+            "description": "Coordinate multi-agent execution",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "agents": { "type": "array", "items": {"type": "string"}, "description": "Agent names" },
+                "task": { "type": "string", "description": "Coordination task" },
+                "topology": { "type": "string", "enum": ["hierarchical", "mesh", "linear"], "description": "Agent topology" }
+              },
+              "required": ["agents", "task"]
+            }
+          },
+          {
+            "name": "send-workflow-email",
+            "description": "Send templated workflow email",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "template": { "type": "string", "enum": ["auth", "onboarding", "report", "alert", "invite"], "description": "Email template" },
+                "recipient": { "type": "string", "description": "Email recipient" },
+                "context": { "type": "object", "description": "Template context variables" }
+              },
+              "required": ["template", "recipient"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "syncpulse-hub",
+        "displayName": "SyncPulse Hub",
+        "category": "orchestration",
+        "description": "Orchestration dashboard for real-time swarm monitoring and agent management",
+        "version": "0.1.1",
+        "tools": [
+          {
+            "name": "monitor-swarm",
+            "description": "Monitor agent swarm health and performance",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "swarmId": { "type": "string", "description": "Swarm identifier" },
+                "metrics": { "type": "array", "items": {"type": "string", "enum": ["health", "performance", "tasks", "errors"]}, "description": "Metrics to retrieve" }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "multi-account-session-tracking-skill",
+        "displayName": "Multi-Account Session Tracking",
+        "category": "orchestration",
+        "description": "Multi-account session management and persistence across platforms",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "track-session",
+            "description": "Track multi-account session",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "accounts": { "type": "array", "items": {"type": "string"}, "description": "Account identifiers" },
+                "sessionData": { "type": "object", "description": "Session data to track" }
+              },
+              "required": ["accounts"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "mermaid-terminal",
+        "displayName": "Mermaid Terminal",
+        "category": "infrastructure",
+        "description": "Mermaid diagram generation and terminal rendering",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-mermaid-diagram",
+            "description": "Generate Mermaid diagram",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "diagramType": { "type": "string", "enum": ["flowchart", "sequence", "class", "state", "gantt"], "description": "Diagram type" },
+                "description": { "type": "string", "description": "Diagram description/content" }
+              },
+              "required": ["diagramType", "description"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "style-dictionary-system",
+        "displayName": "Style Dictionary System",
+        "category": "infrastructure",
+        "description": "Design token management and cross-platform theming system",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-design-tokens",
+            "description": "Generate design tokens from definitions",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "tokenDefinitions": { "type": "object", "description": "Design token definitions" },
+                "platforms": { "type": "array", "items": {"type": "string", "enum": ["web", "ios", "android", "figma"]}, "description": "Target platforms" }
+              },
+              "required": ["tokenDefinitions"]
+            }
+          }
+        ]
       }
     ],
     "available": [
@@ -207,14 +708,7 @@
       "webapp-testing",
       "brand-guidelines",
       "doc-coauthoring",
-      "internal-comms",
-      "nft-generative-art",
-      "daily-review-skill",
-      "linkedin-master-journalist",
-      "multi-account-session-tracking-skill",
-      "playwright-test-automation",
-      "project-manager",
-      "project-status-tool"
+      "internal-comms"
     ]
   },
   "launch": {
@@ -228,10 +722,18 @@
   "documentation": {
     "quickStart": "https://github.com/fused-gaming/fused-gaming-skill-mcp#quick-start",
     "guide": "https://github.com/fused-gaming/fused-gaming-skill-mcp/blob/main/docs/ARCHITECTURE.md",
-    "examples": "https://github.com/fused-gaming/fused-gaming-skill-mcp/tree/main/examples"
+    "examples": "https://github.com/fused-gaming/fused-gaming-skill-mcp/tree/main/examples",
+    "skills": "https://github.com/fused-gaming/fused-gaming-skill-mcp#-skills-index-31-total"
   },
   "authentication": {
     "type": "none",
     "description": "No authentication required for local usage"
+  },
+  "registry": {
+    "status": "ready-for-submission",
+    "totalSkills": 30,
+    "totalTools": 35,
+    "categories": 7,
+    "submissionGuide": "https://github.com/fused-gaming/fused-gaming-skill-mcp/blob/main/docs/CLAUDE_PLUGINS_INTEGRATION.md"
   }
 }
