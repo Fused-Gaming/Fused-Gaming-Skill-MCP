@@ -123,6 +123,52 @@ npm install \
 
 ---
 
+## 🔌 Using with Claude Plugins
+
+The Fused Gaming MCP is fully compatible with Claude Desktop Client and Claude.ai plugins!
+
+### For Claude Desktop Users (Recommended)
+
+1. **Clone the repository** (see Quick Start above)
+2. **Update your Claude Desktop config:**
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+   - Linux: `~/.config/Claude/claude_desktop_config.json`
+
+3. **Add this configuration:**
+   ```json
+   {
+     "mcpServers": {
+       "fused-gaming-mcp": {
+         "command": "npm",
+         "args": ["run", "dev"],
+         "cwd": "/path/to/fused-gaming-skill-mcp",
+         "alwaysAllow": ["tools/all"]
+       }
+     }
+   }
+   ```
+
+4. **Restart Claude Desktop** — all 31 skills will be available!
+
+### For Claude.ai Web Users
+
+Coming soon! Claude.ai will support MCP server plugins directly. You'll be able to add Fused Gaming MCP with a single click.
+
+### Troubleshooting
+
+**Error: "No manifest or registry for tools/plugins"?**
+
+→ Ensure `claude.json` exists in the repository root and `npm run build` succeeds.
+
+**MCP server not connecting?**
+
+→ See [CLAUDE_PLUGINS_INTEGRATION.md](./docs/CLAUDE_PLUGINS_INTEGRATION.md) for detailed troubleshooting.
+
+**Full integration guide:** [CLAUDE_PLUGINS_INTEGRATION.md](./docs/CLAUDE_PLUGINS_INTEGRATION.md)
+
+---
+
 ## 📚 Skills Index (31 Total)
 
 All skills include individual documentation in their respective directories at `packages/skills/<skill>/README.md`.

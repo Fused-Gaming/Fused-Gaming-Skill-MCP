@@ -1,0 +1,237 @@
+{
+  "version": "1.0.0",
+  "server": {
+    "name": "fused-gaming-mcp",
+    "displayName": "Fused Gaming MCP",
+    "description": "Modular MCP server with scalable Claude skills for creative design, development, and automation",
+    "version": "1.3.0",
+    "author": {
+      "name": "Fused Gaming",
+      "email": "info@fused-gaming.io",
+      "url": "https://fused-gaming.io"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/fused-gaming/fused-gaming-skill-mcp.git"
+    },
+    "homepage": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
+    "bugs": {
+      "url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/issues"
+    },
+    "keywords": [
+      "mcp",
+      "claude",
+      "ai",
+      "skills",
+      "model-context-protocol",
+      "design",
+      "development",
+      "tools",
+      "automation"
+    ]
+  },
+  "transport": {
+    "type": "stdio"
+  },
+  "capabilities": {
+    "tools": {
+      "enabled": true
+    },
+    "resources": {
+      "enabled": false
+    },
+    "sampling": {
+      "enabled": false
+    }
+  },
+  "skills": {
+    "enabled": [
+      {
+        "name": "algorithmic-art",
+        "displayName": "Algorithmic Art",
+        "description": "Generate algorithmic and generative art using p5.js with seeded randomness, flow fields, and particle systems",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-art",
+            "description": "Generate algorithmic art with customizable parameters",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "style": {
+                  "type": "string",
+                  "description": "Art style: flow-field, particle-system, fractal, or noise-based"
+                },
+                "width": {
+                  "type": "number",
+                  "description": "Canvas width in pixels",
+                  "default": 800
+                },
+                "height": {
+                  "type": "number",
+                  "description": "Canvas height in pixels",
+                  "default": 600
+                },
+                "seed": {
+                  "type": "number",
+                  "description": "Random seed for reproducibility"
+                },
+                "complexity": {
+                  "type": "number",
+                  "description": "Complexity level 1-10",
+                  "default": 5
+                }
+              },
+              "required": ["style"]
+            }
+          },
+          {
+            "name": "create-flow-field",
+            "description": "Create a flow field visualization",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "gridSize": {
+                  "type": "number",
+                  "description": "Size of grid cells",
+                  "default": 20
+                },
+                "scale": {
+                  "type": "number",
+                  "description": "Noise scale",
+                  "default": 0.01
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "ascii-mockup",
+        "displayName": "ASCII Mockup",
+        "description": "Create mobile-first wireframes and mockups using ASCII art",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-mockup",
+            "description": "Generate ASCII wireframe mockup for mobile or desktop",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "layout": {
+                  "type": "string",
+                  "enum": ["mobile", "tablet", "desktop"],
+                  "description": "Device layout type"
+                },
+                "sections": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Wireframe sections to include"
+                }
+              },
+              "required": ["layout"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "canvas-design",
+        "displayName": "Canvas Design",
+        "description": "Generate visual designs and export to PNG/PDF",
+        "version": "1.0.0",
+        "tools": [
+          {
+            "name": "generate-svg",
+            "description": "Generate SVG design output",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Design type: illustration, icon, pattern, or layout"
+                },
+                "width": {
+                  "type": "number",
+                  "default": 800
+                },
+                "height": {
+                  "type": "number",
+                  "default": 600
+                }
+              },
+              "required": ["type"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "frontend-design",
+        "displayName": "Frontend Design",
+        "description": "Design and prototype frontend components and layouts",
+        "version": "1.0.0",
+        "tools": []
+      },
+      {
+        "name": "theme-factory",
+        "displayName": "Theme Factory",
+        "description": "Generate customizable design system themes and color palettes",
+        "version": "1.0.0",
+        "tools": []
+      },
+      {
+        "name": "mcp-builder",
+        "displayName": "MCP Builder",
+        "description": "Create and configure MCP servers and tools",
+        "version": "1.0.0",
+        "tools": []
+      },
+      {
+        "name": "pre-deploy-validator",
+        "displayName": "Pre-Deploy Validator",
+        "description": "Validate applications before deployment",
+        "version": "1.0.0",
+        "tools": []
+      },
+      {
+        "name": "skill-creator",
+        "displayName": "Skill Creator",
+        "description": "Create new Claude skills and MCP tools",
+        "version": "1.0.0",
+        "tools": []
+      }
+    ],
+    "available": [
+      "web-artifacts-builder",
+      "webapp-testing",
+      "brand-guidelines",
+      "doc-coauthoring",
+      "internal-comms",
+      "nft-generative-art",
+      "daily-review-skill",
+      "linkedin-master-journalist",
+      "multi-account-session-tracking-skill",
+      "playwright-test-automation",
+      "project-manager",
+      "project-status-tool"
+    ]
+  },
+  "launch": {
+    "command": "npm",
+    "args": ["run", "dev"],
+    "env": {
+      "NODE_ENV": "production",
+      "CLAUDE_MCP_MODE": "plugin"
+    }
+  },
+  "documentation": {
+    "quickStart": "https://github.com/fused-gaming/fused-gaming-skill-mcp#quick-start",
+    "guide": "https://github.com/fused-gaming/fused-gaming-skill-mcp/blob/main/docs/ARCHITECTURE.md",
+    "examples": "https://github.com/fused-gaming/fused-gaming-skill-mcp/tree/main/examples"
+  },
+  "authentication": {
+    "type": "none",
+    "description": "No authentication required for local usage"
+  }
+}
