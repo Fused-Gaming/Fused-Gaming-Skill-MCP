@@ -90,8 +90,10 @@ jobs:
           elif [ "$BENCHMARK_SUCCESS" = true ] && [ -n "$BENCHMARK_OUTPUT" ]; then
             # Parse benchmark output and create results JSON
             # Extract performance metrics from benchmark output
+            # Read output from file to avoid backtick injection in template literals
             node -e "
-              const output = \`$BENCHMARK_OUTPUT\`;
+              const fs = require('fs');
+              const output = fs.readFileSync('benchmark-output.log', 'utf8');
               const lines = output.split('\n');
 
               // Extract performance metrics from benchmark output format: 'X.XXXms/op (Y ops/sec)'
@@ -285,6 +287,21 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
+          # Save benchmark changes for later application
+          git diff benchmarks/ > benchmark-changes.patch || true
+
+          # Check out main branch cleanly to avoid pushing tagged history
+          git fetch origin main
+          git checkout -B temp-benchmark origin/main
+
+          # Apply only benchmark file changes (not tagged commit history)
+          if [ -s benchmark-changes.patch ]; then
+            git apply benchmark-changes.patch || {
+              echo "Failed to apply benchmark changes"
+              exit 1
+            }
+          fi
+
           git add benchmarks/
 
           if git diff --cached --quiet; then
@@ -296,7 +313,7 @@ jobs:
             MAX_RETRIES=3
             RETRY_COUNT=0
             while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-              if git push origin HEAD:main 2>&1; then
+              if git push origin temp-benchmark:main 2>&1; then
                 echo "Push succeeded"
                 exit 0
               fi

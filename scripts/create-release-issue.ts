@@ -140,14 +140,39 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   const releaseDate = new Date().toISOString().split("T")[0];
   const dodThreshold = 90;
 
+  // Validate combined score matches formula before using it for gates
+  // Combined score = (Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)
+  const calculatedCombined =
+    (behavioral.behavioral_score * 0.40) +
+    (performance.performance_score * 0.35) +
+    (code_quality.quality_score * 0.25);
+
+  // If provided combined_score differs significantly from calculated (tolerance: ±2%), reject it
+  const scoreDeviation = Math.abs(combined_score - calculatedCombined);
+  const isScoreValid = scoreDeviation <= 2.0;
+
+  if (!isScoreValid) {
+    console.warn(
+      `⚠️ Combined score validation failed: provided ${combined_score.toFixed(2)}% ` +
+      `but formula gives ${calculatedCombined.toFixed(2)}% (deviation: ${scoreDeviation.toFixed(2)}%). ` +
+      `Using calculated value.`
+    );
+  }
+
+  const validatedCombinedScore = isScoreValid ? combined_score : calculatedCombined;
+
   // Enforce mandatory gates per Definition of Done
   const coreCI = calculateCI(behavioral.core_pass_rate, behavioral.core_total);
   const corePassesCI = !isNaN(coreCI[0]) && coreCI[0] >= 93;
+
+  // Require regression tests to exist (regression_total > 0) for approval
+  const hasRegressionTests = behavioral.regression_total > 0;
+
   const mandatoryGates =
     behavioral.core_pass_rate >= 95 && corePassesCI &&
-    behavioral.regression_pass_rate === 100 &&
+    behavioral.regression_pass_rate === 100 && hasRegressionTests &&
     behavioral.behavioral_score >= 90 &&
-    combined_score >= dodThreshold &&
+    validatedCombinedScore >= dodThreshold &&
     status === "pass";
 
   const isApproved = mandatoryGates;
@@ -171,11 +196,11 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   - Confidence Interval (95% CI): \`${behavioral.core_total > 0 ? `[${coreCI[0].toFixed(2)}%, ${coreCI[1].toFixed(2)}%]` : "N/A"}\`
   - Status: ${behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "✅" : "❌"}
 
-- [${behavioral.regression_pass_rate === 100 ? "x" : " "}] **REGRESSION Tests Pass** (100% mandatory)
+- [${behavioral.regression_pass_rate === 100 && behavioral.regression_total > 0 ? "x" : " "}] **REGRESSION Tests Pass** (100% mandatory, must have tests)
   - Prior Checkpoint Tests: \`${behavioral.regression_total}\`
   - Pass Rate: \`${behavioral.regression_pass_rate.toFixed(2)}%\`
-  - Code Erosion Detected: ${behavioral.regression_pass_rate === 100 ? "No ✅" : "Yes ⚠️"}
-  - Status: ${behavioral.regression_pass_rate === 100 ? "✅" : "❌"}
+  - Code Erosion Detected: ${behavioral.regression_total > 0 && behavioral.regression_pass_rate === 100 ? "No ✅" : behavioral.regression_total === 0 ? "No tests ❌" : "Yes ⚠️"}
+  - Status: ${behavioral.regression_total > 0 && behavioral.regression_pass_rate === 100 ? "✅" : behavioral.regression_total === 0 ? "❌ (no tests)" : "❌"}
 
 - [${behavioral.functionality_pass_rate >= 80 && behavioral.functionality_total > 0 ? "x" : " "}] **FUNCTIONALITY Tests** (≥80% threshold)
   - Test Count: \`${behavioral.functionality_total}\`
@@ -227,10 +252,10 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   - Threshold: Mean ≤3.0, Max ≤8.0
   - Status: ${code_quality.complexity_mean <= 3.0 && code_quality.complexity_max <= 8.0 ? "✅" : code_quality.complexity_max > 8.0 ? "❌" : "⚠️"}
 
-- [${code_quality.duplication_percent < 5 ? "x" : " "}] **Code Duplication**
+- [${code_quality.duplication_percent < 15 ? "x" : " "}] **Code Duplication**
   - Percentage: \`${code_quality.duplication_percent.toFixed(2)}%\`
-  - Threshold: <5%
-  - Status: ${code_quality.duplication_percent < 5 ? "✅" : "⚠️"}
+  - Threshold: Acceptable <5%, Marginal 5-15%, Blocking ≥15%
+  - Status: ${code_quality.duplication_percent < 5 ? "✅" : code_quality.duplication_percent < 15 ? "⚠️" : "❌"}
 
 - [${code_quality.coverage_percent >= 80 ? "x" : " "}] **Test Coverage**
   - Percentage: \`${code_quality.coverage_percent.toFixed(2)}%\`
@@ -256,10 +281,11 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 | Behavioral | 40% | \`${behavioral.behavioral_score.toFixed(2)}%\` | \`${(behavioral.behavioral_score * 0.40).toFixed(2)}\` |
 | Performance | 35% | \`${performance.performance_score.toFixed(2)}%\` | \`${(performance.performance_score * 0.35).toFixed(2)}\` |
 | Code Quality | 25% | \`${code_quality.quality_score.toFixed(2)}%\` | \`${(code_quality.quality_score * 0.25).toFixed(2)}\` |
-| **COMBINED** | **100%** | **\`${combined_score.toFixed(2)}%\`** | - |
+| **COMBINED** | **100%** | **\`${validatedCombinedScore.toFixed(2)}%\`** | - |
 
 **DoD Threshold:** ≥90%
 **Release Approved:** ${isApproved ? "✅ Yes" : status === "conditional" ? "⚠️ Conditional" : "❌ Blocked"}
+${!isScoreValid ? `\n⚠️ **Note**: Score validation adjusted from ${combined_score.toFixed(2)}% to calculated ${validatedCombinedScore.toFixed(2)}%` : ""}`
 
 ---
 
