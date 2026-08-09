@@ -212,5 +212,5 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore(benchmarks): record results for ${{ steps.package-info.outputs.package }} v${{ steps.package-info.outputs.version }}"
-            git push origin main
+            git push origin HEAD:main
           fi

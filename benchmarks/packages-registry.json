@@ -43,7 +43,7 @@
         "code_quality_score": 91.0,
         "combined_score": 93.0,
         "status": "pass",
-        "details_url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/blob/main/benchmarks/packages/@h4shed/mcp-core/v1.3.0/index.html"
+        "details_url": null
       },
       "regression_detection": {
         "performance_regression": false,

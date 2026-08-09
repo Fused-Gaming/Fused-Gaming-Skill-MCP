@@ -80,8 +80,11 @@ async function createReleaseIssue() {
 
   const octokit = new Octokit({ auth: token });
 
+  // Get release manager from environment
+  const releaseManager = process.env.GITHUB_ASSIGNEE || "unknown";
+
   // Create issue body from template
-  const issueBody = generateIssueBody(results);
+  const issueBody = generateIssueBody(results, releaseManager);
 
   try {
     // Create the issue
@@ -123,7 +126,7 @@ async function createReleaseIssue() {
   }
 }
 
-function generateIssueBody(results: BenchmarkResults): string {
+function generateIssueBody(results: BenchmarkResults, releaseManager: string = "unknown"): string {
   const {
     behavioral,
     performance,
@@ -136,7 +139,8 @@ function generateIssueBody(results: BenchmarkResults): string {
   const dodThreshold = 90;
 
   // Enforce mandatory gates per Definition of Done
-  const corePassesCI = calculateCI(behavioral.core_pass_rate, behavioral.core_total)[0] >= 93;
+  const coreCI = calculateCI(behavioral.core_pass_rate, behavioral.core_total);
+  const corePassesCI = !isNaN(coreCI[0]) && coreCI[0] >= 93;
   const mandatoryGates =
     behavioral.core_pass_rate >= 95 && corePassesCI &&
     behavioral.regression_pass_rate === 100 &&
@@ -151,7 +155,7 @@ function generateIssueBody(results: BenchmarkResults): string {
 **Package:** \`${results.package}\`
 **Version:** \`v${results.version}\`
 **Release Date:** \`${releaseDate}\`
-**Release Manager:** \`@[GitHub username]\`
+**Release Manager:** \`@${releaseManager}\`
 
 ---
 
@@ -159,11 +163,11 @@ function generateIssueBody(results: BenchmarkResults): string {
 
 ### Behavioral Testing (Target: ≥95% CORE, 100% REGRESSION)
 
-- [${behavioral.core_pass_rate >= 95 ? "x" : " "}] **CORE Tests Pass** (≥95% precision threshold)
+- [${behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "x" : " "}] **CORE Tests Pass** (≥95% precision threshold)
   - Test Count: \`${behavioral.core_total}\`
   - Pass Rate: \`${behavioral.core_pass_rate.toFixed(2)}%\`
-  - Confidence Interval (95% CI): \`[${calculateCI(behavioral.core_pass_rate, behavioral.core_total)[0].toFixed(2)}%, ${calculateCI(behavioral.core_pass_rate, behavioral.core_total)[1].toFixed(2)}%]\`
-  - Status: ${behavioral.core_pass_rate >= 95 ? "✅" : "❌"}
+  - Confidence Interval (95% CI): \`${behavioral.core_total > 0 ? `[${coreCI[0].toFixed(2)}%, ${coreCI[1].toFixed(2)}%]` : "N/A"}\`
+  - Status: ${behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "✅" : "❌"}
 
 - [${behavioral.regression_pass_rate === 100 ? "x" : " "}] **REGRESSION Tests Pass** (100% mandatory)
   - Prior Checkpoint Tests: \`${behavioral.regression_total}\`
@@ -259,7 +263,7 @@ function generateIssueBody(results: BenchmarkResults): string {
 - [${status === "conditional" ? "x" : " "}] **CONDITIONAL** — One or more metrics require review/remediation
 - [${status === "fail" ? "x" : " "}] **REJECT** — Critical failures preventing release
 
-**Sign-Off:** \`@[Release Manager]\`
+**Sign-Off:** \`@${releaseManager}\`
 **Approval Date:** \`${releaseDate}\`
 
 ---
@@ -284,6 +288,9 @@ function generateIssueBody(results: BenchmarkResults): string {
 }
 
 function calculateCI(passRate: number, total: number): [number, number] {
+  if (total === 0) {
+    return [NaN, NaN];
+  }
   const p = passRate / 100;
   const se = Math.sqrt((p * (1 - p)) / total);
   const margin = 1.96 * se * 100;
