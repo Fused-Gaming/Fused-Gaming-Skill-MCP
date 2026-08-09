@@ -85,45 +85,78 @@ async function createReleaseIssue() {
   // Get release manager from environment
   const releaseManager = process.env.GITHUB_ASSIGNEE || "unknown";
 
+  // Check for existing issue metadata to avoid duplicates on workflow rerun
+  const metadataPath = path.join(
+    process.cwd(),
+    "benchmarks/release-issues",
+    `${packageName}-v${version}-issue.json`
+  );
+
+  let existingIssueNumber: number | null = null;
+  if (fs.existsSync(metadataPath)) {
+    try {
+      const existingMetadata = JSON.parse(fs.readFileSync(metadataPath, "utf-8"));
+      existingIssueNumber = existingMetadata.issue_number;
+      console.log(`ℹ️  Found existing issue metadata: #${existingIssueNumber}`);
+    } catch (e) {
+      console.warn(`⚠️  Could not parse existing metadata: ${e}`);
+    }
+  }
+
   // Create issue body from template
   const issueBody = generateIssueBody(results, releaseManager);
 
   try {
-    // Create the issue
-    const response = await octokit.issues.create({
-      owner: process.env.GITHUB_REPOSITORY_OWNER || "fused-gaming",
-      repo: process.env.GITHUB_REPOSITORY_NAME || "fused-gaming-skill-mcp",
-      title: `📦 Package Release & Quality Checkpoint: ${packageName} v${version}`,
-      body: issueBody,
-      labels: ["release", "benchmarks", "quality-assurance"],
-      assignees: process.env.GITHUB_ASSIGNEE ? [process.env.GITHUB_ASSIGNEE] : [],
-    });
+    let issueNumber: number;
+    let issueUrl: string;
 
-    console.log(`✅ Release issue created: #${response.data.number}`);
-    console.log(`   URL: ${response.data.html_url}`);
+    if (existingIssueNumber) {
+      // Reuse existing issue - update it with new benchmark results
+      console.log(`📝 Updating existing issue #${existingIssueNumber}...`);
+      await octokit.issues.update({
+        owner: process.env.GITHUB_REPOSITORY_OWNER || "fused-gaming",
+        repo: process.env.GITHUB_REPOSITORY_NAME || "fused-gaming-skill-mcp",
+        issue_number: existingIssueNumber,
+        body: issueBody,
+      });
+
+      issueNumber = existingIssueNumber;
+      issueUrl = `https://github.com/${process.env.GITHUB_REPOSITORY_OWNER || "fused-gaming"}/${process.env.GITHUB_REPOSITORY_NAME || "fused-gaming-skill-mcp"}/issues/${existingIssueNumber}`;
+      console.log(`✅ Release issue updated: #${issueNumber}`);
+      console.log(`   URL: ${issueUrl}`);
+    } else {
+      // Create new issue
+      const response = await octokit.issues.create({
+        owner: process.env.GITHUB_REPOSITORY_OWNER || "fused-gaming",
+        repo: process.env.GITHUB_REPOSITORY_NAME || "fused-gaming-skill-mcp",
+        title: `📦 Package Release & Quality Checkpoint: ${packageName} v${version}`,
+        body: issueBody,
+        labels: ["release", "benchmarks", "quality-assurance"],
+        assignees: process.env.GITHUB_ASSIGNEE ? [process.env.GITHUB_ASSIGNEE] : [],
+      });
+
+      issueNumber = response.data.number;
+      issueUrl = response.data.html_url;
+      console.log(`✅ Release issue created: #${issueNumber}`);
+      console.log(`   URL: ${issueUrl}`);
+    }
 
     // Save issue metadata
     const metadata = {
-      issue_number: response.data.number,
-      issue_url: response.data.html_url,
+      issue_number: issueNumber,
+      issue_url: issueUrl,
       package: packageName,
       version: version,
       timestamp: new Date().toISOString(),
       benchmark_file: resultsFile,
     };
 
-    const metadataPath = path.join(
-      process.cwd(),
-      "benchmarks/release-issues",
-      `${packageName}-v${version}-issue.json`
-    );
-
     fs.mkdirSync(path.dirname(metadataPath), { recursive: true });
     fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
 
     console.log(`   Metadata saved: ${metadataPath}`);
   } catch (error) {
-    console.error("Failed to create GitHub issue:", error);
+    console.error("Failed to create/update GitHub issue:", error);
     process.exit(1);
   }
 }
