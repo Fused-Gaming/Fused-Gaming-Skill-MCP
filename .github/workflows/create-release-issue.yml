@@ -11,6 +11,9 @@ jobs:
     name: Create Release Issue & Benchmark Tracking
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    concurrency:
+      group: benchmark-commit-push
+      cancel-in-progress: false
     permissions:
       issues: write
       contents: write
@@ -86,55 +89,58 @@ jobs:
             cp "benchmarks/packages/${{ steps.package-info.outputs.package }}/latest/results.json" "$RESULTS_FILE"
           elif [ "$BENCHMARK_SUCCESS" = true ] && [ -n "$BENCHMARK_OUTPUT" ]; then
             # Parse benchmark output and create results JSON
-            # Extract performance metrics from benchmark output using grep/awk
+            # Extract performance metrics from benchmark output
             node -e "
               const output = \`$BENCHMARK_OUTPUT\`;
               const lines = output.split('\n');
 
-              // Extract performance metrics
+              // Extract performance metrics from benchmark output format: 'X.XXXms/op (Y ops/sec)'
               let latency_ms = 0, throughput_ops = 0;
               lines.forEach(line => {
-                const latencyMatch = line.match(/avg[^0-9]*([0-9.]+)ms/);
+                // Match patterns like '0.003ms/op' or 'avg: 0.003ms'
+                const latencyMatch = line.match(/([0-9.]+)\s*ms\/op/) || line.match(/([0-9.]+)\s*ms$/);
                 if (latencyMatch) latency_ms = parseFloat(latencyMatch[1]);
                 const throughputMatch = line.match(/([0-9.]+)\s*ops\/sec/);
                 if (throughputMatch) throughput_ops = parseFloat(throughputMatch[1]);
               });
 
+              // Report only metrics that were actually captured
+              // Do NOT synthesize passing behavioral/quality results when not measured
               const results = {
                 package: '${{ steps.package-info.outputs.package }}',
                 version: '${{ steps.package-info.outputs.version }}',
                 timestamp: new Date().toISOString(),
                 behavioral: {
-                  core_pass_rate: 100,
-                  core_total: 1,
-                  regression_pass_rate: 100,
-                  regression_total: 1,
-                  functionality_pass_rate: 100,
-                  functionality_total: 1,
-                  error_pass_rate: 100,
-                  error_total: 1,
-                  behavioral_score: 100
+                  core_pass_rate: 0,
+                  core_total: 0,
+                  regression_pass_rate: 0,
+                  regression_total: 0,
+                  functionality_pass_rate: 0,
+                  functionality_total: 0,
+                  error_pass_rate: 0,
+                  error_total: 0,
+                  behavioral_score: 0
                 },
                 performance: {
                   latency_ms_mean: latency_ms,
                   latency_ms_std_dev: 0,
-                  latency_sample_count: 1,
+                  latency_sample_count: 0,
                   throughput_ops_sec_mean: throughput_ops,
                   throughput_ops_sec_std_dev: 0,
-                  throughput_sample_count: 1,
+                  throughput_sample_count: 0,
                   memory_mb_peak: 0,
-                  performance_score: Math.min(100, (throughput_ops / 1000) * 100)
+                  performance_score: 0
                 },
                 code_quality: {
-                  complexity_mean: 2.5,
-                  complexity_max: 5.0,
+                  complexity_mean: 0,
+                  complexity_max: 0,
                   duplication_percent: 0,
-                  coverage_percent: 85,
-                  maintainability_index: 85,
-                  quality_score: 85
+                  coverage_percent: 0,
+                  maintainability_index: 0,
+                  quality_score: 0
                 },
-                combined_score: 90,
-                status: 'pass'
+                combined_score: 0,
+                status: 'conditional'
               };
 
               console.log(JSON.stringify(results, null, 2));
@@ -285,5 +291,27 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore(benchmarks): record results for ${{ steps.package-info.outputs.package }} v${{ steps.package-info.outputs.version }}"
-            git push origin HEAD:main
+
+            # Retry push with rebase in case of concurrent updates
+            MAX_RETRIES=3
+            RETRY_COUNT=0
+            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+              if git push origin HEAD:main 2>&1; then
+                echo "Push succeeded"
+                exit 0
+              fi
+
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "Push failed, retrying after rebase... (attempt $((RETRY_COUNT + 1))/$MAX_RETRIES)"
+                git fetch origin main
+                git rebase origin/main || {
+                  echo "Rebase failed, aborting retry"
+                  exit 1
+                }
+              fi
+            done
+
+            echo "Push failed after $MAX_RETRIES retries"
+            exit 1
           fi
