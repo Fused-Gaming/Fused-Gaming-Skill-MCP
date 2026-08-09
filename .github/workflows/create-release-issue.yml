@@ -11,6 +11,9 @@ jobs:
     name: Create Release Issue & Benchmark Tracking
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      issues: write
+      contents: write
 
     steps:
       - name: Checkout code
@@ -31,11 +34,19 @@ jobs:
             VERSION="${TAG#v}"
             RELEASE_TYPE="root"
           elif [[ $TAG == skill-* ]]; then
-            # Extract skill name and version from skill-name@version format
-            SKILL_NAME=$(echo $TAG | sed 's/@.*//' | sed 's/skill-//')
+            # Extract skill directory name and version from skill-name@version format
+            SKILL_DIR=$(echo $TAG | sed 's/@.*//' | sed 's/skill-//')
             VERSION=$(echo $TAG | sed 's/.*@//')
-            PACKAGE="@h4shed/skill-$SKILL_NAME"
             RELEASE_TYPE="skill"
+
+            # Read package name from the skill's package.json to handle naming mismatches
+            SKILL_MANIFEST="packages/skills/$SKILL_DIR/package.json"
+            if [ -f "$SKILL_MANIFEST" ]; then
+              PACKAGE=$(jq -r '.name' "$SKILL_MANIFEST")
+            else
+              # Fallback to conventional naming if manifest not found
+              PACKAGE="@h4shed/skill-$SKILL_DIR"
+            fi
           else
             echo "Unrecognized tag format: $TAG"
             exit 1
@@ -90,8 +101,10 @@ jobs:
             "performance": {
               "latency_ms_mean": 0,
               "latency_ms_std_dev": 0,
+              "latency_sample_count": 0,
               "throughput_ops_sec_mean": 0,
               "throughput_ops_sec_std_dev": 0,
+              "throughput_sample_count": 0,
               "memory_mb_peak": 0,
               "performance_score": 0
             },

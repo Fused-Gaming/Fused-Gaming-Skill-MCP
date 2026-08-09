@@ -35,8 +35,10 @@ interface BenchmarkResults {
   performance: {
     latency_ms_mean: number;
     latency_ms_std_dev: number;
+    latency_sample_count?: number;
     throughput_ops_sec_mean: number;
     throughput_ops_sec_std_dev: number;
+    throughput_sample_count?: number;
     memory_mb_peak: number;
     performance_score: number;
   };
@@ -146,7 +148,7 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
     behavioral.regression_pass_rate === 100 &&
     behavioral.behavioral_score >= 90 &&
     combined_score >= dodThreshold &&
-    status !== "fail";
+    status === "pass";
 
   const isApproved = mandatoryGates;
 
@@ -175,15 +177,17 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   - Code Erosion Detected: ${behavioral.regression_pass_rate === 100 ? "No ✅" : "Yes ⚠️"}
   - Status: ${behavioral.regression_pass_rate === 100 ? "✅" : "❌"}
 
-- [${behavioral.functionality_pass_rate >= 80 ? "x" : " "}] **FUNCTIONALITY Tests** (≥80% threshold)
+- [${behavioral.functionality_pass_rate >= 80 && behavioral.functionality_total > 0 ? "x" : " "}] **FUNCTIONALITY Tests** (≥80% threshold)
   - Test Count: \`${behavioral.functionality_total}\`
   - Pass Rate: \`${behavioral.functionality_pass_rate.toFixed(2)}%\`
-  - Status: ${behavioral.functionality_pass_rate >= 80 ? "✅" : "⚠️"}
+  - Confidence Interval (95% CI): \`${behavioral.functionality_total > 0 ? `[${calculateCI(behavioral.functionality_pass_rate, behavioral.functionality_total)[0].toFixed(2)}%, ${calculateCI(behavioral.functionality_pass_rate, behavioral.functionality_total)[1].toFixed(2)}%]` : "N/A"}\`
+  - Status: ${behavioral.functionality_pass_rate >= 80 && behavioral.functionality_total > 0 && calculateCI(behavioral.functionality_pass_rate, behavioral.functionality_total)[0] >= 75 ? "✅" : "⚠️"}
 
-- [${behavioral.error_pass_rate >= 90 ? "x" : " "}] **ERROR Handling Tests** (≥90% threshold)
+- [${behavioral.error_pass_rate >= 90 && behavioral.error_total > 0 ? "x" : " "}] **ERROR Handling Tests** (≥90% threshold)
   - Test Count: \`${behavioral.error_total}\`
   - Pass Rate: \`${behavioral.error_pass_rate.toFixed(2)}%\`
-  - Status: ${behavioral.error_pass_rate >= 90 ? "✅" : "⚠️"}
+  - Confidence Interval (95% CI): \`${behavioral.error_total > 0 ? `[${calculateCI(behavioral.error_pass_rate, behavioral.error_total)[0].toFixed(2)}%, ${calculateCI(behavioral.error_pass_rate, behavioral.error_total)[1].toFixed(2)}%]` : "N/A"}\`
+  - Status: ${behavioral.error_pass_rate >= 90 && behavioral.error_total > 0 && calculateCI(behavioral.error_pass_rate, behavioral.error_total)[0] >= 85 ? "✅" : "⚠️"}
 
 **Behavioral Score:** \`${behavioral.behavioral_score.toFixed(2)}%\`
 **Behavioral Status:** ${behavioral.behavioral_score >= 90 ? "✅ Approved" : behavioral.behavioral_score >= 80 ? "⚠️ Review Required" : "❌ Blocked"}
@@ -192,17 +196,19 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 
 ### Performance Testing (Target: ±5% variance tolerance)
 
-- [${performance.latency_ms_mean > 0 && performance.latency_ms_std_dev <= performance.latency_ms_mean * 0.1 ? "x" : " "}] **Latency Metrics**
+- [${performance.latency_ms_mean > 0 && (performance.latency_sample_count || 0) >= 30 && performance.latency_ms_std_dev <= performance.latency_ms_mean * 0.2 ? "x" : " "}] **Latency Metrics**
   - Mean: \`${performance.latency_ms_mean.toFixed(2)}ms\`
   - Std Dev: \`${performance.latency_ms_std_dev.toFixed(2)}ms\`
+  - Sample Count: \`${performance.latency_sample_count || 0}\`
   - Coefficient of Variation: \`${performance.latency_ms_mean > 0 ? ((performance.latency_ms_std_dev / performance.latency_ms_mean) * 100).toFixed(2) : "N/A"}%\`
-  - Status: ${performance.latency_ms_mean > 0 ? calculatePerformanceStatus(performance.latency_ms_std_dev / performance.latency_ms_mean) : "⚠️"}
+  - Status: ${performance.latency_ms_mean > 0 && (performance.latency_sample_count || 0) >= 30 ? calculatePerformanceStatus(performance.latency_ms_std_dev / performance.latency_ms_mean) : "⚠️"}
 
-- [${performance.throughput_ops_sec_mean > 0 && performance.throughput_ops_sec_std_dev <= performance.throughput_ops_sec_mean * 0.1 ? "x" : " "}] **Throughput Metrics**
+- [${performance.throughput_ops_sec_mean > 0 && (performance.throughput_sample_count || 0) >= 30 && performance.throughput_ops_sec_std_dev <= performance.throughput_ops_sec_mean * 0.2 ? "x" : " "}] **Throughput Metrics**
   - Mean: \`${performance.throughput_ops_sec_mean.toFixed(0)} ops/sec\`
   - Std Dev: \`${performance.throughput_ops_sec_std_dev.toFixed(0)} ops/sec\`
+  - Sample Count: \`${performance.throughput_sample_count || 0}\`
   - Coefficient of Variation: \`${performance.throughput_ops_sec_mean > 0 ? ((performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean) * 100).toFixed(2) : "N/A"}%\`
-  - Status: ${performance.throughput_ops_sec_mean > 0 ? calculatePerformanceStatus(performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean) : "⚠️"}
+  - Status: ${performance.throughput_ops_sec_mean > 0 && (performance.throughput_sample_count || 0) >= 30 ? calculatePerformanceStatus(performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean) : "⚠️"}
 
 - [x] **Memory Usage**
   - Peak: \`${performance.memory_mb_peak.toFixed(1)}MB\`
@@ -215,11 +221,11 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 
 ### Code Quality Metrics (Target: Complexity ≤3.0, Duplication <5%, Coverage ≥80%)
 
-- [${code_quality.complexity_mean <= 3.0 ? "x" : " "}] **Cyclomatic Complexity**
+- [${code_quality.complexity_mean <= 3.0 && code_quality.complexity_max <= 8.0 ? "x" : " "}] **Cyclomatic Complexity**
   - Mean: \`${code_quality.complexity_mean.toFixed(2)}\`
   - Max: \`${code_quality.complexity_max.toFixed(2)}\`
-  - Threshold: ≤3.0
-  - Status: ${code_quality.complexity_mean <= 3.0 ? "✅" : "⚠️"}
+  - Threshold: Mean ≤3.0, Max ≤8.0
+  - Status: ${code_quality.complexity_mean <= 3.0 && code_quality.complexity_max <= 8.0 ? "✅" : code_quality.complexity_max > 8.0 ? "❌" : "⚠️"}
 
 - [${code_quality.duplication_percent < 5 ? "x" : " "}] **Code Duplication**
   - Percentage: \`${code_quality.duplication_percent.toFixed(2)}%\`

@@ -169,7 +169,7 @@ ADMIN_EMAIL=admin@vln.gg
 ADMIN_PASSWORD=your-strong-password
 
 # Security Settings
-ALLOWED_ORIGINS=http://localhost:3000,https://syncpulse.vln.gg
+ALLOWED_ORIGINS=http://localhost:3000,https://sync.vln.gg
 ENFORCE_HTTPS=true
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
