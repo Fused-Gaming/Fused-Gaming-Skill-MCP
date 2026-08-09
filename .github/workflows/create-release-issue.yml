@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          ref: main
+          ref: ${{ github.ref }}
 
       - name: Extract package information from tag
         id: package-info
@@ -111,10 +111,18 @@ jobs:
 
           echo "results_file=$RESULTS_FILE" >> $GITHUB_OUTPUT
 
+      - name: Sanitize package name for artifact upload
+        id: sanitize-artifact
+        run: |
+          # Replace slashes with dashes for GitHub upload-artifact compatibility
+          SAFE_NAME="${{ steps.package-info.outputs.package }}"
+          SAFE_NAME="${SAFE_NAME//\//-}"
+          echo "artifact_name=benchmark-results-${SAFE_NAME}-${{ steps.package-info.outputs.version }}" >> $GITHUB_OUTPUT
+
       - name: Upload benchmark results artifact
         uses: actions/upload-artifact@v4
         with:
-          name: benchmark-results-${{ steps.package-info.outputs.package }}-${{ steps.package-info.outputs.version }}
+          name: ${{ steps.sanitize-artifact.outputs.artifact_name }}
           path: ${{ steps.benchmarks.outputs.results_file }}
           retention-days: 90
 

@@ -148,7 +148,7 @@ function generateIssueBody(results: BenchmarkResults): string {
 
   return `## 📋 Release Information
 
-**Package:** \`@h4shed/${results.package}\`
+**Package:** \`${results.package}\`
 **Version:** \`v${results.version}\`
 **Release Date:** \`${releaseDate}\`
 **Release Manager:** \`@[GitHub username]\`
@@ -188,17 +188,17 @@ function generateIssueBody(results: BenchmarkResults): string {
 
 ### Performance Testing (Target: ±5% variance tolerance)
 
-- [${performance.latency_ms_std_dev <= performance.latency_ms_mean * 0.1 ? "x" : " "}] **Latency Metrics**
+- [${performance.latency_ms_mean > 0 && performance.latency_ms_std_dev <= performance.latency_ms_mean * 0.1 ? "x" : " "}] **Latency Metrics**
   - Mean: \`${performance.latency_ms_mean.toFixed(2)}ms\`
   - Std Dev: \`${performance.latency_ms_std_dev.toFixed(2)}ms\`
-  - Coefficient of Variation: \`${((performance.latency_ms_std_dev / performance.latency_ms_mean) * 100).toFixed(2)}%\`
-  - Status: ${calculatePerformanceStatus(performance.latency_ms_std_dev / performance.latency_ms_mean)}
+  - Coefficient of Variation: \`${performance.latency_ms_mean > 0 ? ((performance.latency_ms_std_dev / performance.latency_ms_mean) * 100).toFixed(2) : "N/A"}%\`
+  - Status: ${performance.latency_ms_mean > 0 ? calculatePerformanceStatus(performance.latency_ms_std_dev / performance.latency_ms_mean) : "⚠️"}
 
-- [${performance.throughput_ops_sec_std_dev <= performance.throughput_ops_sec_mean * 0.1 ? "x" : " "}] **Throughput Metrics**
+- [${performance.throughput_ops_sec_mean > 0 && performance.throughput_ops_sec_std_dev <= performance.throughput_ops_sec_mean * 0.1 ? "x" : " "}] **Throughput Metrics**
   - Mean: \`${performance.throughput_ops_sec_mean.toFixed(0)} ops/sec\`
   - Std Dev: \`${performance.throughput_ops_sec_std_dev.toFixed(0)} ops/sec\`
-  - Coefficient of Variation: \`${((performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean) * 100).toFixed(2)}%\`
-  - Status: ${calculatePerformanceStatus(performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean)}
+  - Coefficient of Variation: \`${performance.throughput_ops_sec_mean > 0 ? ((performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean) * 100).toFixed(2) : "N/A"}%\`
+  - Status: ${performance.throughput_ops_sec_mean > 0 ? calculatePerformanceStatus(performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean) : "⚠️"}
 
 - [x] **Memory Usage**
   - Peak: \`${performance.memory_mb_peak.toFixed(1)}MB\`
@@ -276,7 +276,7 @@ function generateIssueBody(results: BenchmarkResults): string {
 
 - Benchmark Results: \`/benchmarks/packages/${results.package}/v${results.version}/\`
 - Definition of Done: \`/docs/DEFINITION_OF_DONE.md\`
-- Benchmark Roadmap: \`/docs/BENCHMARK_ROADMAP.md\`
+- Project Roadmap: \`/docs/ROADMAP.md\`
 
 ---
 
