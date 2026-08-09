@@ -318,7 +318,7 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 
 **DoD Threshold:** ≥90%
 **Release Approved:** ${isApproved ? "✅ Yes" : status === "conditional" ? "⚠️ Conditional" : "❌ Blocked"}
-${!isScoreValid ? `\n⚠️ **Note**: Score validation adjusted from ${combined_score.toFixed(2)}% to calculated ${validatedCombinedScore.toFixed(2)}%` : ""}`
+${!isScoreValid ? "\n⚠️ **Note**: Score validation adjusted from " + combined_score.toFixed(2) + "% to calculated " + validatedCombinedScore.toFixed(2) + "%" : ""}
 
 ---
 
