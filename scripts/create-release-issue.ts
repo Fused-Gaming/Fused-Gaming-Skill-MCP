@@ -134,7 +134,17 @@ function generateIssueBody(results: BenchmarkResults): string {
 
   const releaseDate = new Date().toISOString().split("T")[0];
   const dodThreshold = 90;
-  const isApproved = combined_score >= dodThreshold;
+
+  // Enforce mandatory gates per Definition of Done
+  const corePassesCI = calculateCI(behavioral.core_pass_rate, behavioral.core_total)[0] >= 93;
+  const mandatoryGates =
+    behavioral.core_pass_rate >= 95 && corePassesCI &&
+    behavioral.regression_pass_rate === 100 &&
+    behavioral.behavioral_score >= 90 &&
+    combined_score >= dodThreshold &&
+    status !== "fail";
+
+  const isApproved = mandatoryGates;
 
   return `## 📋 Release Information
 
