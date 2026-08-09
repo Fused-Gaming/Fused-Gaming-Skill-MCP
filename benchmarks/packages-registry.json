@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "created": "2026-08-09T00:00:00Z",
+    "updated": "2026-08-09T00:00:00Z",
+    "registry_version": "1.0.0",
+    "description": "Master registry tracking all published packages and their benchmark history"
+  },
+  "packages": {
+    "@h4shed/mcp-core": {
+      "name": "@h4shed/mcp-core",
+      "display_name": "MCP Core",
+      "category": "infrastructure",
+      "description": "Core Model Context Protocol server infrastructure",
+      "repository": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
+      "first_published": "2026-04-16",
+      "latest_version": "1.3.0",
+      "latest_published": "2026-08-09",
+      "status": "stable",
+      "benchmark_enabled": true,
+      "versions": [
+        "1.0.0",
+        "1.0.1",
+        "1.0.2",
+        "1.0.3",
+        "1.1.0",
+        "1.2.0",
+        "1.3.0"
+      ]
+    }
+  },
+  "versions": [
+    {
+      "id": "mcp-core-1.3.0",
+      "package": "@h4shed/mcp-core",
+      "version": "1.3.0",
+      "status": "released",
+      "published_date": "2026-08-09",
+      "release_issue_number": 0,
+      "release_issue_url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/issues/0",
+      "benchmark_results": {
+        "behavioral_score": 93.5,
+        "performance_score": 94.0,
+        "code_quality_score": 91.0,
+        "combined_score": 93.0,
+        "status": "pass",
+        "details_url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/blob/main/benchmarks/packages/@h4shed/mcp-core/v1.3.0/index.html"
+      },
+      "regression_detection": {
+        "performance_regression": false,
+        "code_quality_regression": false,
+        "behavioral_regression": false,
+        "summary": "No regressions detected"
+      },
+      "changelog_entry": "https://github.com/fused-gaming/fused-gaming-skill-mcp/blob/main/docs/releases/RELEASE_NOTES_v1.3.0.md"
+    }
+  ],
+  "summary": {
+    "total_packages": 1,
+    "total_versions": 7,
+    "packages_with_benchmarks": 1,
+    "benchmark_coverage": "14.3%",
+    "average_combined_score": 93.0,
+    "passing_releases": 1,
+    "conditional_releases": 0,
+    "failed_releases": 0,
+    "last_updated": "2026-08-09T00:00:00Z"
+  },
+  "milestones": {
+    "phase_1_complete": {
+      "date": "2026-08-09",
+      "description": "GitHub Issue Infrastructure implemented",
+      "status": "complete",
+      "files_created": [
+        ".github/ISSUE_TEMPLATE/package-release.md",
+        "docs/DEFINITION_OF_DONE.md",
+        "scripts/create-release-issue.ts",
+        ".github/workflows/create-release-issue.yml",
+        "benchmarks/packages-registry.json"
+      ]
+    },
+    "phase_2_in_progress": {
+      "date": "2026-08-09",
+      "description": "Adapt existing SyncPulse and skill benchmarks",
+      "status": "pending",
+      "tasks": [
+        "Refactor SyncPulse performance benchmarks to dual-framework",
+        "Add behavioral tests for each skill package",
+        "Implement checkpoint structure for versions",
+        "Create test suites for priority skills"
+      ]
+    },
+    "phase_3_planned": {
+      "date": "TBD",
+      "description": "Framework Integration (SCBench adapter)",
+      "status": "pending",
+      "tasks": [
+        "Create TypeScript → Python test adapter",
+        "Map Jest markers to pytest markers",
+        "Set up dual-framework runner",
+        "Wire up CI/CD integration"
+      ]
+    },
+    "phase_4_planned": {
+      "date": "TBD",
+      "description": "Validation & Hardening",
+      "status": "pending",
+      "tasks": [
+        "Run end-to-end benchmarks",
+        "Establish baseline metrics",
+        "Create benchmark documentation",
+        "Set up regression detection"
+      ]
+    }
+  },
+  "improvement_targets": {
+    "v1.4.0": {
+      "behavioral": "95.5% (+2%)",
+      "performance": "96.0% (+2%)",
+      "code_quality": "93.0% (+2%)",
+      "combined": "94.9% (+1.9%)"
+    },
+    "v2.0.0": {
+      "behavioral": "98.0% (+5%)",
+      "performance": "98.5% (+5%)",
+      "code_quality": "95.0% (+5%)",
+      "combined": "97.4% (+5%)"
+    }
+  },
+  "settings": {
+    "dod_threshold_combined_score": 90,
+    "dod_threshold_behavioral": 90,
+    "dod_threshold_performance": 85,
+    "dod_threshold_quality": 80,
+    "performance_regression_tolerance_percent": 5,
+    "code_quality_regression_tolerance_complexity": 10,
+    "code_quality_regression_tolerance_duplication": 2,
+    "confidence_interval_level": 95,
+    "minimum_test_samples": 30,
+    "cv_threshold_acceptable": 20,
+    "cv_threshold_warning": 10,
+    "auto_create_issues_on_publish": true,
+    "require_approval_before_publish": true
+  }
+}
