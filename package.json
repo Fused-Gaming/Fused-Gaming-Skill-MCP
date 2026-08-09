@@ -11,7 +11,7 @@
     "./server": "./packages/core/dist/packages/core/src/server.js"
   },
   "license": "Apache-2.0",
-  "author": "Fused Gaming <info@fused-gaming.io>",
+  "author": "Fused Gaming <info@vln.gg>",
   "keywords": [
     "mcp",
     "claude",
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
   "bugs": {
     "url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/issues",
-    "email": "support@fused-gaming.io"
+    "email": "support@vln.gg"
   },
   "workspaces": [
     "packages/core",

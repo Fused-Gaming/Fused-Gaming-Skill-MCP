@@ -16,7 +16,7 @@
  * - Not permitted for commercial products or services
  * - Attribution to Fused Gaming required
  *
- * For commercial licensing inquiries, contact: license@fused-gaming.io
+ * For commercial licensing inquiries, contact: license@vln.gg
  *
  * @license Apache 2.0 with educational restrictions
  * @copyright 2026 Fused Gaming

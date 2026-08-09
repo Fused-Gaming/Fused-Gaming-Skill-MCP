@@ -68,7 +68,7 @@
     "shadows",
     "components"
   ],
-  "author": "Fused Gaming <info@fused-gaming.io>",
+  "author": "Fused Gaming <info@vln.gg>",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -78,7 +78,7 @@
   "homepage": "https://github.com/fused-gaming/fused-gaming-skill-mcp/tree/main/packages/design-tokens",
   "bugs": {
     "url": "https://github.com/fused-gaming/fused-gaming-skill-mcp/issues",
-    "email": "support@fused-gaming.io"
+    "email": "support@vln.gg"
   },
   "publishConfig": {
     "access": "public",

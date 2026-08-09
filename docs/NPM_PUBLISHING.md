@@ -628,5 +628,5 @@ npm ci
 ## Contact
 
 For publishing issues:
-- Email: publish@fused-gaming.io
+- Email: publish@vln.gg
 - GitHub Issues: [Fused Gaming MCP Issues](https://github.com/fused-gaming/fused-gaming-skill-mcp/issues)

@@ -17,7 +17,7 @@ Educational Use Restrictions:
 - License: Apache 2.0 with educational restrictions
 ```
 
-For commercial licensing inquiries: **license@fused-gaming.io**
+For commercial licensing inquiries: **license@vln.gg**
 
 ---
 
@@ -256,7 +256,7 @@ All component files include:
  * EDUCATIONAL USE ONLY
  *
  * Licensed under Apache 2.0 with educational restrictions.
- * For commercial licensing: license@fused-gaming.io
+ * For commercial licensing: license@vln.gg
  *
  * @copyright 2026 Fused Gaming
  */
@@ -442,7 +442,7 @@ try {
 ## 📞 Support & Licensing
 
 **GitHub Issues:** [Fused Gaming MCP Issues](https://github.com/fused-gaming/fused-gaming-skill-mcp/issues)  
-**Commercial Licensing:** license@fused-gaming.io  
+**Commercial Licensing:** license@vln.gg  
 **Documentation:** [Fused Gaming MCP Docs](https://github.com/fused-gaming/fused-gaming-skill-mcp/tree/main/docs)
 
 ---
@@ -457,7 +457,7 @@ Licensed under the Apache License, Version 2.0 with additional
 educational-use-only restrictions.
 
 For educational use: See requirements above
-For commercial use: Contact license@fused-gaming.io
+For commercial use: Contact license@vln.gg
 
 This software is provided "as is" for educational purposes.
 ```
