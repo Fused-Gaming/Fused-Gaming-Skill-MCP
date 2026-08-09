@@ -266,8 +266,8 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 ## 🎯 Release Decision
 
 - [${isApproved ? "x" : " "}] **APPROVE** — All metrics meet DoD thresholds
-- [${status === "conditional" ? "x" : " "}] **CONDITIONAL** — One or more metrics require review/remediation
-- [${status === "fail" ? "x" : " "}] **REJECT** — Critical failures preventing release
+- [${!isApproved && status === "conditional" ? "x" : " "}] **CONDITIONAL** — One or more metrics require review/remediation
+- [${!isApproved && status !== "conditional" ? "x" : " "}] **REJECT** — Critical failures preventing release
 
 **Sign-Off:** \`@${releaseManager}\`
 **Approval Date:** \`${releaseDate}\`
