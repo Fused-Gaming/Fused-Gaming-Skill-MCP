@@ -57,6 +57,7 @@ Lower Bound = 92.5% ✅ (≥93% CI threshold passes)
 
 DoD Status: PASS ✅
 ```
+```
 
 **Action if Failed:**
 - ❌ **BLOCKED** — Do not release

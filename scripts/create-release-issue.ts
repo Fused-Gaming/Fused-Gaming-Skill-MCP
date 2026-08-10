@@ -224,11 +224,11 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 
 ### Behavioral Testing (Target: ≥95% CORE, 100% REGRESSION)
 
-- [${behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "x" : " "}] **CORE Tests Pass** (≥95% precision threshold)
+- [${corePassesCI && behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "x" : " "}] **CORE Tests Pass** (≥95% pass rate, ≥93% CI lower bound)
   - Test Count: \`${behavioral.core_total}\`
   - Pass Rate: \`${behavioral.core_pass_rate.toFixed(2)}%\`
   - Confidence Interval (95% CI): \`${behavioral.core_total > 0 ? `[${coreCI[0].toFixed(2)}%, ${coreCI[1].toFixed(2)}%]` : "N/A"}\`
-  - Status: ${behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "✅" : "❌"}
+  - Status: ${corePassesCI && behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "✅" : "❌"}
 
 - [${behavioral.regression_pass_rate === 100 && behavioral.regression_total > 0 ? "x" : " "}] **REGRESSION Tests Pass** (100% mandatory, must have tests)
   - Prior Checkpoint Tests: \`${behavioral.regression_total}\`
