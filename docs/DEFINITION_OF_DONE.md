@@ -41,7 +41,19 @@ CORE Tests: 95 passed / 100 total
 Pass Rate = 95%
 SE = √(0.95 × 0.05 / 100) = 0.0218
 95% CI = 95% ± (1.96 × 2.18%) = [90.7%, 99.3%]
-Lower Bound = 90.7% ✅ (≥93% fails, but 95% mean passes)
+Lower Bound = 90.7% ❌ (Below 93% CI threshold - FAILS)
+
+DoD Status: BLOCKED ❌
+
+---
+
+**PASSING EXAMPLE** (with 125 tests):
+```
+CORE Tests: 119 passed / 125 total
+Pass Rate = 95.2%
+SE = √(0.952 × 0.048 / 125) = 0.0139
+95% CI = 95.2% ± (1.96 × 1.39%) = [92.5%, 97.9%]
+Lower Bound = 92.5% ✅ (≥93% CI threshold passes)
 
 DoD Status: PASS ✅
 ```

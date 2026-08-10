@@ -46,6 +46,12 @@ jobs:
             VERSION="${TAG#v}"
             RELEASE_TYPE="root"
 
+            # Validate version format (alphanumeric, dots, hyphens only)
+            if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+)*(-[a-zA-Z0-9]+)?$ ]]; then
+              echo "Error: Invalid version format: $VERSION"
+              exit 1
+            fi
+
             # Root package.json name
             PACKAGE=$(jq -r '.name' package.json)
             if [ -z "$PACKAGE" ] || [ "$PACKAGE" == "null" ]; then
@@ -54,9 +60,15 @@ jobs:
             fi
           elif [[ $TAG == skill-* ]]; then
             # Extract skill directory name and version from skill-name@version format
-            SKILL_DIR=$(echo $TAG | sed 's/@.*//' | sed 's/skill-//')
-            VERSION=$(echo $TAG | sed 's/.*@//')
+            SKILL_DIR=$(echo "$TAG" | sed 's/@.*//' | sed 's/skill-//')
+            VERSION=$(echo "$TAG" | sed 's/.*@//')
             RELEASE_TYPE="skill"
+
+            # Validate version format (alphanumeric, dots, hyphens only)
+            if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+)*(-[a-zA-Z0-9]+)?$ ]]; then
+              echo "Error: Invalid version format: $VERSION"
+              exit 1
+            fi
 
             # Read package name from the skill's package.json to handle naming mismatches
             SKILL_MANIFEST="packages/skills/$SKILL_DIR/package.json"
@@ -71,8 +83,9 @@ jobs:
             exit 1
           fi
 
-          echo "package=$PACKAGE" >> $GITHUB_OUTPUT
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          # Pass values through step outputs with proper escaping
+          echo "package=$(printf '%s\n' "$PACKAGE" | sed -e 's/[\/&]/\\&/g')" >> $GITHUB_OUTPUT
+          echo "version=$(printf '%s\n' "$VERSION" | sed -e 's/[\/&]/\\&/g')" >> $GITHUB_OUTPUT
           echo "release_type=$RELEASE_TYPE" >> $GITHUB_OUTPUT
 
       - name: Setup Node.js
@@ -93,17 +106,13 @@ jobs:
           mkdir -p "$(dirname "$RESULTS_FILE")"
 
           BENCHMARK_SUCCESS=false
-          BENCHMARK_OUTPUT=""
 
           if npm run benchmark --workspace=${{ steps.package-info.outputs.package }} > benchmark-output.log 2>&1; then
             BENCHMARK_SUCCESS=true
-            BENCHMARK_OUTPUT=$(cat benchmark-output.log)
           fi
 
-          # Try to use existing results file first
-          if [ -f "benchmarks/packages/${{ steps.package-info.outputs.package }}/latest/results.json" ]; then
-            cp "benchmarks/packages/${{ steps.package-info.outputs.package }}/latest/results.json" "$RESULTS_FILE"
-          elif [ "$BENCHMARK_SUCCESS" = true ] && [ -n "$BENCHMARK_OUTPUT" ]; then
+          # Only use results from the current benchmark run, never cached results
+          if [ "$BENCHMARK_SUCCESS" = true ]; then
             # Parse benchmark output and create results JSON
             # Extract performance metrics from benchmark output
             # Read output from file to avoid backtick injection in template literals
@@ -276,8 +285,9 @@ jobs:
         run: |
           mkdir -p benchmarks
 
-          REGISTRY=$(cat benchmarks/packages-registry.json 2>/dev/null || echo '{"packages":{},"versions":[]}')
+          REGISTRY=$(cat benchmarks/packages-registry.json 2>/dev/null || echo '{"packages":{},"versions":[],"summary":{}}')
 
+          # Update registry and recalculate summary fields
           echo "$REGISTRY" | jq \
             --arg pkg "${{ steps.package-info.outputs.package }}" \
             --arg ver "${{ steps.package-info.outputs.version }}" \
@@ -293,7 +303,14 @@ jobs:
               "status": "released",
               "timestamp": $date
             }] |
-            .meta.updated = $date' > benchmarks/packages-registry.json.tmp
+            .meta.updated = $date |
+            # Recalculate summary fields from current data
+            .summary = {
+              "total_packages": (.packages | length),
+              "total_versions": (.versions | length),
+              "packages_with_benchmarks": (.packages | to_entries | map(select(.value.benchmark_enabled == true)) | length),
+              "last_updated": .meta.updated
+            }' > benchmarks/packages-registry.json.tmp
 
           mv benchmarks/packages-registry.json.tmp benchmarks/packages-registry.json
 
