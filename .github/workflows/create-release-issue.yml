@@ -328,11 +328,30 @@ jobs:
             <div id="results"></div>
             <script>
               fetch('results.json').then(r => r.json()).then(data => {
+                // Recalculate validated combined score using canonical formula
+                // Combined score = (Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)
+                const validatedScore = (
+                  (data.behavioral.behavioral_score * 0.40) +
+                  (data.performance.performance_score * 0.35) +
+                  (data.code_quality.quality_score * 0.25)
+                );
                 const html = `
                   <h2>${data.package} v${data.version}</h2>
                   <div class="metric">
-                    <div class="score">${data.combined_score.toFixed(1)}%</div>
+                    <div class="score">${validatedScore.toFixed(1)}%</div>
                     <div>Combined Score</div>
+                  </div>
+                  <div class="metric">
+                    <div class="score">${data.behavioral.behavioral_score.toFixed(1)}%</div>
+                    <div>Behavioral</div>
+                  </div>
+                  <div class="metric">
+                    <div class="score">${data.performance.performance_score.toFixed(1)}%</div>
+                    <div>Performance</div>
+                  </div>
+                  <div class="metric">
+                    <div class="score">${data.code_quality.quality_score.toFixed(1)}%</div>
+                    <div>Code Quality</div>
                   </div>
                 `;
                 document.getElementById('results').innerHTML = html;
@@ -364,6 +383,7 @@ jobs:
 
           # Update registry and recalculate summary fields
           # Use upsert logic: update existing entry if it exists, else append
+          # Also maintain nested version history in .packages[$pkg].versions
           echo "$REGISTRY" | jq \
             --arg pkg "${{ steps.package-info.outputs.package }}" \
             --arg ver "${{ steps.package-info.outputs.version }}" \
@@ -373,7 +393,18 @@ jobs:
             '.packages[$pkg] |= . + {
               "name": $pkg,
               "latest_version": $ver,
-              "updated": $date
+              "updated": $date,
+              "versions": (
+                if (.versions | type) == "array" then
+                  if (.versions | map(select(.version == $ver)) | length) > 0 then
+                    .versions |= map(if .version == $ver then . + {"status": $status, "published_date": $date} else . end)
+                  else
+                    .versions += [{"version": $ver, "status": $status, "published_date": $date}]
+                  end
+                else
+                  [{"version": $ver, "status": $status, "published_date": $date}]
+                end
+              )
             } |
             if (.versions | map(select(.id == $pkgver)) | length) > 0 then
               .versions |= map(if .id == $pkgver then . + {

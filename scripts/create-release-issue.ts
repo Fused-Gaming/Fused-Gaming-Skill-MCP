@@ -185,9 +185,12 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
     code_quality,
     combined_score,
     status,
+    timestamp,
   } = results;
 
-  const releaseDate = new Date().toISOString().split("T")[0];
+  // Use results timestamp (from benchmark run or tag metadata) instead of current date
+  // to preserve original release date across reruns
+  const releaseDate = timestamp ? timestamp.split("T")[0] : new Date().toISOString().split("T")[0];
   const dodThreshold = 90;
 
   // Always calculate combined score from components, never trust supplied value
@@ -229,14 +232,16 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   // Maintainability 65-69 is conditional/warning; only <=65 blocks release
   const maintainabilityBlocks = code_quality.maintainability_index <= 65;
 
-  // Enforce minimum performance score threshold
+  // Enforce minimum performance and code quality thresholds
   const performanceThresholdMet = performance.performance_score >= 85;
+  const codeQualityThresholdMet = code_quality.quality_score >= 80;
 
   const mandatoryGates =
     behavioral.core_pass_rate >= 95 && corePassesCI && hasMinimumCoreSamples &&
     behavioral.regression_pass_rate === 100 && hasRegressionTests &&
     behavioral.behavioral_score >= 90 &&
     performance.performance_score >= 85 &&
+    code_quality.quality_score >= 80 &&
     validatedCombinedScore >= dodThreshold &&
     !coverageBlocks && !complexityBlocks && !duplicationBlocks && !maintainabilityBlocks &&
     status === "pass";

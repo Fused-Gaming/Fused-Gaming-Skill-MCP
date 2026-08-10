@@ -18,14 +18,16 @@ Measures functional correctness through:
 - **FUNCTIONALITY Tests**: Feature completeness validation
 - **ERROR Tests**: Error handling and recovery
 
-Calculation:
+Calculation (canonical formula from DEFINITION_OF_DONE.md):
 ```
-behavioral_score = (
-  (core_pass_rate * 0.40) +
-  (regression_pass_rate * 0.30) +
-  (functionality_pass_rate * 0.20) +
-  (error_pass_rate * 0.10)
-) × 100
+behavioral_score = (CORE_pass% × 0.50) + (REGRESSION_pass% × 0.30) 
+                   + (FUNCTIONALITY_pass% × 0.12) + (ERROR_pass% × 0.08)
+
+Example:
+  CORE: 95%, REGRESSION: 100%, FUNCTIONALITY: 85%, ERROR: 92%
+  B = (95 × 0.50) + (100 × 0.30) + (85 × 0.12) + (92 × 0.08)
+    = 47.5 + 30 + 10.2 + 7.36
+    = 95.06%
 ```
 
 ### 2. Performance Score (Weight: 35%)
