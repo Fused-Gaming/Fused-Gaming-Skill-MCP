@@ -202,11 +202,17 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   // Require regression tests to exist (regression_total > 0) for approval
   const hasRegressionTests = behavioral.regression_total > 0;
 
+  // Enforce release-blocking code quality metrics
+  const coverageBlocks = code_quality.coverage_percent < 70;
+  const complexityBlocks = code_quality.complexity_max > 8.0;
+  const duplicationBlocks = code_quality.duplication_percent >= 15;
+
   const mandatoryGates =
     behavioral.core_pass_rate >= 95 && corePassesCI &&
     behavioral.regression_pass_rate === 100 && hasRegressionTests &&
     behavioral.behavioral_score >= 90 &&
     validatedCombinedScore >= dodThreshold &&
+    !coverageBlocks && !complexityBlocks && !duplicationBlocks &&
     status === "pass";
 
   const isApproved = mandatoryGates;

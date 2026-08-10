@@ -455,17 +455,22 @@ Example:
 
 ### 4.3 DoD Release Decision Matrix
 
-| Combined Score | Behavioral | Performance | Decision |
-|---|---|---|---|
-| **≥90%** | Any | Any | ✅ **APPROVED** |
-| 85-89% | ≥95% CORE + 100% REGR | ≥90% | ⚠️ **CONDITIONAL** |
-| <85% | <95% CORE OR <100% REGR | <85% | ❌ **BLOCKED** |
+| Combined Score | CORE Tests | REGRESSION | Coverage | Decision |
+|---|---|---|---|---|
+| **≥90%** | **≥95%** | **100%** | **≥70%** | ✅ **APPROVED** |
+| 85-89% | ≥95% | 100% | ≥70% | ⚠️ **CONDITIONAL** |
+| Any | <95% | Any | Any | ❌ **BLOCKED** |
+| Any | Any | <100% | Any | ❌ **BLOCKED** |
+| Any | Any | Any | <70% | ❌ **BLOCKED** |
 
 **Release Criteria (ALL Must Pass):**
 1. Combined Score ≥ 90%
-2. CORE Tests ≥ 95%
-3. REGRESSION Tests = 100%
-4. Behavioral Score ≥ 90%
+2. CORE Tests ≥ 95% (with 95% CI lower bound ≥ 93%)
+3. REGRESSION Tests = 100% (tests must exist)
+4. Test Coverage ≥ 70%
+5. Code Complexity max ≤ 8.0
+6. Code Duplication < 15%
+7. Behavioral Score ≥ 90%
 
 ---
 

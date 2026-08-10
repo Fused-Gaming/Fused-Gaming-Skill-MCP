@@ -292,16 +292,35 @@ jobs:
             --arg pkg "${{ steps.package-info.outputs.package }}" \
             --arg ver "${{ steps.package-info.outputs.version }}" \
             --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg pkgver "${{ steps.package-info.outputs.package }}-${{ steps.package-info.outputs.version }}" \
             '.packages[$pkg] |= . + {
               "name": $pkg,
               "latest_version": $ver,
               "updated": $date
             } |
             .versions += [{
+              "id": $pkgver,
               "package": $pkg,
               "version": $ver,
               "status": "released",
-              "timestamp": $date
+              "published_date": $date,
+              "release_issue_number": null,
+              "release_issue_url": null,
+              "benchmark_results": {
+                "behavioral_score": 0,
+                "performance_score": 0,
+                "code_quality_score": 0,
+                "combined_score": 0,
+                "status": "pending",
+                "details_url": null
+              },
+              "regression_detection": {
+                "performance_regression": false,
+                "code_quality_regression": false,
+                "behavioral_regression": false,
+                "summary": "Pending baseline comparison"
+              },
+              "changelog_entry": null
             }] |
             .meta.updated = $date |
             # Recalculate summary fields from current data
@@ -328,6 +347,9 @@ jobs:
           # Check out main branch cleanly to avoid pushing tagged history
           git fetch origin main
           git checkout -B temp-benchmark origin/main
+
+          # Reset any tracked changes from the tag branch
+          git checkout -- benchmarks/ || true
 
           # Apply only benchmark file changes (not tagged commit history)
           if [ -s benchmark-changes.patch ]; then
