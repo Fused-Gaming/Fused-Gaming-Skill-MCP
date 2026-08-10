@@ -193,10 +193,18 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   const releaseDate = timestamp ? timestamp.split("T")[0] : new Date().toISOString().split("T")[0];
   const dodThreshold = 90;
 
+  // Recalculate behavioral score from raw components using canonical formula
+  // behavioral_score = (CORE × 0.50) + (REGRESSION × 0.30) + (FUNCTIONALITY × 0.12) + (ERROR × 0.08)
+  const calculatedBehavioral =
+    (behavioral.core_pass_rate * 0.50) +
+    (behavioral.regression_pass_rate * 0.30) +
+    (behavioral.functionality_pass_rate * 0.12) +
+    (behavioral.error_pass_rate * 0.08);
+
   // Always calculate combined score from components, never trust supplied value
   // Combined score = (Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)
   const calculatedCombined =
-    (behavioral.behavioral_score * 0.40) +
+    (calculatedBehavioral * 0.40) +
     (performance.performance_score * 0.35) +
     (code_quality.quality_score * 0.25);
 
@@ -239,7 +247,7 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   const mandatoryGates =
     behavioral.core_pass_rate >= 95 && corePassesCI && hasMinimumCoreSamples &&
     behavioral.regression_pass_rate === 100 && hasRegressionTests &&
-    behavioral.behavioral_score >= 90 &&
+    calculatedBehavioral >= 90 &&
     performance.performance_score >= 85 &&
     codeQualityThresholdMet &&
     validatedCombinedScore >= dodThreshold &&

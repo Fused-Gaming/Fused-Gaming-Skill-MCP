@@ -397,9 +397,9 @@ jobs:
               "versions": (
                 if (.versions | type) == "array" then
                   if (.versions | map(select(.version == $ver)) | length) > 0 then
-                    .versions |= map(if .version == $ver then . + {"status": $status, "published_date": $date} else . end)
+                    .versions | map(if .version == $ver then . + {"status": $status, "published_date": $date} else . end)
                   else
-                    .versions += [{"version": $ver, "status": $status, "published_date": $date}]
+                    .versions + [{"version": $ver, "status": $status, "published_date": $date}]
                   end
                 else
                   [{"version": $ver, "status": $status, "published_date": $date}]
@@ -412,7 +412,7 @@ jobs:
                 "published_date": $date
               } else . end)
             else
-              .versions += [{
+              .versions = (.versions + [{
                 "id": $pkgver,
                 "package": $pkg,
                 "version": $ver,
@@ -435,16 +435,18 @@ jobs:
                   "summary": "Pending baseline comparison"
                 },
                 "changelog_entry": null
-            }] |
+            }])
+            end |
             .meta.updated = $date |
-            # Recalculate summary fields from current data
-            .summary = {
-              "total_packages": (.packages | length),
+            # Recalculate and merge summary fields while preserving aggregate metrics
+            . as $root |
+            .summary |= . + {
+              "total_packages": ($root.packages | length),
               "total_versions": (
-                [.packages[].versions | if type == "array" then length else 0 end] | add
+                [$root.packages[].versions | if type == "array" then length else 0 end] | add
               ),
-              "packages_with_benchmarks": (.packages | to_entries | map(select(.value.benchmark_enabled == true)) | length),
-              "last_updated": .meta.updated
+              "packages_with_benchmarks": ($root.packages | to_entries | map(select(.value.benchmark_enabled == true)) | length),
+              "last_updated": $root.meta.updated
             }' > benchmarks/packages-registry.json.tmp
 
           mv benchmarks/packages-registry.json.tmp benchmarks/packages-registry.json
