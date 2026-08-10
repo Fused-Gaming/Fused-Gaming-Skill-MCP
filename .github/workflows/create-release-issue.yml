@@ -46,9 +46,9 @@ jobs:
             VERSION="${TAG#v}"
             RELEASE_TYPE="root"
 
-            # Validate version format: semantic versioning with optional prerelease (e.g., 1.0.0-beta.1)
-            if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+)*(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?$ ]]; then
-              echo "Error: Invalid version format: $VERSION"
+            # Validate version format: strict semantic versioning (X.Y.Z) with optional prerelease (e.g., 1.0.0-beta.1)
+            if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?$ ]]; then
+              echo "Error: Invalid version format: $VERSION (must be X.Y.Z or X.Y.Z-prerelease)"
               exit 1
             fi
 
@@ -64,9 +64,9 @@ jobs:
             VERSION=$(echo "$TAG" | sed 's/.*@//')
             RELEASE_TYPE="skill"
 
-            # Validate version format: semantic versioning with optional prerelease (e.g., 1.0.0-beta.1)
-            if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+)*(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?$ ]]; then
-              echo "Error: Invalid version format: $VERSION"
+            # Validate version format: strict semantic versioning (X.Y.Z) with optional prerelease (e.g., 1.0.0-beta.1)
+            if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?$ ]]; then
+              echo "Error: Invalid version format: $VERSION (must be X.Y.Z or X.Y.Z-prerelease)"
               exit 1
             fi
 
@@ -75,8 +75,10 @@ jobs:
             if [ -f "$SKILL_MANIFEST" ]; then
               PACKAGE=$(jq -r '.name' "$SKILL_MANIFEST")
             else
-              # Fallback to conventional naming if manifest not found
-              PACKAGE="@h4shed/skill-$SKILL_DIR"
+              # Reject skill tags without matching manifest - do not invent package names
+              echo "Error: Skill manifest not found at $SKILL_MANIFEST"
+              echo "Tag '$TAG' references skill '$SKILL_DIR' which has no package.json"
+              exit 1
             fi
           else
             echo "Unrecognized tag format: $TAG"
@@ -122,14 +124,24 @@ jobs:
               const lines = output.split('\n');
 
               // Extract performance metrics from benchmark output format: 'X.XXXms/op (Y ops/sec)'
-              let latency_ms = 0, throughput_ops = 0;
+              // Aggregate multiple measurements by collecting all values and computing means
+              let latency_values = [], throughput_values = [];
               lines.forEach(line => {
                 // Match patterns like '0.003ms/op' or 'avg: 0.003ms'
                 const latencyMatch = line.match(/([0-9.]+)\s*ms\/op/) || line.match(/([0-9.]+)\s*ms$/);
-                if (latencyMatch) latency_ms = parseFloat(latencyMatch[1]);
+                if (latencyMatch) latency_values.push(parseFloat(latencyMatch[1]));
                 const throughputMatch = line.match(/([0-9.]+)\s*ops\/sec/);
-                if (throughputMatch) throughput_ops = parseFloat(throughputMatch[1]);
+                if (throughputMatch) throughput_values.push(parseFloat(throughputMatch[1]));
               });
+
+              // Calculate means if measurements were captured
+              let latency_ms = 0, throughput_ops = 0;
+              if (latency_values.length > 0) {
+                latency_ms = latency_values.reduce((a, b) => a + b, 0) / latency_values.length;
+              }
+              if (throughput_values.length > 0) {
+                throughput_ops = throughput_values.reduce((a, b) => a + b, 0) / throughput_values.length;
+              }
 
               // Report only metrics that were actually captured
               // Do NOT synthesize passing behavioral/quality results when not measured
@@ -151,10 +163,10 @@ jobs:
                 performance: {
                   latency_ms_mean: latency_ms,
                   latency_ms_std_dev: 0,
-                  latency_sample_count: 0,
+                  latency_sample_count: latency_values.length,
                   throughput_ops_sec_mean: throughput_ops,
                   throughput_ops_sec_std_dev: 0,
-                  throughput_sample_count: 0,
+                  throughput_sample_count: throughput_values.length,
                   memory_mb_peak: 0,
                   performance_score: 0
                 },
@@ -340,6 +352,9 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+
+          # Clean up any generated files from prior runs to prevent checkout abort
+          rm -f benchmark-output.log benchmark-changes.patch
 
           # Save benchmark changes for later application
           git diff benchmarks/ > benchmark-changes.patch || true

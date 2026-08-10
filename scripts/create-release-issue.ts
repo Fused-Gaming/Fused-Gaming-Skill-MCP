@@ -199,6 +199,9 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   const coreCI = calculateCI(behavioral.core_pass_rate, behavioral.core_total);
   const corePassesCI = !isNaN(coreCI[0]) && coreCI[0] >= 93;
 
+  // Require minimum test sample size for statistical validity
+  const hasMinimumCoreSamples = behavioral.core_total >= 30;
+
   // Require regression tests to exist (regression_total > 0) for approval
   const hasRegressionTests = behavioral.regression_total > 0;
 
@@ -207,10 +210,14 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   const complexityBlocks = code_quality.complexity_max > 8.0;
   const duplicationBlocks = code_quality.duplication_percent >= 15;
 
+  // Enforce minimum performance score threshold
+  const performanceThresholdMet = performance.performance_score >= 85;
+
   const mandatoryGates =
-    behavioral.core_pass_rate >= 95 && corePassesCI &&
+    behavioral.core_pass_rate >= 95 && corePassesCI && hasMinimumCoreSamples &&
     behavioral.regression_pass_rate === 100 && hasRegressionTests &&
     behavioral.behavioral_score >= 90 &&
+    performance.performance_score >= 85 &&
     validatedCombinedScore >= dodThreshold &&
     !coverageBlocks && !complexityBlocks && !duplicationBlocks &&
     status === "pass";
@@ -230,11 +237,12 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 
 ### Behavioral Testing (Target: ≥95% CORE, 100% REGRESSION)
 
-- [${corePassesCI && behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "x" : " "}] **CORE Tests Pass** (≥95% pass rate, ≥93% CI lower bound)
-  - Test Count: \`${behavioral.core_total}\`
+- [${corePassesCI && behavioral.core_pass_rate >= 95 && hasMinimumCoreSamples ? "x" : " "}] **CORE Tests Pass** (≥95% pass rate, ≥93% CI lower bound, min 30 samples)
+  - Test Count: \`${behavioral.core_total}\` (Minimum Required: 30)
   - Pass Rate: \`${behavioral.core_pass_rate.toFixed(2)}%\`
   - Confidence Interval (95% CI): \`${behavioral.core_total > 0 ? `[${coreCI[0].toFixed(2)}%, ${coreCI[1].toFixed(2)}%]` : "N/A"}\`
-  - Status: ${corePassesCI && behavioral.core_pass_rate >= 95 && behavioral.core_total > 0 ? "✅" : "❌"}
+  - Minimum Samples Met: ${hasMinimumCoreSamples ? "✅" : "❌"}
+  - Status: ${corePassesCI && behavioral.core_pass_rate >= 95 && hasMinimumCoreSamples ? "✅" : "❌"}
 
 - [${behavioral.regression_pass_rate === 100 && behavioral.regression_total > 0 ? "x" : " "}] **REGRESSION Tests Pass** (100% mandatory, must have tests)
   - Prior Checkpoint Tests: \`${behavioral.regression_total}\`
@@ -280,7 +288,8 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   - Status: ${performance.memory_mb_peak > 0 ? "✅" : "⚠️ Not measured"}
 
 **Performance Score:** \`${performance.performance_score.toFixed(2)}%\`
-**Performance Targets Met:** ${performance.performance_score >= 90 ? "✅ Yes" : performance.performance_score >= 80 ? "⚠️ Partial" : "❌ No"}
+**Performance Threshold (≥85%):** ${performanceThresholdMet ? "✅ Met" : "❌ Not Met"}
+**Performance Targets Met:** ${performance.performance_score >= 90 ? "✅ Yes" : performance.performance_score >= 85 ? "✅ Threshold" : performance.performance_score >= 80 ? "⚠️ Partial" : "❌ No"}
 
 ---
 

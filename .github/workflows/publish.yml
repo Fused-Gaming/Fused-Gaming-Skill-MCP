@@ -135,8 +135,16 @@ jobs:
           for PACKAGE in $PACKAGES_TO_VALIDATE; do
             echo "Validating benchmarks for: $PACKAGE"
 
+            # Get workspace-specific version from the package's own package.json, not root
+            WORKSPACE_ROOT=$(npm ls -p --workspace=$PACKAGE 2>/dev/null | head -1)
+            if [ -z "$WORKSPACE_ROOT" ]; then
+              echo "⚠️  Could not determine workspace root for $PACKAGE, skipping"
+              continue
+            fi
+            WORKSPACE_VERSION=$(jq -r '.version' "$WORKSPACE_ROOT/package.json" 2>/dev/null || echo "0.0.0")
+
             # Run benchmark
-            RESULTS_DIR="benchmarks/packages/$PACKAGE/v$(node -e "console.log(require('package.json').version)")"
+            RESULTS_DIR="benchmarks/packages/$PACKAGE/v$WORKSPACE_VERSION"
             mkdir -p "$RESULTS_DIR"
 
             if npm run benchmark --workspace=$PACKAGE > benchmark-output.log 2>&1; then
@@ -155,7 +163,7 @@ jobs:
 
                 const results = {
                   package: '$PACKAGE',
-                  version: require('package.json').version,
+                  version: '$WORKSPACE_VERSION',
                   timestamp: new Date().toISOString(),
                   behavioral: { core_pass_rate: 0, core_total: 0, regression_pass_rate: 0, regression_total: 0, functionality_pass_rate: 0, functionality_total: 0, error_pass_rate: 0, error_total: 0, behavioral_score: 0 },
                   performance: { latency_ms_mean: latency_ms, latency_ms_std_dev: 0, latency_sample_count: 0, throughput_ops_sec_mean: throughput_ops, throughput_ops_sec_std_dev: 0, throughput_sample_count: 0, memory_mb_peak: 0, performance_score: 0 },
@@ -172,7 +180,7 @@ jobs:
                 const fs = require('fs');
                 fs.writeFileSync('$RESULTS_DIR/results.json', JSON.stringify({
                   package: '$PACKAGE',
-                  version: require('package.json').version,
+                  version: '$WORKSPACE_VERSION',
                   timestamp: new Date().toISOString(),
                   behavioral: { core_pass_rate: 0, core_total: 0, regression_pass_rate: 0, regression_total: 0, functionality_pass_rate: 0, functionality_total: 0, error_pass_rate: 0, error_total: 0, behavioral_score: 0 },
                   performance: { latency_ms_mean: 0, latency_ms_std_dev: 0, latency_sample_count: 0, throughput_ops_sec_mean: 0, throughput_ops_sec_std_dev: 0, throughput_sample_count: 0, memory_mb_peak: 0, performance_score: 0 },
