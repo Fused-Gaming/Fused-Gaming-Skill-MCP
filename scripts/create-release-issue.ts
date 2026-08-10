@@ -241,7 +241,7 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
     behavioral.regression_pass_rate === 100 && hasRegressionTests &&
     behavioral.behavioral_score >= 90 &&
     performance.performance_score >= 85 &&
-    code_quality.quality_score >= 80 &&
+    codeQualityThresholdMet &&
     validatedCombinedScore >= dodThreshold &&
     !coverageBlocks && !complexityBlocks && !duplicationBlocks && !maintainabilityBlocks &&
     status === "pass";
