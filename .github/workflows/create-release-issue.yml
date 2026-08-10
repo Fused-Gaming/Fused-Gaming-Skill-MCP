@@ -5,13 +5,8 @@ on:
     tags:
       - 'v*'           # Release tag: v1.0.0, v1.1.0, etc.
       - 'skill-*@*'    # Skill tag: skill-design-system@1.0.0
-
-  workflow_run:
-    workflows: ['Publish to npm']
-    types:
-      - completed
-    # Note: workflow_run triggers even when publish.yml uses GITHUB_TOKEN
-    # (which doesn't trigger tag-based workflows directly)
+  # Note: workflow_run trigger removed - benchmark validation now happens
+  # in publish.yml as a pre-publication gate before npm publish
 
 jobs:
   create-release-issue:
@@ -24,10 +19,7 @@ jobs:
     permissions:
       issues: write
       contents: write
-    # Only run on successful publish workflow, or on direct tag pushes
-    if: |
-      github.event_name != 'workflow_run' ||
-      github.event.workflow_run.conclusion == 'success'
+      pull-requests: read
 
     steps:
       - name: Checkout code
@@ -39,25 +31,27 @@ jobs:
       - name: Extract package information from tag
         id: package-info
         run: |
-          # Handle both direct tag push and workflow_run triggers
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            TAG="${GITHUB_REF#refs/tags/}"
-          else
-            # workflow_run trigger: find the most recent tag (published by publish.yml)
-            TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-            if [ -z "$TAG" ]; then
-              echo "Error: No tag found for workflow_run trigger"
-              exit 1
-            fi
+          # Direct tag push only
+          if [[ $GITHUB_REF != refs/tags/* ]]; then
+            echo "Error: This workflow only runs on tag pushes"
+            exit 1
           fi
 
+          TAG="${GITHUB_REF#refs/tags/}"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
           # Parse tag format: v1.0.0 (root) or skill-design-system@1.0.0 (skill)
           if [[ $TAG == v* ]]; then
-            PACKAGE="@h4shed/mcp-core"
+            # For root releases, get the root package name and version from package.json
             VERSION="${TAG#v}"
             RELEASE_TYPE="root"
+
+            # Root package.json name
+            PACKAGE=$(jq -r '.name' package.json)
+            if [ -z "$PACKAGE" ] || [ "$PACKAGE" == "null" ]; then
+              echo "Error: Could not determine root package name from package.json"
+              exit 1
+            fi
           elif [[ $TAG == skill-* ]]; then
             # Extract skill directory name and version from skill-name@version format
             SKILL_DIR=$(echo $TAG | sed 's/@.*//' | sed 's/skill-//')

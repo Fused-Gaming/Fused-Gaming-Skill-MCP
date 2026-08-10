@@ -89,6 +89,105 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Validate benchmarks (pre-publication gate)
+        if: success() && !startsWith(github.ref, 'refs/tags/')
+        run: |
+          # Determine which packages to validate
+          # For main branch pushes that will create tags
+          PACKAGES_TO_VALIDATE=$(node -e "
+            const fs = require('fs');
+            const path = require('path');
+
+            // Get all workspace packages
+            const workspaceDirs = fs.readdirSync('packages', { withFileTypes: true })
+              .filter(d => d.isDirectory())
+              .map(d => path.join('packages', d.name));
+
+            const packages = [];
+            workspaceDirs.forEach(dir => {
+              const pkgJsonPath = path.join(dir, 'package.json');
+              if (fs.existsSync(pkgJsonPath)) {
+                const pkg = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+                packages.push(pkg.name);
+              }
+            });
+
+            console.log(packages.join(' '));
+          ")
+
+          VALIDATION_FAILED=false
+
+          for PACKAGE in $PACKAGES_TO_VALIDATE; do
+            echo "Validating benchmarks for: $PACKAGE"
+
+            # Run benchmark
+            RESULTS_DIR="benchmarks/packages/$PACKAGE/v$(node -e "console.log(require('package.json').version)")"
+            mkdir -p "$RESULTS_DIR"
+
+            if npm run benchmark --workspace=$PACKAGE > benchmark-output.log 2>&1; then
+              # Parse results
+              node -e "
+                const fs = require('fs');
+                const output = fs.readFileSync('benchmark-output.log', 'utf8');
+
+                let latency_ms = 0, throughput_ops = 0;
+                output.split('\n').forEach(line => {
+                  const latencyMatch = line.match(/([0-9.]+)\s*ms\/op/) || line.match(/([0-9.]+)\s*ms$/);
+                  if (latencyMatch) latency_ms = parseFloat(latencyMatch[1]);
+                  const throughputMatch = line.match(/([0-9.]+)\s*ops\/sec/);
+                  if (throughputMatch) throughput_ops = parseFloat(throughputMatch[1]);
+                });
+
+                const results = {
+                  package: '$PACKAGE',
+                  version: require('package.json').version,
+                  timestamp: new Date().toISOString(),
+                  behavioral: { core_pass_rate: 0, core_total: 0, regression_pass_rate: 0, regression_total: 0, functionality_pass_rate: 0, functionality_total: 0, error_pass_rate: 0, error_total: 0, behavioral_score: 0 },
+                  performance: { latency_ms_mean: latency_ms, latency_ms_std_dev: 0, latency_sample_count: 0, throughput_ops_sec_mean: throughput_ops, throughput_ops_sec_std_dev: 0, throughput_sample_count: 0, memory_mb_peak: 0, performance_score: 0 },
+                  code_quality: { complexity_mean: 0, complexity_max: 0, duplication_percent: 0, coverage_percent: 0, maintainability_index: 0, quality_score: 0 },
+                  combined_score: 0,
+                  status: 'conditional'
+                };
+
+                console.log(JSON.stringify(results, null, 2));
+              " > "$RESULTS_DIR/results.json"
+            else
+              # Fallback to minimal results
+              node -e "
+                const fs = require('fs');
+                fs.writeFileSync('$RESULTS_DIR/results.json', JSON.stringify({
+                  package: '$PACKAGE',
+                  version: require('package.json').version,
+                  timestamp: new Date().toISOString(),
+                  behavioral: { core_pass_rate: 0, core_total: 0, regression_pass_rate: 0, regression_total: 0, functionality_pass_rate: 0, functionality_total: 0, error_pass_rate: 0, error_total: 0, behavioral_score: 0 },
+                  performance: { latency_ms_mean: 0, latency_ms_std_dev: 0, latency_sample_count: 0, throughput_ops_sec_mean: 0, throughput_ops_sec_std_dev: 0, throughput_sample_count: 0, memory_mb_peak: 0, performance_score: 0 },
+                  code_quality: { complexity_mean: 0, complexity_max: 0, duplication_percent: 0, coverage_percent: 0, maintainability_index: 0, quality_score: 0 },
+                  combined_score: 0,
+                  status: 'fail'
+                }, null, 2));
+              "
+            fi
+
+            # Validate combined_score meets DoD threshold (90%)
+            COMBINED_SCORE=$(node -e "
+              const fs = require('fs');
+              const results = JSON.parse(fs.readFileSync('$RESULTS_DIR/results.json', 'utf8'));
+              console.log(results.combined_score || 0);
+            ")
+
+            if (( $(echo "$COMBINED_SCORE < 90" | bc -l) )); then
+              echo "❌ VALIDATION FAILED: $PACKAGE combined_score $COMBINED_SCORE% < 90% threshold"
+              VALIDATION_FAILED=true
+            else
+              echo "✅ VALIDATION PASSED: $PACKAGE combined_score $COMBINED_SCORE%"
+            fi
+          done
+
+          if [ "$VALIDATION_FAILED" = true ]; then
+            echo "Benchmark validation failed - blocking release"
+            exit 1
+          fi
+
       - name: Commit and sign version updates
         if: success() && !startsWith(github.ref, 'refs/tags/') && env.HAS_GPG_PRIVATE_KEY == 'true'
         run: |

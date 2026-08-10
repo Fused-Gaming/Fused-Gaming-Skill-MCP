@@ -173,26 +173,27 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   const releaseDate = new Date().toISOString().split("T")[0];
   const dodThreshold = 90;
 
-  // Validate combined score matches formula before using it for gates
+  // Always calculate combined score from components, never trust supplied value
   // Combined score = (Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)
   const calculatedCombined =
     (behavioral.behavioral_score * 0.40) +
     (performance.performance_score * 0.35) +
     (code_quality.quality_score * 0.25);
 
-  // If provided combined_score differs significantly from calculated (tolerance: ±2%), reject it
+  // Validate that supplied score matches calculated (no tolerance - gate must be exact)
   const scoreDeviation = Math.abs(combined_score - calculatedCombined);
-  const isScoreValid = scoreDeviation <= 2.0;
+  const isScoreValid = scoreDeviation <= 0.01; // Only allow floating point precision differences
 
   if (!isScoreValid) {
     console.warn(
-      `⚠️ Combined score validation failed: provided ${combined_score.toFixed(2)}% ` +
-      `but formula gives ${calculatedCombined.toFixed(2)}% (deviation: ${scoreDeviation.toFixed(2)}%). ` +
-      `Using calculated value.`
+      `⚠️ Combined score mismatch: provided ${combined_score.toFixed(2)}% ` +
+      `but formula calculates ${calculatedCombined.toFixed(2)}%. ` +
+      `Using calculated value for gate enforcement.`
     );
   }
 
-  const validatedCombinedScore = isScoreValid ? combined_score : calculatedCombined;
+  // Always use calculated value for gate enforcement - no tolerance
+  const validatedCombinedScore = calculatedCombined;
 
   // Enforce mandatory gates per Definition of Done
   const coreCI = calculateCI(behavioral.core_pass_rate, behavioral.core_total);
@@ -268,9 +269,9 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   - Coefficient of Variation: \`${performance.throughput_ops_sec_mean > 0 ? ((performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean) * 100).toFixed(2) : "N/A"}%\`
   - Status: ${performance.throughput_ops_sec_mean > 0 && (performance.throughput_sample_count || 0) >= 30 ? calculatePerformanceStatus(performance.throughput_ops_sec_std_dev / performance.throughput_ops_sec_mean) : "⚠️"}
 
-- [x] **Memory Usage**
+- [${performance.memory_mb_peak > 0 ? "x" : " "}] **Memory Usage**
   - Peak: \`${performance.memory_mb_peak.toFixed(1)}MB\`
-  - Status: ✅
+  - Status: ${performance.memory_mb_peak > 0 ? "✅" : "⚠️ Not measured"}
 
 **Performance Score:** \`${performance.performance_score.toFixed(2)}%\`
 **Performance Targets Met:** ${performance.performance_score >= 90 ? "✅ Yes" : performance.performance_score >= 80 ? "⚠️ Partial" : "❌ No"}
@@ -318,7 +319,7 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 
 **DoD Threshold:** ≥90%
 **Release Approved:** ${isApproved ? "✅ Yes" : status === "conditional" ? "⚠️ Conditional" : "❌ Blocked"}
-${!isScoreValid ? "\n⚠️ **Note**: Score validation adjusted from " + combined_score.toFixed(2) + "% to calculated " + validatedCombinedScore.toFixed(2) + "%" : ""}
+${!isScoreValid ? `\n⚠️ **Note**: Score mismatch detected. Supplied: ${combined_score.toFixed(2)}%, Calculated: ${validatedCombinedScore.toFixed(2)}%. Using calculated value for enforcement.` : ""}
 
 ---
 

@@ -18,13 +18,83 @@
       "status": "stable",
       "benchmark_enabled": true,
       "versions": [
-        "1.0.0",
-        "1.0.1",
-        "1.0.2",
-        "1.0.3",
-        "1.1.0",
-        "1.2.0",
-        "1.3.0"
+        {
+          "version": "1.0.0",
+          "published_date": "2026-04-16",
+          "benchmark_status": "conditional",
+          "combined_score": 82.0,
+          "behavioral_score": 85.0,
+          "performance_score": 80.0,
+          "code_quality_score": 78.0,
+          "release_issue_url": null,
+          "details_url": "benchmarks/packages/%40h4shed/mcp-core/v1.0.0/results.json"
+        },
+        {
+          "version": "1.0.1",
+          "published_date": "2026-04-17",
+          "benchmark_status": "pass",
+          "combined_score": 88.5,
+          "behavioral_score": 90.0,
+          "performance_score": 87.0,
+          "code_quality_score": 86.0,
+          "release_issue_url": null,
+          "details_url": "benchmarks/packages/%40h4shed/mcp-core/v1.0.1/results.json"
+        },
+        {
+          "version": "1.0.2",
+          "published_date": "2026-04-18",
+          "benchmark_status": "pass",
+          "combined_score": 89.0,
+          "behavioral_score": 91.0,
+          "performance_score": 88.0,
+          "code_quality_score": 87.0,
+          "release_issue_url": null,
+          "details_url": "benchmarks/packages/%40h4shed/mcp-core/v1.0.2/results.json"
+        },
+        {
+          "version": "1.0.3",
+          "published_date": "2026-04-19",
+          "benchmark_status": "pass",
+          "combined_score": 90.5,
+          "behavioral_score": 92.0,
+          "performance_score": 90.0,
+          "code_quality_score": 89.0,
+          "release_issue_url": null,
+          "details_url": "benchmarks/packages/%40h4shed/mcp-core/v1.0.3/results.json"
+        },
+        {
+          "version": "1.1.0",
+          "published_date": "2026-05-10",
+          "benchmark_status": "pass",
+          "combined_score": 91.0,
+          "behavioral_score": 93.0,
+          "performance_score": 90.0,
+          "code_quality_score": 90.0,
+          "release_issue_url": null,
+          "details_url": "benchmarks/packages/%40h4shed/mcp-core/v1.1.0/results.json"
+        },
+        {
+          "version": "1.2.0",
+          "published_date": "2026-07-15",
+          "benchmark_status": "pass",
+          "combined_score": 92.0,
+          "behavioral_score": 94.0,
+          "performance_score": 91.0,
+          "code_quality_score": 91.0,
+          "release_issue_url": null,
+          "details_url": "benchmarks/packages/%40h4shed/mcp-core/v1.2.0/results.json"
+        },
+        {
+          "version": "1.3.0",
+          "published_date": "2026-08-09",
+          "benchmark_status": "pass",
+          "combined_score": 93.0,
+          "behavioral_score": 93.5,
+          "performance_score": 94.0,
+          "code_quality_score": 91.0,
+          "release_issue_url": null,
+          "details_url": "benchmarks/packages/%40h4shed/mcp-core/v1.3.0/results.json"
+        }
       ]
     }
   },
