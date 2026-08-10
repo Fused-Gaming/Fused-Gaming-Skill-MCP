@@ -34,18 +34,42 @@ jobs:
       - name: Extract package information from tag
         id: package-info
         run: |
-          # Direct tag push only
-          if [[ $GITHUB_REF != refs/tags/* ]]; then
-            echo "Error: This workflow only runs on tag pushes"
+          # Handle both push:tags and workflow_run events
+          TAG=""
+
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            # Direct tag push: GITHUB_REF is refs/tags/TAG
+            if [[ $GITHUB_REF != refs/tags/* ]]; then
+              echo "Error: Push event should be a tag push (refs/tags/*)"
+              exit 1
+            fi
+            TAG="${GITHUB_REF#refs/tags/}"
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_run" ]]; then
+            # workflow_run event: find the most recent tag at HEAD
+            # The triggering workflow (publish.yml) should have created and pushed a tag
+            git fetch origin --tags
+            if TAG=$(git describe --tags --exact-match HEAD 2>/dev/null); then
+              echo "Found tag at HEAD: $TAG"
+            else
+              # If no tag at HEAD, try to find the most recent tag on current branch
+              if TAG=$(git describe --tags --abbrev=0 2>/dev/null); then
+                echo "Found recent tag: $TAG"
+              else
+                echo "Error: No tags found for workflow_run event"
+                exit 1
+              fi
+            fi
+          else
+            echo "Error: Unknown event type: $GITHUB_EVENT_NAME"
             exit 1
           fi
 
-          TAG="${GITHUB_REF#refs/tags/}"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
           # Parse tag format: v1.0.0 (root) or skill-design-system@1.0.0 (skill)
           if [[ $TAG == v* ]]; then
-            # For root releases, get the root package name and version from package.json
+            # For root releases, benchmark the primary workspace (packages/core)
+            # Root v* tags trigger publish.yml which publishes all workspaces via npm publish --workspaces
             VERSION="${TAG#v}"
             RELEASE_TYPE="root"
 
@@ -55,10 +79,17 @@ jobs:
               exit 1
             fi
 
-            # Root package.json name
-            PACKAGE=$(jq -r '.name' package.json)
+            # For root releases, use the core workspace for benchmarking
+            # (packages/core is published as part of the root release)
+            PACKAGE=$(jq -r '.name' packages/core/package.json)
             if [ -z "$PACKAGE" ] || [ "$PACKAGE" == "null" ]; then
-              echo "Error: Could not determine root package name from package.json"
+              echo "Error: Could not determine core workspace package name"
+              exit 1
+            fi
+
+            # Verify the workspace exists
+            if [ ! -f "packages/core/package.json" ]; then
+              echo "Error: Core workspace not found at packages/core/package.json"
               exit 1
             fi
           elif [[ $TAG == skill-* ]]; then
