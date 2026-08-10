@@ -358,26 +358,9 @@ ${!isScoreValid ? `\n⚠️ **Note**: Score mismatch detected. Supplied: ${combi
 
 ## 🎯 Release Decision
 
-${(() => {
-  const isConditionalDataMissing = !isApproved && status === "conditional" && behavioral.core_total === 0 && behavioral.regression_total === 0 && code_quality.coverage_percent === 0;
-  return `- [${isApproved ? "x" : " "}] **APPROVE** — All metrics meet DoD thresholds
-- [${isConditionalDataMissing ? "x" : " "}] **CONDITIONAL** — Benchmark data not collected (collect data and retry)
-- [${!isApproved && !isConditionalDataMissing ? "x" : " "}] **REJECT** — Critical failures: ${
-  !mandatoryGates ? (() => {
-    const failures = [];
-    if (behavioral.core_pass_rate < 95 || !corePassesCI || !hasMinimumCoreSamples) failures.push("CORE tests");
-    if (behavioral.regression_pass_rate !== 100 || !hasRegressionTests) failures.push("REGRESSION tests");
-    if (behavioral.behavioral_score < 90) failures.push("Behavioral score");
-    if (performance.performance_score < 85) failures.push("Performance score");
-    if (validatedCombinedScore < dodThreshold) failures.push("Combined score");
-    if (coverageBlocks) failures.push("Code coverage");
-    if (complexityBlocks) failures.push("Complexity");
-    if (duplicationBlocks) failures.push("Duplication");
-    if (maintainabilityBlocks) failures.push("Maintainability");
-    return failures.join(", ");
-  })() : "unspecified"}`;
-})()}`;
-
+- [${isApproved ? "x" : " "}] **APPROVE** — All metrics meet DoD thresholds
+- [${!isApproved && status === "conditional" && behavioral.core_total === 0 && behavioral.regression_total === 0 ? "x" : " "}] **CONDITIONAL** — Benchmark data not collected (collect and retry)
+- [${!isApproved && !(status === "conditional" && behavioral.core_total === 0) ? "x" : " "}] **REJECT** — Critical gate failures detected
 
 **Sign-Off:** \`@${releaseManager}\`
 **Approval Date:** \`${releaseDate}\`
