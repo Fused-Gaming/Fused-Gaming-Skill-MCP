@@ -136,7 +136,8 @@ jobs:
             echo "Validating benchmarks for: $PACKAGE"
 
             # Get workspace-specific version from the package's own package.json, not root
-            WORKSPACE_ROOT=$(npm ls -p --workspace=$PACKAGE 2>/dev/null | head -1)
+            # npm ls -p outputs repo root first, then workspace paths - we want the last line
+            WORKSPACE_ROOT=$(npm ls -p --workspace=$PACKAGE 2>/dev/null | tail -1)
             if [ -z "$WORKSPACE_ROOT" ]; then
               echo "❌ Could not determine workspace root for $PACKAGE"
               VALIDATION_FAILED=true
@@ -206,7 +207,28 @@ jobs:
 
           # If we get here, all discovered packages had their benchmarks run successfully
           echo "✅ All benchmark validations completed successfully"
-          echo "Note: Full score validation (combined_score >= 90%) will be enforced in create-release-issue.yml"
+
+          # Validate combined scores meet DoD threshold (>= 90%)
+          SCORE_VALIDATION_FAILED=false
+          for PACKAGE in $PACKAGES_TO_VALIDATE; do
+            WORKSPACE_VERSION=$(jq -r '.version' <(npm ls -p --workspace=$PACKAGE 2>/dev/null | tail -1 | xargs -I {} test -f {}/package.json && cat {}/package.json) 2>/dev/null || echo "0.0.0")
+            RESULTS_FILE="benchmarks/packages/$PACKAGE/v$WORKSPACE_VERSION/results.json"
+
+            if [ -f "$RESULTS_FILE" ]; then
+              COMBINED_SCORE=$(jq -r '.combined_score // 0' "$RESULTS_FILE" 2>/dev/null)
+              if (( $(echo "$COMBINED_SCORE < 90" | bc -l) )); then
+                echo "❌ $PACKAGE v$WORKSPACE_VERSION: Combined score $COMBINED_SCORE% < 90% threshold"
+                SCORE_VALIDATION_FAILED=true
+              else
+                echo "✅ $PACKAGE v$WORKSPACE_VERSION: Combined score $COMBINED_SCORE% >= 90%"
+              fi
+            fi
+          done
+
+          if [ "$SCORE_VALIDATION_FAILED" = true ]; then
+            echo "❌ Benchmark score validation failed - publication blocked"
+            exit 1
+          fi
 
       - name: Commit and sign version updates
         if: success() && !startsWith(github.ref, 'refs/tags/') && env.HAS_GPG_PRIVATE_KEY == 'true'
