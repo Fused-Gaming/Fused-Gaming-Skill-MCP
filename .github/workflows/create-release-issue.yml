@@ -1,0 +1,545 @@
+name: 📦 Create Release Issue & Benchmark Tracking
+
+on:
+  push:
+    tags:
+      - 'v*'           # Release tag: v1.0.0, v1.1.0, etc.
+      - 'skill-*@*'    # Skill tag: skill-design-system@1.0.0
+  workflow_run:
+    workflows: ["Publish to npm"]
+    types: [completed]
+    # This triggers for automated tags created by publish.yml with GITHUB_TOKEN
+    # which don't trigger push events. Manual tag pushes trigger via push event above.
+
+jobs:
+  create-release-issue:
+    name: Create Release Issue & Benchmark Tracking
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: benchmark-commit-push
+      cancel-in-progress: false
+    permissions:
+      issues: write
+      contents: write
+      pull-requests: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          # For workflow_run events, check out the published revision; for push, use github.ref (the tag)
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.ref }}
+
+      - name: Extract package information from tag
+        id: package-info
+        run: |
+          # Handle both push:tags and workflow_run events
+          TAG=""
+
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            # Direct tag push: GITHUB_REF is refs/tags/TAG
+            if [[ $GITHUB_REF != refs/tags/* ]]; then
+              echo "Error: Push event should be a tag push (refs/tags/*)"
+              exit 1
+            fi
+            TAG="${GITHUB_REF#refs/tags/}"
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_run" ]]; then
+            # workflow_run event: find the tag created by the triggering publish.yml run
+            # Use the workflow run's head_sha to find the exact commit that was tagged
+            git fetch origin --tags
+            PUBLISH_SHA="${{ github.event.workflow_run.head_sha }}"
+
+            # Find the tag pointing to this exact commit (the one created by publish.yml)
+            if TAG=$(git describe --tags --exact-match "$PUBLISH_SHA" 2>/dev/null); then
+              echo "Found tag for workflow publish commit: $TAG"
+            else
+              # Fallback: use git describe to find most recent tag from this commit
+              if TAG=$(git describe --tags "$PUBLISH_SHA" 2>/dev/null | cut -d- -f1); then
+                echo "Found related tag for workflow commit: $TAG"
+              else
+                echo "Error: No tags found for workflow_run publish commit $PUBLISH_SHA"
+                exit 1
+              fi
+            fi
+          else
+            echo "Error: Unknown event type: $GITHUB_EVENT_NAME"
+            exit 1
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+          # Parse tag format: v1.0.0 (root) or skill-design-system@1.0.0 (skill)
+          if [[ $TAG == v* ]]; then
+            # For root releases, benchmark the primary workspace (packages/core)
+            # Root v* tags trigger publish.yml which publishes all workspaces via npm publish --workspaces
+            VERSION="${TAG#v}"
+            RELEASE_TYPE="root"
+
+            # Validate version format: semantic versioning (X.Y.Z) with optional prerelease and build metadata
+            # Allows: 1.0.0, 1.0.0-beta, 1.0.0-beta-feature, 1.0.0+build.7, 1.0.0-beta+build
+            if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?(\+[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?$ ]]; then
+              echo "Error: Invalid version format: $VERSION (must be valid SemVer like X.Y.Z or X.Y.Z-prerelease)"
+              exit 1
+            fi
+
+            # For root releases, use the core workspace for benchmarking
+            # (packages/core is published as part of the root release)
+            PACKAGE=$(jq -r '.name' packages/core/package.json)
+            if [ -z "$PACKAGE" ] || [ "$PACKAGE" == "null" ]; then
+              echo "Error: Could not determine core workspace package name"
+              exit 1
+            fi
+
+            # Verify the workspace exists
+            if [ ! -f "packages/core/package.json" ]; then
+              echo "Error: Core workspace not found at packages/core/package.json"
+              exit 1
+            fi
+          elif [[ $TAG == skill-* ]]; then
+            # Extract skill directory name and version from skill-name@version format
+            SKILL_DIR=$(echo "$TAG" | sed 's/@.*//' | sed 's/skill-//')
+            VERSION=$(echo "$TAG" | sed 's/.*@//')
+            RELEASE_TYPE="skill"
+
+            # Validate version format: semantic versioning (X.Y.Z) with optional prerelease and build metadata
+            # Allows: 1.0.0, 1.0.0-beta, 1.0.0-beta-feature, 1.0.0+build.7, 1.0.0-beta+build
+            if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?(\+[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?$ ]]; then
+              echo "Error: Invalid version format: $VERSION (must be valid SemVer like X.Y.Z or X.Y.Z-prerelease)"
+              exit 1
+            fi
+
+            # Read package name from the skill's package.json to handle naming mismatches
+            SKILL_MANIFEST="packages/skills/$SKILL_DIR/package.json"
+            if [ -f "$SKILL_MANIFEST" ]; then
+              PACKAGE=$(jq -r '.name' "$SKILL_MANIFEST")
+            else
+              # Reject skill tags without matching manifest - do not invent package names
+              echo "Error: Skill manifest not found at $SKILL_MANIFEST"
+              echo "Tag '$TAG' references skill '$SKILL_DIR' which has no package.json"
+              exit 1
+            fi
+          else
+            echo "Unrecognized tag format: $TAG"
+            exit 1
+          fi
+
+          # Pass values through step outputs without sed escaping (breaks scoped packages)
+          echo "package=$PACKAGE" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "release_type=$RELEASE_TYPE" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          npm ci
+
+      - name: Run benchmark tests
+        id: benchmarks
+        run: |
+          RESULTS_FILE="benchmarks/packages/${{ steps.package-info.outputs.package }}/v${{ steps.package-info.outputs.version }}/results-${{ github.run_number }}.json"
+          mkdir -p "$(dirname "$RESULTS_FILE")"
+
+          BENCHMARK_SUCCESS=false
+
+          if npm run benchmark --workspace=${{ steps.package-info.outputs.package }} > benchmark-output.log 2>&1; then
+            BENCHMARK_SUCCESS=true
+          fi
+
+          # Only use results from the current benchmark run, never cached results
+          if [ "$BENCHMARK_SUCCESS" = true ]; then
+            # Parse benchmark output and create results JSON
+            # Extract performance metrics from benchmark output
+            # Read output from file to avoid backtick injection in template literals
+            node -e "
+              const fs = require('fs');
+              const output = fs.readFileSync('benchmark-output.log', 'utf8');
+              const lines = output.split('\n');
+
+              // Extract performance metrics from benchmark output format: 'X.XXXms/op (Y ops/sec)'
+              // Aggregate multiple measurements by collecting all values and computing means and std dev
+              let latency_values = [], throughput_values = [];
+              lines.forEach(line => {
+                // Match patterns like '0.003ms/op' or 'avg: 0.003ms'
+                const latencyMatch = line.match(/([0-9.]+)\s*ms\/op/) || line.match(/([0-9.]+)\s*ms$/);
+                if (latencyMatch) latency_values.push(parseFloat(latencyMatch[1]));
+                const throughputMatch = line.match(/([0-9.]+)\s*ops\/sec/);
+                if (throughputMatch) throughput_values.push(parseFloat(throughputMatch[1]));
+              });
+
+              // Calculate means and standard deviations if measurements were captured
+              let latency_ms = 0, latency_std_dev = 0, throughput_ops = 0, throughput_std_dev = 0;
+              if (latency_values.length > 0) {
+                latency_ms = latency_values.reduce((a, b) => a + b, 0) / latency_values.length;
+                const latency_variance = latency_values.reduce((sum, val) => sum + Math.pow(val - latency_ms, 2), 0) / latency_values.length;
+                latency_std_dev = Math.sqrt(latency_variance);
+              }
+              if (throughput_values.length > 0) {
+                throughput_ops = throughput_values.reduce((a, b) => a + b, 0) / throughput_values.length;
+                const throughput_variance = throughput_values.reduce((sum, val) => sum + Math.pow(val - throughput_ops, 2), 0) / throughput_values.length;
+                throughput_std_dev = Math.sqrt(throughput_variance);
+              }
+
+              // Report only metrics that were actually captured
+              // Do NOT synthesize passing behavioral/quality results when not measured
+              const results = {
+                package: '${{ steps.package-info.outputs.package }}',
+                version: '${{ steps.package-info.outputs.version }}',
+                timestamp: new Date().toISOString(),
+                behavioral: {
+                  core_pass_rate: 0,
+                  core_total: 0,
+                  regression_pass_rate: 0,
+                  regression_total: 0,
+                  functionality_pass_rate: 0,
+                  functionality_total: 0,
+                  error_pass_rate: 0,
+                  error_total: 0,
+                  behavioral_score: 0
+                },
+                performance: {
+                  latency_ms_mean: latency_ms,
+                  latency_ms_std_dev: latency_std_dev,
+                  latency_sample_count: latency_values.length,
+                  throughput_ops_sec_mean: throughput_ops,
+                  throughput_ops_sec_std_dev: throughput_std_dev,
+                  throughput_sample_count: throughput_values.length,
+                  memory_mb_peak: 0,
+                  performance_score: 0
+                },
+                code_quality: {
+                  complexity_mean: 0,
+                  complexity_max: 0,
+                  duplication_percent: 0,
+                  coverage_percent: 0,
+                  maintainability_index: 0,
+                  quality_score: 0
+                },
+                combined_score: 0,
+                status: 'conditional'
+              };
+
+              console.log(JSON.stringify(results, null, 2));
+            " > "$RESULTS_FILE" || {
+              echo "Failed to parse benchmark output"
+              BENCHMARK_SUCCESS=false
+            }
+          fi
+
+          # Validate results file contains valid JSON
+          if [ "$BENCHMARK_SUCCESS" = true ] && [ -f "$RESULTS_FILE" ]; then
+            if ! jq empty "$RESULTS_FILE" 2>/dev/null; then
+              echo "Warning: Generated results file contains invalid JSON"
+              BENCHMARK_SUCCESS=false
+            fi
+          fi
+
+          if [ "$BENCHMARK_SUCCESS" = false ] || [ ! -f "$RESULTS_FILE" ]; then
+            cat > "$RESULTS_FILE" <<EOF
+          {
+            "package": "${{ steps.package-info.outputs.package }}",
+            "version": "${{ steps.package-info.outputs.version }}",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "behavioral": {
+              "core_pass_rate": 0,
+              "core_total": 0,
+              "regression_pass_rate": 0,
+              "regression_total": 0,
+              "functionality_pass_rate": 0,
+              "functionality_total": 0,
+              "error_pass_rate": 0,
+              "error_total": 0,
+              "behavioral_score": 0
+            },
+            "performance": {
+              "latency_ms_mean": 0,
+              "latency_ms_std_dev": 0,
+              "latency_sample_count": 0,
+              "throughput_ops_sec_mean": 0,
+              "throughput_ops_sec_std_dev": 0,
+              "throughput_sample_count": 0,
+              "memory_mb_peak": 0,
+              "performance_score": 0
+            },
+            "code_quality": {
+              "complexity_mean": 0,
+              "complexity_max": 0,
+              "duplication_percent": 0,
+              "coverage_percent": 0,
+              "maintainability_index": 0,
+              "quality_score": 0
+            },
+            "combined_score": 0,
+            "status": "fail"
+          }
+          EOF
+          fi
+
+          echo "results_file=$RESULTS_FILE" >> $GITHUB_OUTPUT
+
+      - name: Sanitize package name for artifact upload
+        id: sanitize-artifact
+        run: |
+          # Replace slashes with dashes for GitHub upload-artifact compatibility
+          SAFE_NAME="${{ steps.package-info.outputs.package }}"
+          SAFE_NAME="${SAFE_NAME//\//-}"
+          echo "artifact_name=benchmark-results-${SAFE_NAME}-${{ steps.package-info.outputs.version }}" >> $GITHUB_OUTPUT
+
+      - name: Upload benchmark results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.sanitize-artifact.outputs.artifact_name }}
+          path: ${{ steps.benchmarks.outputs.results_file }}
+          retention-days: 90
+
+      - name: Create GitHub Release Issue
+        id: create-issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+          GITHUB_ASSIGNEE: ${{ github.actor }}
+        run: |
+          npx ts-node scripts/create-release-issue.ts \
+            "${{ steps.package-info.outputs.package }}" \
+            "${{ steps.package-info.outputs.version }}" \
+            "${{ steps.benchmarks.outputs.results_file }}"
+
+      - name: Generate benchmark report
+        run: |
+          REPORT_DIR="benchmarks/packages/${{ steps.package-info.outputs.package }}/v${{ steps.package-info.outputs.version }}"
+          mkdir -p "$REPORT_DIR"
+          cp ${{ steps.benchmarks.outputs.results_file }} "$REPORT_DIR/results.json"
+
+          cat > "$REPORT_DIR/index.html" <<'HTMLEOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Benchmark Report</title>
+            <style>
+              body { font-family: sans-serif; margin: 20px; }
+              .metric { display: inline-block; margin: 10px; padding: 15px; border-radius: 8px; background: #f5f5f5; }
+              .score { font-size: 2em; font-weight: bold; }
+            </style>
+          </head>
+          <body>
+            <h1>Benchmark Report</h1>
+            <div id="results"></div>
+            <script>
+              fetch('results.json').then(r => r.json()).then(data => {
+                // Recalculate validated combined score using canonical formula
+                // Combined score = (Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)
+                const validatedScore = (
+                  (data.behavioral.behavioral_score * 0.40) +
+                  (data.performance.performance_score * 0.35) +
+                  (data.code_quality.quality_score * 0.25)
+                );
+                const html = `
+                  <h2>${data.package} v${data.version}</h2>
+                  <div class="metric">
+                    <div class="score">${validatedScore.toFixed(1)}%</div>
+                    <div>Combined Score</div>
+                  </div>
+                  <div class="metric">
+                    <div class="score">${data.behavioral.behavioral_score.toFixed(1)}%</div>
+                    <div>Behavioral</div>
+                  </div>
+                  <div class="metric">
+                    <div class="score">${data.performance.performance_score.toFixed(1)}%</div>
+                    <div>Performance</div>
+                  </div>
+                  <div class="metric">
+                    <div class="score">${data.code_quality.quality_score.toFixed(1)}%</div>
+                    <div>Code Quality</div>
+                  </div>
+                `;
+                document.getElementById('results').innerHTML = html;
+              });
+            </script>
+          </body>
+          </html>
+          HTMLEOF
+
+      - name: Update packages registry
+        run: |
+          mkdir -p benchmarks
+
+          REGISTRY=$(cat benchmarks/packages-registry.json 2>/dev/null || echo '{"packages":{},"versions":[],"summary":{}}')
+
+          # Extract benchmark results if available to populate registry entry
+          WORKSPACE_VERSION="${{ steps.package-info.outputs.version }}"
+          RESULTS_FILE="benchmarks/packages/${{ steps.package-info.outputs.package }}/v${WORKSPACE_VERSION}/results.json"
+          if [ -f "$RESULTS_FILE" ]; then
+            BENCHMARK_DATA=$(cat "$RESULTS_FILE")
+          else
+            BENCHMARK_DATA='{}'
+          fi
+
+          # Determine release status based on trigger
+          # workflow_run with conclusion=success: triggered after publish.yml succeeds = "published"
+          # workflow_run with other conclusion: publish failed or was cancelled = "failed"
+          # push (manual tag): unverified publication = "staged"
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            if [ "${{ github.event.workflow_run.conclusion }}" = "success" ]; then
+              RELEASE_STATUS="published"
+            else
+              RELEASE_STATUS="failed"
+            fi
+          else
+            RELEASE_STATUS="staged"
+          fi
+
+          # Update registry and recalculate summary fields
+          # Use upsert logic: update existing entry if it exists, else append
+          # Also maintain nested version history in .packages[$pkg].versions
+          echo "$REGISTRY" | jq \
+            --arg pkg "${{ steps.package-info.outputs.package }}" \
+            --arg ver "${{ steps.package-info.outputs.version }}" \
+            --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg pkgver "${{ steps.package-info.outputs.package }}-${{ steps.package-info.outputs.version }}" \
+            --arg status "$RELEASE_STATUS" \
+            --argjson benchmarks "$BENCHMARK_DATA" \
+            '.packages[$pkg] |= . + {
+              "name": $pkg,
+              "latest_version": (if (.latest_version == null or (.latest_version | split(".") | map(tonumber) | .[0:3]) < ($ver | split(".") | map(tonumber) | .[0:3])) then $ver else .latest_version end),
+              "updated": $date,
+              "versions": (
+                if (.versions | type) == "array" then
+                  if (.versions | map(select(.version == $ver)) | length) > 0 then
+                    .versions | map(if .version == $ver then . + {"status": $status, "published_date": $date} else . end)
+                  else
+                    .versions + [{"version": $ver, "status": $status, "published_date": $date}]
+                  end
+                else
+                  [{"version": $ver, "status": $status, "published_date": $date}]
+                end
+              )
+            } |
+            if (.versions | map(select(.id == $pkgver)) | length) > 0 then
+              .versions |= map(if .id == $pkgver then . + {
+                "status": $status,
+                "published_date": $date
+              } else . end)
+            else
+              .versions = (.versions + [{
+                "id": $pkgver,
+                "package": $pkg,
+                "version": $ver,
+                "status": $status,
+                "published_date": $date,
+                "release_issue_number": null,
+                "release_issue_url": null,
+                "benchmark_results": (
+                  if $benchmarks != {} then
+                    {
+                      "behavioral_score": ($benchmarks.behavioral.behavioral_score // 0),
+                      "performance_score": ($benchmarks.performance.performance_score // 0),
+                      "code_quality_score": ($benchmarks.code_quality.quality_score // 0),
+                      "combined_score": ($benchmarks.combined_score // 0),
+                      "status": ($benchmarks.status // "pending"),
+                      "details_url": null
+                    }
+                  else
+                    {
+                      "behavioral_score": 0,
+                      "performance_score": 0,
+                      "code_quality_score": 0,
+                      "combined_score": 0,
+                      "status": "pending",
+                      "details_url": null
+                    }
+                  end
+                ),
+                "regression_detection": (
+                  if $benchmarks.regression_detection then
+                    $benchmarks.regression_detection
+                  else
+                    {
+                      "performance_regression": false,
+                      "code_quality_regression": false,
+                      "behavioral_regression": false,
+                      "summary": "Pending baseline comparison"
+                    }
+                  end
+                ),
+                "changelog_entry": null
+            }])
+            end |
+            .meta.updated = $date |
+            # Recalculate and merge summary fields while preserving aggregate metrics
+            . as $root |
+            .summary |= . + {
+              "total_packages": ($root.packages | length),
+              "total_versions": (
+                [$root.packages[].versions | if type == "array" then length else 0 end] | add
+              ),
+              "packages_with_benchmarks": ($root.packages | to_entries | map(select(.value.benchmark_enabled == true)) | length),
+              "last_updated": $root.meta.updated
+            }' > benchmarks/packages-registry.json.tmp
+
+          mv benchmarks/packages-registry.json.tmp benchmarks/packages-registry.json
+
+      - name: Commit benchmark results to main
+        if: github.actor != 'dependabot[bot]'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          # Clean up any generated files from prior runs to prevent checkout abort
+          rm -f benchmark-output.log benchmark-changes.patch
+
+          # Save benchmark changes for later application BEFORE discard
+          git diff benchmarks/ > benchmark-changes.patch || true
+
+          # Discard modified files to allow clean checkout to main
+          git checkout -- benchmarks/ || true
+
+          # Check out main branch cleanly to avoid pushing tagged history
+          git fetch origin main
+          git checkout -B temp-benchmark origin/main
+
+          # Apply only benchmark file changes (not tagged commit history)
+          if [ -s benchmark-changes.patch ]; then
+            git apply benchmark-changes.patch || {
+              echo "Failed to apply benchmark changes"
+              exit 1
+            }
+          fi
+
+          git add benchmarks/
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(benchmarks): record results for ${{ steps.package-info.outputs.package }} v${{ steps.package-info.outputs.version }}"
+
+            # Retry push with rebase in case of concurrent updates
+            MAX_RETRIES=3
+            RETRY_COUNT=0
+            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+              if git push origin temp-benchmark:main 2>&1; then
+                echo "Push succeeded"
+                exit 0
+              fi
+
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "Push failed, retrying after rebase... (attempt $((RETRY_COUNT + 1))/$MAX_RETRIES)"
+                git fetch origin main
+                git rebase origin/main || {
+                  echo "Rebase failed, aborting retry"
+                  exit 1
+                }
+              fi
+            done
+
+            echo "Push failed after $MAX_RETRIES retries"
+            exit 1
+          fi

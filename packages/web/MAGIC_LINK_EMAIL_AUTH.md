@@ -297,7 +297,7 @@ MAIL_PORT=587
 MAIL_SECURE=false
 MAIL_USER=your-email@gmail.com
 MAIL_PASS=your-app-password
-MAIL_FROM=noreply@fused-gaming.io
+MAIL_FROM=noreply@vln.gg
 NEXTAUTH_URL=https://your-domain.com
 ```
 

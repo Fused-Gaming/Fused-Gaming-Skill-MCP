@@ -398,7 +398,7 @@ docs.vln.gg/
 ### Support Channels
 - GitHub Issues: Bug reports
 - GitHub Discussions: Feature requests
-- Email: support@fused-gaming.io
+- Email: support@vln.gg
 - Slack: Community workspace
 
 ---

@@ -327,4 +327,4 @@ For issues or questions:
 
 - **GitHub Issues**: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues
 - **Documentation**: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/docs
-- **Email**: support@fused-gaming.io
+- **Email**: support@vln.gg

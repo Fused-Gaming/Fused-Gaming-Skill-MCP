@@ -89,6 +89,147 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Validate benchmarks (pre-publication gate)
+        if: success()
+        run: |
+          # Determine which packages to validate
+          # Discover all workspace packages including nested skills
+          PACKAGES_TO_VALIDATE=$(node -e "
+            const fs = require('fs');
+            const path = require('path');
+
+            function findPackages(dir) {
+              const packages = [];
+              try {
+                const entries = fs.readdirSync(dir, { withFileTypes: true });
+                entries.forEach(entry => {
+                  const fullPath = path.join(dir, entry.name);
+                  const pkgJsonPath = path.join(fullPath, 'package.json');
+
+                  if (entry.isDirectory() && fs.existsSync(pkgJsonPath)) {
+                    try {
+                      const pkg = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+                      packages.push(pkg.name);
+                    } catch (e) {
+                      // Skip malformed package.json
+                    }
+                  }
+                });
+              } catch (e) {
+                // Skip if directory doesn't exist
+              }
+              return packages;
+            }
+
+            // Find all packages in packages/ and packages/skills/
+            const packages = [
+              ...findPackages('packages'),
+              ...findPackages('packages/skills')
+            ];
+
+            console.log([...new Set(packages)].join(' '));
+          ")
+
+          VALIDATION_FAILED=false
+
+          for PACKAGE in $PACKAGES_TO_VALIDATE; do
+            echo "Validating benchmarks for: $PACKAGE"
+
+            # Get workspace-specific version from the package's own package.json, not root
+            # npm ls -p outputs repo root first, then workspace paths - we want the last line
+            WORKSPACE_ROOT=$(npm ls -p --workspace=$PACKAGE 2>/dev/null | tail -1)
+            if [ -z "$WORKSPACE_ROOT" ]; then
+              echo "❌ Could not determine workspace root for $PACKAGE"
+              VALIDATION_FAILED=true
+              continue
+            fi
+            WORKSPACE_VERSION=$(jq -r '.version' "$WORKSPACE_ROOT/package.json" 2>/dev/null || echo "0.0.0")
+
+            # Run benchmark
+            RESULTS_DIR="benchmarks/packages/$PACKAGE/v$WORKSPACE_VERSION"
+            mkdir -p "$RESULTS_DIR"
+
+            if npm run benchmark --workspace=$PACKAGE > benchmark-output.log 2>&1; then
+              # Parse results
+              node -e "
+                const fs = require('fs');
+                const output = fs.readFileSync('benchmark-output.log', 'utf8');
+
+                let latency_ms = 0, throughput_ops = 0;
+                output.split('\n').forEach(line => {
+                  const latencyMatch = line.match(/([0-9.]+)\s*ms\/op/) || line.match(/([0-9.]+)\s*ms$/);
+                  if (latencyMatch) latency_ms = parseFloat(latencyMatch[1]);
+                  const throughputMatch = line.match(/([0-9.]+)\s*ops\/sec/);
+                  if (throughputMatch) throughput_ops = parseFloat(throughputMatch[1]);
+                });
+
+                const results = {
+                  package: '$PACKAGE',
+                  version: '$WORKSPACE_VERSION',
+                  timestamp: new Date().toISOString(),
+                  behavioral: { core_pass_rate: 0, core_total: 0, regression_pass_rate: 0, regression_total: 0, functionality_pass_rate: 0, functionality_total: 0, error_pass_rate: 0, error_total: 0, behavioral_score: 0 },
+                  performance: { latency_ms_mean: latency_ms, latency_ms_std_dev: 0, latency_sample_count: 0, throughput_ops_sec_mean: throughput_ops, throughput_ops_sec_std_dev: 0, throughput_sample_count: 0, memory_mb_peak: 0, performance_score: 0 },
+                  code_quality: { complexity_mean: 0, complexity_max: 0, duplication_percent: 0, coverage_percent: 0, maintainability_index: 0, quality_score: 0 },
+                  combined_score: 0,
+                  status: 'conditional'
+                };
+
+                console.log(JSON.stringify(results, null, 2));
+              " > "$RESULTS_DIR/results.json"
+              echo "✅ Benchmark completed for $PACKAGE"
+            else
+              # Benchmark command failed (missing script, execution error, etc.)
+              echo "❌ Benchmark validation failed for $PACKAGE (exit code: $?)"
+              VALIDATION_FAILED=true
+
+              # Still write results file for tracking, but mark as failed
+              node -e "
+                const fs = require('fs');
+                fs.writeFileSync('$RESULTS_DIR/results.json', JSON.stringify({
+                  package: '$PACKAGE',
+                  version: '$WORKSPACE_VERSION',
+                  timestamp: new Date().toISOString(),
+                  behavioral: { core_pass_rate: 0, core_total: 0, regression_pass_rate: 0, regression_total: 0, functionality_pass_rate: 0, functionality_total: 0, error_pass_rate: 0, error_total: 0, behavioral_score: 0 },
+                  performance: { latency_ms_mean: 0, latency_ms_std_dev: 0, latency_sample_count: 0, throughput_ops_sec_mean: 0, throughput_ops_sec_std_dev: 0, throughput_sample_count: 0, memory_mb_peak: 0, performance_score: 0 },
+                  code_quality: { complexity_mean: 0, complexity_max: 0, duplication_percent: 0, coverage_percent: 0, maintainability_index: 0, quality_score: 0 },
+                  combined_score: 0,
+                  status: 'fail'
+                }, null, 2));
+              "
+            fi
+          done
+
+          # Fail if any validation failed
+          if [ "$VALIDATION_FAILED" = true ]; then
+            echo "❌ Benchmark validation failed for one or more packages"
+            exit 1
+          fi
+
+          # If we get here, all discovered packages had their benchmarks run successfully
+          echo "✅ All benchmark validations completed successfully"
+
+          # Validate combined scores meet DoD threshold (>= 90%)
+          SCORE_VALIDATION_FAILED=false
+          for PACKAGE in $PACKAGES_TO_VALIDATE; do
+            WORKSPACE_VERSION=$(jq -r '.version' <(npm ls -p --workspace=$PACKAGE 2>/dev/null | tail -1 | xargs -I {} test -f {}/package.json && cat {}/package.json) 2>/dev/null || echo "0.0.0")
+            RESULTS_FILE="benchmarks/packages/$PACKAGE/v$WORKSPACE_VERSION/results.json"
+
+            if [ -f "$RESULTS_FILE" ]; then
+              COMBINED_SCORE=$(jq -r '.combined_score // 0' "$RESULTS_FILE" 2>/dev/null)
+              if (( $(echo "$COMBINED_SCORE < 90" | bc -l) )); then
+                echo "❌ $PACKAGE v$WORKSPACE_VERSION: Combined score $COMBINED_SCORE% < 90% threshold"
+                SCORE_VALIDATION_FAILED=true
+              else
+                echo "✅ $PACKAGE v$WORKSPACE_VERSION: Combined score $COMBINED_SCORE% >= 90%"
+              fi
+            fi
+          done
+
+          if [ "$SCORE_VALIDATION_FAILED" = true ]; then
+            echo "❌ Benchmark score validation failed - publication blocked"
+            exit 1
+          fi
+
       - name: Commit and sign version updates
         if: success() && !startsWith(github.ref, 'refs/tags/') && env.HAS_GPG_PRIVATE_KEY == 'true'
         run: |

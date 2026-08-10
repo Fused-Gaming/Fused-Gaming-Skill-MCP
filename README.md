@@ -515,7 +515,7 @@ We'd love your involvement!
 - 🐛 **Report Issues** → [GitHub Issues](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues)
 - 💡 **Suggest Features** → [GitHub Discussions](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/discussions)
 - 🤝 **Contribute Code** → [CONTRIBUTING.md](./CONTRIBUTING.md)
-- 📧 **Get Support** → [support@fused-gaming.io](mailto:support@fused-gaming.io)
+- 📧 **Get Support** → [support@vln.gg](mailto:support@vln.gg)
 
 ---
 

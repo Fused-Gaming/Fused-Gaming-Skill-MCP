@@ -302,7 +302,7 @@ All API changes are opt-in; existing code remains compatible.
 ## Support
 
 For questions or issues:
-- 📧 Email: support@fused-gaming.io
+- 📧 Email: support@vln.gg
 - 🐛 Issues: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues
 - 📚 Documentation: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/tree/main/docs
 

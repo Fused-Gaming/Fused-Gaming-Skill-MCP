@@ -601,7 +601,7 @@ packages/cli/
   "licenseManager": {
     "databasePath": "~/.fused-gaming-mcp/licenses.db",
     "backend": {
-      "apiUrl": "https://license-api.fused-gaming.io",
+      "apiUrl": "https://license-api.vln.gg",
       "retryAttempts": 3,
       "retryDelay": 1000,
       "timeout": 10000

@@ -343,7 +343,7 @@ For issues or questions:
 1. Check `.claude-flow/logs/orchestration.log`
 2. Review `.claude-flow/security/audit.log` for auth issues
 3. Check GitHub Issues: https://github.com/fused-gaming/fused-gaming-skill-mcp/issues
-4. Contact support@fused-gaming.io
+4. Contact support@vln.gg
 
 ---
 

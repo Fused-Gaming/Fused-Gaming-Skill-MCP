@@ -407,4 +407,4 @@ See [ICONS_GUIDE.md](./ICONS_GUIDE.md) for complete icon documentation.
 
 For issues, questions, or suggestions:
 - GitHub Issues: https://github.com/fused-gaming/fused-gaming-skill-mcp/issues
-- Email: support@fused-gaming.io
+- Email: support@vln.gg

@@ -455,4 +455,4 @@ Apache-2.0
 
 For issues or questions:
 - GitHub: https://github.com/fused-gaming/fused-gaming-skill-mcp
-- Email: support@fused-gaming.io
+- Email: support@vln.gg

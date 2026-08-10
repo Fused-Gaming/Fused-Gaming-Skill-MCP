@@ -118,8 +118,8 @@ Educational Use: Learning and training only. Not for commercial use.
 
 If you need to use this component for **commercial purposes**, contact:
 
-**Email:** license@fused-gaming.io  
-**Website:** https://fused-gaming.io  
+**Email:** license@vln.gg  
+**Website:** https://vln.gg  
 **GitHub:** https://github.com/fused-gaming/fused-gaming-skill-mcp  
 
 Commercial licenses are available for:
@@ -208,7 +208,7 @@ limitations under the License.
 ## 📧 Questions & Support
 
 **For licensing questions:**
-- Email: license@fused-gaming.io
+- Email: license@vln.gg
 - GitHub Discussions: https://github.com/fused-gaming/fused-gaming-skill-mcp/discussions
 - Issues: https://github.com/fused-gaming/fused-gaming-skill-mcp/issues
 

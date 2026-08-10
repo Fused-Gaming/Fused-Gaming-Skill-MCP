@@ -165,11 +165,11 @@ JWT_SECRET=your-very-secure-random-string-min-32-chars
 JWT_EXPIRY=24h
 
 # Admin Credentials (change in production)
-ADMIN_EMAIL=admin@fused-gaming.io
+ADMIN_EMAIL=admin@vln.gg
 ADMIN_PASSWORD=your-strong-password
 
 # Security Settings
-ALLOWED_ORIGINS=http://localhost:3000,https://syncpulse.fused-gaming.io
+ALLOWED_ORIGINS=http://localhost:3000,https://sync.vln.gg
 ENFORCE_HTTPS=true
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100

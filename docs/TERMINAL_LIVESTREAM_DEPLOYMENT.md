@@ -511,7 +511,7 @@ trackEvent('logs-exported', { format: 'json', count: logs.length });
 - Discussions: https://github.com/fused-gaming/fused-gaming-skill-mcp/discussions
 
 **Licensing:**
-- Email: license@fused-gaming.io
+- Email: license@vln.gg
 
 ---
 

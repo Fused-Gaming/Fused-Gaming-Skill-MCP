@@ -18,7 +18,7 @@
 | **Author** | Fused Gaming + VLN Security |
 | **License** | Apache 2.0 |
 | **Repository** | https://github.com/fused-gaming/fused-gaming-skill-mcp |
-| **Homepage** | https://fused-gaming.io |
+| **Homepage** | https://vln.gg |
 
 ### Description
 
@@ -385,7 +385,7 @@ For organizations requiring:
 - Priority support
 - Training and consulting
 
-**Contact:** info@fused-gaming.io
+**Contact:** info@vln.gg
 
 ---
 

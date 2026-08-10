@@ -214,7 +214,7 @@ Learn more: [Full Installation Guide](/guide/installation/full-setup)
 - **npm Scope**: [@h4shed](https://www.npmjs.com/~h4shed)
 - **Issue Tracker**: [GitHub Issues](https://github.com/fused-gaming/fused-gaming-skill-mcp/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/fused-gaming/fused-gaming-skill-mcp/discussions)
-- **Email**: support@fused-gaming.io
+- **Email**: support@vln.gg
 
 ---
 
