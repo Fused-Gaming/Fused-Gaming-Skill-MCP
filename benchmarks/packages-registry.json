@@ -1,7 +1,7 @@
 {
   "meta": {
     "created": "2026-08-09T00:00:00Z",
-    "updated": "2026-08-09T00:00:00Z",
+    "updated": "2026-08-10T10:17:23Z",
     "registry_version": "1.0.0",
     "description": "Master registry tracking all published packages and their benchmark history"
   },
@@ -20,14 +20,15 @@
       "versions": [
         {
           "version": "1.0.0",
-          "published_date": "2026-04-16",
+          "published_date": "2026-08-10T10:17:23Z",
           "benchmark_status": "conditional",
           "combined_score": 82.0,
           "behavioral_score": 85.0,
           "performance_score": 80.0,
           "code_quality_score": 78.0,
           "release_issue_url": null,
-          "details_url": null
+          "details_url": null,
+          "status": "failed"
         },
         {
           "version": "1.0.1",
@@ -95,7 +96,8 @@
           "release_issue_url": null,
           "details_url": null
         }
-      ]
+      ],
+      "updated": "2026-08-10T10:17:23Z"
     }
   },
   "versions": [
@@ -122,6 +124,30 @@
         "summary": "No regressions detected"
       },
       "changelog_entry": "https://github.com/fused-gaming/fused-gaming-skill-mcp/blob/main/docs/releases/RELEASE_NOTES_v1.3.0.md"
+    },
+    {
+      "id": "@h4shed/mcp-core-1.0.0",
+      "package": "@h4shed/mcp-core",
+      "version": "1.0.0",
+      "status": "failed",
+      "published_date": "2026-08-10T10:17:23Z",
+      "release_issue_number": null,
+      "release_issue_url": null,
+      "benchmark_results": {
+        "behavioral_score": 0,
+        "performance_score": 0,
+        "code_quality_score": 0,
+        "combined_score": 0,
+        "status": "fail",
+        "details_url": null
+      },
+      "regression_detection": {
+        "performance_regression": false,
+        "code_quality_regression": false,
+        "behavioral_regression": false,
+        "summary": "Pending baseline comparison"
+      },
+      "changelog_entry": null
     }
   ],
   "summary": {
@@ -133,7 +159,7 @@
     "passing_releases": 1,
     "conditional_releases": 0,
     "failed_releases": 0,
-    "last_updated": "2026-08-09T00:00:00Z"
+    "last_updated": "2026-08-10T10:17:23Z"
   },
   "milestones": {
     "phase_1_complete": {
