@@ -47,13 +47,25 @@ DoD Status: BLOCKED ❌
 
 ---
 
-**PASSING EXAMPLE** (with 125 tests):
+**BLOCKED EXAMPLE** (insufficient sample size):
 ```
 CORE Tests: 119 passed / 125 total
-Pass Rate = 95.2%
+Pass Rate = 95.2% ✅ (meets ≥95% rate requirement)
 SE = √(0.952 × 0.048 / 125) = 0.0139
 95% CI = 95.2% ± (1.96 × 1.39%) = [92.5%, 97.9%]
-Lower Bound = 92.5% ✅ (≥93% CI threshold passes)
+Lower Bound = 92.5% ❌ (below 93% CI threshold)
+
+Action: Increase sample size to ~360 tests to achieve ≥93% lower bound
+DoD Status: BLOCKED ❌
+```
+
+**PASSING EXAMPLE** (with sufficient sample size):
+```
+CORE Tests: 345 passed / 363 total
+Pass Rate = 95.0%
+SE = √(0.950 × 0.050 / 363) = 0.0110
+95% CI = 95.0% ± (1.96 × 1.10%) = [93.0%, 97.0%]
+Lower Bound = 93.0% ✅ (≥93% CI threshold passes)
 
 DoD Status: PASS ✅
 ```
