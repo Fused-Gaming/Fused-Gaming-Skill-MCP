@@ -45,17 +45,20 @@ jobs:
             fi
             TAG="${GITHUB_REF#refs/tags/}"
           elif [[ "$GITHUB_EVENT_NAME" == "workflow_run" ]]; then
-            # workflow_run event: find the most recent tag at HEAD
-            # The triggering workflow (publish.yml) should have created and pushed a tag
+            # workflow_run event: find the tag created by the triggering publish.yml run
+            # Use the workflow run's head_sha to find the exact commit that was tagged
             git fetch origin --tags
-            if TAG=$(git describe --tags --exact-match HEAD 2>/dev/null); then
-              echo "Found tag at HEAD: $TAG"
+            PUBLISH_SHA="${{ github.event.workflow_run.head_sha }}"
+
+            # Find the tag pointing to this exact commit (the one created by publish.yml)
+            if TAG=$(git describe --tags --exact-match "$PUBLISH_SHA" 2>/dev/null); then
+              echo "Found tag for workflow publish commit: $TAG"
             else
-              # If no tag at HEAD, try to find the most recent tag on current branch
-              if TAG=$(git describe --tags --abbrev=0 2>/dev/null); then
-                echo "Found recent tag: $TAG"
+              # Fallback: use git describe to find most recent tag from this commit
+              if TAG=$(git describe --tags "$PUBLISH_SHA" 2>/dev/null | cut -d- -f1); then
+                echo "Found related tag for workflow commit: $TAG"
               else
-                echo "Error: No tags found for workflow_run event"
+                echo "Error: No tags found for workflow_run publish commit $PUBLISH_SHA"
                 exit 1
               fi
             fi
@@ -367,6 +370,15 @@ jobs:
 
           REGISTRY=$(cat benchmarks/packages-registry.json 2>/dev/null || echo '{"packages":{},"versions":[],"summary":{}}')
 
+          # Extract benchmark results if available to populate registry entry
+          WORKSPACE_VERSION="${{ steps.package-info.outputs.version }}"
+          RESULTS_FILE="benchmarks/packages/${{ steps.package-info.outputs.package }}/v${WORKSPACE_VERSION}/results.json"
+          if [ -f "$RESULTS_FILE" ]; then
+            BENCHMARK_DATA=$(cat "$RESULTS_FILE")
+          else
+            BENCHMARK_DATA='{}'
+          fi
+
           # Determine release status based on trigger
           # workflow_run with conclusion=success: triggered after publish.yml succeeds = "published"
           # workflow_run with other conclusion: publish failed or was cancelled = "failed"
@@ -390,6 +402,7 @@ jobs:
             --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --arg pkgver "${{ steps.package-info.outputs.package }}-${{ steps.package-info.outputs.version }}" \
             --arg status "$RELEASE_STATUS" \
+            --argjson benchmarks "$BENCHMARK_DATA" \
             '.packages[$pkg] |= . + {
               "name": $pkg,
               "latest_version": $ver,
@@ -420,20 +433,39 @@ jobs:
                 "published_date": $date,
                 "release_issue_number": null,
                 "release_issue_url": null,
-                "benchmark_results": {
-                  "behavioral_score": 0,
-                  "performance_score": 0,
-                  "code_quality_score": 0,
-                  "combined_score": 0,
-                  "status": "pending",
-                  "details_url": null
-                },
-                "regression_detection": {
-                  "performance_regression": false,
-                  "code_quality_regression": false,
-                  "behavioral_regression": false,
-                  "summary": "Pending baseline comparison"
-                },
+                "benchmark_results": (
+                  if $benchmarks != {} then
+                    {
+                      "behavioral_score": ($benchmarks.behavioral.behavioral_score // 0),
+                      "performance_score": ($benchmarks.performance.performance_score // 0),
+                      "code_quality_score": ($benchmarks.code_quality.quality_score // 0),
+                      "combined_score": ($benchmarks.combined_score // 0),
+                      "status": ($benchmarks.status // "pending"),
+                      "details_url": null
+                    }
+                  else
+                    {
+                      "behavioral_score": 0,
+                      "performance_score": 0,
+                      "code_quality_score": 0,
+                      "combined_score": 0,
+                      "status": "pending",
+                      "details_url": null
+                    }
+                  end
+                ),
+                "regression_detection": (
+                  if $benchmarks.regression_detection then
+                    $benchmarks.regression_detection
+                  else
+                    {
+                      "performance_regression": false,
+                      "code_quality_regression": false,
+                      "behavioral_regression": false,
+                      "summary": "Pending baseline comparison"
+                    }
+                  end
+                ),
                 "changelog_entry": null
             }])
             end |
@@ -460,15 +492,15 @@ jobs:
           # Clean up any generated files from prior runs to prevent checkout abort
           rm -f benchmark-output.log benchmark-changes.patch
 
-          # Save benchmark changes for later application
+          # Save benchmark changes for later application BEFORE discard
           git diff benchmarks/ > benchmark-changes.patch || true
+
+          # Discard modified files to allow clean checkout to main
+          git checkout -- benchmarks/ || true
 
           # Check out main branch cleanly to avoid pushing tagged history
           git fetch origin main
           git checkout -B temp-benchmark origin/main
-
-          # Reset any tracked changes from the tag branch
-          git checkout -- benchmarks/ || true
 
           # Apply only benchmark file changes (not tagged commit history)
           if [ -s benchmark-changes.patch ]; then
