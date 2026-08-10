@@ -221,7 +221,18 @@ jobs:
               };
 
               console.log(JSON.stringify(results, null, 2));
-            " > "$RESULTS_FILE" || true
+            " > "$RESULTS_FILE" || {
+              echo "Failed to parse benchmark output"
+              BENCHMARK_SUCCESS=false
+            }
+          fi
+
+          # Validate results file contains valid JSON
+          if [ "$BENCHMARK_SUCCESS" = true ] && [ -f "$RESULTS_FILE" ]; then
+            if ! jq empty "$RESULTS_FILE" 2>/dev/null; then
+              echo "Warning: Generated results file contains invalid JSON"
+              BENCHMARK_SUCCESS=false
+            fi
           fi
 
           if [ "$BENCHMARK_SUCCESS" = false ] || [ ! -f "$RESULTS_FILE" ]; then
@@ -338,15 +349,21 @@ jobs:
           REGISTRY=$(cat benchmarks/packages-registry.json 2>/dev/null || echo '{"packages":{},"versions":[],"summary":{}}')
 
           # Determine release status based on trigger
-          # workflow_run: triggered after publish.yml succeeds = "published"
+          # workflow_run with conclusion=success: triggered after publish.yml succeeds = "published"
+          # workflow_run with other conclusion: publish failed or was cancelled = "failed"
           # push (manual tag): unverified publication = "staged"
           if [ "${{ github.event_name }}" = "workflow_run" ]; then
-            RELEASE_STATUS="published"
+            if [ "${{ github.event.workflow_run.conclusion }}" = "success" ]; then
+              RELEASE_STATUS="published"
+            else
+              RELEASE_STATUS="failed"
+            fi
           else
             RELEASE_STATUS="staged"
           fi
 
           # Update registry and recalculate summary fields
+          # Use upsert logic: update existing entry if it exists, else append
           echo "$REGISTRY" | jq \
             --arg pkg "${{ steps.package-info.outputs.package }}" \
             --arg ver "${{ steps.package-info.outputs.version }}" \
@@ -358,29 +375,35 @@ jobs:
               "latest_version": $ver,
               "updated": $date
             } |
-            .versions += [{
-              "id": $pkgver,
-              "package": $pkg,
-              "version": $ver,
-              "status": $status,
-              "published_date": $date,
-              "release_issue_number": null,
-              "release_issue_url": null,
-              "benchmark_results": {
-                "behavioral_score": 0,
-                "performance_score": 0,
-                "code_quality_score": 0,
-                "combined_score": 0,
-                "status": "pending",
-                "details_url": null
-              },
-              "regression_detection": {
-                "performance_regression": false,
-                "code_quality_regression": false,
-                "behavioral_regression": false,
-                "summary": "Pending baseline comparison"
-              },
-              "changelog_entry": null
+            if (.versions | map(select(.id == $pkgver)) | length) > 0 then
+              .versions |= map(if .id == $pkgver then . + {
+                "status": $status,
+                "published_date": $date
+              } else . end)
+            else
+              .versions += [{
+                "id": $pkgver,
+                "package": $pkg,
+                "version": $ver,
+                "status": $status,
+                "published_date": $date,
+                "release_issue_number": null,
+                "release_issue_url": null,
+                "benchmark_results": {
+                  "behavioral_score": 0,
+                  "performance_score": 0,
+                  "code_quality_score": 0,
+                  "combined_score": 0,
+                  "status": "pending",
+                  "details_url": null
+                },
+                "regression_detection": {
+                  "performance_regression": false,
+                  "code_quality_regression": false,
+                  "behavioral_regression": false,
+                  "summary": "Pending baseline comparison"
+                },
+                "changelog_entry": null
             }] |
             .meta.updated = $date |
             # Recalculate summary fields from current data

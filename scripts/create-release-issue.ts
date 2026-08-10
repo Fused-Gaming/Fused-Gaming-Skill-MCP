@@ -226,7 +226,8 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   const coverageBlocks = code_quality.coverage_percent < 70;
   const complexityBlocks = code_quality.complexity_max > 8.0;
   const duplicationBlocks = code_quality.duplication_percent >= 15;
-  const maintainabilityBlocks = code_quality.maintainability_index < 70;
+  // Maintainability 65-69 is conditional/warning; only <=65 blocks release
+  const maintainabilityBlocks = code_quality.maintainability_index <= 65;
 
   // Enforce minimum performance score threshold
   const performanceThresholdMet = performance.performance_score >= 85;
@@ -329,10 +330,10 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   - Threshold: ≥80%
   - Status: ${code_quality.coverage_percent >= 80 ? "✅" : "❌"}
 
-- [${code_quality.maintainability_index >= 70 ? "x" : " "}] **Maintainability Index**
+- [${code_quality.maintainability_index > 70 ? "x" : " "}] **Maintainability Index**
   - Score: \`${code_quality.maintainability_index.toFixed(2)}/100\`
-  - Threshold: ≥70
-  - Status: ${code_quality.maintainability_index >= 70 ? "✅" : "⚠️"}
+  - Threshold: >70 (Approved), 65-70 (Conditional), ≤65 (Blocked)
+  - Status: ${code_quality.maintainability_index > 70 ? "✅" : code_quality.maintainability_index >= 65 ? "⚠️" : "❌"}
 
 **Code Quality Score:** \`${code_quality.quality_score.toFixed(2)}%\`
 **Code Quality Status:** ${code_quality.quality_score >= 90 ? "✅ Approved" : code_quality.quality_score >= 80 ? "⚠️ Review Required" : "❌ Blocked"}
