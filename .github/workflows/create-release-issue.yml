@@ -5,8 +5,11 @@ on:
     tags:
       - 'v*'           # Release tag: v1.0.0, v1.1.0, etc.
       - 'skill-*@*'    # Skill tag: skill-design-system@1.0.0
-  # Note: workflow_run trigger removed - benchmark validation now happens
-  # in publish.yml as a pre-publication gate before npm publish
+  workflow_run:
+    workflows: ["Publish to npm"]
+    types: [completed]
+    # This triggers for automated tags created by publish.yml with GITHUB_TOKEN
+    # which don't trigger push events. Manual tag pushes trigger via push event above.
 
 jobs:
   create-release-issue:
@@ -124,7 +127,7 @@ jobs:
               const lines = output.split('\n');
 
               // Extract performance metrics from benchmark output format: 'X.XXXms/op (Y ops/sec)'
-              // Aggregate multiple measurements by collecting all values and computing means
+              // Aggregate multiple measurements by collecting all values and computing means and std dev
               let latency_values = [], throughput_values = [];
               lines.forEach(line => {
                 // Match patterns like '0.003ms/op' or 'avg: 0.003ms'
@@ -134,13 +137,17 @@ jobs:
                 if (throughputMatch) throughput_values.push(parseFloat(throughputMatch[1]));
               });
 
-              // Calculate means if measurements were captured
-              let latency_ms = 0, throughput_ops = 0;
+              // Calculate means and standard deviations if measurements were captured
+              let latency_ms = 0, latency_std_dev = 0, throughput_ops = 0, throughput_std_dev = 0;
               if (latency_values.length > 0) {
                 latency_ms = latency_values.reduce((a, b) => a + b, 0) / latency_values.length;
+                const latency_variance = latency_values.reduce((sum, val) => sum + Math.pow(val - latency_ms, 2), 0) / latency_values.length;
+                latency_std_dev = Math.sqrt(latency_variance);
               }
               if (throughput_values.length > 0) {
                 throughput_ops = throughput_values.reduce((a, b) => a + b, 0) / throughput_values.length;
+                const throughput_variance = throughput_values.reduce((sum, val) => sum + Math.pow(val - throughput_ops, 2), 0) / throughput_values.length;
+                throughput_std_dev = Math.sqrt(throughput_variance);
               }
 
               // Report only metrics that were actually captured
@@ -162,10 +169,10 @@ jobs:
                 },
                 performance: {
                   latency_ms_mean: latency_ms,
-                  latency_ms_std_dev: 0,
+                  latency_ms_std_dev: latency_std_dev,
                   latency_sample_count: latency_values.length,
                   throughput_ops_sec_mean: throughput_ops,
-                  throughput_ops_sec_std_dev: 0,
+                  throughput_ops_sec_std_dev: throughput_std_dev,
                   throughput_sample_count: throughput_values.length,
                   memory_mb_peak: 0,
                   performance_score: 0
@@ -299,12 +306,22 @@ jobs:
 
           REGISTRY=$(cat benchmarks/packages-registry.json 2>/dev/null || echo '{"packages":{},"versions":[],"summary":{}}')
 
+          # Determine release status based on trigger
+          # workflow_run: triggered after publish.yml succeeds = "published"
+          # push (manual tag): unverified publication = "staged"
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            RELEASE_STATUS="published"
+          else
+            RELEASE_STATUS="staged"
+          fi
+
           # Update registry and recalculate summary fields
           echo "$REGISTRY" | jq \
             --arg pkg "${{ steps.package-info.outputs.package }}" \
             --arg ver "${{ steps.package-info.outputs.version }}" \
             --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --arg pkgver "${{ steps.package-info.outputs.package }}-${{ steps.package-info.outputs.version }}" \
+            --arg status "$RELEASE_STATUS" \
             '.packages[$pkg] |= . + {
               "name": $pkg,
               "latest_version": $ver,
@@ -314,7 +331,7 @@ jobs:
               "id": $pkgver,
               "package": $pkg,
               "version": $ver,
-              "status": "released",
+              "status": $status,
               "published_date": $date,
               "release_issue_number": null,
               "release_issue_url": null,

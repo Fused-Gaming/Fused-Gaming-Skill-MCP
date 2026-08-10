@@ -93,13 +93,30 @@ async function createReleaseIssue() {
   );
 
   let existingIssueNumber: number | null = null;
+
+  // First check local metadata (fast path)
   if (fs.existsSync(metadataPath)) {
     try {
       const existingMetadata = JSON.parse(fs.readFileSync(metadataPath, "utf-8"));
       existingIssueNumber = existingMetadata.issue_number;
-      console.log(`ℹ️  Found existing issue metadata: #${existingIssueNumber}`);
+      console.log(`ℹ️  Found existing issue metadata locally: #${existingIssueNumber}`);
     } catch (e) {
       console.warn(`⚠️  Could not parse existing metadata: ${e}`);
+    }
+  }
+
+  // If no local metadata (e.g., on tag rerun), search GitHub for existing issues
+  if (!existingIssueNumber) {
+    try {
+      const searchQuery = `repo:${process.env.GITHUB_REPOSITORY_OWNER || "fused-gaming"}/${process.env.GITHUB_REPOSITORY_NAME || "fused-gaming-skill-mcp"} is:issue "${packageName}" "v${version}" in:title`;
+      const searchResults = await octokit.search.issuesAndPullRequests({ q: searchQuery });
+
+      if (searchResults.data.items.length > 0) {
+        existingIssueNumber = searchResults.data.items[0].number;
+        console.log(`ℹ️  Found existing issue via GitHub search: #${existingIssueNumber}`);
+      }
+    } catch (e) {
+      console.warn(`⚠️  GitHub search failed (will create new issue): ${e}`);
     }
   }
 
@@ -209,6 +226,7 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   const coverageBlocks = code_quality.coverage_percent < 70;
   const complexityBlocks = code_quality.complexity_max > 8.0;
   const duplicationBlocks = code_quality.duplication_percent >= 15;
+  const maintainabilityBlocks = code_quality.maintainability_index < 70;
 
   // Enforce minimum performance score threshold
   const performanceThresholdMet = performance.performance_score >= 85;
@@ -219,7 +237,7 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
     behavioral.behavioral_score >= 90 &&
     performance.performance_score >= 85 &&
     validatedCombinedScore >= dodThreshold &&
-    !coverageBlocks && !complexityBlocks && !duplicationBlocks &&
+    !coverageBlocks && !complexityBlocks && !duplicationBlocks && !maintainabilityBlocks &&
     status === "pass";
 
   const isApproved = mandatoryGates;
@@ -333,16 +351,33 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
 | **COMBINED** | **100%** | **\`${validatedCombinedScore.toFixed(2)}%\`** | - |
 
 **DoD Threshold:** ≥90%
-**Release Approved:** ${isApproved ? "✅ Yes" : status === "conditional" ? "⚠️ Conditional" : "❌ Blocked"}
+**Release Approved:** ${isApproved ? "✅ Yes" : !isApproved && (status === "conditional" && behavioral.core_total === 0 && behavioral.regression_total === 0 && code_quality.coverage_percent === 0) ? "⚠️ Conditional (Benchmarks Not Collected)" : "❌ Blocked (Gate Failures)"}
 ${!isScoreValid ? `\n⚠️ **Note**: Score mismatch detected. Supplied: ${combined_score.toFixed(2)}%, Calculated: ${validatedCombinedScore.toFixed(2)}%. Using calculated value for enforcement.` : ""}
 
 ---
 
 ## 🎯 Release Decision
 
-- [${isApproved ? "x" : " "}] **APPROVE** — All metrics meet DoD thresholds
-- [${!isApproved && status === "conditional" ? "x" : " "}] **CONDITIONAL** — One or more metrics require review/remediation
-- [${!isApproved && status !== "conditional" ? "x" : " "}] **REJECT** — Critical failures preventing release
+${(() => {
+  const isConditionalDataMissing = !isApproved && status === "conditional" && behavioral.core_total === 0 && behavioral.regression_total === 0 && code_quality.coverage_percent === 0;
+  return `- [${isApproved ? "x" : " "}] **APPROVE** — All metrics meet DoD thresholds
+- [${isConditionalDataMissing ? "x" : " "}] **CONDITIONAL** — Benchmark data not collected (collect data and retry)
+- [${!isApproved && !isConditionalDataMissing ? "x" : " "}] **REJECT** — Critical failures: ${
+  !mandatoryGates ? (() => {
+    const failures = [];
+    if (behavioral.core_pass_rate < 95 || !corePassesCI || !hasMinimumCoreSamples) failures.push("CORE tests");
+    if (behavioral.regression_pass_rate !== 100 || !hasRegressionTests) failures.push("REGRESSION tests");
+    if (behavioral.behavioral_score < 90) failures.push("Behavioral score");
+    if (performance.performance_score < 85) failures.push("Performance score");
+    if (validatedCombinedScore < dodThreshold) failures.push("Combined score");
+    if (coverageBlocks) failures.push("Code coverage");
+    if (complexityBlocks) failures.push("Complexity");
+    if (duplicationBlocks) failures.push("Duplication");
+    if (maintainabilityBlocks) failures.push("Maintainability");
+    return failures.join(", ");
+  })() : "unspecified"}`;
+})()}`;
+
 
 **Sign-Off:** \`@${releaseManager}\`
 **Approval Date:** \`${releaseDate}\`
