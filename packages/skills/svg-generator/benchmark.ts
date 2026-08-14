@@ -120,6 +120,14 @@ async function runBenchmarks() {
           objective: 'Square icon with 256x256 dimensions',
         });
         if (!result.success) throw new Error('Dimensions not handled');
+        // Verify the SVG respects the requested 256x256 dimensions
+        const svg = (result.svgCode || '').toLowerCase();
+        const hasViewBox = svg.includes('viewbox="0 0 256 256"') || svg.includes('viewbox=\'0 0 256 256\'');
+        const hasExplicitDim = (svg.includes('width="256"') || svg.includes('width=\'256\'')) &&
+                               (svg.includes('height="256"') || svg.includes('height=\'256\''));
+        if (!hasViewBox && !hasExplicitDim) {
+          throw new Error('SVG does not reflect requested 256x256 dimensions');
+        }
       },
     },
   ];
@@ -165,7 +173,8 @@ async function runBenchmarks() {
   const latencyResult = await perfBench.benchmark(
     'SVG generation latency',
     async () => {
-      await GenerateSvgAssetTool.handler({ objective: 'Performance test SVG' });
+      const result = await GenerateSvgAssetTool.handler({ objective: 'Performance test SVG' });
+      if (!result.success) throw new Error('SVG generation failed in latency benchmark');
     },
     30,
     'ms'

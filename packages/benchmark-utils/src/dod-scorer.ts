@@ -78,11 +78,18 @@ export class DoDScorer {
       let passed = passRate >= threshold;
       let ciLowerBound: number | undefined;
 
-      // For CORE, check CI lower bound
-      if (category === 'CORE') {
-        const coreConfidenceInterval = this.calculateConfidenceInterval(passRate, totalTests);
-        ciLowerBound = coreConfidenceInterval.lowerBound;
-        if (ciLowerBound !== undefined && ciLowerBound < 93) {
+      // Apply confidence interval bounds per DoD: CORE (93%), FUNCTIONALITY (75%), ERROR (85%)
+      const ciBounds: Record<string, number> = {
+        CORE: 93,
+        FUNCTIONALITY: 75,
+        ERROR: 85,
+      };
+
+      if (category in ciBounds) {
+        const confidenceInterval = this.calculateConfidenceInterval(passRate, totalTests);
+        ciLowerBound = confidenceInterval.lowerBound;
+        const requiredBound = ciBounds[category];
+        if (ciLowerBound !== undefined && ciLowerBound < requiredBound) {
           passed = false;
         }
       }
@@ -185,11 +192,9 @@ export class DoDScorer {
       performance.aggregateScore * 0.35 +
       quality.aggregateScore * 0.25;
 
-    const roundedScore = Math.round(combinedScore);
-
     return {
-      combinedScore: roundedScore,
-      passed: roundedScore >= 90,
+      combinedScore: Math.round(combinedScore),
+      passed: combinedScore >= 90, // Check unrounded score, not rounded
     };
   }
 
@@ -442,6 +447,11 @@ export class DoDScorer {
 
     // Code coverage must be >= 70%
     if (codeQuality.coverage !== undefined && codeQuality.coverage < 70) {
+      passed = false;
+    }
+
+    // Code maintainability must be >= 50 (per DoD: <50 blocks release)
+    if (codeQuality.maintainability !== undefined && codeQuality.maintainability < 50) {
       passed = false;
     }
 
