@@ -22,12 +22,13 @@ export class BehavioralTester {
     for (const test of tests) {
       const startTime = performance.now();
       let timeoutHandle: NodeJS.Timeout | null = null;
+      let racerTimeoutHandle: NodeJS.Timeout | null = null;
 
       try {
         await Promise.race([
           test.fn(),
           new Promise<never>((_, reject) => {
-            timeoutHandle = setTimeout(() => reject(new Error('Test timeout')), timeout);
+            racerTimeoutHandle = setTimeout(() => reject(new Error('Test timeout')), timeout);
           }),
         ]);
 
@@ -45,6 +46,7 @@ export class BehavioralTester {
         });
       } finally {
         if (timeoutHandle) clearTimeout(timeoutHandle);
+        if (racerTimeoutHandle) clearTimeout(racerTimeoutHandle);
       }
     }
 

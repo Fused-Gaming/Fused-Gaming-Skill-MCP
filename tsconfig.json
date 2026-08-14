@@ -20,6 +20,7 @@
     "paths": {
       "@h4shed/mcp-core": ["packages/core/src/index.ts"],
       "@h4shed/mcp-cli": ["packages/cli/src/index.ts"],
+      "@h4shed/benchmark-utils": ["packages/benchmark-utils/src/index.ts"],
       "@h4shed/skill-*": ["packages/skills/*/src/index.ts"],
       "@/*": ["packages/web/src/*"]
     },

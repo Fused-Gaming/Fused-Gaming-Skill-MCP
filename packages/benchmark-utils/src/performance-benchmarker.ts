@@ -75,80 +75,74 @@ export class PerformanceBenchmarker {
   }
 
   calculatePerformanceScore(baseline?: PerformanceMetric[]): PerformanceScore {
-    // Extract latency and throughput metrics
-    const latencyMetric = this.metrics.find(
-      (m) => m.unit === 'ms' && m.name.includes('latency')
-    );
-    const throughputMetric = this.metrics.find(
-      (m) => m.unit === 'ops/sec' && m.name.includes('throughput')
-    );
-    const memoryMetric = this.metrics.find(
-      (m) => m.unit === 'MB' && m.name.includes('memory')
-    );
+    // Extract metrics by unit, not by name substring
+    const latencyMetric = this.metrics.find((m) => m.unit === 'ms');
+    const throughputMetric = this.metrics.find((m) => m.unit === 'ops/sec');
+    const memoryMetric = this.metrics.find((m) => m.unit === 'MB');
 
-    // Score latency (lower is better; CV scoring per DoD: <10% excellent, 10-20% acceptable, >20% marginal)
+    // Score latency (lower is better; CV: <10% = 100, 10-20% = 80, >20% = 60)
     let latencyScore = 0;
     if (!latencyMetric) {
-      latencyScore = 0; // Missing metric gets 0, not perfect
+      latencyScore = 0; // Missing metric gets 0
     } else {
       const cv = latencyMetric.coefficientOfVariation || 0;
-      if (cv > 20) latencyScore = 60; // Marginal stability
-      else if (cv <= 20) latencyScore = 100; // Excellent (CV<10%) or Acceptable (10-20%)
+      if (cv < 10) latencyScore = 100; // Excellent
+      else if (cv <= 20) latencyScore = 80; // Acceptable
+      else latencyScore = 60; // Marginal
 
       if (baseline) {
-        const baselineLatency = baseline.find((m) => m.name === latencyMetric.name);
+        const baselineLatency = baseline.find((m) => m.unit === 'ms');
         if (baselineLatency && baselineLatency.mean > 0) {
           const changePercent =
             ((latencyMetric.mean - baselineLatency.mean) / baselineLatency.mean) * 100;
           if (changePercent > 10) {
-            // Major regression (>10%): hard fail, not just penalty
-            latencyScore = 0;
+            latencyScore = 0; // Major regression: hard fail
           } else if (changePercent > 5) {
-            latencyScore -= 10; // Moderate regression penalty
+            latencyScore = Math.max(0, latencyScore - 10); // Moderate penalty
           }
         }
       }
     }
 
-    // Score throughput (higher is better; CV scoring per DoD)
+    // Score throughput (higher is better; same CV thresholds as latency)
     let throughputScore = 0;
     if (!throughputMetric) {
-      throughputScore = 0; // Missing metric gets 0, not perfect
+      throughputScore = 0; // Missing metric gets 0
     } else {
       const cv = throughputMetric.coefficientOfVariation || 0;
-      if (cv > 20) throughputScore = 60; // Marginal stability
-      else if (cv <= 20) throughputScore = 100; // Excellent or Acceptable
+      if (cv < 10) throughputScore = 100; // Excellent
+      else if (cv <= 20) throughputScore = 80; // Acceptable
+      else throughputScore = 60; // Marginal
 
       if (baseline) {
-        const baselineThroughput = baseline.find((m) => m.name === throughputMetric.name);
-        if (baselineThroughput) {
+        const baselineThroughput = baseline.find((m) => m.unit === 'ops/sec');
+        if (baselineThroughput && baselineThroughput.mean > 0) {
           const changePercent =
-            ((throughputMetric.mean - baselineThroughput.mean) / baselineThroughput.mean) *
-            100;
+            ((throughputMetric.mean - baselineThroughput.mean) / baselineThroughput.mean) * 100;
           if (changePercent < -10) {
             throughputScore = 0; // Major regression: hard fail
           } else if (changePercent < -5) {
-            throughputScore -= 10; // Moderate regression penalty
+            throughputScore = Math.max(0, throughputScore - 10); // Moderate penalty
           }
         }
       }
     }
 
-    // Score memory (lower is better, ±5% tolerance)
+    // Score memory (lower is better; penalize only increases, not improvements)
     let memoryScore = 0;
     let changePercent = 0;
     if (!memoryMetric) {
       memoryScore = 0; // Missing metric gets 0
     } else if (baseline) {
-      const baselineMemory = baseline.find((m) => m.name === memoryMetric.name);
-      if (baselineMemory) {
+      const baselineMemory = baseline.find((m) => m.unit === 'MB');
+      if (baselineMemory && baselineMemory.max > 0) {
         changePercent =
           ((memoryMetric.max - baselineMemory.max) / baselineMemory.max) * 100;
-        // Major increase (>10%): hard fail; moderate increase (5-10%): penalize; acceptable (<=5%): pass
+        // Only penalize increases, not improvements (negative changes are acceptable)
         if (changePercent > 10) {
           memoryScore = 0; // Major regression: hard fail
         } else if (changePercent > 5) {
-          memoryScore = 80; // Moderate regression: penalize
+          memoryScore = 80; // Moderate increase: penalize
         } else {
           memoryScore = 100; // Within tolerance or improvement
         }
