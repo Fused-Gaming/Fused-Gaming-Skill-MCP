@@ -125,7 +125,11 @@ export class PerformanceBenchmarker {
           const changePercent =
             ((throughputMetric.mean - baselineThroughput.mean) / baselineThroughput.mean) *
             100;
-          if (changePercent < -5) throughputScore -= 10; // Regression penalty
+          if (changePercent < -10) {
+            throughputScore = 0; // Major regression: hard fail
+          } else if (changePercent < -5) {
+            throughputScore -= 10; // Moderate regression penalty
+          }
         }
       }
     }
@@ -139,10 +143,15 @@ export class PerformanceBenchmarker {
       const baselineMemory = baseline.find((m) => m.name === memoryMetric.name);
       if (baselineMemory) {
         changePercent =
-          ((memoryMetric.mean - baselineMemory.mean) / baselineMemory.mean) * 100;
-        // Penalize increases, reward improvements (don't penalize negative changes)
-        if (changePercent > 5) memoryScore = 80;
-        else memoryScore = 100;
+          ((memoryMetric.max - baselineMemory.max) / baselineMemory.max) * 100;
+        // Major increase (>10%): hard fail; moderate increase (5-10%): penalize; acceptable (<=5%): pass
+        if (changePercent > 10) {
+          memoryScore = 0; // Major regression: hard fail
+        } else if (changePercent > 5) {
+          memoryScore = 80; // Moderate regression: penalize
+        } else {
+          memoryScore = 100; // Within tolerance or improvement
+        }
       } else {
         memoryScore = 100; // No baseline, accept as is
       }
@@ -166,7 +175,7 @@ export class PerformanceBenchmarker {
         score: throughputScore,
       },
       memory: {
-        peakMB: memoryMetric?.mean || 0,
+        peakMB: memoryMetric?.max || 0,
         changePercent,
         score: memoryScore,
       },

@@ -37,8 +37,12 @@ const coreResult = await tester.runTestSuite('CORE', [
 ]);
 
 console.log(coreResult.passRate); // 95.0
-console.log(coreResult.confidenceInterval.lowerBound); // 93.2 (≥93% required)
-console.log(coreResult.passed); // true
+console.log(coreResult.confidenceInterval?.lowerBound); // 93.2 (≥93% required)
+
+// Determine pass/fail using scorer
+const scorer = new DoDScorer();
+const scores = scorer.calculateBehavioralScores([coreResult]);
+console.log(scores.aggregateScore); // 95 (100 = pass, <95 = fail for CORE)
 ```
 
 ### Performance Benchmarking

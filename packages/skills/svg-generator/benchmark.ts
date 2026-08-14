@@ -135,9 +135,9 @@ async function runBenchmarks() {
         const result = await GenerateSvgAssetTool.handler({
           objective: '',
         });
-        // Should fail gracefully with error or return success: false
-        if (result.success === true && !result.svgCode) {
-          throw new Error('Invalid success state: success:true but no SVG code');
+        // Per handler contract, empty objectives must return success: false
+        if (result.success !== false) {
+          throw new Error('Empty objective must return success: false');
         }
       },
     },

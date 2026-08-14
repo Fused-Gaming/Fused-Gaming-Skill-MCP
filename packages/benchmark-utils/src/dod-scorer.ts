@@ -47,6 +47,15 @@ export class DoDScorer {
     const categoryAggregates: Record<string, { totalPass: number; totalTests: number; passed: boolean }> = {};
 
     for (const suite of suites) {
+      // Validate suite counts
+      if (!Number.isFinite(suite.passCount) || !Number.isFinite(suite.totalCount) ||
+          suite.passCount < 0 || suite.totalCount < 0 || suite.passCount > suite.totalCount) {
+        throw new Error(
+          `Invalid suite counts for ${suite.category}: passCount=${suite.passCount}, totalCount=${suite.totalCount}. ` +
+          `Counts must be finite, non-negative integers with passCount <= totalCount.`
+        );
+      }
+
       if (!categoryAggregates[suite.category]) {
         categoryAggregates[suite.category] = { totalPass: 0, totalTests: 0, passed: true };
       }
@@ -433,6 +442,16 @@ export class DoDScorer {
 
     // Code coverage must be >= 70%
     if (codeQuality.coverage !== undefined && codeQuality.coverage < 70) {
+      passed = false;
+    }
+
+    // Behavioral aggregate score must be >= 90%
+    if (behavioral.aggregateScore < 90) {
+      passed = false;
+    }
+
+    // Validate performance aggregate score is finite and within 0-100
+    if (!Number.isFinite(performance.aggregateScore) || performance.aggregateScore < 0 || performance.aggregateScore > 100) {
       passed = false;
     }
 
