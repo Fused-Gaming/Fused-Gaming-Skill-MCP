@@ -10,10 +10,12 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
+    "benchmark": "node --expose-gc dist/benchmark.js",
     "test": "echo \"No tests yet\"",
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@h4shed/benchmark-utils": "^1.0.0",
     "@h4shed/mcp-core": "^1.0.24"
   },
   "devDependencies": {

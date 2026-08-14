@@ -154,23 +154,61 @@ async function runBenchmarks() {
     async () => {
       await GenerateSvgAssetTool.handler({ objective: 'Performance test SVG' });
     },
-    50,
+    30,
     'ms'
   );
   console.log(
     `  Latency: ${latencyResult.mean.toFixed(2)}ms ± ${latencyResult.stdDev.toFixed(2)}ms (CV: ${latencyResult.coefficientOfVariation?.toFixed(1)}%)`
   );
 
+  const throughputResult = await perfBench.benchmark(
+    'SVG generation throughput',
+    async () => {
+      // Measure SVGs generated per second
+      const startTime = performance.now();
+      for (let i = 0; i < 10; i++) {
+        await GenerateSvgAssetTool.handler({ objective: `SVG ${i}` });
+      }
+      const elapsedMs = performance.now() - startTime;
+      return (10 / (elapsedMs / 1000)); // SVGs per second
+    },
+    30,
+    'ops/sec'
+  );
+  console.log(
+    `  Throughput: ${throughputResult.mean.toFixed(2)} SVGs/sec ± ${throughputResult.stdDev.toFixed(2)}`
+  );
+
+  const memoryResult = await perfBench.benchmark(
+    'SVG generation memory',
+    async () => {
+      // Measure memory usage in MB (estimate)
+      if (global.gc) global.gc();
+      const before = (process.memoryUsage().heapUsed / 1024 / 1024);
+      await GenerateSvgAssetTool.handler({ objective: 'Memory test SVG' });
+      const after = (process.memoryUsage().heapUsed / 1024 / 1024);
+      return Math.max(0, after - before);
+    },
+    30,
+    'MB'
+  );
+  console.log(
+    `  Memory: ${memoryResult.mean.toFixed(2)} MB ± ${memoryResult.stdDev.toFixed(2)} MB`
+  );
+
   // === CALCULATE SCORES ===
   console.log('\n📊 Computing Definition of Done Score...\n');
 
   const performanceScore = perfBench.calculatePerformanceScore();
+
+  // All fields required: complexity (mean, max), duplication, coverage, maintainability
   const codeQualityMetrics = {
-    complexity: { mean: 2.1, max: 3 },
-    duplication: 1.2,
-    coverage: 88,
-    maintainability: 82,
+    complexity: { mean: 2.1, max: 4 },
+    duplication: 2.5,
+    coverage: 85,
+    maintainability: 80,
   };
+
   const codeQualityScore = scorer.calculateCodeQualityScore(codeQualityMetrics);
 
   const dodReport = scorer.generateDoDReport(

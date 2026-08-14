@@ -10,7 +10,7 @@ import {
   PerformanceScore,
   CodeQualityScore,
   RegressionDetection,
-} from './types';
+} from './types.js';
 
 export class DoDScorer {
   private baselineVersion?: {
@@ -154,9 +154,11 @@ export class DoDScorer {
       performance.aggregateScore * 0.35 +
       quality.aggregateScore * 0.25;
 
+    const roundedScore = Math.round(combinedScore);
+
     return {
-      combinedScore: Math.round(combinedScore),
-      passed: combinedScore >= 90,
+      combinedScore: roundedScore,
+      passed: roundedScore >= 90,
     };
   }
 
@@ -169,21 +171,23 @@ export class DoDScorer {
     if (!baseline) return regressions;
 
     // Latency regressions (±5% tolerance, exclude improvements)
-    const latencyChange =
-      ((current.performance.latency.mean - baseline.performance.latency.mean) /
-        baseline.performance.latency.mean) *
-      100;
-    if (latencyChange > 5) {
-      // Only report increases as regressions
-      regressions.push({
-        metric: 'latency',
-        baselineValue: baseline.performance.latency.mean,
-        currentValue: current.performance.latency.mean,
-        changePercent: latencyChange,
-        tolerance: 5,
-        isRegression: true,
-        severity: latencyChange > 10 ? 'high' : 'medium',
-      });
+    if (baseline.performance.latency.mean > 0) {
+      const latencyChange =
+        ((current.performance.latency.mean - baseline.performance.latency.mean) /
+          baseline.performance.latency.mean) *
+        100;
+      if (latencyChange > 5) {
+        // Only report increases as regressions
+        regressions.push({
+          metric: 'latency',
+          baselineValue: baseline.performance.latency.mean,
+          currentValue: current.performance.latency.mean,
+          changePercent: latencyChange,
+          tolerance: 5,
+          isRegression: true,
+          severity: latencyChange > 10 ? 'high' : 'medium',
+        });
+      }
     }
 
     // Throughput regressions (lower throughput is bad)
@@ -226,7 +230,7 @@ export class DoDScorer {
       }
     }
 
-    // Complexity regressions (documented: ±10% tolerance)
+    // Complexity regressions (documented: ±10% tolerance, high severity >15%)
     if (baseline.codeQuality.complexity.mean > 0) {
       const complexityChange =
         ((current.codeQuality.complexity.mean - baseline.codeQuality.complexity.mean) /
@@ -240,7 +244,7 @@ export class DoDScorer {
           changePercent: complexityChange,
           tolerance: 10,
           isRegression: true,
-          severity: complexityChange > 20 ? 'high' : 'medium',
+          severity: complexityChange > 15 ? 'high' : 'medium',
         });
       }
     }
@@ -308,6 +312,20 @@ export class DoDScorer {
       );
     }
 
+    // Validate all required code quality fields are present and have non-undefined values
+    if (
+      codeQuality.complexity === undefined ||
+      codeQuality.complexity.mean === undefined ||
+      codeQuality.complexity.max === undefined ||
+      codeQuality.duplication === undefined ||
+      codeQuality.coverage === undefined ||
+      codeQuality.maintainability === undefined
+    ) {
+      throw new Error(
+        'All code quality metrics required: complexity (mean, max), duplication, coverage, maintainability. Do not omit fields.'
+      );
+    }
+
     const behavioral = this.calculateBehavioralScores(behavioralSuites);
     const quality = this.calculateCodeQualityScore(codeQuality);
 
@@ -332,15 +350,27 @@ export class DoDScorer {
       passed = false; // Missing required test suite
     }
 
-    // REGRESSION tests must be 100%
-    const regressionScore = behavioral.scores.find((s) => s.category === 'REGRESSION');
-    if (regressionScore && regressionScore.passRate < 100) {
-      passed = false;
+    // ALL REGRESSION tests must be 100%
+    const regressionScores = behavioral.scores.filter((s) => s.category === 'REGRESSION');
+    if (regressionScores.length === 0) {
+      passed = false; // Missing REGRESSION suite entirely
+    } else if (regressionScores.some((s) => s.passRate < 100)) {
+      passed = false; // Any REGRESSION suite below 100%
     }
 
     // CORE tests must pass CI check
     const coreScore = behavioral.scores.find((s) => s.category === 'CORE');
     if (coreScore && !coreScore.passed) {
+      passed = false;
+    }
+
+    // Code complexity max must be <= 5
+    if (codeQuality.complexity && codeQuality.complexity.max > 5) {
+      passed = false;
+    }
+
+    // Code duplication must be <= 5%
+    if (codeQuality.duplication && codeQuality.duplication > 5) {
       passed = false;
     }
 

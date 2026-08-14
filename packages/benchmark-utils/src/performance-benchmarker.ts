@@ -17,6 +17,9 @@ export class PerformanceBenchmarker {
     if (iterations <= 0) {
       throw new Error(`Iteration count must be positive, got ${iterations}`);
     }
+    if (iterations < 30) {
+      throw new Error(`Minimum 30 iterations required for statistical validity, got ${iterations}`);
+    }
 
     const samples: number[] = [];
 
@@ -24,7 +27,11 @@ export class PerformanceBenchmarker {
       for (let i = 0; i < iterations; i++) {
         const start = performance.now();
         await fn();
-        samples.push(performance.now() - start);
+        const sample = performance.now() - start;
+        if (!Number.isFinite(sample)) {
+          throw new Error(`Invalid latency sample: ${sample} (not a finite number)`);
+        }
+        samples.push(sample);
       }
     } else {
       for (let i = 0; i < iterations; i++) {
@@ -33,6 +40,9 @@ export class PerformanceBenchmarker {
           throw new Error(
             `benchmark callback for unit '${unit}' must return positive number, got ${result}`
           );
+        }
+        if (!Number.isFinite(result)) {
+          throw new Error(`Invalid sample: ${result} (not a finite number)`);
         }
         samples.push(result);
       }

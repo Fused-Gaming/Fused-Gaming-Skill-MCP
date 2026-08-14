@@ -3,7 +3,7 @@
  * Measures CORE, REGRESSION, FUNCTIONALITY, and ERROR test pass rates
  */
 
-import { TestResult, TestSuiteResult, ConfidenceInterval } from './types';
+import { TestResult, TestSuiteResult, ConfidenceInterval } from './types.js';
 
 export class BehavioralTester {
   private results: TestSuiteResult[] = [];
@@ -16,36 +16,19 @@ export class BehavioralTester {
     }>,
     options?: { timeout?: number }
   ): Promise<TestSuiteResult> {
-    if (tests.length === 0) {
-      return {
-        category,
-        passCount: 0,
-        totalCount: 0,
-        passRate: 0,
-        confidenceInterval: {
-          lowerBound: 0,
-          upperBound: 0,
-          standardError: 0,
-          confidence: 0.95,
-        },
-        results: [],
-      };
-    }
-
     const timeout = options?.timeout || 30000;
     const testResults: TestResult[] = [];
 
     for (const test of tests) {
       const startTime = performance.now();
-      let timerHandle: NodeJS.Timeout | null = null;
+      let timeoutHandle: NodeJS.Timeout | null = null;
 
       try {
-        timerHandle = setTimeout(() => {}, timeout); // Create timer to clear
         await Promise.race([
           test.fn(),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Test timeout')), timeout)
-          ),
+          new Promise<never>((_, reject) => {
+            timeoutHandle = setTimeout(() => reject(new Error('Test timeout')), timeout);
+          }),
         ]);
 
         testResults.push({
@@ -61,7 +44,7 @@ export class BehavioralTester {
           error: error instanceof Error ? error.message : 'Unknown error',
         });
       } finally {
-        if (timerHandle) clearTimeout(timerHandle);
+        if (timeoutHandle) clearTimeout(timeoutHandle);
       }
     }
 
