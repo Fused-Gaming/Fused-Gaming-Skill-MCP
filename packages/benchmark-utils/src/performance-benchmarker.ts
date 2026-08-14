@@ -88,6 +88,7 @@ export class PerformanceBenchmarker {
 
     // Score latency (lower is better; CV scoring per DoD: <10% excellent, 10-20% acceptable, >20% marginal)
     let latencyScore = 0;
+    let majorLatencyRegression = false;
     if (!latencyMetric) {
       latencyScore = 0; // Missing metric gets 0, not perfect
     } else {
@@ -100,7 +101,13 @@ export class PerformanceBenchmarker {
         if (baselineLatency && baselineLatency.mean > 0) {
           const changePercent =
             ((latencyMetric.mean - baselineLatency.mean) / baselineLatency.mean) * 100;
-          if (changePercent > 5) latencyScore -= 10; // Regression penalty
+          if (changePercent > 10) {
+            // Major regression (>10%): hard fail, not just penalty
+            majorLatencyRegression = true;
+            latencyScore = 0;
+          } else if (changePercent > 5) {
+            latencyScore -= 10; // Moderate regression penalty
+          }
         }
       }
     }

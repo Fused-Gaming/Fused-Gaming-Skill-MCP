@@ -271,7 +271,7 @@ export class DoDScorer {
       }
     }
 
-    // Duplication regressions (documented: ±2% tolerance, high severity >10%)
+    // Duplication regressions (documented: ±2% tolerance, high severity >5 point increase)
     const duplicationChange =
       current.codeQuality.duplication.percentDuplicated -
       baseline.codeQuality.duplication.percentDuplicated;
@@ -286,7 +286,7 @@ export class DoDScorer {
             : 100,
         tolerance: 2,
         isRegression: true,
-        severity: duplicationChange > 10 ? 'high' : 'medium',
+        severity: duplicationChange > 5 ? 'high' : 'medium',
       });
     }
 
@@ -321,11 +321,11 @@ export class DoDScorer {
     version: string,
     behavioralSuites: TestSuiteResult[],
     performance: PerformanceScore,
-    codeQuality?: {
-      complexity?: { mean: number; max: number };
-      duplication?: number;
-      coverage?: number;
-      maintainability?: number;
+    codeQuality: {
+      complexity: { mean: number; max: number };
+      duplication: number;
+      coverage: number;
+      maintainability: number;
     }
   ): DoDScore {
     if (!codeQuality) {
@@ -358,6 +358,28 @@ export class DoDScorer {
     ) {
       throw new Error(
         'Code quality metrics must be finite numbers. Received NaN, Infinity, or -Infinity in one or more fields.'
+      );
+    }
+
+    // Validate metric ranges: complexity ≥0, duplication/coverage 0-100, maintainability 0-100+
+    if (codeQuality.complexity.mean < 0 || codeQuality.complexity.max < 0) {
+      throw new Error(
+        'Complexity metrics must be non-negative. Received negative mean or max complexity.'
+      );
+    }
+    if (codeQuality.duplication < 0 || codeQuality.duplication > 100) {
+      throw new Error(
+        'Duplication must be 0-100%. Received out-of-range value.'
+      );
+    }
+    if (codeQuality.coverage < 0 || codeQuality.coverage > 100) {
+      throw new Error(
+        'Coverage must be 0-100%. Received out-of-range value.'
+      );
+    }
+    if (codeQuality.maintainability < 0 || codeQuality.maintainability > 200) {
+      throw new Error(
+        'Maintainability index must be 0-200. Received out-of-range value.'
       );
     }
 

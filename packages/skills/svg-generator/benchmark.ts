@@ -9,6 +9,13 @@ import { GenerateSvgAssetTool } from './src/tools/generate-svg-asset.js';
 async function runBenchmarks() {
   console.log('🎯 SVG Generator Skill - Phase 2 Benchmarks\n');
 
+  // Read version from package.json
+  const fs = await import('fs/promises');
+  const path = await import('path');
+  const packagePath = path.join(process.cwd(), 'package.json');
+  const packageJson = JSON.parse(await fs.readFile(packagePath, 'utf8'));
+  const version = packageJson.version;
+
   const tester = new BehavioralTester();
   const perfBench = new PerformanceBenchmarker();
   const scorer = new DoDScorer();
@@ -70,7 +77,12 @@ async function runBenchmarks() {
         const result = await GenerateSvgAssetTool.handler({
           objective: 'Circle',
         });
-        if (!result.success) throw new Error('Circle regression');
+        if (!result.success) throw new Error('Circle regression: generation failed');
+        // Verify the SVG actually contains circle geometry, not just any valid SVG
+        const svg = (result.svgCode || '').toLowerCase();
+        if (!svg.includes('circle') && !svg.includes('cx') && !svg.includes('cy')) {
+          throw new Error('Circle regression: generated SVG does not contain circle geometry');
+        }
       },
     },
     {
@@ -164,13 +176,17 @@ async function runBenchmarks() {
   const throughputResult = await perfBench.benchmark(
     'SVG generation throughput',
     async () => {
-      // Measure SVGs generated per second
+      // Measure SVGs successfully generated per second (exclude failures)
       const startTime = performance.now();
+      let successCount = 0;
       for (let i = 0; i < 10; i++) {
-        await GenerateSvgAssetTool.handler({ objective: `SVG ${i}` });
+        const result = await GenerateSvgAssetTool.handler({ objective: `SVG ${i}` });
+        if (result.success) successCount++;
       }
       const elapsedMs = performance.now() - startTime;
-      return (10 / (elapsedMs / 1000)); // SVGs per second
+      // Only count successful generations
+      if (successCount === 0) throw new Error('All SVG generations failed in throughput test');
+      return (successCount / (elapsedMs / 1000)); // Successful SVGs per second
     },
     30,
     'ops/sec'
@@ -182,14 +198,25 @@ async function runBenchmarks() {
   const memoryResult = await perfBench.benchmark(
     'SVG generation memory',
     async () => {
-      // Measure peak heap usage in MB (actual footprint, not delta)
-      const before = (process.memoryUsage().heapUsed / 1024 / 1024);
+      // Measure peak heap usage during SVG generation (actual footprint in MB)
+      // Run GC before to establish baseline
+      if (global.gc) global.gc();
+      const before = process.memoryUsage();
       await GenerateSvgAssetTool.handler({ objective: 'Memory test SVG' });
-      const after = (process.memoryUsage().heapUsed / 1024 / 1024);
-      // Return peak value reached (not delta), ensure positive value
-      const delta = after - before;
-      // If no measurable allocation, report baseline to ensure positive value
-      return delta > 0 ? delta : 0.1; // Minimum 0.1 MB to avoid zero/negative rejection
+      const after = process.memoryUsage();
+
+      // Calculate peak used during execution
+      const heapDelta = (after.heapUsed - before.heapUsed) / 1024 / 1024;
+      const externalDelta = (after.external - before.external) / 1024 / 1024;
+      const totalDelta = heapDelta + externalDelta;
+
+      // If measurement shows allocation, report it; otherwise report actual current usage
+      if (totalDelta > 0) {
+        return totalDelta;
+      } else {
+        // Report current heap usage when delta is non-positive (GC happened, or allocation was minimal)
+        return (after.heapUsed / 1024 / 1024);
+      }
     },
     30,
     'MB'
@@ -220,7 +247,7 @@ async function runBenchmarks() {
   const codeQualityScore = scorer.calculateCodeQualityScore(codeQualityMetrics);
 
   const dodReport = scorer.generateDoDReport(
-    '1.0.23',
+    version,
     [coreResult, regressionResult, functionalityResult, errorResult],
     performanceScore,
     codeQualityMetrics
@@ -240,7 +267,7 @@ async function runBenchmarks() {
 
   // Emit results to JSON for publish workflow consumption
   const resultsJson = {
-    version: '1.0.23',
+    version,
     timestamp: new Date().toISOString(),
     combined_score: dodReport.combinedScore,
     passed: dodReport.passed,
@@ -264,8 +291,6 @@ async function runBenchmarks() {
   };
 
   console.log('\n📄 Writing results to .benchmark/results.json...');
-  const fs = await import('fs/promises');
-  const path = await import('path');
   const resultsDir = path.join(process.cwd(), '.benchmark');
 
   try {
