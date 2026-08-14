@@ -117,16 +117,14 @@ async function runBenchmarks() {
   // ERROR Tests: Edge cases and error handling
   const errorTests = [
     {
-      name: 'Handle empty objective',
+      name: 'Handle empty objective gracefully',
       fn: async () => {
-        try {
-          const result = await GenerateSvgAssetTool.handler({
-            objective: '',
-          });
-          // Should either return error or handle gracefully
-          if (!result.success && !result.error) throw new Error('No error info');
-        } catch {
-          // Expected
+        const result = await GenerateSvgAssetTool.handler({
+          objective: '',
+        });
+        // Should fail gracefully with error or return success: false
+        if (result.success === true && !result.svgCode) {
+          throw new Error('Invalid success state: success:true but no SVG code');
         }
       },
     },
@@ -134,14 +132,12 @@ async function runBenchmarks() {
       name: 'Handle very long objective',
       fn: async () => {
         const longObjective = 'A'.repeat(1000);
-        try {
-          const result = await GenerateSvgAssetTool.handler({
-            objective: longObjective,
-          });
-          // Should handle or fail gracefully
-          if (result.success && !result.svgCode) throw new Error('Invalid success state');
-        } catch {
-          // Expected
+        const result = await GenerateSvgAssetTool.handler({
+          objective: longObjective,
+        });
+        // Should handle without crashing
+        if (result.success && !result.svgCode) {
+          throw new Error('Invalid success state: success:true but no SVG code');
         }
       },
     },
@@ -178,7 +174,7 @@ async function runBenchmarks() {
   const codeQualityScore = scorer.calculateCodeQualityScore(codeQualityMetrics);
 
   const dodReport = scorer.generateDoDReport(
-    '1.0.24',
+    '1.0.23',
     [coreResult, regressionResult, functionalityResult, errorResult],
     performanceScore,
     codeQualityMetrics
@@ -196,7 +192,18 @@ async function runBenchmarks() {
   console.log(`Code Quality Score: ${codeQualityScore.aggregateScore}/100`);
   console.log(`\n🎯 Combined DoD Score: ${dodReport.combinedScore}/100 ${dodReport.passed ? '✅ PASS' : '❌ FAIL'}`);
 
+  if (!dodReport.passed) {
+    process.exit(1);
+  }
+
   return dodReport;
 }
 
-runBenchmarks().catch(console.error);
+runBenchmarks()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error('Benchmark failed:', error);
+    process.exit(1);
+  });

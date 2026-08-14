@@ -16,13 +16,31 @@ export class BehavioralTester {
     }>,
     options?: { timeout?: number }
   ): Promise<TestSuiteResult> {
+    if (tests.length === 0) {
+      return {
+        category,
+        passCount: 0,
+        totalCount: 0,
+        passRate: 0,
+        confidenceInterval: {
+          lowerBound: 0,
+          upperBound: 0,
+          standardError: 0,
+          confidence: 0.95,
+        },
+        results: [],
+      };
+    }
+
     const timeout = options?.timeout || 30000;
     const testResults: TestResult[] = [];
 
     for (const test of tests) {
       const startTime = performance.now();
+      let timerHandle: NodeJS.Timeout | null = null;
 
       try {
+        timerHandle = setTimeout(() => {}, timeout); // Create timer to clear
         await Promise.race([
           test.fn(),
           new Promise((_, reject) =>
@@ -42,6 +60,8 @@ export class BehavioralTester {
           duration: performance.now() - startTime,
           error: error instanceof Error ? error.message : 'Unknown error',
         });
+      } finally {
+        if (timerHandle) clearTimeout(timerHandle);
       }
     }
 
