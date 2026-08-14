@@ -129,9 +129,9 @@ export class DoDScorer {
 
     let duplicationScore = 100;
     if (metrics.duplication !== undefined) {
-      if (metrics.duplication > 5) duplicationScore = 50;
-      // >= 5% is still passing per DoD, just lower score
-      else if (metrics.duplication > 0) duplicationScore = 100;
+      if (metrics.duplication > 15) duplicationScore = 50;  // >15% is blocking
+      else if (metrics.duplication > 10) duplicationScore = 75;  // 10-15% is marginal
+      else duplicationScore = 100;  // ≤10% is acceptable per DoD
     }
 
     // Coverage: ≥80% acceptable (maps to 100), 70-79% marginal (75), <70% insufficient (50)

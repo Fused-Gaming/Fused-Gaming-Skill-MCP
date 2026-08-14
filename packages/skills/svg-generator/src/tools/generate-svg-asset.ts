@@ -331,7 +331,8 @@ export const GenerateSvgAssetTool: ToolDefinition = {
 
       // Extract custom dimensions if specified
       const customDimensions = extractDimensions(objective + " " + context) || undefined;
-      const size = customDimensions?.width || 100;
+      const width = customDimensions?.width || 100;
+      const height = customDimensions?.height || 100;
 
       // Generate SVG code
       const svgCode = generateSvgAsset(objective, assetType, colors, customDimensions);
@@ -344,7 +345,7 @@ export const GenerateSvgAssetTool: ToolDefinition = {
         assetType,
         svgCode,
         description: `Generated ${assetType} SVG asset: ${objective}`,
-        dimensions: { width: size, height: size },
+        dimensions: { width, height },
         colorPalette: colors,
         complexity: "simple",
         previewText,

@@ -20,6 +20,10 @@
   ],
   "author": "VLN Team",
   "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"

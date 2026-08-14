@@ -236,29 +236,63 @@ async function runBenchmarks() {
   const performanceScore = perfBench.calculatePerformanceScore();
 
   // Code quality metrics must be measured, not fabricated
-  // This benchmark requires actual code analysis tools integrated
-  // TODO: Integrate with real metrics collection when tools are available:
-  //   - Complexity: Extract from AST analysis or ESLint plugin
-  //   - Duplication: Use duplication detector (e.g., jscpd)
-  //   - Coverage: Collect from Jest or similar test runner
-  //   - Maintainability: Calculate using Halstead metrics or similar
-  // For now, require that code quality metrics be provided by the caller
-  // Fail fast if metrics are not measured - do not fabricate passing values
-  const codeQualityMetrics = {
-    complexity: { mean: 2.1, max: 4 },
-    duplication: 2.5,
-    coverage: 85,
-    maintainability: 80,
-  };
+  // Try to load actual metrics from ESLint/TypeScript analysis or fail
+  let codeQualityMetrics: any = null;
 
-  // Warning: These are placeholder values. In production, measure actual code quality
-  console.warn('⚠️  WARNING: Using placeholder code quality metrics. Measure actual values in production.');
-  console.warn('   - Complexity: use ESLint plugin or AST analysis');
-  console.warn('   - Duplication: use jscpd or similar');
-  console.warn('   - Coverage: collect from test runner');
-  console.warn('   - Maintainability: compute from Halstead metrics\n');
+  // Attempt to load metrics from .eslintrc or build artifacts if available
+  // For now, we require that these be provided via environment or actual measurement
+  try {
+    // Check if metrics file exists in project
+    const metricsFile = path.join(process.cwd(), '.quality-metrics.json');
+    try {
+      const metricsData = await fs.readFile(metricsFile, 'utf8');
+      codeQualityMetrics = JSON.parse(metricsData);
+      console.log('✅ Loaded code quality metrics from .quality-metrics.json');
+    } catch {
+      // File doesn't exist - use placeholder only if explicitly allowed
+      const usePlaceholders = process.env.ALLOW_PLACEHOLDER_METRICS === 'true';
+      if (!usePlaceholders) {
+        console.error('❌ FAILURE: Code quality metrics not measured');
+        console.error('   Missing file: .quality-metrics.json');
+        console.error('   Required metrics: complexity (mean, max), duplication (%),');
+        console.error('   coverage (%), maintainability (index)');
+        console.error('   Generate with: eslint --format json, jscpd, jest --coverage, etc.');
+        process.exit(1);
+      }
+      // Only use placeholders if explicitly allowed and no real metrics available
+      codeQualityMetrics = {
+        complexity: { mean: 2.1, max: 4 },
+        duplication: 2.5,
+        coverage: 85,
+        maintainability: 80,
+      };
+      console.warn('⚠️  WARNING: Using placeholder code quality metrics (ALLOW_PLACEHOLDER_METRICS=true)');
+      console.warn('   In production, provide real metrics via .quality-metrics.json\n');
+    }
+  } catch (err) {
+    console.error('Error checking for quality metrics:', err);
+    process.exit(1);
+  }
 
   const codeQualityScore = scorer.calculateCodeQualityScore(codeQualityMetrics);
+
+  // Try to load baseline for regression detection
+  try {
+    const baselineFile = path.join(process.cwd(), '.benchmark/baseline.json');
+    try {
+      const baselineData = await fs.readFile(baselineFile, 'utf8');
+      const baseline = JSON.parse(baselineData);
+      if (baseline.combined_score !== undefined) {
+        scorer.setBaseline(baseline.version || 'unknown', baseline);
+        console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
+      }
+    } catch {
+      // Baseline doesn't exist yet - this is the first release
+      console.log('ℹ️  No baseline available - first release, establishing baseline\n');
+    }
+  } catch (err) {
+    console.warn('⚠️  Could not load baseline for regression detection:', err);
+  }
 
   const dodReport = scorer.generateDoDReport(
     version,
@@ -314,9 +348,19 @@ async function runBenchmarks() {
       JSON.stringify(resultsJson, null, 2)
     );
     console.log(`✅ Results written to ${resultsDir}/results.json`);
+
+    // Also write baseline for next release's regression detection
+    await fs.writeFile(
+      path.join(resultsDir, 'baseline.json'),
+      JSON.stringify(resultsJson, null, 2)
+    );
   } catch (err) {
     console.error('⚠️ Failed to write results.json:', err);
   }
+
+  // Output results to stdout in JSON format for workflow consumption
+  // Publish workflow parses this to populate benchmarks/packages/*/results.json
+  console.log('\n' + JSON.stringify(resultsJson, null, 2));
 
   if (!dodReport.passed) {
     process.exit(1);
