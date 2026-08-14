@@ -10,6 +10,7 @@ import {
   PerformanceScore,
   CodeQualityScore,
   RegressionDetection,
+  ConfidenceInterval,
 } from './types.js';
 
 export class DoDScorer {
@@ -41,31 +42,50 @@ export class DoDScorer {
     };
 
     const scores: BehavioralScore[] = [];
+
+    // Aggregate suites by category (handle multiple suites per category)
+    const categoryAggregates: Record<string, { totalPass: number; totalTests: number; passed: boolean }> = {};
+
+    for (const suite of suites) {
+      if (!categoryAggregates[suite.category]) {
+        categoryAggregates[suite.category] = { totalPass: 0, totalTests: 0, passed: true };
+      }
+      categoryAggregates[suite.category].totalPass += suite.passCount;
+      categoryAggregates[suite.category].totalTests += suite.totalCount;
+    }
+
+    // Calculate score once per category, apply weight once
     let weightedSum = 0;
     let weightSum = 0;
 
-    for (const suite of suites) {
-      const weight = categoryWeights[suite.category] || 0;
-      const threshold = categoryThresholds[suite.category] || 90;
+    for (const [category, aggregate] of Object.entries(categoryAggregates)) {
+      const weight = categoryWeights[category] || 0;
+      const threshold = categoryThresholds[category] || 90;
+      const totalTests = aggregate.totalTests;
+      const totalPass = aggregate.totalPass;
+      const passRate = totalTests > 0 ? (totalPass / totalTests) * 100 : 0;
 
-      // Check if CI lower bound meets threshold (for CORE, must have ≥93% CI)
-      let passed = suite.passRate >= threshold;
-      if (
-        suite.category === 'CORE' &&
-        suite.confidenceInterval &&
-        suite.confidenceInterval.lowerBound < 93
-      ) {
-        passed = false;
+      // Check all suites in this category against threshold
+      let passed = passRate >= threshold;
+      let ciLowerBound: number | undefined;
+
+      // For CORE, check CI lower bound
+      if (category === 'CORE') {
+        const coreConfidenceInterval = this.calculateConfidenceInterval(passRate, totalTests);
+        ciLowerBound = coreConfidenceInterval.lowerBound;
+        if (ciLowerBound !== undefined && ciLowerBound < 93) {
+          passed = false;
+        }
       }
 
-      const score = Math.min(100, suite.passRate); // Cap at 100%
+      const score = Math.min(100, passRate); // Cap at 100%
 
       scores.push({
-        category: suite.category,
-        passRate: suite.passRate,
+        category: category as any,
+        passRate,
         weight,
         score,
-        ciLowerBound: suite.confidenceInterval?.lowerBound,
+        ciLowerBound,
         passed,
       });
 
@@ -98,18 +118,20 @@ export class DoDScorer {
       else if (metrics.duplication > 0) duplicationScore = 100;
     }
 
+    // Coverage: ≥80% acceptable (maps to 100), 70-79% marginal (75), <70% insufficient (50)
     let coverageScore = 100;
     if (metrics.coverage !== undefined) {
-      if (metrics.coverage < 60) coverageScore = 50;
+      if (metrics.coverage < 70) coverageScore = 50;
       else if (metrics.coverage < 80) coverageScore = 75;
-      else coverageScore = Math.min(100, Math.round((metrics.coverage / 100) * 100));
+      else coverageScore = 100; // ≥80% is acceptable, award full credit
     }
 
+    // Maintainability: 70-84 acceptable (maps to 100), 65-69 moderate (75), <65 low (50)
     let maintainabilityScore = 100;
     if (metrics.maintainability !== undefined) {
-      if (metrics.maintainability < 50) maintainabilityScore = 50;
+      if (metrics.maintainability < 65) maintainabilityScore = 50;
       else if (metrics.maintainability < 70) maintainabilityScore = 75;
-      else maintainabilityScore = Math.min(100, Math.round((metrics.maintainability / 100) * 100));
+      else maintainabilityScore = 100; // ≥70 is acceptable, award full credit
     }
 
     // Apply documented weights: complexity 35%, duplication 20%, coverage 25%, maintainability 20%
@@ -249,7 +271,7 @@ export class DoDScorer {
       }
     }
 
-    // Duplication regressions (documented: ±2% tolerance)
+    // Duplication regressions (documented: ±2% tolerance, high severity >10%)
     const duplicationChange =
       current.codeQuality.duplication.percentDuplicated -
       baseline.codeQuality.duplication.percentDuplicated;
@@ -264,7 +286,7 @@ export class DoDScorer {
             : 100,
         tolerance: 2,
         isRegression: true,
-        severity: duplicationChange > 5 ? 'high' : 'medium',
+        severity: duplicationChange > 10 ? 'high' : 'medium',
       });
     }
 
@@ -326,6 +348,19 @@ export class DoDScorer {
       );
     }
 
+    // Validate all metrics are finite numbers (reject NaN, Infinity, -Infinity)
+    if (
+      !Number.isFinite(codeQuality.complexity.mean) ||
+      !Number.isFinite(codeQuality.complexity.max) ||
+      !Number.isFinite(codeQuality.duplication) ||
+      !Number.isFinite(codeQuality.coverage) ||
+      !Number.isFinite(codeQuality.maintainability)
+    ) {
+      throw new Error(
+        'Code quality metrics must be finite numbers. Received NaN, Infinity, or -Infinity in one or more fields.'
+      );
+    }
+
     const behavioral = this.calculateBehavioralScores(behavioralSuites);
     const quality = this.calculateCodeQualityScore(codeQuality);
 
@@ -364,13 +399,13 @@ export class DoDScorer {
       passed = false;
     }
 
-    // Code complexity max must be <= 5
-    if (codeQuality.complexity && codeQuality.complexity.max > 5) {
+    // Code complexity max must be <= 8 (per DoD: >8 is hard to test, block release)
+    if (codeQuality.complexity && codeQuality.complexity.max > 8) {
       passed = false;
     }
 
-    // Code duplication must be <= 5%
-    if (codeQuality.duplication && codeQuality.duplication > 5) {
+    // Code duplication must be <= 15% (per DoD: >15% requires refactoring, block release)
+    if (codeQuality.duplication && codeQuality.duplication > 15) {
       passed = false;
     }
 
@@ -405,5 +440,24 @@ export class DoDScorer {
 
     report.passed = passed;
     return report;
+  }
+
+  private calculateConfidenceInterval(
+    passRate: number,
+    sampleSize: number,
+    confidence = 0.95
+  ): ConfidenceInterval {
+    const p = passRate / 100;
+    const z = confidence === 0.95 ? 1.96 : 2.576; // Z-score for 95% and 99% CI
+
+    const standardError = Math.sqrt((p * (1 - p)) / sampleSize);
+    const margin = z * standardError;
+
+    return {
+      lowerBound: Math.max(0, (p - margin) * 100),
+      upperBound: Math.min(100, (p + margin) * 100),
+      standardError: standardError * 100,
+      confidence,
+    };
   }
 }

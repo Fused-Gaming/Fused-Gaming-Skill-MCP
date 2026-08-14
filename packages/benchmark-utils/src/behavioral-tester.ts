@@ -117,22 +117,37 @@ export class BehavioralTester {
       >,
     };
 
+    // Aggregate multiple suites in the same category
+    const categoryAggregates: Record<string, { passCount: number; totalCount: number }> = {};
+
     for (const suite of this.results) {
       summary.totalTests += suite.totalCount;
       summary.totalPassed += suite.passCount;
 
-      // Determine if suite passed based on DoD thresholds
-      let threshold = 90;
-      if (suite.category === 'CORE') threshold = 95;
-      if (suite.category === 'REGRESSION') threshold = 100;
-      if (suite.category === 'FUNCTIONALITY') threshold = 80;
-      if (suite.category === 'ERROR') threshold = 90;
+      // Combine suites in the same category
+      if (!categoryAggregates[suite.category]) {
+        categoryAggregates[suite.category] = { passCount: 0, totalCount: 0 };
+      }
+      categoryAggregates[suite.category].passCount += suite.passCount;
+      categoryAggregates[suite.category].totalCount += suite.totalCount;
+    }
 
-      summary.byCategory[suite.category] = {
-        passCount: suite.passCount,
-        totalCount: suite.totalCount,
-        passRate: suite.passRate,
-        passed: suite.passRate >= threshold,
+    // Calculate category pass rates from aggregated counts
+    for (const [category, aggregate] of Object.entries(categoryAggregates)) {
+      const passRate = aggregate.totalCount > 0 ? (aggregate.passCount / aggregate.totalCount) * 100 : 0;
+
+      // Determine if category passed based on DoD thresholds
+      let threshold = 90;
+      if (category === 'CORE') threshold = 95;
+      if (category === 'REGRESSION') threshold = 100;
+      if (category === 'FUNCTIONALITY') threshold = 80;
+      if (category === 'ERROR') threshold = 90;
+
+      summary.byCategory[category] = {
+        passCount: aggregate.passCount,
+        totalCount: aggregate.totalCount,
+        passRate,
+        passed: passRate >= threshold,
       };
     }
 

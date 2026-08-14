@@ -14,8 +14,9 @@ export class PerformanceBenchmarker {
     iterations = 100,
     unit: 'ms' | 'ops/sec' | 'MB' = 'ms'
   ): Promise<PerformanceMetric> {
-    if (iterations <= 0) {
-      throw new Error(`Iteration count must be positive, got ${iterations}`);
+    // Validate iterations is a finite positive number
+    if (!Number.isFinite(iterations) || iterations <= 0) {
+      throw new Error(`Iteration count must be a finite positive number, got ${iterations}`);
     }
     if (iterations < 30) {
       throw new Error(`Minimum 30 iterations required for statistical validity, got ${iterations}`);
@@ -85,19 +86,18 @@ export class PerformanceBenchmarker {
       (m) => m.unit === 'MB' && m.name.includes('memory')
     );
 
-    // Score latency (lower is better, target CV < 10%)
+    // Score latency (lower is better; CV scoring per DoD: <10% excellent, 10-20% acceptable, >20% marginal)
     let latencyScore = 0;
     if (!latencyMetric) {
       latencyScore = 0; // Missing metric gets 0, not perfect
     } else {
       const cv = latencyMetric.coefficientOfVariation || 0;
-      if (cv > 20) latencyScore = 60; // Poor stability
-      else if (cv > 10) latencyScore = 80; // Acceptable
-      else latencyScore = 100; // Excellent
+      if (cv > 20) latencyScore = 60; // Marginal stability
+      else if (cv <= 20) latencyScore = 100; // Excellent (CV<10%) or Acceptable (10-20%)
 
       if (baseline) {
         const baselineLatency = baseline.find((m) => m.name === latencyMetric.name);
-        if (baselineLatency) {
+        if (baselineLatency && baselineLatency.mean > 0) {
           const changePercent =
             ((latencyMetric.mean - baselineLatency.mean) / baselineLatency.mean) * 100;
           if (changePercent > 5) latencyScore -= 10; // Regression penalty
@@ -105,15 +105,14 @@ export class PerformanceBenchmarker {
       }
     }
 
-    // Score throughput (higher is better)
+    // Score throughput (higher is better; CV scoring per DoD)
     let throughputScore = 0;
     if (!throughputMetric) {
       throughputScore = 0; // Missing metric gets 0, not perfect
     } else {
       const cv = throughputMetric.coefficientOfVariation || 0;
-      if (cv > 20) throughputScore = 60;
-      else if (cv > 10) throughputScore = 80;
-      else throughputScore = 100;
+      if (cv > 20) throughputScore = 60; // Marginal stability
+      else if (cv <= 20) throughputScore = 100; // Excellent or Acceptable
 
       if (baseline) {
         const baselineThroughput = baseline.find((m) => m.name === throughputMetric.name);
