@@ -12,7 +12,8 @@ async function runBenchmarks() {
   // Read version from package.json
   const fs = await import('fs/promises');
   const path = await import('path');
-  const packagePath = path.join(process.cwd(), 'package.json');
+  const { fileURLToPath } = await import('url');
+  const packagePath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'package.json');
   const packageJson = JSON.parse(await fs.readFile(packagePath, 'utf8'));
   const version = packageJson.version;
 
