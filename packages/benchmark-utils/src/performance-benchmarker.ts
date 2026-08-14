@@ -55,13 +55,20 @@ export class PerformanceBenchmarker {
     const stdDev = Math.sqrt(variance);
     const cv = mean > 0 ? (stdDev / mean) * 100 : 0; // Coefficient of variation
 
+    let min = samples[0] ?? 0;
+    let max = samples[0] ?? 0;
+    for (let i = 1; i < samples.length; i++) {
+      if (samples[i] < min) min = samples[i];
+      if (samples[i] > max) max = samples[i];
+    }
+
     const metric: PerformanceMetric = {
       name,
       unit,
       mean,
       stdDev,
-      min: Math.min(...samples),
-      max: Math.max(...samples),
+      min,
+      max,
       samples: samples.length,
       coefficientOfVariation: cv,
     };

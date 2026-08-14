@@ -198,7 +198,7 @@ class DoDScorer {
     version: string,
     behavioralSuites: TestSuiteResult[],
     performance: PerformanceScore,
-    codeQuality?: CodeQualityMetrics
+    codeQuality: CodeQualityMetrics  // Required: must include complexity, duplication, coverage, maintainability
   ): DoDScore
 }
 ```
