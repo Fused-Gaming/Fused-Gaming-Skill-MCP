@@ -1,0 +1,31 @@
+{
+  "name": "@h4shed/benchmark-utils",
+  "version": "1.0.0",
+  "description": "Shared benchmark utilities for DoD compliance and performance testing",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'No tests yet'"
+  },
+  "keywords": [
+    "benchmark",
+    "performance",
+    "dod",
+    "definition-of-done",
+    "testing"
+  ],
+  "author": "VLN Team",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

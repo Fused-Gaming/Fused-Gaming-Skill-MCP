@@ -5,7 +5,7 @@
 
 import type { ToolDefinition } from "@h4shed/mcp-core";
 
-interface SvgAsset extends Record<string, unknown> {
+export interface SvgAsset extends Record<string, unknown> {
   success: boolean;
   assetType?: string;
   svgCode?: string;
@@ -60,6 +60,25 @@ function detectAssetType(objective: string): string {
   }
 
   return "generic-shape";
+}
+
+/**
+ * Extracts custom dimensions from objective (e.g., "256x256", "512 by 512")
+ */
+function extractDimensions(objective: string): { width: number; height: number } | null {
+  const lowerObj = objective.toLowerCase();
+
+  // Match patterns like "256x256", "256 x 256", "256x256 dimensions"
+  const match = lowerObj.match(/(\d+)\s*x\s*(\d+)/);
+  if (match) {
+    const width = parseInt(match[1], 10);
+    const height = parseInt(match[2], 10);
+    if (width > 0 && height > 0) {
+      return { width, height };
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -213,9 +232,10 @@ function generateChart(size: number, colors: string[]): string {
 function generateSvgAsset(
   objective: string,
   assetType: string,
-  colors: string[]
+  colors: string[],
+  customSize?: { width: number; height: number }
 ): string {
-  const size = 100;
+  const size = customSize?.width || 100;
   const primaryColor = colors[0] || "#4444FF";
 
   switch (assetType) {
@@ -309,8 +329,13 @@ export const GenerateSvgAssetTool: ToolDefinition = {
       // Extract colors from objective and context
       const colors = extractColors(objective + " " + context);
 
+      // Extract custom dimensions if specified
+      const customDimensions = extractDimensions(objective + " " + context) || undefined;
+      const width = customDimensions?.width || 100;
+      const height = customDimensions?.height || 100;
+
       // Generate SVG code
-      const svgCode = generateSvgAsset(objective, assetType, colors);
+      const svgCode = generateSvgAsset(objective, assetType, colors, customDimensions);
 
       // Create preview
       const previewText = createSvgPreview(svgCode);
@@ -320,7 +345,7 @@ export const GenerateSvgAssetTool: ToolDefinition = {
         assetType,
         svgCode,
         description: `Generated ${assetType} SVG asset: ${objective}`,
-        dimensions: { width: 100, height: 100 },
+        dimensions: { width, height },
         colorPalette: colors,
         complexity: "simple",
         previewText,

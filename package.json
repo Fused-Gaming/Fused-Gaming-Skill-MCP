@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/mcp",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
   "main": "./packages/core/dist/packages/core/src/index.js",
@@ -38,7 +38,8 @@
     "packages/license-client",
     "packages/skills/*",
     "packages/cli",
-    "packages/web"
+    "packages/web",
+    "packages/benchmark-utils"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
