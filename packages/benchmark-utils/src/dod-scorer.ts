@@ -375,10 +375,15 @@ export class DoDScorer {
       );
     }
 
-    // Validate metric ranges: complexity ≥0, duplication/coverage 0-100, maintainability 0-100+
+    // Validate metric ranges: complexity ≥0 and mean≤max, duplication/coverage 0-100, maintainability 0-100+
     if (codeQuality.complexity.mean < 0 || codeQuality.complexity.max < 0) {
       throw new Error(
         'Complexity metrics must be non-negative. Received negative mean or max complexity.'
+      );
+    }
+    if (codeQuality.complexity.mean > codeQuality.complexity.max) {
+      throw new Error(
+        `Complexity metrics are invalid: mean (${codeQuality.complexity.mean}) cannot exceed max (${codeQuality.complexity.max}).`
       );
     }
     if (codeQuality.duplication < 0 || codeQuality.duplication > 100) {
@@ -429,9 +434,17 @@ export class DoDScorer {
       passed = false; // Any REGRESSION suite below 100%
     }
 
-    // CORE tests must pass CI check
+    // CORE, FUNCTIONALITY, and ERROR tests must pass their confidence interval checks
     const coreScore = behavioral.scores.find((s) => s.category === 'CORE');
     if (coreScore && !coreScore.passed) {
+      passed = false;
+    }
+    const functionalityScore = behavioral.scores.find((s) => s.category === 'FUNCTIONALITY');
+    if (functionalityScore && !functionalityScore.passed) {
+      passed = false;
+    }
+    const errorScore = behavioral.scores.find((s) => s.category === 'ERROR');
+    if (errorScore && !errorScore.passed) {
       passed = false;
     }
 

@@ -170,10 +170,10 @@ async function runBenchmarks() {
   // === PERFORMANCE BENCHMARKS ===
   console.log('⚡ Running Performance Benchmarks...\n');
 
+  if (global.gc) global.gc();
   const latencyResult = await perfBench.benchmark(
     'SVG generation latency',
     async () => {
-      if (global.gc) global.gc();
       const result = (await GenerateSvgAssetTool.handler({ objective: 'Performance test SVG' })) as SvgAsset;
       if (!result.success) throw new Error('SVG generation failed in latency benchmark');
     },
@@ -281,8 +281,33 @@ async function runBenchmarks() {
     const baselineFile = path.join(process.cwd(), '.benchmark/baseline.json');
     try {
       const baselineData = await fs.readFile(baselineFile, 'utf8');
-      const baseline = JSON.parse(baselineData);
-      if (baseline.combined_score !== undefined) {
+      const persisted = JSON.parse(baselineData);
+      if (persisted.combined_score !== undefined) {
+        // Convert persisted schema (code_quality, aggregate_score) to DoDScore schema (codeQuality, aggregateScore)
+        const baseline = {
+          version: persisted.version,
+          timestamp: persisted.timestamp,
+          combinedScore: persisted.combined_score,
+          passed: persisted.passed,
+          behavioral: {
+            aggregateScore: persisted.behavioral.aggregate_score,
+            scores: persisted.behavioral.scores,
+          },
+          performance: {
+            aggregateScore: persisted.performance.aggregate_score,
+            latency: persisted.performance.latency,
+            throughput: persisted.performance.throughput,
+            memory: persisted.performance.memory,
+          },
+          codeQuality: {
+            aggregateScore: persisted.code_quality.aggregate_score,
+            complexity: persisted.code_quality.complexity,
+            duplication: persisted.code_quality.duplication,
+            coverage: persisted.code_quality.coverage,
+            maintainability: persisted.code_quality.maintainability,
+          },
+          regressions: persisted.regressions || [],
+        };
         scorer.setBaseline(baseline.version || 'unknown', baseline);
         console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
       }
@@ -349,11 +374,16 @@ async function runBenchmarks() {
     );
     console.log(`✅ Results written to ${resultsDir}/results.json`);
 
-    // Also write baseline for next release's regression detection
-    await fs.writeFile(
-      path.join(resultsDir, 'baseline.json'),
-      JSON.stringify(resultsJson, null, 2)
-    );
+    // Only write baseline for next release if this run passed Definition of Done
+    if (dodReport.passed) {
+      await fs.writeFile(
+        path.join(resultsDir, 'baseline.json'),
+        JSON.stringify(resultsJson, null, 2)
+      );
+      console.log(`✅ Baseline updated for next release comparison`);
+    } else {
+      console.log(`⚠️  Baseline not updated (run did not pass DoD threshold)`);
+    }
   } catch (err) {
     console.error('⚠️ Failed to write results.json:', err);
   }
