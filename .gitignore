@@ -235,3 +235,13 @@ node_modules/.cache/
 .claude-flow/session/
 packages/web/.claude-flow/sessions/
 packages/web/.claude-flow/data/
+
+# TypeScript & Build Artifacts (in src/ directories)
+**/src/**/*.d.ts
+**/src/**/*.d.ts.map
+**/src/**/*.js
+**/src/**/*.js.map
+
+# Benchmark Results
+**/.benchmark/
+**/tsconfig.benchmark.json
