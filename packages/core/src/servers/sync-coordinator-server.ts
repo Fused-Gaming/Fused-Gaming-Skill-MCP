@@ -59,7 +59,7 @@ export class SyncCoordinatorServer {
     this.app.use(express.json());
 
     // Authentication middleware
-    this.app.use((req, res, next) => {
+    this.app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
       const auth = req.headers.authorization;
       if (this.apiKey && auth !== `Bearer ${this.apiKey}`) {
         return res.status(401).json({ error: "Unauthorized" });
@@ -76,7 +76,7 @@ export class SyncCoordinatorServer {
 
   private setupRoutes(): void {
     // Health check
-    this.app.get("/mcp/health", (_req, res) => {
+    this.app.get("/mcp/health", (_req: express.Request, res: express.Response) => {
       res.json({
         status: "healthy",
         service: "sync-coordinator-mcp",
@@ -85,7 +85,7 @@ export class SyncCoordinatorServer {
     });
 
     // MCP SSE endpoint
-    this.app.get("/mcp", (req, res) => {
+    this.app.get("/mcp", (req: express.Request, res: express.Response) => {
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
@@ -115,7 +115,7 @@ export class SyncCoordinatorServer {
     });
 
     // Sync tasks endpoint
-    this.app.post("/mcp/tasks/sync", (req, res) => {
+    this.app.post("/mcp/tasks/sync", (req: express.Request, res: express.Response) => {
       const taskRequest = req.body as SyncTaskRequest;
 
       if (!taskRequest.taskId || !taskRequest.type) {
@@ -134,7 +134,7 @@ export class SyncCoordinatorServer {
     });
 
     // Get sync status
-    this.app.get("/mcp/sync/status", (_req, res) => {
+    this.app.get("/mcp/sync/status", (_req: express.Request, res: express.Response) => {
       res.json({
         pendingTasks: this.taskQueue.size,
         eventQueueSize: this.eventBus.length,
@@ -144,7 +144,7 @@ export class SyncCoordinatorServer {
     });
 
     // Coordination event publication
-    this.app.post("/mcp/events/publish", (req, res) => {
+    this.app.post("/mcp/events/publish", (req: express.Request, res: express.Response) => {
       const event = req.body as CoordinationEvent;
 
       if (!event.type || !event.agentId) {
@@ -164,7 +164,7 @@ export class SyncCoordinatorServer {
     });
 
     // Get coordination events
-    this.app.get("/mcp/events", (req, res) => {
+    this.app.get("/mcp/events", (req: express.Request, res: express.Response) => {
       const agentId = req.query.agentId as string;
       const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000);
 
@@ -181,7 +181,7 @@ export class SyncCoordinatorServer {
     });
 
     // Get task by ID
-    this.app.get("/mcp/tasks/:taskId", (req, res) => {
+    this.app.get("/mcp/tasks/:taskId", (req: express.Request, res: express.Response) => {
       const task = this.taskQueue.get(req.params.taskId);
 
       if (!task) {
@@ -192,7 +192,7 @@ export class SyncCoordinatorServer {
     });
 
     // Tools listing
-    this.app.get("/mcp/tools", (_req, res) => {
+    this.app.get("/mcp/tools", (_req: express.Request, res: express.Response) => {
       res.json({
         tools: [
           {

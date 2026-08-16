@@ -61,7 +61,7 @@ export class SkillRepositoryServer {
     this.app.use(express.json());
 
     // Authentication middleware
-    this.app.use((req, res, next) => {
+    this.app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
       const auth = req.headers.authorization;
       if (this.apiKey && auth !== `Bearer ${this.apiKey}`) {
         return res.status(401).json({ error: "Unauthorized" });
@@ -78,7 +78,7 @@ export class SkillRepositoryServer {
 
   private setupRoutes(): void {
     // Health check
-    this.app.get("/mcp/health", (_req, res) => {
+    this.app.get("/mcp/health", (_req: express.Request, res: express.Response) => {
       res.json({
         status: "healthy",
         service: "skill-repository-mcp",
@@ -87,7 +87,7 @@ export class SkillRepositoryServer {
     });
 
     // MCP SSE endpoint
-    this.app.get("/mcp", (req, res) => {
+    this.app.get("/mcp", (req: express.Request, res: express.Response) => {
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
@@ -117,7 +117,7 @@ export class SkillRepositoryServer {
     });
 
     // List all skills
-    this.app.get("/mcp/skills", (_req, res) => {
+    this.app.get("/mcp/skills", (_req: express.Request, res: express.Response) => {
       const skills = Array.from(this.skillCache.values());
 
       res.json({
@@ -128,7 +128,7 @@ export class SkillRepositoryServer {
     });
 
     // Get skill by name
-    this.app.get("/mcp/skills/:skillName", (req, res) => {
+    this.app.get("/mcp/skills/:skillName", (req: express.Request, res: express.Response) => {
       const skill = this.skillCache.get(req.params.skillName);
 
       if (!skill) {
@@ -139,7 +139,7 @@ export class SkillRepositoryServer {
     });
 
     // Search skills
-    this.app.get("/mcp/skills/search", (req, res) => {
+    this.app.get("/mcp/skills/search", (req: express.Request, res: express.Response) => {
       const query = (req.query.q as string || "").toLowerCase();
       const tag = req.query.tag as string;
 
@@ -165,7 +165,7 @@ export class SkillRepositoryServer {
     });
 
     // Register skill
-    this.app.post("/mcp/skills/register", (req, res) => {
+    this.app.post("/mcp/skills/register", (req: express.Request, res: express.Response) => {
       const { name, version, description, author, license, tags } = req.body;
 
       if (!name || !version) {
@@ -194,7 +194,7 @@ export class SkillRepositoryServer {
     });
 
     // List all tools
-    this.app.get("/mcp/tools", (req, res) => {
+    this.app.get("/mcp/tools", (req: express.Request, res: express.Response) => {
       const skillName = req.query.skill as string;
       let tools = Array.from(this.toolCache.values());
 
@@ -210,7 +210,7 @@ export class SkillRepositoryServer {
     });
 
     // Get tool by name
-    this.app.get("/mcp/tools/:toolName", (req, res) => {
+    this.app.get("/mcp/tools/:toolName", (req: express.Request, res: express.Response) => {
       const tool = this.toolCache.get(req.params.toolName);
 
       if (!tool) {
@@ -221,7 +221,7 @@ export class SkillRepositoryServer {
     });
 
     // Search tools
-    this.app.get("/mcp/tools/search", (req, res) => {
+    this.app.get("/mcp/tools/search", (req: express.Request, res: express.Response) => {
       const query = (req.query.q as string || "").toLowerCase();
       const skillName = req.query.skill as string;
 
@@ -247,7 +247,7 @@ export class SkillRepositoryServer {
     });
 
     // Register tool
-    this.app.post("/mcp/tools/register", (req, res) => {
+    this.app.post("/mcp/tools/register", (req: express.Request, res: express.Response) => {
       const { name, description, skillName, inputSchema } = req.body;
 
       if (!name || !skillName) {
@@ -273,7 +273,7 @@ export class SkillRepositoryServer {
     });
 
     // Execute skill (placeholder)
-    this.app.post("/mcp/skills/:skillName/execute", (req, res) => {
+    this.app.post("/mcp/skills/:skillName/execute", (req: express.Request, res: express.Response) => {
       const skillName = req.params.skillName;
       const { tool, input } = req.body;
 
@@ -293,7 +293,7 @@ export class SkillRepositoryServer {
     });
 
     // Get metadata for all registered skills
-    this.app.get("/mcp/metadata/skills", (_req, res) => {
+    this.app.get("/mcp/metadata/skills", (_req: express.Request, res: express.Response) => {
       res.json({
         availableSkills: Array.from(this.skillCache.values()).map((s) => ({
           name: s.name,
