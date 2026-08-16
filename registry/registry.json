@@ -1,0 +1,377 @@
+{
+  "generated": "2026-08-16T10:54:50.219Z",
+  "version": "1.2.0",
+  "stats": {
+    "totalSkills": 30,
+    "totalPackages": 7,
+    "skillsWithTests": 3,
+    "skillsWithBenchmarks": 1
+  },
+  "packages": {
+    "benchmark-utils": {
+      "name": "@h4shed/benchmark-utils",
+      "version": "1.0.0",
+      "description": "Shared benchmark utilities for DoD compliance and performance testing",
+      "type": "package",
+      "hasBenchmarks": false,
+      "hasTests": false
+    },
+    "cli": {
+      "name": "@h4shed/mcp-cli",
+      "version": "1.0.24",
+      "description": "CLI tool for managing Fused Gaming MCP skills and configuration",
+      "type": "package",
+      "hasBenchmarks": false,
+      "hasTests": false
+    },
+    "core": {
+      "name": "@h4shed/mcp-core",
+      "version": "1.0.24",
+      "description": "Core MCP server and skill registry for Fused Gaming",
+      "type": "package",
+      "hasBenchmarks": false,
+      "hasTests": false
+    },
+    "design-tokens": {
+      "name": "@h4shed/design-tokens",
+      "version": "1.0.0",
+      "description": "SyncPulse Design System - Complete token system with colors, typography, spacing, shadows, animations, and component tokens",
+      "type": "package",
+      "hasBenchmarks": false,
+      "hasTests": false
+    },
+    "docs": {
+      "name": "@h4shed/docs",
+      "version": "1.0.0",
+      "description": "Complete design system and tool documentation hub - docs.vln.gg",
+      "type": "package",
+      "hasBenchmarks": false,
+      "hasTests": false
+    },
+    "license-client": {
+      "name": "@h4shed/license-client",
+      "version": "1.0.0",
+      "description": "License validation & management library for SyncPulse CLI",
+      "type": "package",
+      "hasBenchmarks": false,
+      "hasTests": false
+    },
+    "web": {
+      "name": "@fused-gaming/swarm-controller",
+      "version": "1.0.0",
+      "description": "Artistic interactive dashboard for SyncPulse agent swarm control and monitoring",
+      "type": "package",
+      "hasBenchmarks": false,
+      "hasTests": false
+    }
+  },
+  "skills": {
+    "agentic-flow-devkit": {
+      "name": "@h4shed/skill-agentic-flow-devkit",
+      "version": "1.0.21",
+      "description": "Design and visualize agentic orchestration flows with trailer A/B-roll planning support.",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "algorithmic-art": {
+      "name": "@h4shed/skill-algorithmic-art",
+      "version": "1.0.24",
+      "description": "Generative art using p5.js with seeded randomness, flow fields, and particle systems",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "ascii-mockup": {
+      "name": "@h4shed/skill-ascii-mockup",
+      "version": "1.0.24",
+      "description": "Mobile-first ASCII wireframe mockup generator for rapid UI prototyping",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "canvas-design": {
+      "name": "@h4shed/skill-canvas-design",
+      "version": "1.0.24",
+      "description": "Visual design generation for web with SVG and canvas rendering",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "daily-review-skill": {
+      "name": "@h4shed/skill-daily-review",
+      "version": "1.0.23",
+      "description": "Productivity tracking and daily review skill for session aggregation, metrics analysis, and multi-account reporting",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "frontend-design": {
+      "name": "@h4shed/skill-frontend-design",
+      "version": "1.0.24",
+      "description": "Frontend component design and HTML/CSS generation for modern web applications",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "linkedin-master-journalist": {
+      "name": "@h4shed/skill-linkedin-master-journalist",
+      "version": "1.0.23",
+      "description": "Draft polished LinkedIn release and thought-leadership posts.",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "mcp-builder": {
+      "name": "@h4shed/skill-mcp-builder",
+      "version": "1.0.24",
+      "description": "Build and scaffold MCP servers and skills with best practices",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "mermaid-terminal": {
+      "name": "@h4shed/skill-mermaid-terminal",
+      "version": "1.0.23",
+      "description": "Generate terminal-friendly Mermaid diagrams and flowcharts.",
+      "type": "skill",
+      "hasTests": true,
+      "testCount": 1,
+      "hasBenchmarks": false
+    },
+    "multi-account-session-tracking-skill": {
+      "name": "@h4shed/skill-multi-account-session-tracking",
+      "version": "1.0.23",
+      "description": "Extended framework for tracking Claude sessions across multiple accounts with unified metrics",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "nft-generative-art": {
+      "name": "@h4shed/skill-nft-generative-art",
+      "version": "1.0.15",
+      "description": "NFT artwork generation, metadata creation, and blockchain-ready asset creation",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "playwright-test-automation": {
+      "name": "@h4shed/skill-playwright-test-automation",
+      "version": "1.0.15",
+      "description": "End-to-end testing automation framework for web applications with cross-browser support",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "pre-deploy-validator": {
+      "name": "@h4shed/skill-pre-deploy-validator",
+      "version": "1.0.24",
+      "description": "Pre-deployment validation and quality checks for production readiness",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "project-manager": {
+      "name": "@h4shed/skill-project-manager",
+      "version": "1.0.23",
+      "description": "Plan projects with milestones, dependencies, and delivery phases.",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "project-manager-skill": {
+      "name": "@h4shed/skill-project-manager-skill",
+      "version": "1.0.24",
+      "description": "Task and project management skill for tracking work items and team collaboration",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "project-status-tool": {
+      "name": "@h4shed/skill-project-status-tool",
+      "version": "1.0.23",
+      "description": "Summarize current project status, risks, and next actions.",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "skill-creator": {
+      "name": "@h4shed/skill-creator",
+      "version": "1.0.24",
+      "description": "Create custom skills and tools for the Fused Gaming MCP ecosystem",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "smart-contract-tools": {
+      "name": "@h4shed/skill-smart-contract-tools",
+      "version": "1.0.15",
+      "description": "Smart contract development tools for Hardhat, Truffle, and Foundry ecosystems",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "storybook-component-library": {
+      "name": "@h4shed/skill-storybook-component-library",
+      "version": "1.0.15",
+      "description": "Component library documentation and visual testing with Storybook integration",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "style-dictionary-system": {
+      "name": "@h4shed/skill-style-dictionary-system",
+      "version": "1.0.15",
+      "description": "Design tokens and style dictionary generation for cross-platform design system management",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "svg-generator": {
+      "name": "@h4shed/skill-svg-generator",
+      "version": "1.1.0",
+      "description": "Generate SVG assets and icon concepts from structured prompts.",
+      "type": "skill",
+      "hasTests": true,
+      "testCount": 1,
+      "hasBenchmarks": true
+    },
+    "syncpulse": {
+      "name": "@h4shed/skill-syncpulse",
+      "version": "0.2.13",
+      "description": "SyncPulse - intelligent project state caching, multi-agent coordination, and secure email automation with 9 production-ready templated workflows",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "syncpulse-hub": {
+      "name": "@h4shed/syncpulse-hub",
+      "version": "0.1.12",
+      "description": "Centralized SyncPulse Hub - Unified orchestration and installation of all @h4shed packages",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "tailwindcss-style-builder": {
+      "name": "@h4shed/skill-tailwindcss-style-builder",
+      "version": "1.0.15",
+      "description": "Tailwind CSS utility-first styling and design system builder for rapid UI development",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "theme-factory": {
+      "name": "@h4shed/skill-theme-factory",
+      "version": "1.0.24",
+      "description": "Design system and theme generation for consistent UI/UX across applications",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "typescript-toolchain": {
+      "name": "@h4shed/skill-typescript-toolchain",
+      "version": "1.0.15",
+      "description": "Advanced TypeScript configuration, type generation, and static analysis tooling",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "underworld-writer-skill": {
+      "name": "@h4shed/skill-underworld-writer",
+      "version": "1.0.24",
+      "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "ux-journeymapper": {
+      "name": "@h4shed/skill-ux-journeymapper",
+      "version": "1.0.23",
+      "description": "Create UX journey maps with pain points, touchpoints, and opportunities.",
+      "type": "skill",
+      "hasTests": true,
+      "testCount": 1,
+      "hasBenchmarks": false
+    },
+    "vercel-nextjs-deployment": {
+      "name": "@h4shed/skill-vercel-nextjs-deployment",
+      "version": "1.0.15",
+      "description": "Vercel deployment optimization and Next.js framework integration for serverless applications",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    },
+    "vite-module-bundler": {
+      "name": "@h4shed/skill-vite-module-bundler",
+      "version": "1.0.15",
+      "description": "Next-generation JavaScript module bundler for lightning-fast development and optimized production builds",
+      "type": "skill",
+      "hasTests": false,
+      "testCount": 0,
+      "hasBenchmarks": false
+    }
+  },
+  "mcp": {
+    "servers": [
+      "claude-flow",
+      "fused-gaming"
+    ],
+    "tools": [
+      "generate-algorithmic-art",
+      "create-ascii-mockup",
+      "design-canvas",
+      "create-frontend-design",
+      "generate-theme",
+      "build-mcp-skill",
+      "validate-deployment",
+      "create-skill",
+      "generate-underworld-content",
+      "create-linkedin-content",
+      "design-agentic-flow",
+      "review-daily",
+      "track-accounts",
+      "generate-mermaid-diagram",
+      "manage-project",
+      "get-project-status",
+      "generate-svg-asset",
+      "map-user-journey",
+      "generate-nft-art",
+      "run-playwright-tests",
+      "generate-smart-contracts",
+      "create-storybook-component",
+      "build-style-dictionary",
+      "generate-tailwind-styles",
+      "setup-typescript",
+      "deploy-nextjs-vercel",
+      "bundle-vite",
+      "syncpulse-benchmark",
+      "manage-syncpulse-hub"
+    ]
+  }
+}
