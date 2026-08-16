@@ -169,6 +169,59 @@ Coming soon! Claude.ai will support MCP server plugins directly. You'll be able 
 
 ---
 
+## 📊 Performance & Quality Metrics
+
+Every skill, tool, and package in this ecosystem is automatically benchmarked and tracked for quality metrics.
+
+### Benchmark Tracking
+
+All 39 packages undergo continuous performance and quality validation:
+
+- **Behavioral Testing** (40% weight) — Test pass rates (CORE, REGRESSION, FUNCTIONALITY, ERROR)
+- **Performance Testing** (35% weight) — Latency, throughput, and memory usage metrics
+- **Code Quality** (25% weight) — Complexity, duplication, coverage, and maintainability
+
+**Combined Precision Score:** Unified metric that gates releases (target: ≥90%)
+- Formula: `(Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)`
+
+### Release Quality Gates
+
+Before packages are released, all mandatory gates must pass:
+
+✅ **Behavioral Score** ≥90% (CORE ≥95%, REGRESSION 100%, min 30 test samples)  
+✅ **Performance Score** ≥85% (Latency & Throughput CV <10%)  
+✅ **Code Quality Score** ≥80% (Complexity ≤3.0 mean, Duplication <5%, Coverage ≥80%)  
+✅ **Combined Score** ≥90%  
+
+### Viewing Benchmark Results
+
+**GitHub Release Issues:** Each version bump creates an issue with detailed metrics
+- Title: `[Benchmark] {Package Name} v{Version} Baseline`
+- Includes: Regression analysis, version-to-version comparison, detailed metrics
+- Access via: [GitHub Issues → filter by `benchmark` label](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues?q=label%3Abenchmark)
+
+**Benchmark Registry:** Central tracking of all versions and metrics
+- Location: `benchmarks/packages-registry.json`
+- Updated on every release
+- Shows: Historical scores, performance trends, regression detection
+
+### Running Benchmarks Locally
+
+```bash
+# Benchmark a single package
+npm run benchmark --workspace=@h4shed/skill-creator
+
+# Benchmark all packages
+npm run benchmark --workspaces
+
+# Release-quality benchmarks (higher iterations)
+npm run benchmark:release --workspace=@h4shed/skill-creator
+```
+
+For detailed information, see [Benchmark Releases Documentation](./docs/BENCHMARK_RELEASES.md).
+
+---
+
 ## 📚 Skills Index (31 Total)
 
 All skills include individual documentation in their respective directories at `packages/skills/<skill>/README.md`.
