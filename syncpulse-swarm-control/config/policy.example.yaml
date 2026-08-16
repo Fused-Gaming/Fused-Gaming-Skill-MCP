@@ -1,0 +1,67 @@
+version: 1
+product:
+  execution_plane: syncpulse
+  trust_plane: queen
+
+routing:
+  deterministic_first: true
+  default_model_classes:
+    economy: haiku
+    standard: sonnet
+    premium: opus
+  targeted_retry_limit: 1
+  escalate_on_verification_failure: true
+
+human_gates:
+  ambiguity: true
+  destructive_change: true
+  production_access: true
+  secrets_or_credentials: true
+  billing: true
+  permission_escalation: true
+  breaking_capability_upgrade: true
+  hard_budget_exceeded: true
+
+procurement:
+  p0_auto_promote: true
+  p1_auto_promote: false
+  p2_requires_coordinator: true
+  p2_requires_shadow_mode: true
+  p2_shadow_mode_min_executions: 20
+  p3_requires_human: true
+
+workspace:
+  broad_read: true
+  narrow_write: true
+  reviewer_may_fix_own_findings: false
+  tester_may_patch_production: false
+  task_branches_preferred: true
+
+# references/hive-architecture-v2.md — task leases + epochs + event log
+ledger:
+  enabled: true
+  default_lease_ttl_seconds: 3600
+  epochs:
+    - project_epoch
+    - architecture_epoch
+    - design_epoch
+    - api_contract_epoch
+
+# references/hive-architecture-v2.md §10 — swarm circuit breaker.
+# Thresholds only; nothing in this plugin evaluates these yet — treat as
+# the policy target for a future health-metrics/circuit-breaker script.
+circuit_breaker:
+  enabled: false
+  same_failure_repeat_threshold: 3
+  cost_velocity_threshold: null
+  recursive_task_generation_threshold: null
+  merge_conflict_rate_threshold: null
+  review_rejection_rate_threshold: null
+  capability_regression_triggers_freeze: true
+  context_epoch_invalidation_ratio_threshold: 0.3
+
+# references/hive-architecture-v2.md §6 — only speculate when parallel
+# candidate cost is below the expected cost of a wrong decision.
+speculative_execution:
+  enabled: false
+  max_parallel_candidates: 3

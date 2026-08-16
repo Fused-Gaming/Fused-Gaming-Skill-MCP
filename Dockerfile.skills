@@ -1,0 +1,38 @@
+# Skill Repository MCP Server Dockerfile
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache curl tini
+
+# Copy package files
+COPY package*.json ./
+COPY packages/core/package.json ./packages/core/
+COPY VERSION.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy source code
+COPY packages/core/src ./packages/core/src
+COPY packages/core/tsconfig.json ./packages/core/
+
+# Build TypeScript
+RUN npm run build --workspace=@h4shed/mcp-core
+
+# Expose port
+EXPOSE 3003
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f -H "Authorization: Bearer ${SKILL_MCP_API_KEY}" http://localhost:3003/mcp/health || exit 1
+
+# Environment
+ENV NODE_ENV=production
+ENV PORT=3003
+ENV SKILL_MCP_API_KEY=default-key
+
+# Run with tini to handle signals properly
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["node", "-e", "import('./packages/core/dist/servers/skill-repository-server.js').then(m => new m.default(3003).start()).catch(e => { console.error(e); process.exit(1); })"]

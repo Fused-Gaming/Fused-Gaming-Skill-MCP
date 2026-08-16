@@ -77,6 +77,77 @@
         "manage-syncpulse-hub"
       ],
       "autoStart": false
+    },
+    "sync-coordinator": {
+      "type": "sse",
+      "url": "https://sync.vln.gg/mcp",
+      "description": "Synchronization and coordination MCP connector for distributed task orchestration",
+      "capabilities": {
+        "tools": [
+          "sync-tasks",
+          "coordinate-agents",
+          "manage-workflow-state",
+          "publish-coordination-event",
+          "subscribe-to-events",
+          "get-sync-status"
+        ],
+        "resources": [
+          "task://sync-state",
+          "workflow://active-tasks",
+          "agent://coordination-info"
+        ]
+      },
+      "env": {
+        "MCP_SERVER_TYPE": "sync-coordinator",
+        "MCP_BASE_URL": "https://sync.vln.gg",
+        "MCP_API_KEY": "${SYNC_MCP_API_KEY}",
+        "MCP_TIMEOUT": "30000"
+      },
+      "auth": {
+        "type": "bearer",
+        "headerName": "Authorization"
+      },
+      "retryPolicy": {
+        "maxRetries": 3,
+        "backoffMultiplier": 2,
+        "initialDelayMs": 1000
+      }
+    },
+    "skill-repository": {
+      "type": "sse",
+      "url": "https://skill.vln.gg/mcp",
+      "description": "Skills and tooling MCP connector for accessing registered skills and tools",
+      "capabilities": {
+        "tools": [
+          "list-skills",
+          "get-skill",
+          "execute-skill",
+          "register-skill",
+          "get-tool",
+          "search-skills",
+          "get-skill-metadata"
+        ],
+        "resources": [
+          "skill://registry",
+          "skill://installed",
+          "tool://available"
+        ]
+      },
+      "env": {
+        "MCP_SERVER_TYPE": "skill-repository",
+        "MCP_BASE_URL": "https://skill.vln.gg",
+        "MCP_API_KEY": "${SKILL_MCP_API_KEY}",
+        "MCP_TIMEOUT": "30000"
+      },
+      "auth": {
+        "type": "bearer",
+        "headerName": "Authorization"
+      },
+      "retryPolicy": {
+        "maxRetries": 3,
+        "backoffMultiplier": 2,
+        "initialDelayMs": 1000
+      }
     }
   }
 }

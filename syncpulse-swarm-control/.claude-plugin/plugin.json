@@ -1,0 +1,11 @@
+{
+  "name": "syncpulse-swarm-control",
+  "version": "0.5.0",
+  "description": "SyncPulse workspace-scoped swarm orchestration with intent routing, least-cost model selection, verification gates, live @h4shed capability discovery, and human decision gates.",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": ["swarm", "orchestration", "syncpulse", "h4shed", "mcp", "agents"]
+}

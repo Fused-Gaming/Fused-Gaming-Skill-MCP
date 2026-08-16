@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  sync-coordinator:
+    build:
+      context: .
+      dockerfile: Dockerfile.sync
+    container_name: sync-coordinator
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      SYNC_MCP_API_KEY: ${SYNC_MCP_API_KEY:-dev-sync-key}
+      MCP_TIMEOUT: ${MCP_TIMEOUT:-30000}
+      CLAUDE_FLOW_MODE: ${CLAUDE_FLOW_MODE:-v3}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-H", "Authorization: Bearer ${SYNC_MCP_API_KEY:-dev-sync-key}", "http://localhost:3002/mcp/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    labels:
+      - "service=sync-coordinator"
+      - "version=1.0.0"
+
+  skill-repository:
+    build:
+      context: .
+      dockerfile: Dockerfile.skills
+    container_name: skill-repository
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      SKILL_MCP_API_KEY: ${SKILL_MCP_API_KEY:-dev-skill-key}
+      MCP_TIMEOUT: ${MCP_TIMEOUT:-30000}
+      CLAUDE_FLOW_MODE: ${CLAUDE_FLOW_MODE:-v3}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-H", "Authorization: Bearer ${SKILL_MCP_API_KEY:-dev-skill-key}", "http://localhost:3003/mcp/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    labels:
+      - "service=skill-repository"
+      - "version=1.0.0"
+
+  nginx:
+    image: nginx:latest
+    container_name: mcp-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl/certs:/etc/nginx/certs:ro
+    depends_on:
+      - sync-coordinator
+      - skill-repository
+    networks:
+      - mcp-network
+    restart: unless-stopped
+
+networks:
+  mcp-network:
+    driver: bridge

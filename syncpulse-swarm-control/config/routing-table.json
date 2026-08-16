@@ -1,0 +1,344 @@
+{
+  "$schema": "./routing-table.schema.json",
+  "version": 1,
+  "workspaces": [
+    "project-management",
+    "design",
+    "architecture",
+    "implementation",
+    "testing",
+    "review",
+    "remediation",
+    "release",
+    "agent-governance",
+    "capability-management",
+    "content"
+  ],
+  "modelClasses": {
+    "economy": "haiku",
+    "standard": "sonnet",
+    "premium": "opus"
+  },
+  "defaultRule": {
+    "id": "default-no-match",
+    "workspace": "implementation",
+    "agent": "developer",
+    "primarySkill": null,
+    "supportingTools": [],
+    "modelClass": "standard",
+    "humanGate": false,
+    "notes": "No specialized capability matched with sufficient confidence. Use ordinary repository tools and coordinator judgement rather than forcing a package into the task."
+  },
+  "rules": [
+    {
+      "id": "coordinate-swarm",
+      "keywords": ["coordinate agents", "swarm", "task queue", "orchestrate the team", "multi-agent", "project memory", "cached state"],
+      "workspace": "agent-governance",
+      "agent": "coordinator",
+      "primarySkill": "@h4shed/skill-syncpulse",
+      "supportingTools": ["@h4shed/mcp-core", "@h4shed/syncpulse-hub"],
+      "modelClass": "premium",
+      "humanGate": false,
+      "notes": "Use SyncPulse as coordinator/source of task state. Select topology based on task dependencies and available agents."
+    },
+    {
+      "id": "expand-ecosystem",
+      "keywords": ["install", "update the ecosystem", "sync the ecosystem", "discover packages", "validate the whole ecosystem", "add a skill", "add a tool", "new capability"],
+      "workspace": "capability-management",
+      "agent": "capability-scout",
+      "primarySkill": "@h4shed/syncpulse-hub",
+      "supportingTools": ["@h4shed/mcp-cli", "@h4shed/skill-pre-deploy-validator"],
+      "modelClass": "economy",
+      "humanGate": false,
+      "notes": "Route to the expand-ecosystem skill: scripts/discover-ecosystem.mjs first, then risk-tiered install per capability-policy.md."
+    },
+    {
+      "id": "mcp-registry",
+      "keywords": ["register mcp", "load mcp skill", "list skills", "invoke mcp skill"],
+      "workspace": "agent-governance",
+      "agent": "capability-scout",
+      "primarySkill": "@h4shed/mcp-core",
+      "supportingTools": ["@h4shed/mcp-cli"],
+      "modelClass": "economy",
+      "humanGate": false,
+      "notes": "Core registry programmatically; CLI for operator-facing management commands."
+    },
+    {
+      "id": "build-mcp-server",
+      "keywords": ["build an mcp server", "scaffold mcp", "mcp tool", "new mcp skill"],
+      "workspace": "implementation",
+      "agent": "developer",
+      "primarySkill": "@h4shed/skill-mcp-builder",
+      "supportingTools": ["@h4shed/skill-creator", "@h4shed/mcp-core"],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Builder for MCP structure, creator for skill packaging. Validate registration through MCP Core."
+    },
+    {
+      "id": "create-skill",
+      "keywords": ["create a skill", "reusable skill", "new claude skill"],
+      "workspace": "agent-governance",
+      "agent": "capability-scout",
+      "primarySkill": "@h4shed/skill-creator",
+      "supportingTools": ["@h4shed/mcp-core", "@h4shed/mcp-cli"],
+      "modelClass": "standard",
+      "humanGate": false
+    },
+    {
+      "id": "project-planning",
+      "keywords": ["plan the project", "milestone", "backlog", "next actions", "project status", "dependencies", "blockers"],
+      "workspace": "project-management",
+      "agent": "project-manager",
+      "primarySkill": "@h4shed/skill-project-manager",
+      "supportingTools": ["@h4shed/skill-project-status-tool", "@h4shed/skill-mermaid-terminal"],
+      "modelClass": "economy",
+      "humanGate": false
+    },
+    {
+      "id": "session-productivity",
+      "keywords": ["session tracking", "daily review", "productivity", "workstream", "time tracking"],
+      "workspace": "project-management",
+      "agent": "project-manager",
+      "primarySkill": "@h4shed/skill-multi-account-session-tracking",
+      "supportingTools": ["@h4shed/skill-daily-review"],
+      "modelClass": "economy",
+      "humanGate": false,
+      "notes": "Do not expose account identifiers or secrets."
+    },
+    {
+      "id": "frontend-ui",
+      "keywords": ["web ui", "landing page", "dashboard", "react component", "frontend", "component library ui"],
+      "workspace": "design",
+      "agent": "designer",
+      "primarySkill": "@h4shed/skill-frontend-design",
+      "supportingTools": ["@h4shed/skill-tailwindcss-style-builder", "@h4shed/tool-tailwindcss", "@h4shed/skill-storybook-component-library"],
+      "modelClass": "standard",
+      "humanGate": false
+    },
+    {
+      "id": "design-system-tokens",
+      "keywords": ["design tokens", "theme", "color palette", "design system", "cross-platform theming"],
+      "workspace": "design",
+      "agent": "designer",
+      "primarySkill": "@h4shed/skill-theme-factory",
+      "supportingTools": ["@h4shed/design-tokens", "@h4shed/skill-style-dictionary-system", "@h4shed/tool-style-dictionary"],
+      "modelClass": "standard",
+      "humanGate": false
+    },
+    {
+      "id": "ascii-wireframe",
+      "keywords": ["ascii wireframe", "ascii mockup", "text wireframe", "early interface concept"],
+      "workspace": "design",
+      "agent": "designer",
+      "primarySkill": "@h4shed/skill-ascii-mockup",
+      "supportingTools": [],
+      "modelClass": "economy",
+      "humanGate": false
+    },
+    {
+      "id": "visual-generation",
+      "keywords": ["svg", "generative art", "algorithmic art", "canvas graphic", "nft artwork"],
+      "workspace": "design",
+      "agent": "designer",
+      "primarySkill": "@h4shed/skill-svg-generator",
+      "supportingTools": ["@h4shed/skill-canvas-design", "@h4shed/skill-algorithmic-art"],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Select one visual medium per requested deliverable. Only pull in skill-nft-generative-art for blockchain-ready collections, never for ordinary brand artwork."
+    },
+    {
+      "id": "ux-journey",
+      "keywords": ["user journey", "touchpoints", "pain points", "service flow", "journey map"],
+      "workspace": "design",
+      "agent": "designer",
+      "primarySkill": "@h4shed/skill-ux-journeymapper",
+      "supportingTools": ["@h4shed/skill-mermaid-terminal"],
+      "modelClass": "standard",
+      "humanGate": false
+    },
+    {
+      "id": "agentic-workflow-diagram",
+      "keywords": ["agentic workflow", "orchestration diagram", "agent topology", "workflow devkit"],
+      "workspace": "architecture",
+      "agent": "architect",
+      "primarySkill": "@h4shed/skill-agentic-flow-devkit",
+      "supportingTools": ["@h4shed/skill-mermaid-terminal"],
+      "modelClass": "standard",
+      "humanGate": false
+    },
+    {
+      "id": "mermaid-diagram",
+      "keywords": ["mermaid diagram", "flowchart", "sequence diagram", "state diagram"],
+      "workspace": "architecture",
+      "agent": "architect",
+      "primarySkill": "@h4shed/skill-mermaid-terminal",
+      "supportingTools": [],
+      "modelClass": "economy",
+      "humanGate": false
+    },
+    {
+      "id": "typescript-toolchain",
+      "keywords": ["typescript config", "tsconfig", "harden typescript", "type generation"],
+      "workspace": "implementation",
+      "agent": "developer",
+      "primarySkill": "@h4shed/skill-typescript-toolchain",
+      "supportingTools": ["@h4shed/tool-tsup", "@h4shed/tool-esbuild", "@h4shed/tool-vite"],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Respect the repository's existing compiler/bundler. Do not replace the build stack without operator intent."
+    },
+    {
+      "id": "bundling",
+      "keywords": ["bundle the app", "bundler", "webpack", "rollup", "esbuild", "vite build"],
+      "workspace": "implementation",
+      "agent": "developer",
+      "primarySkill": "@h4shed/skill-vite-module-bundler",
+      "supportingTools": ["@h4shed/tool-rollup", "@h4shed/tool-webpack", "@h4shed/tool-esbuild", "@h4shed/tool-tsup"],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Choose the existing repository stack first; otherwise Vite for apps, tsup/esbuild for libraries, Rollup/Webpack only when compatibility requires them."
+    },
+    {
+      "id": "css-styling",
+      "keywords": ["css preprocess", "sass", "less", "postcss", "minify css", "optimize css"],
+      "workspace": "implementation",
+      "agent": "developer",
+      "primarySkill": null,
+      "supportingTools": ["@h4shed/tool-postcss", "@h4shed/tool-sass", "@h4shed/tool-less", "@h4shed/tool-cssnano"],
+      "modelClass": "economy",
+      "humanGate": false,
+      "notes": "Select only the tools required by the current source format. cssnano is for production optimization, not authoring."
+    },
+    {
+      "id": "component-docs",
+      "keywords": ["storybook", "component documentation", "document components"],
+      "workspace": "implementation",
+      "agent": "developer",
+      "primarySkill": "@h4shed/skill-storybook-component-library",
+      "supportingTools": ["@h4shed/tool-storybook"],
+      "modelClass": "standard",
+      "humanGate": false
+    },
+    {
+      "id": "technical-docs",
+      "keywords": ["api documentation", "technical documentation", "docs site", "typedoc"],
+      "workspace": "implementation",
+      "agent": "developer",
+      "primarySkill": null,
+      "supportingTools": ["@h4shed/tool-typedoc", "@h4shed/tool-docusaurus", "@h4shed/tool-vitepress", "@h4shed/tool-markdown-it"],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "TypeDoc for TypeScript APIs; use the repository's established docs generator for sites."
+    },
+    {
+      "id": "smart-contracts",
+      "keywords": ["smart contract", "solidity", "hardhat", "foundry", "truffle"],
+      "workspace": "implementation",
+      "agent": "developer",
+      "primarySkill": "@h4shed/skill-smart-contract-tools",
+      "supportingTools": [],
+      "modelClass": "premium",
+      "humanGate": true,
+      "notes": "Default to local/test networks. Never sign, fund, broadcast, or deploy a transaction without explicit operator authority."
+    },
+    {
+      "id": "large-parallel-swarm",
+      "keywords": ["hive mind", "byzantine consensus", "spawn many agents", "consensus coordination", "raft consensus", "gossip protocol", "quorum"],
+      "workspace": "capability-management",
+      "agent": "capability-scout",
+      "primarySkill": null,
+      "supportingTools": [],
+      "modelClass": "standard",
+      "humanGate": true,
+      "notes": "No local agent implements this yet. Check registry/claude-flow-agents.registry.json for a matching catalog entry (e.g. byzantine-coordinator, raft-manager, quorum-manager) and follow references/agent-catalog.md 'Imported: claude-flow agent-type catalog' to promote it into a real agents/<name>.md before routing a live task to it. Human gate because this is a request for capability that doesn't exist yet, not a request to use existing capability."
+    },
+    {
+      "id": "remediate-defect",
+      "keywords": ["fix the bug", "apply the review fix", "remediate", "patch the failing test", "address the finding", "harden against"],
+      "workspace": "remediation",
+      "agent": "remediator",
+      "primarySkill": null,
+      "supportingTools": [],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Fix only evidenced defects assigned to remediation. Preserve original intent. Return work to the appropriate verifier/reviewer instead of self-closing the gate."
+    },
+    {
+      "id": "e2e-browser-testing",
+      "keywords": ["end-to-end test", "e2e test", "browser test", "playwright", "cypress"],
+      "workspace": "testing",
+      "agent": "tester",
+      "primarySkill": "@h4shed/skill-playwright-test-automation",
+      "supportingTools": ["@h4shed/tool-playwright", "@h4shed/tool-cypress"],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Prefer the test framework already present. Use deterministic fixtures; preserve evidence for failures."
+    },
+    {
+      "id": "unit-testing",
+      "keywords": ["unit test", "integration test", "test coverage", "vitest", "jest"],
+      "workspace": "testing",
+      "agent": "tester",
+      "primarySkill": null,
+      "supportingTools": ["@h4shed/tool-vitest", "@h4shed/tool-jest", "@h4shed/tool-istanbul"],
+      "modelClass": "economy",
+      "humanGate": false,
+      "notes": "Do not introduce a second unit-test framework unless required."
+    },
+    {
+      "id": "accessibility-audit",
+      "keywords": ["accessibility audit", "a11y", "wcag", "screen reader", "keyboard navigation"],
+      "workspace": "review",
+      "agent": "reviewer",
+      "primarySkill": null,
+      "supportingTools": ["@h4shed/tool-axe-core", "@h4shed/tool-pa11y"],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Combine automated results with manual checks for keyboard use, focus, semantics, contrast."
+    },
+    {
+      "id": "pre-deploy-validation",
+      "keywords": ["production readiness", "pre-deploy", "deployment validation", "merge readiness"],
+      "workspace": "release",
+      "agent": "release-manager",
+      "primarySkill": "@h4shed/skill-pre-deploy-validator",
+      "supportingTools": ["@h4shed/skill-vercel-nextjs-deployment"],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Validate before deployment. Deployment itself remains a separate external mutation requiring operator intent."
+    },
+    {
+      "id": "vercel-nextjs",
+      "keywords": ["next.js config", "vercel deployment", "nextjs"],
+      "workspace": "release",
+      "agent": "release-manager",
+      "primarySkill": "@h4shed/skill-vercel-nextjs-deployment",
+      "supportingTools": [],
+      "modelClass": "standard",
+      "humanGate": true,
+      "notes": "Inspect framework versions and repository settings first. Never deploy merely because validation succeeds."
+    },
+    {
+      "id": "linkedin-content",
+      "keywords": ["linkedin post", "thought leadership", "release announcement post"],
+      "workspace": "content",
+      "agent": "project-manager",
+      "primarySkill": "@h4shed/skill-linkedin-master-journalist",
+      "supportingTools": ["@h4shed/skill-project-status-tool"],
+      "modelClass": "standard",
+      "humanGate": true,
+      "notes": "Verify product facts and avoid publishing; return a draft unless the operator explicitly requests an authorized post action."
+    },
+    {
+      "id": "narrative-writing",
+      "keywords": ["underworld character", "mythology", "narrative world", "story world"],
+      "workspace": "content",
+      "agent": "designer",
+      "primarySkill": "@h4shed/skill-underworld-writer",
+      "supportingTools": [],
+      "modelClass": "standard",
+      "humanGate": false,
+      "notes": "Narrative/creative tasks only, not technical documentation."
+    }
+  ]
+}

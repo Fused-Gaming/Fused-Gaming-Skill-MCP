@@ -58,7 +58,15 @@
     "prerelease": "npm run build && npm run typecheck && npm run lint",
     "publish:prepare": "node scripts/prepare-publish-versions.cjs && npm install --package-lock-only --ignore-scripts",
     "create:release-issue": "ts-node scripts/create-release-issue.ts",
-    "create:baseline-issues": "ts-node scripts/create-baseline-benchmark-issues.ts"
+    "create:baseline-issues": "ts-node scripts/create-baseline-benchmark-issues.ts",
+    "server:sync": "npm run build && node packages/core/dist/servers/sync-coordinator-server.js",
+    "server:skills": "npm run build && node packages/core/dist/servers/skill-repository-server.js",
+    "server:both": "npm run build && concurrently \"npm run server:sync\" \"npm run server:skills\"",
+    "docker:build": "docker-compose -f docker-compose.mcp.yml build",
+    "docker:up": "docker-compose -f docker-compose.mcp.yml up -d",
+    "docker:down": "docker-compose -f docker-compose.mcp.yml down",
+    "docker:logs": "docker-compose -f docker-compose.mcp.yml logs -f",
+    "mcp:setup": "node scripts/setup-mcp-connectors.cjs"
   },
   "engines": {
     "node": ">=20.0.0",
