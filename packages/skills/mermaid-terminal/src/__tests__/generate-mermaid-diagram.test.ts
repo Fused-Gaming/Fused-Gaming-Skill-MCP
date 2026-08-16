@@ -3,7 +3,7 @@
  * Validates diagram generation, type detection, and output formatting
  */
 
-import { GenerateMermaidDiagramTool } from '../tools/generate-mermaid-diagram.js';
+import { GenerateMermaidDiagramTool } from '../tools/generate-mermaid-diagram';
 
 interface DiagramResult extends Record<string, unknown> {
   success: boolean;

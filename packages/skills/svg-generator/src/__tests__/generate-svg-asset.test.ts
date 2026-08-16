@@ -3,8 +3,8 @@
  * Validates SVG asset generation, dimension handling, and benchmark integration
  */
 
-import { GenerateSvgAssetTool } from '../tools/generate-svg-asset.js';
-import type { SvgAsset } from '../tools/generate-svg-asset.js';
+import { GenerateSvgAssetTool } from '../tools/generate-svg-asset';
+import type { SvgAsset } from '../tools/generate-svg-asset';
 
 describe('GenerateSvgAssetTool', () => {
   describe('Basic SVG Generation', () => {

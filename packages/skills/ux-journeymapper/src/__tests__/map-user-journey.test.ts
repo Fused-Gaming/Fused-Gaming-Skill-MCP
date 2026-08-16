@@ -3,7 +3,7 @@
  * Validates journey map generation, stage detection, and persona mapping
  */
 
-import { MapUserJourneyTool } from '../tools/map-user-journey.js';
+import { MapUserJourneyTool } from '../tools/map-user-journey';
 
 interface JourneyStage {
   stage: string;
