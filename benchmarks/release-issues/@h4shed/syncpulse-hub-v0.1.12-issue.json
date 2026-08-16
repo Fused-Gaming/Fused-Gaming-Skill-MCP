@@ -1,0 +1,9 @@
+{
+  "issue_number": null,
+  "issue_url": null,
+  "package": "@h4shed/syncpulse-hub",
+  "version": "0.1.12",
+  "timestamp": "2026-08-16T13:54:29.957Z",
+  "benchmark_file": "/home/user/Fused-Gaming-Skill-MCP/benchmarks/packages/@h4shed/syncpulse-hub/v0.1.12/baseline-results.json",
+  "status": "pending_github_auth"
+}

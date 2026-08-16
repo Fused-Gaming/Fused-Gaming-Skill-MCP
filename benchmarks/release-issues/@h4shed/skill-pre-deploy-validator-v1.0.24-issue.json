@@ -1,0 +1,9 @@
+{
+  "issue_number": null,
+  "issue_url": null,
+  "package": "@h4shed/skill-pre-deploy-validator",
+  "version": "1.0.24",
+  "timestamp": "2026-08-16T13:54:29.957Z",
+  "benchmark_file": "/home/user/Fused-Gaming-Skill-MCP/benchmarks/packages/@h4shed/skill-pre-deploy-validator/v1.0.24/baseline-results.json",
+  "status": "pending_github_auth"
+}

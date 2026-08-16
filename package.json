@@ -56,7 +56,8 @@
     "publish:packages": "npm publish --workspaces",
     "prerelease": "npm run build && npm run typecheck && npm run lint",
     "publish:prepare": "node scripts/prepare-publish-versions.cjs && npm install --package-lock-only --ignore-scripts",
-    "create:release-issue": "ts-node scripts/create-release-issue.ts"
+    "create:release-issue": "ts-node scripts/create-release-issue.ts",
+    "create:baseline-issues": "ts-node scripts/create-baseline-benchmark-issues.ts"
   },
   "engines": {
     "node": ">=20.0.0",

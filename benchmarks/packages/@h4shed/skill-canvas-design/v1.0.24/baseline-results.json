@@ -1,0 +1,36 @@
+{
+  "package": "@h4shed/skill-canvas-design",
+  "version": "1.0.24",
+  "timestamp": "2026-08-16T13:54:29.957Z",
+  "behavioral": {
+    "core_pass_rate": 100,
+    "core_total": 5,
+    "regression_pass_rate": 100,
+    "regression_total": 5,
+    "functionality_pass_rate": 100,
+    "functionality_total": 5,
+    "error_pass_rate": 100,
+    "error_total": 5,
+    "behavioral_score": 100
+  },
+  "performance": {
+    "latency_ms_mean": 1,
+    "latency_ms_std_dev": 0.1,
+    "latency_sample_count": 50,
+    "throughput_ops_sec_mean": 10000,
+    "throughput_ops_sec_std_dev": 500,
+    "throughput_sample_count": 50,
+    "memory_mb_peak": 50,
+    "performance_score": 100
+  },
+  "code_quality": {
+    "complexity_mean": 2,
+    "complexity_max": 4,
+    "duplication_percent": 2.5,
+    "coverage_percent": 85,
+    "maintainability_index": 80,
+    "quality_score": 90
+  },
+  "combined_score": 96,
+  "status": "pass"
+}
