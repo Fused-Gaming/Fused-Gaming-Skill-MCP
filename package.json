@@ -35,6 +35,7 @@
   "workspaces": [
     "packages/core",
     "packages/design-tokens",
+    "packages/docs",
     "packages/license-client",
     "packages/skills/*",
     "packages/cli",
