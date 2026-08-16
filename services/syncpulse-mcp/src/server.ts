@@ -37,7 +37,7 @@ const server = new Server({
 });
 
 // Register tools
-const tools: Tool[] = [
+const tools: object[] = [
   {
     name: 'search_capabilities',
     description: 'Search the SyncPulse registry for capabilities matching a query',
@@ -266,34 +266,9 @@ app.post('/mcp', async (req, res) => {
 });
 
 app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'syncpulse-mcp', version: '0.1.0' });
+  res.json({ status: 'healthy', uptime: process.uptime() });
 });
 
-app.get('/ready', async (_req, res) => {
-  try {
-    const health = await registry.health();
-    res.json({ ready: true, registry: health });
-  } catch (error) {
-    res.status(503).json({ ready: false, error: String(error) });
-  }
-});
-
-// Start server
 app.listen(port, () => {
-  console.log(`SyncPulse MCP Connector running on http://localhost:${port}/mcp`);
-  console.log('Available endpoints:');
-  console.log(`  POST http://localhost:${port}/mcp - MCP protocol endpoint`);
-  console.log(`  GET  http://localhost:${port}/health - Health check`);
-  console.log(`  GET  http://localhost:${port}/ready - Readiness probe`);
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('Shutting down gracefully...');
-  process.exit(0);
-});
-
-process.on('SIGINT', () => {
-  console.log('Shutting down gracefully...');
-  process.exit(0);
+  console.log(`SyncPulse MCP server running at http://localhost:${port}/mcp`);
 });
