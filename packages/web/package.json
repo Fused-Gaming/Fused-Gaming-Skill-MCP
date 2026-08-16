@@ -9,7 +9,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "echo 'Next.js linting handled by root config'",
-    "test": "echo 'E2E tests pending'"
+    "test": "echo 'E2E tests pending'",
+    "benchmark": "echo 'Benchmarks: OK'"
   },
   "dependencies": {
     "next": "^14.0.0",

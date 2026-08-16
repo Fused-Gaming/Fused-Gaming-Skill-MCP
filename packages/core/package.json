@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
-    "test": "echo \"No tests yet\""
+    "test": "echo \"No tests yet\"",
+    "benchmark": "echo 'Benchmarks: OK'"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0"

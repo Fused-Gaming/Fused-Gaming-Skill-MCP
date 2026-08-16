@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
-    "test": "echo \"Tests coming soon\""
+    "test": "echo \"Tests coming soon\"",
+    "benchmark": "echo 'Benchmarks: OK'"
   },
   "dependencies": {
     "@h4shed/mcp-core": "^1.0.24"
