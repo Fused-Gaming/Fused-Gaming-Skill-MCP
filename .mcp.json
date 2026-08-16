@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "claude-flow": {
+      "type": "stdio",
       "command": "npx",
       "args": [
         "-y",
