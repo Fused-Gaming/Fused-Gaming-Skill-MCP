@@ -144,8 +144,10 @@ jobs:
       - name: Run benchmark tests
         id: benchmarks
         run: |
-          RESULTS_FILE="benchmarks/packages/${{ steps.package-info.outputs.package }}/v${{ steps.package-info.outputs.version }}/results-${{ github.run_number }}.json"
-          mkdir -p "$(dirname "$RESULTS_FILE")"
+          VERSION_DIR="benchmarks/packages/${{ steps.package-info.outputs.package }}/v${{ steps.package-info.outputs.version }}"
+          RESULTS_FILE="$VERSION_DIR/results-${{ github.run_number }}.json"
+          LATEST_RESULTS="$VERSION_DIR/results.json"
+          mkdir -p "$VERSION_DIR"
 
           BENCHMARK_SUCCESS=false
 
@@ -231,6 +233,11 @@ jobs:
               echo "Failed to parse benchmark output"
               BENCHMARK_SUCCESS=false
             }
+
+            # Also write to latest results for registry to read (maintains history + latest pointer)
+            if [ -f "$RESULTS_FILE" ]; then
+              cp "$RESULTS_FILE" "$LATEST_RESULTS"
+            fi
           fi
 
           # Validate results file contains valid JSON
@@ -242,6 +249,7 @@ jobs:
           fi
 
           if [ "$BENCHMARK_SUCCESS" = false ] || [ ! -f "$RESULTS_FILE" ]; then
+            # Write fallback results to both archive (with run number) and latest
             cat > "$RESULTS_FILE" <<EOF
           {
             "package": "${{ steps.package-info.outputs.package }}",
@@ -280,9 +288,13 @@ jobs:
             "status": "fail"
           }
           EOF
+
+            # Copy fallback results to latest as well
+            cp "$RESULTS_FILE" "$LATEST_RESULTS"
           fi
 
           echo "results_file=$RESULTS_FILE" >> $GITHUB_OUTPUT
+          echo "latest_results=$LATEST_RESULTS" >> $GITHUB_OUTPUT
 
       - name: Sanitize package name for artifact upload
         id: sanitize-artifact
@@ -373,11 +385,16 @@ jobs:
 
           REGISTRY=$(cat benchmarks/packages-registry.json 2>/dev/null || echo '{"packages":{},"versions":[],"summary":{}}')
 
-          # Extract benchmark results if available to populate registry entry
+          # Extract benchmark results from latest results file (created in previous step)
           WORKSPACE_VERSION="${{ steps.package-info.outputs.version }}"
           RESULTS_FILE="benchmarks/packages/${{ steps.package-info.outputs.package }}/v${WORKSPACE_VERSION}/results.json"
+          ARCHIVED_RESULTS="benchmarks/packages/${{ steps.package-info.outputs.package }}/v${WORKSPACE_VERSION}/results-${{ github.run_number }}.json"
+
+          # Use latest results if available, otherwise use archived with run number
           if [ -f "$RESULTS_FILE" ]; then
             BENCHMARK_DATA=$(cat "$RESULTS_FILE")
+          elif [ -f "$ARCHIVED_RESULTS" ]; then
+            BENCHMARK_DATA=$(cat "$ARCHIVED_RESULTS")
           else
             BENCHMARK_DATA='{}'
           fi
