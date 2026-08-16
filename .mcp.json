@@ -34,46 +34,5 @@
       },
       "autoStart": false
     }
-  },
-  "skills": {
-    "enabled": [
-      "algorithmic-art",
-      "ascii-mockup",
-      "canvas-design",
-      "frontend-design",
-      "theme-factory",
-      "mcp-builder",
-      "pre-deploy-validator",
-      "skill-creator",
-      "underworld-writer",
-      "linkedin-master-journalist",
-      "agentic-flow-devkit",
-      "daily-review",
-      "multi-account-session-tracking",
-      "mermaid-terminal",
-      "project-manager",
-      "project-status-tool",
-      "svg-generator",
-      "ux-journeymapper",
-      "nft-generative-art",
-      "playwright-test-automation",
-      "smart-contract-tools",
-      "storybook-component-library",
-      "style-dictionary-system",
-      "tailwindcss-style-builder",
-      "typescript-toolchain",
-      "vercel-nextjs-deployment",
-      "vite-module-bundler",
-      "syncpulse",
-      "syncpulse-hub"
-    ],
-    "disabled": [],
-    "custom": []
-  },
-  "auth": {
-    "apiKeys": {}
-  },
-  "logging": {
-    "level": "info"
   }
 }
