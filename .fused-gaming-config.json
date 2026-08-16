@@ -1,0 +1,60 @@
+{
+  "project": {
+    "name": "Fused Gaming Skill MCP",
+    "version": "1.3.2",
+    "description": "Multi-agent orchestration for AI-powered skill ecosystem with 29 packages"
+  },
+  "config": {
+    "transport": "stdio",
+    "port": 3001,
+    "environment": "production"
+  },
+  "skills": {
+    "enabled": [
+      "algorithmic-art",
+      "ascii-mockup",
+      "canvas-design",
+      "frontend-design",
+      "theme-factory",
+      "mcp-builder",
+      "pre-deploy-validator",
+      "skill-creator",
+      "underworld-writer",
+      "linkedin-master-journalist",
+      "agentic-flow-devkit",
+      "daily-review",
+      "multi-account-session-tracking",
+      "mermaid-terminal",
+      "project-manager",
+      "project-status-tool",
+      "svg-generator",
+      "ux-journeymapper",
+      "nft-generative-art",
+      "playwright-test-automation",
+      "smart-contract-tools",
+      "storybook-component-library",
+      "style-dictionary-system",
+      "tailwindcss-style-builder",
+      "typescript-toolchain",
+      "vercel-nextjs-deployment",
+      "vite-module-bundler",
+      "syncpulse",
+      "syncpulse-hub"
+    ],
+    "disabled": [],
+    "custom": []
+  },
+  "features": {
+    "auth": {
+      "apiKeys": {}
+    },
+    "logging": {
+      "level": "info",
+      "format": "json"
+    },
+    "monitoring": {
+      "enabled": true,
+      "metricsPort": 9090
+    }
+  }
+}

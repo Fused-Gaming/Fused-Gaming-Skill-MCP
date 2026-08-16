@@ -11,7 +11,7 @@
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
     "benchmark": "node --expose-gc dist/packages/skills/svg-generator/src/benchmark.js",
-    "test": "echo \"No tests yet\"",
+    "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {

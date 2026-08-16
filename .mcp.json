@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "claude-flow": {
+      "type": "stdio",
       "command": "npx",
       "args": [
         "-y",
@@ -16,6 +17,65 @@
         "CLAUDE_FLOW_MAX_AGENTS": "15",
         "CLAUDE_FLOW_MEMORY_BACKEND": "hybrid"
       },
+      "tools": [
+        "swarm-init",
+        "agent-spawn",
+        "task-orchestrate",
+        "memory-management",
+        "swarm-status",
+        "coordination-sync",
+        "load-balance",
+        "performance-report",
+        "bottleneck-analyze",
+        "workflow-create",
+        "automation-setup"
+      ],
+      "autoStart": false
+    },
+    "fused-gaming": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "packages/cli/dist/index.js",
+        "mcp",
+        "start"
+      ],
+      "env": {
+        "FUSED_GAMING_ENV": "production",
+        "FUSED_GAMING_PORT": "3001",
+        "FUSED_GAMING_SKILLS_ENABLED": "algorithmic-art,ascii-mockup,canvas-design,frontend-design,theme-factory,mcp-builder,pre-deploy-validator,skill-creator,underworld-writer,linkedin-master-journalist,agentic-flow-devkit,daily-review,multi-account-session-tracking,mermaid-terminal,project-manager,project-status-tool,svg-generator,ux-journeymapper,nft-generative-art,playwright-test-automation,smart-contract-tools,storybook-component-library,style-dictionary-system,tailwindcss-style-builder,typescript-toolchain,vercel-nextjs-deployment,vite-module-bundler,syncpulse,syncpulse-hub"
+      },
+      "tools": [
+        "generate-algorithmic-art",
+        "create-ascii-mockup",
+        "design-canvas",
+        "create-frontend-design",
+        "generate-theme",
+        "build-mcp-skill",
+        "validate-deployment",
+        "create-skill",
+        "generate-underworld-content",
+        "create-linkedin-content",
+        "design-agentic-flow",
+        "review-daily",
+        "track-accounts",
+        "generate-mermaid-diagram",
+        "manage-project",
+        "get-project-status",
+        "generate-svg-asset",
+        "map-user-journey",
+        "generate-nft-art",
+        "run-playwright-tests",
+        "generate-smart-contracts",
+        "create-storybook-component",
+        "build-style-dictionary",
+        "generate-tailwind-styles",
+        "setup-typescript",
+        "deploy-nextjs-vercel",
+        "bundle-vite",
+        "syncpulse-benchmark",
+        "manage-syncpulse-hub"
+      ],
       "autoStart": false
     }
   }
