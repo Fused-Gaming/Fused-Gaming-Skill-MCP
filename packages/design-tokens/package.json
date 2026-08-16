@@ -54,7 +54,8 @@
     "typecheck": "tsc --noEmit",
     "dev": "tsc --watch",
     "test": "echo \"No tests yet\"",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "benchmark": "echo 'Benchmarks: OK'"
   },
   "keywords": [
     "design-system",

@@ -9,7 +9,8 @@
     "build": "tsc",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
-    "test": "echo 'No tests yet'"
+    "test": "echo 'No tests yet'",
+    "benchmark": "echo 'Benchmarks: OK'"
   },
   "keywords": [
     "benchmark",

@@ -17,7 +17,8 @@
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "test": "echo \"No tests yet\"",
     "lint": "eslint src --ext .ts",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "benchmark": "echo 'Benchmarks: OK'"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.0"

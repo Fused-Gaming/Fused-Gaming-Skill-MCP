@@ -289,6 +289,58 @@ Aim for 80%+ coverage. Check with:
 npm test -- --coverage
 ```
 
+### Benchmark Gates
+
+All packages must pass benchmark validation before release. Benchmarks measure:
+
+1. **Performance** — Latency, throughput, and memory metrics
+2. **Behavioral** — Test pass rates (CORE, REGRESSION, FUNCTIONALITY, ERROR)
+3. **Code Quality** — Complexity, duplication, coverage, maintainability
+
+Run benchmarks for your changes:
+
+```bash
+# Run benchmarks for your package
+npm run benchmark --workspace=@h4shed/your-package
+
+# Run all benchmarks
+npm run benchmark --workspaces
+
+# Release-quality benchmarks (higher iterations)
+npm run benchmark:release --workspace=@h4shed/your-package
+```
+
+#### Release Quality Thresholds
+
+Before your PR can merge, your package's metrics must meet:
+
+- **Behavioral Score** ≥90% (weighted: CORE 50%, REGRESSION 30%, FUNCTIONALITY 12%, ERROR 8%)
+  - CORE Tests: ≥95% pass rate with 30+ samples
+  - REGRESSION Tests: 100% pass rate (required)
+  - FUNCTIONALITY Tests: ≥80% pass rate
+  - ERROR Tests: ≥90% pass rate
+
+- **Performance Score** ≥85%
+  - Latency Coefficient of Variation <10%
+  - Throughput Coefficient of Variation <10%
+  - Memory usage tracked
+
+- **Code Quality Score** ≥80%
+  - Cyclomatic Complexity: Mean ≤3.0, Max ≤8.0
+  - Code Duplication: <5%
+  - Test Coverage: ≥80%
+  - Maintainability Index: >70
+
+- **Combined Precision Score** ≥90%
+  - Formula: (Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)
+
+When you tag a release, GitHub Actions automatically:
+1. Runs benchmarks for all packages
+2. Creates release quality reports as GitHub issues
+3. Blocks release if mandatory gates fail
+
+See [Benchmark Releases documentation](/docs/BENCHMARK_RELEASES.md) for detailed gate requirements and how to interpret release issues.
+
 ---
 
 ## Workspace Installation & Dependency Management

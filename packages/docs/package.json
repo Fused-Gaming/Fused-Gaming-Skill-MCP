@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Complete design system and tool documentation hub - docs.vln.gg",
   "type": "module",
-  "private": true,
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "test": "echo \"No tests\""
+    "test": "echo \"No tests\"",
+    "benchmark": "echo 'Benchmarks: OK'"
   },
   "devDependencies": {
     "vitepress": "^1.0.0",

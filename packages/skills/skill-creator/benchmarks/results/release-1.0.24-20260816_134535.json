@@ -1,0 +1,95 @@
+{
+  "version": "1.0.24",
+  "timestamp": 1786887935099,
+  "metrics": {
+    "skillTemplateGen": {
+      "name": "Skill template generation",
+      "iterations": 200,
+      "duration": 0.38227799999998524,
+      "avg": 0.0019113899999999263,
+      "min": 0.0007979999999747633,
+      "max": 0.011023999999963507,
+      "ops_per_sec": 523179.46625232877,
+      "target": 20,
+      "passed": true
+    },
+    "toolCreation": {
+      "name": "Tool definition creation",
+      "iterations": 300,
+      "duration": 0.6259670000000028,
+      "avg": 0.002086556666666676,
+      "min": 0.0014439999999922293,
+      "max": 0.03297900000001164,
+      "ops_per_sec": 479258.4912623168,
+      "target": 15,
+      "passed": true
+    },
+    "mcpRegistration": {
+      "name": "MCP tool registration",
+      "iterations": 500,
+      "duration": 0.9338240000000155,
+      "avg": 0.001867648000000031,
+      "min": 0.0012189999999918655,
+      "max": 0.03225299999996878,
+      "ops_per_sec": 535432.8010417292,
+      "target": 10,
+      "passed": true
+    },
+    "packageScaffolding": {
+      "name": "Package structure setup",
+      "iterations": 100,
+      "duration": 0.12707699999998567,
+      "avg": 0.0012707699999998567,
+      "min": 0.0008300000000076579,
+      "max": 0.006153000000040265,
+      "ops_per_sec": 786924.4631208737,
+      "target": 50,
+      "passed": true
+    },
+    "configParsing": {
+      "name": "Configuration parsing and validation",
+      "iterations": 200,
+      "duration": 0.15208100000000968,
+      "avg": 0.0007604050000000484,
+      "min": 0.00034500000003845344,
+      "max": 0.028277000000002772,
+      "ops_per_sec": 1315088.6698534812,
+      "target": 12,
+      "passed": true
+    },
+    "handlerInvocation": {
+      "name": "Skill handler invocation",
+      "iterations": 150,
+      "duration": 0.17920799999996007,
+      "avg": 0.0011947199999997337,
+      "min": 0.0004500000000007276,
+      "max": 0.01925299999999197,
+      "ops_per_sec": 837016.2046339082,
+      "target": 25,
+      "passed": true
+    },
+    "batchOperations": {
+      "name": "Batch skill creation (10 skills)",
+      "iterations": 20,
+      "duration": 0.17104700000004414,
+      "avg": 0.008552350000002207,
+      "min": 0.006176999999979671,
+      "max": 0.021823000000040338,
+      "ops_per_sec": 116926.92651724286,
+      "target": 100,
+      "passed": true
+    },
+    "memoryUsage": {
+      "heapUsed": 6.79,
+      "heapTotal": 12.35,
+      "external": 2.33,
+      "arrayBuffers": 0.02
+    }
+  },
+  "targets": {
+    "skillTemplateGen": true,
+    "toolCreation": true,
+    "mcpRegistration": true,
+    "packageScaffolding": true
+  }
+}

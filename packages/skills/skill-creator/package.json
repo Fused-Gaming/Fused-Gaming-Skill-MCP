@@ -12,7 +12,9 @@
     "dev": "tsc --project tsconfig.json --watch",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "benchmark": "npx tsx --expose-gc benchmarks/performance.benchmark.ts",
+    "benchmark:release": "npx tsx --expose-gc --max-old-space-size=4096 benchmarks/release-performance.benchmark.ts"
   },
   "dependencies": {
     "@h4shed/mcp-core": "^1.0.24"
