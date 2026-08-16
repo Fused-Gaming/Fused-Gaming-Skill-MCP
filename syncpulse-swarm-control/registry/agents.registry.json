@@ -1,0 +1,117 @@
+{
+  "$schema": "./agents.registry.schema.json",
+  "version": 1,
+  "generatedAt": "2026-08-16T15:13:46.973Z",
+  "note": "localAgents is regenerated in full from agents/*.md frontmatter every time `node scripts/sync-registries.mjs` runs — edit the agent files, not this section, to change an agent. discoveredAgentPackages is populated from live npm discovery (packages classified as agent-like: name/description mentions 'agent', 'swarm', or 'orchestrator') and is additive/upsert-only, so hand-added entries survive re-runs. A discovered agent package is metadata only — it is NOT wired into config/routing-table.json automatically; that step still requires a human or the coordinator to add a routing rule (see references/agent-catalog.md 'Adding a new agent').",
+  "localAgents": [
+    {
+      "name": "architect",
+      "file": "agents/architect.md",
+      "workspace": null,
+      "model": "sonnet",
+      "effort": "high",
+      "source": "local"
+    },
+    {
+      "name": "capability-scout",
+      "file": "agents/capability-scout.md",
+      "workspace": null,
+      "model": "haiku",
+      "effort": "medium",
+      "source": "local"
+    },
+    {
+      "name": "coordinator",
+      "file": "agents/coordinator.md",
+      "workspace": null,
+      "model": "opus",
+      "effort": "high",
+      "source": "local"
+    },
+    {
+      "name": "designer",
+      "file": "agents/designer.md",
+      "workspace": null,
+      "model": "sonnet",
+      "effort": "medium",
+      "source": "local"
+    },
+    {
+      "name": "developer",
+      "file": "agents/developer.md",
+      "workspace": null,
+      "model": "sonnet",
+      "effort": "medium",
+      "source": "local"
+    },
+    {
+      "name": "project-manager",
+      "file": "agents/project-manager.md",
+      "workspace": null,
+      "model": "haiku",
+      "effort": "medium",
+      "source": "local"
+    },
+    {
+      "name": "release-manager",
+      "file": "agents/release-manager.md",
+      "workspace": null,
+      "model": "haiku",
+      "effort": "medium",
+      "source": "local"
+    },
+    {
+      "name": "remediator",
+      "file": "agents/remediator.md",
+      "workspace": null,
+      "model": "sonnet",
+      "effort": "medium",
+      "source": "local"
+    },
+    {
+      "name": "reviewer",
+      "file": "agents/reviewer.md",
+      "workspace": null,
+      "model": "sonnet",
+      "effort": "high",
+      "source": "local"
+    },
+    {
+      "name": "tester",
+      "file": "agents/tester.md",
+      "workspace": null,
+      "model": "haiku",
+      "effort": "medium",
+      "source": "local"
+    }
+  ],
+  "discoveredAgentPackages": [
+    {
+      "name": "@h4shed/skill-agentic-flow-devkit",
+      "latestKnownVersion": "1.0.28",
+      "description": "Design and visualize agentic orchestration flows with trailer A/B-roll planning support.",
+      "verifiedH4shed": true,
+      "wiredToRoutingTable": false,
+      "source": "discovered",
+      "lastDiscoveredAt": "2026-08-16T15:13:46.972Z"
+    },
+    {
+      "name": "@h4shed/skill-syncpulse",
+      "latestKnownVersion": "0.2.20",
+      "description": "SyncPulse - intelligent project state caching, multi-agent coordination, and secure email automation with 9 production-ready templated workflows",
+      "verifiedH4shed": true,
+      "wiredToRoutingTable": false,
+      "source": "discovered",
+      "lastDiscoveredAt": "2026-08-16T15:13:46.972Z"
+    },
+    {
+      "name": "@h4shed/syncpulse-hub",
+      "latestKnownVersion": "0.1.19",
+      "description": "Centralized SyncPulse Hub - Unified orchestration and installation of all @h4shed packages",
+      "verifiedH4shed": true,
+      "wiredToRoutingTable": false,
+      "source": "discovered",
+      "lastDiscoveredAt": "2026-08-16T15:13:46.972Z"
+    }
+  ]
+}
