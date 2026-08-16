@@ -12,15 +12,13 @@
 
 import express from 'express';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { Tool, TextContent, Resource } from '@modelcontextprotocol/sdk/types.js';
+import { TextContent } from '@modelcontextprotocol/sdk/types.js';
 import dotenv from 'dotenv';
 
 import { MockCapabilityRegistry } from './services/capability-registry.js';
 import {
   CapabilitySearch,
   CapabilityRequirement,
-  CompatibilityCheckRequest,
 } from './schemas/types.js';
 
 dotenv.config();
