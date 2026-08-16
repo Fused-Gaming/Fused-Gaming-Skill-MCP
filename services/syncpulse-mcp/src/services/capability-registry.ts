@@ -136,7 +136,7 @@ export class MockCapabilityRegistry implements CapabilityRegistry {
     id: string,
   ): Promise<{ version: string; releaseDate?: string }[]> {
     const versions: { version: string; releaseDate?: string }[] = [];
-    for (const [_key, cap] of this.capabilities) {
+    for (const [key, cap] of this.capabilities) {
       if (cap.id === id) {
         versions.push({
           version: cap.version.value,
