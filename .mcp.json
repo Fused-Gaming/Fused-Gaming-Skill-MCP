@@ -18,6 +18,62 @@
         "CLAUDE_FLOW_MEMORY_BACKEND": "hybrid"
       },
       "autoStart": false
+    },
+    "fused-gaming": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "packages/cli/dist/index.js",
+        "mcp",
+        "start"
+      ],
+      "env": {
+        "FUSED_GAMING_ENV": "production",
+        "FUSED_GAMING_SKILLS_ENABLED": "all",
+        "FUSED_GAMING_PORT": "3001"
+      },
+      "autoStart": false
     }
+  },
+  "skills": {
+    "enabled": [
+      "algorithmic-art",
+      "ascii-mockup",
+      "canvas-design",
+      "frontend-design",
+      "theme-factory",
+      "mcp-builder",
+      "pre-deploy-validator",
+      "skill-creator",
+      "underworld-writer",
+      "linkedin-master-journalist",
+      "agentic-flow-devkit",
+      "daily-review",
+      "multi-account-session-tracking",
+      "mermaid-terminal",
+      "project-manager",
+      "project-status-tool",
+      "svg-generator",
+      "ux-journeymapper",
+      "nft-generative-art",
+      "playwright-test-automation",
+      "smart-contract-tools",
+      "storybook-component-library",
+      "style-dictionary-system",
+      "tailwindcss-style-builder",
+      "typescript-toolchain",
+      "vercel-nextjs-deployment",
+      "vite-module-bundler",
+      "syncpulse",
+      "syncpulse-hub"
+    ],
+    "disabled": [],
+    "custom": []
+  },
+  "auth": {
+    "apiKeys": {}
+  },
+  "logging": {
+    "level": "info"
   }
 }
