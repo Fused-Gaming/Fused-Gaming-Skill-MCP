@@ -1,0 +1,242 @@
+name: Deploy MCP Connectors
+
+on:
+  push:
+    branches:
+      - main
+      - claude/mcp-connector-setup-*
+    paths:
+      - 'packages/core/src/servers/**'
+      - 'Dockerfile.*'
+      - 'docker-compose.mcp.yml'
+      - '.github/workflows/deploy-mcp-connectors.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  group: deploy-mcp-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build MCP Connectors
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test --workspaces --if-present
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run type checker
+        run: npm run typecheck
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(jq -r '.version' VERSION.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date +%s)" >> $GITHUB_OUTPUT
+
+      - name: Build and push Sync Coordinator image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.sync
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/sync-coordinator:latest
+            ${{ secrets.DOCKER_USERNAME }}/sync-coordinator:${{ steps.version.outputs.version }}
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/sync-coordinator:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/sync-coordinator:buildcache,mode=max
+
+      - name: Build and push Skill Repository image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.skills
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/skill-repository:latest
+            ${{ secrets.DOCKER_USERNAME }}/skill-repository:${{ steps.version.outputs.version }}
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/skill-repository:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/skill-repository:buildcache,mode=max
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/claude/mcp-connector-setup')
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
+      - name: Update ECS tasks
+        run: |
+          aws ecs update-service \
+            --cluster mcp-staging \
+            --service sync-coordinator \
+            --force-new-deployment
+
+          aws ecs update-service \
+            --cluster mcp-staging \
+            --service skill-repository \
+            --force-new-deployment
+
+      - name: Wait for deployment
+        run: |
+          aws ecs wait services-stable \
+            --cluster mcp-staging \
+            --services sync-coordinator skill-repository
+
+  test-deployment:
+    name: Test Deployment
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/claude/mcp-connector-setup')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Wait for services to stabilize
+        run: sleep 30
+
+      - name: Health check - Sync Coordinator
+        run: |
+          curl -f -H "Authorization: Bearer ${{ secrets.SYNC_MCP_API_KEY }}" \
+            https://sync-staging.vln.gg/mcp/health || exit 1
+
+      - name: Health check - Skill Repository
+        run: |
+          curl -f -H "Authorization: Bearer ${{ secrets.SKILL_MCP_API_KEY }}" \
+            https://skill-staging.vln.gg/mcp/health || exit 1
+
+      - name: Test API endpoints
+        run: |
+          # Test Sync Coordinator
+          curl -f -H "Authorization: Bearer ${{ secrets.SYNC_MCP_API_KEY }}" \
+            https://sync-staging.vln.gg/mcp/sync/status || exit 1
+
+          # Test Skill Repository
+          curl -f -H "Authorization: Bearer ${{ secrets.SKILL_MCP_API_KEY }}" \
+            https://skill-staging.vln.gg/mcp/skills || exit 1
+
+  deploy-production:
+    name: Deploy to Production
+    needs: test-deployment
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      id-token: write
+
+    environment:
+      name: production
+      url: https://sync.vln.gg/mcp
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
+      - name: Update ECS tasks
+        run: |
+          aws ecs update-service \
+            --cluster mcp-production \
+            --service sync-coordinator \
+            --force-new-deployment
+
+          aws ecs update-service \
+            --cluster mcp-production \
+            --service skill-repository \
+            --force-new-deployment
+
+      - name: Wait for deployment
+        run: |
+          aws ecs wait services-stable \
+            --cluster mcp-production \
+            --services sync-coordinator skill-repository
+
+  verify-production:
+    name: Verify Production
+    needs: deploy-production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for services to stabilize
+        run: sleep 60
+
+      - name: Health check - Sync Coordinator
+        run: |
+          curl -f -H "Authorization: Bearer ${{ secrets.SYNC_MCP_API_KEY }}" \
+            https://sync.vln.gg/mcp/health || exit 1
+
+      - name: Health check - Skill Repository
+        run: |
+          curl -f -H "Authorization: Bearer ${{ secrets.SKILL_MCP_API_KEY }}" \
+            https://skill.vln.gg/mcp/health || exit 1
+
+      - name: Post deployment notification
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          text: 'MCP Connectors deployed to production'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName
