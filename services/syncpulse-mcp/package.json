@@ -1,0 +1,51 @@
+{
+  "name": "@h4shed/syncpulse-mcp",
+  "version": "0.1.0",
+  "description": "SyncPulse Remote MCP Connector - Capability discovery and resolution endpoint",
+  "type": "module",
+  "main": "./dist/server.js",
+  "bin": {
+    "syncpulse-mcp": "./dist/server.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch & node --watch dist/server.js",
+    "start": "node dist/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:contract": "jest tests/mcp-contract",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^2.0.0",
+    "express": "^4.18.0",
+    "dotenv": "^16.0.0",
+    "zod": "^3.22.0",
+    "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.1.0",
+    "eslint": "^8.40.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "syncpulse",
+    "capabilities",
+    "discovery",
+    "orchestration"
+  ],
+  "author": "Fused Gaming",
+  "license": "Apache-2.0"
+}
