@@ -72,7 +72,7 @@ async function runBenchmarks() {
 
   benchmark("Skill template generation", 100, () => {
     // Simulate template generation (in-memory operation)
-    const skillTemplate = {
+    const _skillTemplate = {
       name: `test-skill-${Math.random().toString(36).substring(7)}`,
       version: "1.0.0",
       description: "Test skill",
@@ -84,7 +84,7 @@ async function runBenchmarks() {
   console.log("\n🔧 Tool Creation");
 
   benchmark("Tool definition creation", 100, () => {
-    const toolDef = {
+    const _toolDef = {
       name: `tool-${Math.random().toString(36).substring(7)}`,
       description: "Test tool",
       inputSchema: {
@@ -114,7 +114,7 @@ async function runBenchmarks() {
   console.log("\n📁 Package Scaffolding");
 
   benchmark("Package structure setup", 50, () => {
-    const packageStructure = {
+    const _packageStructure = {
       name: `@h4shed/skill-${Math.random().toString(36).substring(7)}`,
       version: "1.0.0",
       description: "Generated skill",
@@ -148,7 +148,7 @@ async function runBenchmarks() {
       tsconfig: { compilerOptions: {} },
     };
     // Simulate config validation
-    const isValid = config.skillName && config.toolCount > 0;
+    const _isValid = config.skillName && config.toolCount > 0;
   });
 
   // Benchmark handler invocation
@@ -156,7 +156,7 @@ async function runBenchmarks() {
 
   benchmark("Skill handler invocation", 100, async () => {
     if (skillCreatorSkill.tools[0]) {
-      const result = await skillCreatorSkill.tools[0].handler({
+      const _result = await skillCreatorSkill.tools[0].handler({
         skillName: "test-skill",
         description: "Test skill",
         toolCount: 1,

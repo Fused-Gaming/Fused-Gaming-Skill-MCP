@@ -162,7 +162,7 @@ async function runReleaseBenchmark() {
     200,
     20.0,
     () => {
-      const skillTemplate = {
+      const _skillTemplate = {
         name: `test-skill-${Math.random().toString(36).substring(7)}`,
         version: "1.0.0",
         description: "Generated test skill template",
@@ -188,7 +188,7 @@ async function runReleaseBenchmark() {
     300,
     15.0,
     () => {
-      const toolDef = {
+      const _toolDef = {
         name: `tool-${Math.random().toString(36).substring(7)}`,
         description: "Dynamically created tool",
         inputSchema: {
@@ -240,7 +240,7 @@ async function runReleaseBenchmark() {
     100,
     50.0,
     () => {
-      const packageStructure = {
+      const _packageStructure = {
         name: `@h4shed/skill-${Math.random().toString(36).substring(7)}`,
         version: "1.0.0",
         description: "Generated skill package",
@@ -304,7 +304,7 @@ async function runReleaseBenchmark() {
         },
       };
       // Simulate config validation
-      const isValid =
+      const _isValid =
         config.skillName &&
         config.toolCount > 0 &&
         config.outputDir &&

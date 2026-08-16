@@ -13,7 +13,6 @@
 import { Octokit } from "@octokit/rest";
 import * as fs from "fs";
 import * as path from "path";
-import { execSync } from "child_process";
 
 interface VersionConfig {
   version: string;
@@ -174,12 +173,12 @@ function getAllPackages(versionConfig: VersionConfig): Array<{ name: string; ver
           if (pkg.name) {
             addPackage(pkg.name, pkg.version || "0.0.0");
           }
-        } catch (e) {
+        } catch {
           // Ignore malformed package.json
         }
       }
     }
-  } catch (e) {
+  } catch {
     console.warn("Could not scan top-level packages directory");
   }
 
@@ -195,12 +194,12 @@ function getAllPackages(versionConfig: VersionConfig): Array<{ name: string; ver
           if (pkg.name) {
             addPackage(pkg.name, pkg.version || "0.0.0");
           }
-        } catch (e) {
+        } catch {
           // Ignore malformed package.json
         }
       }
     }
-  } catch (e) {
+  } catch {
     console.warn("Could not scan skills packages directory");
   }
 
@@ -213,7 +212,7 @@ async function createBaselineIssues() {
   // Load VERSION.json
   const versionPath = path.join(process.cwd(), "VERSION.json");
   const versionConfig: VersionConfig = JSON.parse(
-    fs.readFileSync(versionPath, "utf-8")
+    fs.readFileSync(versionPath, "utf-8"),
   );
 
   // Get all packages
@@ -257,7 +256,7 @@ async function createBaselineIssues() {
           console.log(`   ℹ️  Baseline issue already exists: #${metadata.issue_number}`);
           issuesSkipped++;
           continue;
-        } catch (e) {
+        } catch {
           console.warn(`   ⚠️  Could not parse existing metadata, will recreate`);
         }
       }
@@ -278,7 +277,6 @@ async function createBaselineIssues() {
       fs.writeFileSync(benchmarkFile, JSON.stringify(benchmarkResults, null, 2));
 
       // Create GitHub issue if token available
-      let issueCreated = false;
       if (octokit) {
         const releaseManager = process.env.GITHUB_ACTOR || "automation";
 
@@ -316,13 +314,14 @@ async function createBaselineIssues() {
           );
 
           issuesCreated++;
-          issueCreated = true;
-        } catch (error: any) {
-          if (error.status === 422 && error.message.includes("already exists")) {
+        } catch (error) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const err = error as any;
+          if (err?.status === 422 && err?.message?.includes("already exists")) {
             console.log(`   ℹ️  Issue already exists on GitHub`);
             issuesSkipped++;
           } else {
-            console.error(`   ❌ Failed to create issue: ${error.message}`);
+            console.error(`   ❌ Failed to create issue: ${err?.message || String(error)}`);
             // Still save metadata even if issue creation failed
             fs.mkdirSync(path.dirname(metadataPath), { recursive: true });
             fs.writeFileSync(
