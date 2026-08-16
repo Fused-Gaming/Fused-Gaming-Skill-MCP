@@ -27,6 +27,9 @@ export interface Skill {
   version: string;
   description: string;
   tools: ToolDefinition[];
+  tags?: string[];
+  author?: string;
+  license?: string;
   initialize(config: SkillConfig): Promise<void>;
   cleanup?(): Promise<void>;
 }

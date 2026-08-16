@@ -6,7 +6,6 @@
 
 import express from "express";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { type Transport } from "@modelcontextprotocol/sdk/shared/types.js";
 import type { Skill } from "../types.js";
 import { SkillRegistry } from "../skill-registry.js";
 import { loadConfig } from "../config.js";

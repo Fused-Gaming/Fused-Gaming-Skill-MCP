@@ -17,7 +17,6 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
     "paths": {
       "@h4shed/mcp-core": ["packages/core/src/index.ts"],
       "@h4shed/mcp-cli": ["packages/cli/src/index.ts"],
