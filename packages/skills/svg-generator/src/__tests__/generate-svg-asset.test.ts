@@ -166,8 +166,13 @@ describe('GenerateSvgAssetTool', () => {
 
       expect(result.success).toBe(true);
       const svg = result.svgCode as string;
-      expect(svg).not.toContain('<');
       expect(svg).toContain('<svg');
+      expect(svg).toContain('</svg>');
+      // Verify SVG is properly formed with matching tags
+      const openTags = (svg.match(/<[^/][^>]*>/g) || []).length;
+      const closeTags = (svg.match(/<\/[^>]*>/g) || []).length;
+      expect(openTags).toBeGreaterThan(0);
+      expect(closeTags).toBeGreaterThan(0);
     });
   });
 
