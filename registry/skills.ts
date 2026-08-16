@@ -30,7 +30,7 @@ export interface SkillRegistry {
 
 export const registry: SkillRegistry = {
   "version": "1.0.0",
-  "timestamp": "2026-06-04T21:01:25.742Z",
+  "timestamp": "2026-08-16T16:15:58.289Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -704,7 +704,7 @@ export const registry: SkillRegistry = {
       "name": "svg-generator",
       "id": "svg-generator",
       "description": "Generate SVG assets and icon concepts from structured prompts.",
-      "version": "1.0.23",
+      "version": "1.1.0",
       "package": "@h4shed/skill-svg-generator",
       "tools": [
         {
