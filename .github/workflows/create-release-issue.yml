@@ -56,7 +56,11 @@ jobs:
               echo "Found tag for workflow publish commit: $TAG"
             else
               # Fallback: use git describe to find most recent tag from this commit
-              if TAG=$(git describe --tags "$PUBLISH_SHA" 2>/dev/null | cut -d- -f1); then
+              # This returns format like "v1.4.0-5-gXXXXXXX", we need just "v1.4.0"
+              DESCRIBE_OUTPUT=$(git describe --tags "$PUBLISH_SHA" 2>/dev/null)
+              if [ -n "$DESCRIBE_OUTPUT" ]; then
+                # Extract the tag part before any dash (which separates tag from commit distance)
+                TAG=$(echo "$DESCRIBE_OUTPUT" | sed 's/-[0-9]*-g.*//')
                 echo "Found related tag for workflow commit: $TAG"
               else
                 echo "Error: No tags found for workflow_run publish commit $PUBLISH_SHA"
