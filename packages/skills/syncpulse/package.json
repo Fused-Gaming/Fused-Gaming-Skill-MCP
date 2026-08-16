@@ -10,15 +10,21 @@
     "benchmark": "node --expose-gc --loader ts-node/esm benchmarks/performance.benchmark.ts",
     "benchmark:release": "node --expose-gc --max-old-space-size=4096 --loader ts-node/esm benchmarks/release-performance.benchmark.ts",
     "benchmark:runner": "bash scripts/run-release-benchmarks.sh",
-    "test": "echo \"tests pending\""
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@h4shed/mcp-core": "^1.0.24",
     "nodemailer": "^6.9.13"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.12.0",
     "@types/nodemailer": "^6.4.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.3.2",
     "ts-node": "^10.9.0"
   },

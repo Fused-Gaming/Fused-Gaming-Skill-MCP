@@ -23,6 +23,11 @@ export default {
     '<rootDir>/packages/skills/mermaid-terminal/jest.config.js',
     '<rootDir>/packages/skills/svg-generator/jest.config.js',
     '<rootDir>/packages/skills/ux-journeymapper/jest.config.js',
+    // High-priority unreleased skills with test suites
+    '<rootDir>/packages/skills/syncpulse/jest.config.js',
+    '<rootDir>/packages/skills/daily-review-skill/jest.config.js',
+    '<rootDir>/packages/skills/project-manager-skill/jest.config.js',
+    '<rootDir>/packages/skills/skill-creator/jest.config.js',
   ],
 
   // Coverage collection from all packages
