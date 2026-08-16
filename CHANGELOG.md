@@ -16,6 +16,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Comprehensive HANDOFF.md documentation for migration to `fused-gaming/queen-vln-gg` repo
   - Full scaffold ready for production deployment at `queen.vln.gg`
 
+## [1.4.0] - In Progress (v1.4.0 Feature Release)
+
+### Added (Preparing for Release)
+- **Test Suite Infrastructure for 4 High-Priority Skills**
+  - Added Jest configurations for: syncpulse, daily-review-skill, project-manager-skill, skill-creator
+  - Comprehensive test coverage for tool registration, structure validation, and functionality
+  - Test suites validate 25+ MCP tools across 4 skills
+  - Added jest dependencies (@jest/globals, ts-jest) to all 4 skill packages
+  - Updated root jest.config.js with 4 new project configurations
+
+- **Benchmark Infrastructure**
+  - Created BENCHMARK_GUIDE.md for daily-review-skill with performance targets
+  - Created BENCHMARK_GUIDE.md for project-manager-skill with performance targets
+  - Created BENCHMARK_GUIDE.md for skill-creator with performance targets
+  - syncpulse already has comprehensive benchmark suite with 16 tools
+
+### Preparing for v1.4.0 Merge
+- Syncpulse (v0.2.13): 16 MCP tools, test suite ready, benchmarks available
+- Daily Review Skill (v1.0.23): 3 tools, test suite ready, benchmark guide added
+- Project Manager Skill (v1.0.24): 5 tools, test suite ready, benchmark guide added
+- Skill Creator (v1.0.24): 1 tool, test suite ready, benchmark guide added
+
+**Status**: Waiting for test execution and CI validation before merging v1.4.0
+
 ## [1.3.3] - 2026-08-16
 
 ### Fixed
