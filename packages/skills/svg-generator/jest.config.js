@@ -3,7 +3,8 @@ export default {
   testEnvironment: "node",
   roots: ["<rootDir>/src"],
   testMatch: ["**/?(*.)+(spec|test).ts"],
-  moduleFileExtensions: ["ts", "js"],
+  testPathIgnorePatterns: ["\\.js$"],
+  moduleFileExtensions: ["ts"],
   transform: {
     "^.+\\.ts$": [
       "ts-jest",
@@ -17,7 +18,7 @@ export default {
     ],
   },
   extensionsToTreatAsEsm: [".ts"],
-  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts"],
+  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts", "!src/**/*.js"],
   coverageThreshold: {
     global: {
       branches: 70,
