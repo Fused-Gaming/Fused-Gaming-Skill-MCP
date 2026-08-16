@@ -1,3 +1,12 @@
+---
+name: daily-review-skill
+description: Productivity tracking and daily review skill for session aggregation, metrics analysis, and multi-account reporting
+version: 1.0.23
+package: @h4shed/skill-daily-review
+hasTests: false
+hasBenchmarks: false
+---
+
 # daily-review-skill
 
 **Package:** @h4shed/skill-daily-review

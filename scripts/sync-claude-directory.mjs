@@ -32,11 +32,23 @@ function ensureDir(dir) {
   }
 }
 
-// Generate SKILL.md file for a skill
+// Generate SKILL.md file for a skill with proper YAML frontmatter
 function generateSkillMarkdown(skillKey, skillData) {
   const { name, version, description, hasTests, testCount, hasBenchmarks } = skillData;
 
-  return `# ${skillKey}
+  // Create concise description for frontmatter
+  const shortDescription = (description || 'Fused Gaming MCP skill').substring(0, 200);
+
+  return `---
+name: ${skillKey}
+description: ${shortDescription}
+version: ${version}
+package: ${name}
+hasTests: ${hasTests}
+hasBenchmarks: ${hasBenchmarks}
+---
+
+# ${skillKey}
 
 **Package:** ${name}
 **Version:** ${version}

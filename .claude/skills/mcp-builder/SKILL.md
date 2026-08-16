@@ -1,3 +1,12 @@
+---
+name: mcp-builder
+description: Build and scaffold MCP servers and skills with best practices
+version: 1.0.24
+package: @h4shed/skill-mcp-builder
+hasTests: false
+hasBenchmarks: false
+---
+
 # mcp-builder
 
 **Package:** @h4shed/skill-mcp-builder

@@ -1,3 +1,12 @@
+---
+name: linkedin-master-journalist
+description: Draft polished LinkedIn release and thought-leadership posts.
+version: 1.0.23
+package: @h4shed/skill-linkedin-master-journalist
+hasTests: false
+hasBenchmarks: false
+---
+
 # linkedin-master-journalist
 
 **Package:** @h4shed/skill-linkedin-master-journalist

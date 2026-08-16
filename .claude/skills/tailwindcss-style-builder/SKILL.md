@@ -1,3 +1,12 @@
+---
+name: tailwindcss-style-builder
+description: Tailwind CSS utility-first styling and design system builder for rapid UI development
+version: 1.0.15
+package: @h4shed/skill-tailwindcss-style-builder
+hasTests: false
+hasBenchmarks: false
+---
+
 # tailwindcss-style-builder
 
 **Package:** @h4shed/skill-tailwindcss-style-builder

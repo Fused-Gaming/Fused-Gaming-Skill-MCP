@@ -1,3 +1,12 @@
+---
+name: project-manager-skill
+description: Task and project management skill for tracking work items and team collaboration
+version: 1.0.24
+package: @h4shed/skill-project-manager-skill
+hasTests: false
+hasBenchmarks: false
+---
+
 # project-manager-skill
 
 **Package:** @h4shed/skill-project-manager-skill

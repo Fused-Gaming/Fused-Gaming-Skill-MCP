@@ -1,3 +1,12 @@
+---
+name: vercel-nextjs-deployment
+description: Vercel deployment optimization and Next.js framework integration for serverless applications
+version: 1.0.15
+package: @h4shed/skill-vercel-nextjs-deployment
+hasTests: false
+hasBenchmarks: false
+---
+
 # vercel-nextjs-deployment
 
 **Package:** @h4shed/skill-vercel-nextjs-deployment

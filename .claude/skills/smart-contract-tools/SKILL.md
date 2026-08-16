@@ -1,3 +1,12 @@
+---
+name: smart-contract-tools
+description: Smart contract development tools for Hardhat, Truffle, and Foundry ecosystems
+version: 1.0.15
+package: @h4shed/skill-smart-contract-tools
+hasTests: false
+hasBenchmarks: false
+---
+
 # smart-contract-tools
 
 **Package:** @h4shed/skill-smart-contract-tools

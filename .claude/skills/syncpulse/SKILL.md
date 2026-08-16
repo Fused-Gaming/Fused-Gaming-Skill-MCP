@@ -1,3 +1,12 @@
+---
+name: syncpulse
+description: SyncPulse - intelligent project state caching, multi-agent coordination, and secure email automation with 9 production-ready templated workflows
+version: 0.2.13
+package: @h4shed/skill-syncpulse
+hasTests: false
+hasBenchmarks: false
+---
+
 # syncpulse
 
 **Package:** @h4shed/skill-syncpulse

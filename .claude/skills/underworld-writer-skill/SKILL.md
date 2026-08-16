@@ -1,3 +1,12 @@
+---
+name: underworld-writer-skill
+description: Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories
+version: 1.0.24
+package: @h4shed/skill-underworld-writer
+hasTests: false
+hasBenchmarks: false
+---
+
 # underworld-writer-skill
 
 **Package:** @h4shed/skill-underworld-writer

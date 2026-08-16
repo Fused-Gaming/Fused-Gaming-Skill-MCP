@@ -1,3 +1,12 @@
+---
+name: playwright-test-automation
+description: End-to-end testing automation framework for web applications with cross-browser support
+version: 1.0.15
+package: @h4shed/skill-playwright-test-automation
+hasTests: false
+hasBenchmarks: false
+---
+
 # playwright-test-automation
 
 **Package:** @h4shed/skill-playwright-test-automation

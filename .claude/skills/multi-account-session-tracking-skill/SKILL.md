@@ -1,3 +1,12 @@
+---
+name: multi-account-session-tracking-skill
+description: Extended framework for tracking Claude sessions across multiple accounts with unified metrics
+version: 1.0.23
+package: @h4shed/skill-multi-account-session-tracking
+hasTests: false
+hasBenchmarks: false
+---
+
 # multi-account-session-tracking-skill
 
 **Package:** @h4shed/skill-multi-account-session-tracking

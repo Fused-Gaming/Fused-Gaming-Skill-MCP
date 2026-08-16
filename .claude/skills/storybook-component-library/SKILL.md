@@ -1,3 +1,12 @@
+---
+name: storybook-component-library
+description: Component library documentation and visual testing with Storybook integration
+version: 1.0.15
+package: @h4shed/skill-storybook-component-library
+hasTests: false
+hasBenchmarks: false
+---
+
 # storybook-component-library
 
 **Package:** @h4shed/skill-storybook-component-library

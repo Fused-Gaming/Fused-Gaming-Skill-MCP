@@ -1,3 +1,12 @@
+---
+name: agentic-flow-devkit
+description: Design and visualize agentic orchestration flows with trailer A/B-roll planning support.
+version: 1.0.21
+package: @h4shed/skill-agentic-flow-devkit
+hasTests: false
+hasBenchmarks: false
+---
+
 # agentic-flow-devkit
 
 **Package:** @h4shed/skill-agentic-flow-devkit
