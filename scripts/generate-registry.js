@@ -12,7 +12,6 @@ const REPO_ROOT = path.join(__dirname, '..');
 const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
 const SKILLS_DIR = path.join(PACKAGES_DIR, 'skills');
 const REGISTRY_DIR = path.join(REPO_ROOT, 'registry');
-const CLAUDE_DIR = path.join(REPO_ROOT, '.claude');
 
 // Read package.json files and extract metadata
 function readPackageMetadata() {

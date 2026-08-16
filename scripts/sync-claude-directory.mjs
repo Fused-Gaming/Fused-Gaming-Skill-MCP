@@ -11,8 +11,6 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.join(__dirname, '..');
-const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
-const SKILLS_DIR = path.join(PACKAGES_DIR, 'skills');
 const CLAUDE_DIR = path.join(REPO_ROOT, '.claude');
 const CLAUDE_SKILLS_DIR = path.join(CLAUDE_DIR, 'skills');
 const REGISTRY_FILE = path.join(REPO_ROOT, 'registry', 'registry.json');
