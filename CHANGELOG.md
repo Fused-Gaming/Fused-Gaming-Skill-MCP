@@ -16,6 +16,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Comprehensive HANDOFF.md documentation for migration to `fused-gaming/queen-vln-gg` repo
   - Full scaffold ready for production deployment at `queen.vln.gg`
 
+## [1.3.3] - 2026-08-16
+
+### Fixed
+- **Version Metadata Sync** — Corrected svg-generator version tracking in VERSION.json
+  - Updated `@h4shed/skill-svg-generator` from v1.0.23 to v1.1.0 to match actual package version
+  - Aligns VERSION.json metadata with workspace package reality
+
+### Added
+- **Registry Automation Infrastructure** — Enables autonomous registry.json maintenance (from PR #300)
+  - Added npm script `registry:update` for automated registry generation
+  - Created `.claude-flow/` directory structure for swarm coordination
+  - Implemented registry synchronization hooks for skill publication workflow
+  - Established `.claude/REGISTRY.md` documentation for registry automation patterns
+
 ## [1.2.0] - 2026-06-03
 
 ### Added
