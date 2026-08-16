@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/mcp.json",
+  "mcpServers": {
+    "h4shed-mcp-core": {
+      "command": "npx",
+      "args": ["--no-install", "-y", "@h4shed/mcp-core"],
+      "env": {
+        "H4SHED_REGISTRY_SCOPE": "@h4shed"
+      },
+      "description": "Registry/loading layer: registers and serves installed @h4shed skills, tools, and agents to Claude."
+    },
+    "h4shed-syncpulse": {
+      "command": "npx",
+      "args": ["--no-install", "-y", "@h4shed/skill-syncpulse"],
+      "env": {
+        "SYNCPULSE_EMAIL_ENABLED": "false",
+        "SYNCPULSE_TELEMETRY_ENABLED": "false"
+      },
+      "description": "SyncPulse coordination state: task graph, workspace ownership, verification, and swarm memory."
+    },
+    "h4shed-syncpulse-hub": {
+      "command": "npx",
+      "args": ["--no-install", "-y", "@h4shed/syncpulse-hub"],
+      "env": {
+        "SYNCPULSE_HUB_MUTATIONS_ENABLED": "false"
+      },
+      "description": "Ecosystem-wide discovery/update/orchestration dashboard for installed @h4shed packages."
+    }
+  }
+}

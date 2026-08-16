@@ -1,0 +1,560 @@
+{
+  "$schema": "./claude-flow-agents.registry.schema.json",
+  "version": 1,
+  "generatedAt": "2026-08-16T15:34:41.469Z",
+  "sourceRepo": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "sourcePath": ".claude-flow/CAPABILITIES.md",
+  "note": "Catalog-only import of claude-flow (ruvnet/claude-flow) agent TYPES surfaced through .claude-flow/CAPABILITIES.md in the upstream repo. Not full agent specs — see references/agent-catalog.md before wiring any entry into config/routing-table.json.",
+  "entries": [
+    {
+      "name": "byzantine-coordinator",
+      "category": "Consensus & Distributed",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "consensus-builder",
+      "category": "Consensus & Distributed",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "crdt-synchronizer",
+      "category": "Consensus & Distributed",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "gossip-coordinator",
+      "category": "Consensus & Distributed",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "quorum-manager",
+      "category": "Consensus & Distributed",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "raft-manager",
+      "category": "Consensus & Distributed",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "security-manager",
+      "category": "Consensus & Distributed",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "coder",
+      "category": "Core Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "planner",
+      "category": "Core Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "researcher",
+      "category": "Core Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "reviewer",
+      "category": "Core Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "tester",
+      "category": "Core Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "code-review-swarm",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "github-modes",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "issue-tracker",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "multi-repo-swarm",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "pr-manager",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "project-board-sync",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "release-manager",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "repo-architect",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "workflow-automation",
+      "category": "GitHub & Repository",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "analyst",
+      "category": "Hive-Mind Worker Types",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "architect",
+      "category": "Hive-Mind Worker Types",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "documenter",
+      "category": "Hive-Mind Worker Types",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "optimizer",
+      "category": "Hive-Mind Worker Types",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "memory-coordinator",
+      "category": "Performance & Optimization",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "perf-analyzer",
+      "category": "Performance & Optimization",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "performance-benchmarker",
+      "category": "Performance & Optimization",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "smart-agent",
+      "category": "Performance & Optimization",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "task-orchestrator",
+      "category": "Performance & Optimization",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "architecture",
+      "category": "SPARC Methodology",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "pseudocode",
+      "category": "SPARC Methodology",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "refinement",
+      "category": "SPARC Methodology",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "sparc-coder",
+      "category": "SPARC Methodology",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "sparc-coord",
+      "category": "SPARC Methodology",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "specification",
+      "category": "SPARC Methodology",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "api-docs",
+      "category": "Specialized Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "backend-dev",
+      "category": "Specialized Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "base-template-generator",
+      "category": "Specialized Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "cicd-engineer",
+      "category": "Specialized Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "code-analyzer",
+      "category": "Specialized Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "ml-developer",
+      "category": "Specialized Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "mobile-dev",
+      "category": "Specialized Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "system-architect",
+      "category": "Specialized Development",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "adaptive-coordinator",
+      "category": "Swarm Coordination",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "collective-intelligence-coordinator",
+      "category": "Swarm Coordination",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "hierarchical-coordinator",
+      "category": "Swarm Coordination",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "mesh-coordinator",
+      "category": "Swarm Coordination",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "swarm-memory-manager",
+      "category": "Swarm Coordination",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "production-validator",
+      "category": "Testing & Validation",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "tdd-london-swarm",
+      "category": "Testing & Validation",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "memory-specialist",
+      "category": "V3 Specialized",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "performance-engineer",
+      "category": "V3 Specialized",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "security-architect",
+      "category": "V3 Specialized",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    },
+    {
+      "name": "security-auditor",
+      "category": "V3 Specialized",
+      "categoryOverridden": false,
+      "wiredToRoutingTable": false,
+      "promotedAgentFile": null,
+      "source": "claude-flow",
+      "firstSeenAt": "2026-08-16T15:34:41.166Z",
+      "lastSeenAt": "2026-08-16T15:34:41.446Z"
+    }
+  ]
+}

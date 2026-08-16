@@ -1,0 +1,3 @@
+# runtime event log and epoch counters — local state, not shipped with the plugin
+ledger.jsonl
+epochs.json
