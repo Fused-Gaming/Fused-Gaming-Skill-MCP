@@ -1,6 +1,6 @@
 ---
 name: pre-deploy-validator
-description: Pre-deployment validation and quality checks for production readiness
+description: "Pre-deployment validation and quality checks for production readiness"
 version: 1.0.24
 package: @h4shed/skill-pre-deploy-validator
 hasTests: false

@@ -1,6 +1,6 @@
 ---
 name: ux-journeymapper
-description: Create UX journey maps with pain points, touchpoints, and opportunities.
+description: "Create UX journey maps with pain points, touchpoints, and opportunities."
 version: 1.0.23
 package: @h4shed/skill-ux-journeymapper
 hasTests: true

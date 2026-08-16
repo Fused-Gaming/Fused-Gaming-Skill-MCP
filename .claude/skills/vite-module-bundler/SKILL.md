@@ -1,6 +1,6 @@
 ---
 name: vite-module-bundler
-description: Next-generation JavaScript module bundler for lightning-fast development and optimized production builds
+description: "Next-generation JavaScript module bundler for lightning-fast development and optimized production builds"
 version: 1.0.15
 package: @h4shed/skill-vite-module-bundler
 hasTests: false

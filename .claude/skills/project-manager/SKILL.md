@@ -1,6 +1,6 @@
 ---
 name: project-manager
-description: Plan projects with milestones, dependencies, and delivery phases.
+description: "Plan projects with milestones, dependencies, and delivery phases."
 version: 1.0.23
 package: @h4shed/skill-project-manager
 hasTests: false

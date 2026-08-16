@@ -1,6 +1,6 @@
 # Fused Gaming MCP Configuration
 
-**Generated:** 2026-08-16T11:09:37.782Z
+**Generated:** 2026-08-16T11:13:52.812Z
 **Registry Version:** 1.2.0
 
 ## Statistics

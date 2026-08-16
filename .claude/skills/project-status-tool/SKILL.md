@@ -1,6 +1,6 @@
 ---
 name: project-status-tool
-description: Summarize current project status, risks, and next actions.
+description: "Summarize current project status, risks, and next actions."
 version: 1.0.23
 package: @h4shed/skill-project-status-tool
 hasTests: false

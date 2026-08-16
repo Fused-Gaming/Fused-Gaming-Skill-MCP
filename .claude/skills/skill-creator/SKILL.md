@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: Create custom skills and tools for the Fused Gaming MCP ecosystem
+description: "Create custom skills and tools for the Fused Gaming MCP ecosystem"
 version: 1.0.24
 package: @h4shed/skill-creator
 hasTests: false

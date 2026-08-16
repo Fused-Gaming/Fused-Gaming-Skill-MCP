@@ -36,12 +36,14 @@ function ensureDir(dir) {
 function generateSkillMarkdown(skillKey, skillData) {
   const { name, version, description, hasTests, testCount, hasBenchmarks } = skillData;
 
-  // Create concise description for frontmatter
+  // Create concise description for frontmatter, properly quoted for YAML
   const shortDescription = (description || 'Fused Gaming MCP skill').substring(0, 200);
+  // Escape quotes in description and wrap in quotes for YAML safety
+  const escapedDescription = shortDescription.replace(/"/g, '\\"');
 
   return `---
 name: ${skillKey}
-description: ${shortDescription}
+description: "${escapedDescription}"
 version: ${version}
 package: ${name}
 hasTests: ${hasTests}

@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Frontend component design and HTML/CSS generation for modern web applications
+description: "Frontend component design and HTML/CSS generation for modern web applications"
 version: 1.0.24
 package: @h4shed/skill-frontend-design
 hasTests: false

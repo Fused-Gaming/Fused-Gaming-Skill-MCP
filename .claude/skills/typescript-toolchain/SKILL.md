@@ -1,6 +1,6 @@
 ---
 name: typescript-toolchain
-description: Advanced TypeScript configuration, type generation, and static analysis tooling
+description: "Advanced TypeScript configuration, type generation, and static analysis tooling"
 version: 1.0.15
 package: @h4shed/skill-typescript-toolchain
 hasTests: false

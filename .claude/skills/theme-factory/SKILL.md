@@ -1,6 +1,6 @@
 ---
 name: theme-factory
-description: Design system and theme generation for consistent UI/UX across applications
+description: "Design system and theme generation for consistent UI/UX across applications"
 version: 1.0.24
 package: @h4shed/skill-theme-factory
 hasTests: false

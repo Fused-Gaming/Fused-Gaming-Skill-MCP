@@ -1,6 +1,6 @@
 ---
 name: mermaid-terminal
-description: Generate terminal-friendly Mermaid diagrams and flowcharts.
+description: "Generate terminal-friendly Mermaid diagrams and flowcharts."
 version: 1.0.23
 package: @h4shed/skill-mermaid-terminal
 hasTests: true

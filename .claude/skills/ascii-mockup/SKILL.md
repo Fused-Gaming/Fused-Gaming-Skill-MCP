@@ -1,6 +1,6 @@
 ---
 name: ascii-mockup
-description: Mobile-first ASCII wireframe mockup generator for rapid UI prototyping
+description: "Mobile-first ASCII wireframe mockup generator for rapid UI prototyping"
 version: 1.0.24
 package: @h4shed/skill-ascii-mockup
 hasTests: false

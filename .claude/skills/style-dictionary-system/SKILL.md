@@ -1,6 +1,6 @@
 ---
 name: style-dictionary-system
-description: Design tokens and style dictionary generation for cross-platform design system management
+description: "Design tokens and style dictionary generation for cross-platform design system management"
 version: 1.0.15
 package: @h4shed/skill-style-dictionary-system
 hasTests: false

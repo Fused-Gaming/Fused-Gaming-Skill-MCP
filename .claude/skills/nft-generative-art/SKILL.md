@@ -1,6 +1,6 @@
 ---
 name: nft-generative-art
-description: NFT artwork generation, metadata creation, and blockchain-ready asset creation
+description: "NFT artwork generation, metadata creation, and blockchain-ready asset creation"
 version: 1.0.15
 package: @h4shed/skill-nft-generative-art
 hasTests: false

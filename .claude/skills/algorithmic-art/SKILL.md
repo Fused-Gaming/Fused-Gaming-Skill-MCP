@@ -1,6 +1,6 @@
 ---
 name: algorithmic-art
-description: Generative art using p5.js with seeded randomness, flow fields, and particle systems
+description: "Generative art using p5.js with seeded randomness, flow fields, and particle systems"
 version: 1.0.24
 package: @h4shed/skill-algorithmic-art
 hasTests: false

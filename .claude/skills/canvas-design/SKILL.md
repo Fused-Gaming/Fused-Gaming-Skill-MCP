@@ -1,6 +1,6 @@
 ---
 name: canvas-design
-description: Visual design generation for web with SVG and canvas rendering
+description: "Visual design generation for web with SVG and canvas rendering"
 version: 1.0.24
 package: @h4shed/skill-canvas-design
 hasTests: false

@@ -1,6 +1,6 @@
 ---
 name: svg-generator
-description: Generate SVG assets and icon concepts from structured prompts.
+description: "Generate SVG assets and icon concepts from structured prompts."
 version: 1.1.0
 package: @h4shed/skill-svg-generator
 hasTests: true

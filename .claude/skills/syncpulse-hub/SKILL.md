@@ -1,6 +1,6 @@
 ---
 name: syncpulse-hub
-description: Centralized SyncPulse Hub - Unified orchestration and installation of all @h4shed packages
+description: "Centralized SyncPulse Hub - Unified orchestration and installation of all @h4shed packages"
 version: 0.1.12
 package: @h4shed/syncpulse-hub
 hasTests: false
