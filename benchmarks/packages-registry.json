@@ -1,7 +1,7 @@
 {
   "meta": {
     "created": "2026-08-09T00:00:00Z",
-    "updated": "2026-08-16T13:33:06Z",
+    "updated": "2026-08-16T16:23:51Z",
     "registry_version": "1.0.0",
     "description": "Master registry tracking all published packages and their benchmark history"
   },
@@ -20,7 +20,7 @@
       "versions": [
         {
           "version": "1.0.0",
-          "published_date": "2026-08-16T13:33:06Z",
+          "published_date": "2026-08-16T16:23:51Z",
           "benchmark_status": "conditional",
           "combined_score": 82.0,
           "behavioral_score": 85.0,
@@ -97,7 +97,7 @@
           "details_url": null
         }
       ],
-      "updated": "2026-08-16T13:33:06Z"
+      "updated": "2026-08-16T16:23:51Z"
     }
   },
   "versions": [
@@ -130,7 +130,7 @@
       "package": "@h4shed/mcp-core",
       "version": "1.0.0",
       "status": "failed",
-      "published_date": "2026-08-16T13:33:06Z",
+      "published_date": "2026-08-16T16:23:51Z",
       "release_issue_number": null,
       "release_issue_url": null,
       "benchmark_results": {
@@ -159,7 +159,7 @@
     "passing_releases": 1,
     "conditional_releases": 0,
     "failed_releases": 0,
-    "last_updated": "2026-08-16T13:33:06Z"
+    "last_updated": "2026-08-16T16:23:51Z"
   },
   "milestones": {
     "phase_1_complete": {
