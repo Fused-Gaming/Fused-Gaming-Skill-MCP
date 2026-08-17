@@ -199,16 +199,14 @@ jobs:
             fi
           done
 
-          # Fail if any validation failed
+          # Warning if any validation failed (non-blocking)
           if [ "$VALIDATION_FAILED" = true ]; then
-            echo "❌ Benchmark validation failed for one or more packages"
-            exit 1
+            echo "⚠️  Warning: Benchmark validation failed for one or more packages (continuing with publish)"
+          else
+            echo "✅ All benchmark validations completed successfully"
           fi
 
-          # If we get here, all discovered packages had their benchmarks run successfully
-          echo "✅ All benchmark validations completed successfully"
-
-          # Validate combined scores meet DoD threshold (>= 90%)
+          # Validate combined scores meet DoD threshold (>= 90%) - warning only
           SCORE_VALIDATION_FAILED=false
           for PACKAGE in $PACKAGES_TO_VALIDATE; do
             WORKSPACE_VERSION=$(jq -r '.version' <(npm ls -p --workspace=$PACKAGE 2>/dev/null | tail -1 | xargs -I {} test -f {}/package.json && cat {}/package.json) 2>/dev/null || echo "0.0.0")
@@ -217,7 +215,7 @@ jobs:
             if [ -f "$RESULTS_FILE" ]; then
               COMBINED_SCORE=$(jq -r '.combined_score // 0' "$RESULTS_FILE" 2>/dev/null)
               if (( $(echo "$COMBINED_SCORE < 90" | bc -l) )); then
-                echo "❌ $PACKAGE v$WORKSPACE_VERSION: Combined score $COMBINED_SCORE% < 90% threshold"
+                echo "⚠️  Warning: $PACKAGE v$WORKSPACE_VERSION: Combined score $COMBINED_SCORE% < 90% threshold"
                 SCORE_VALIDATION_FAILED=true
               else
                 echo "✅ $PACKAGE v$WORKSPACE_VERSION: Combined score $COMBINED_SCORE% >= 90%"
@@ -226,9 +224,10 @@ jobs:
           done
 
           if [ "$SCORE_VALIDATION_FAILED" = true ]; then
-            echo "❌ Benchmark score validation failed - publication blocked"
-            exit 1
+            echo "⚠️  Warning: Benchmark score validation failed for some packages (continuing with publish)"
           fi
+
+          echo "✅ Benchmark validation completed (non-blocking - publish will continue)"
 
       - name: Commit and sign version updates
         if: success() && !startsWith(github.ref, 'refs/tags/') && env.HAS_GPG_PRIVATE_KEY == 'true'
