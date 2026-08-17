@@ -119,9 +119,9 @@ export class PerformanceBenchmarker {
       const maxCV = target.maxCV ?? 20;
       const passedVarianceTarget = metric.coefficientOfVariation <= maxCV;
 
-      let passedAbsoluteTarget = true;
-      if (target.maxMean !== undefined) passedAbsoluteTarget = passedAbsoluteTarget && metric.mean <= target.maxMean;
-      if (target.minMean !== undefined) passedAbsoluteTarget = passedAbsoluteTarget && metric.mean >= target.minMean;
+      const passedMax = target.maxMean === undefined || metric.mean <= target.maxMean;
+      const passedMin = target.minMean === undefined || metric.mean >= target.minMean;
+      const passedAbsoluteTarget = passedMax && passedMin;
 
       let score = (passedVarianceTarget ? 50 : 0) + (passedAbsoluteTarget ? 50 : 0);
       let regressionPercent: number | undefined;
