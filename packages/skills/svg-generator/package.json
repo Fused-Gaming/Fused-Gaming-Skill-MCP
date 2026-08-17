@@ -10,12 +10,12 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
-    "benchmark": "echo 'Benchmarks: OK'",
+    "benchmark": "tsc --project tsconfig.json && node dist/packages/skills/svg-generator/src/benchmark.js",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@h4shed/benchmark-utils": "^1.0.0",
+    "@h4shed/benchmark-utils": "^2.0.0",
     "@h4shed/mcp-core": "^1.0.24"
   },
   "devDependencies": {

@@ -51,7 +51,10 @@ interface BenchmarkResults {
     quality_score: number;
   };
   combined_score: number;
-  status: "pass" | "conditional" | "fail";
+  // "not_measured": the package's benchmark script did not emit a structured DoD
+  // report (e.g. it's still a placeholder). This is informational, not a failing
+  // score, and must not be treated as if a 0% result was actually measured.
+  status: "pass" | "conditional" | "fail" | "not_measured";
 }
 
 async function createReleaseIssue() {
@@ -192,6 +195,57 @@ function generateIssueBody(results: BenchmarkResults, releaseManager: string = "
   // to preserve original release date across reruns
   const releaseDate = timestamp ? timestamp.split("T")[0] : new Date().toISOString().split("T")[0];
   const dodThreshold = 90;
+
+  // A "not_measured" result means the package's benchmark script never produced a
+  // real DoD report (e.g. it's still a placeholder `echo` script). Report this as
+  // its own state rather than running it through the pass/fail checklist below,
+  // which would otherwise render a fabricated 0% as if it were a real, failing
+  // measurement.
+  if (status === "not_measured") {
+    return `## 📋 Release Information
+
+**Package:** \`${results.package}\`
+**Version:** \`v${results.version}\`
+**Release Date:** \`${releaseDate}\`
+**Release Manager:** \`@${releaseManager}\`
+
+---
+
+## ⚠️ Benchmarks Not Measured
+
+This package's \`npm run benchmark\` script did not emit a structured Definition of
+Done report (behavioral / performance / code quality). No score was calculated, and
+the fields below are placeholders — **not** a measured 0% failure.
+
+To get real DoD scoring and regression detection for this package, wire up
+\`@h4shed/benchmark-utils\` (\`BehavioralTester\`, \`PerformanceBenchmarker\`,
+\`DoDScorer\`) in its benchmark script and have it print the resulting report as
+JSON to stdout. See \`packages/skills/svg-generator/src/benchmark.ts\` for a
+worked example, and \`/packages/benchmark-utils/README.md\` for the API.
+
+**Release Decision:** This release was **not gated** on benchmark results. Manual
+review is required before considering it approved.
+
+---
+
+## 📌 Implementation Details
+
+**Checkpoint:** \`${results.package} v${results.version}\`
+
+**Test Execution:** Automatic benchmark run on package publication (no structured report emitted)
+
+---
+
+## 📚 Related Documentation
+
+- Benchmark Results: \`/benchmarks/packages/${results.package}/v${results.version}/\`
+- Definition of Done: \`/docs/DEFINITION_OF_DONE.md\`
+- Project Roadmap: \`/docs/ROADMAP.md\`
+
+---
+
+**This issue tracks the quality and benchmark metrics for this release. Close only after successful publication and post-release validation.**`;
+  }
 
   // Recalculate behavioral score from raw components using canonical formula
   // behavioral_score = (CORE × 0.50) + (REGRESSION × 0.30) + (FUNCTIONALITY × 0.12) + (ERROR × 0.08)

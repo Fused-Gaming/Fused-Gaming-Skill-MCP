@@ -3,7 +3,7 @@
  * Measures behavioral, performance, and code quality metrics for DoD compliance
  */
 
-import { BehavioralTester, PerformanceBenchmarker, DoDScorer } from '@h4shed/benchmark-utils';
+import { BehavioralTester, PerformanceBenchmarker, DoDScorer, DoDScore } from '@h4shed/benchmark-utils';
 import { GenerateSvgAssetTool } from './tools/generate-svg-asset.js';
 import type { SvgAsset } from './tools/generate-svg-asset.js';
 
@@ -181,7 +181,7 @@ async function runBenchmarks() {
     'ms'
   );
   console.log(
-    `  Latency: ${latencyResult.mean.toFixed(2)}ms ± ${latencyResult.stdDev.toFixed(2)}ms (CV: ${latencyResult.coefficientOfVariation?.toFixed(1)}%)`
+    `  Latency: ${latencyResult.mean.toFixed(2)}ms ± ${latencyResult.stdDev.toFixed(2)}ms (CV: ${latencyResult.coefficientOfVariation.toFixed(1)}%)`
   );
 
   const throughputResult = await perfBench.benchmark(
@@ -233,49 +233,41 @@ async function runBenchmarks() {
   // === CALCULATE SCORES ===
   console.log('\n📊 Computing Definition of Done Score...\n');
 
-  const performanceScore = perfBench.calculatePerformanceScore();
+  // Explicit, domain-meaningful targets are required — scoring purely on
+  // variance would let a metric that is stably bad (e.g. slow but
+  // consistent) score as if it were fine.
+  const performanceScore = perfBench.calculatePerformanceScore([
+    { metricName: 'SVG generation latency', unit: 'ms', maxMean: 50 },
+    { metricName: 'SVG generation throughput', unit: 'ops/sec', minMean: 5 },
+    { metricName: 'SVG generation memory', unit: 'MB', maxMean: 64 },
+  ]);
 
-  // Code quality metrics must be measured, not fabricated
-  // Try to load actual metrics from ESLint/TypeScript analysis or fail
-  let codeQualityMetrics: any = null;
-
-  // Attempt to load metrics from .eslintrc or build artifacts if available
-  // For now, we require that these be provided via environment or actual measurement
+  // Code quality metrics must be measured, not fabricated. CI must fail
+  // closed when this data is absent rather than substituting known-good
+  // placeholder constants — a "conditional" un-measured result must never
+  // be able to reach a passing DoD score.
+  const metricsFile = path.join(process.cwd(), '.quality-metrics.json');
+  let codeQualityMetrics: {
+    complexity: { mean: number; max: number };
+    duplication: number;
+    coverage: number;
+    maintainability: number;
+    provenance: { source: string; measured: boolean };
+  };
   try {
-    // Check if metrics file exists in project
-    const metricsFile = path.join(process.cwd(), '.quality-metrics.json');
-    try {
-      const metricsData = await fs.readFile(metricsFile, 'utf8');
-      codeQualityMetrics = JSON.parse(metricsData);
-      console.log('✅ Loaded code quality metrics from .quality-metrics.json');
-    } catch {
-      // File doesn't exist - use placeholder in CI or if explicitly allowed
-      const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
-      const usePlaceholders = isCI || process.env.ALLOW_PLACEHOLDER_METRICS === 'true';
-      if (!usePlaceholders) {
-        console.error('❌ FAILURE: Code quality metrics not measured');
-        console.error('   Missing file: .quality-metrics.json');
-        console.error('   Required metrics: complexity (mean, max), duplication (%),');
-        console.error('   coverage (%), maintainability (index)');
-        console.error('   Generate with: eslint --format json, jscpd, jest --coverage, etc.');
-        process.exit(1);
-      }
-      // Use placeholders in CI environment or if explicitly allowed
-      codeQualityMetrics = {
-        complexity: { mean: 2.1, max: 4 },
-        duplication: 2.5,
-        coverage: 85,
-        maintainability: 80,
-      };
-      if (isCI) {
-        console.warn('⚠️  WARNING: Using placeholder code quality metrics (CI environment detected)');
-      } else {
-        console.warn('⚠️  WARNING: Using placeholder code quality metrics (ALLOW_PLACEHOLDER_METRICS=true)');
-      }
-      console.warn('   In production, provide real metrics via .quality-metrics.json\n');
-    }
-  } catch (err) {
-    console.error('Error checking for quality metrics:', err);
+    const metricsData = await fs.readFile(metricsFile, 'utf8');
+    const parsed = JSON.parse(metricsData);
+    codeQualityMetrics = {
+      ...parsed,
+      provenance: parsed.provenance ?? { source: metricsFile, measured: true },
+    };
+    console.log('✅ Loaded code quality metrics from .quality-metrics.json');
+  } catch {
+    console.error('❌ FAILURE: Code quality metrics not measured');
+    console.error('   Missing file: .quality-metrics.json');
+    console.error('   Required metrics: complexity (mean, max), duplication (%),');
+    console.error('   coverage (%), maintainability (index), provenance (source, measured: true)');
+    console.error('   Generate with: eslint --format json, jscpd, jest --coverage, etc.');
     process.exit(1);
   }
 
@@ -288,33 +280,8 @@ async function runBenchmarks() {
     const baselineFile = path.join(baselineDir, 'svg-generator-baseline.json');
     try {
       const baselineData = await fs.readFile(baselineFile, 'utf8');
-      const persisted = JSON.parse(baselineData);
-      if (persisted.combined_score !== undefined) {
-        // Convert persisted schema (code_quality, aggregate_score) to DoDScore schema (codeQuality, aggregateScore)
-        const baseline = {
-          version: persisted.version,
-          timestamp: persisted.timestamp,
-          combinedScore: persisted.combined_score,
-          passed: persisted.passed,
-          behavioral: {
-            aggregateScore: persisted.behavioral.aggregate_score,
-            scores: persisted.behavioral.scores,
-          },
-          performance: {
-            aggregateScore: persisted.performance.aggregate_score,
-            latency: persisted.performance.latency,
-            throughput: persisted.performance.throughput,
-            memory: persisted.performance.memory,
-          },
-          codeQuality: {
-            aggregateScore: persisted.code_quality.aggregate_score,
-            complexity: persisted.code_quality.complexity,
-            duplication: persisted.code_quality.duplication,
-            coverage: persisted.code_quality.coverage,
-            maintainability: persisted.code_quality.maintainability,
-          },
-          regressions: persisted.regressions || [],
-        };
+      const baseline: DoDScore = JSON.parse(baselineData);
+      if (baseline.combinedScore !== undefined) {
         scorer.setBaseline(baseline.version || 'unknown', baseline);
         console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
       }
@@ -335,7 +302,7 @@ async function runBenchmarks() {
 
   // Print results
   console.log('Behavioral Scores:');
-  dodReport.behavioral.scores.forEach((s: any) => {
+  dodReport.behavioral.scores.forEach((s) => {
     console.log(
       `  ${s.category}: ${s.passRate.toFixed(1)}% (${s.passed ? '✅' : '❌'})`
     );
@@ -357,9 +324,7 @@ async function runBenchmarks() {
     },
     performance: {
       aggregate_score: performanceScore.aggregateScore,
-      latency: performanceScore.latency,
-      throughput: performanceScore.throughput,
-      memory: performanceScore.memory,
+      items: performanceScore.items,
     },
     code_quality: {
       aggregate_score: codeQualityScore.aggregateScore,
@@ -389,7 +354,7 @@ async function runBenchmarks() {
       await fs.mkdir(baselineDir, { recursive: true });
       await fs.writeFile(
         path.join(baselineDir, 'svg-generator-baseline.json'),
-        JSON.stringify(resultsJson, null, 2)
+        JSON.stringify(dodReport, null, 2)
       );
       console.log(`✅ Baseline updated to ${baselineDir}/svg-generator-baseline.json (persisted across CI runs)`);
     } else {

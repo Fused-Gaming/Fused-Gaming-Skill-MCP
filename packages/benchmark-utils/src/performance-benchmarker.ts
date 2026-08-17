@@ -3,10 +3,11 @@
  * Measures latency, throughput, and memory usage with statistical analysis
  */
 
-import { PerformanceMetric, PerformanceScore } from './types.js';
+import { PerformanceMetric, PerformanceScore, PerformanceTarget } from './types.js';
 
 export class PerformanceBenchmarker {
   private metrics: PerformanceMetric[] = [];
+  private sequence = 0;
 
   async benchmark(
     name: string,
@@ -14,12 +15,8 @@ export class PerformanceBenchmarker {
     iterations = 100,
     unit: 'ms' | 'ops/sec' | 'MB' = 'ms'
   ): Promise<PerformanceMetric> {
-    // Validate iterations is a finite positive number
-    if (!Number.isFinite(iterations) || iterations <= 0) {
-      throw new Error(`Iteration count must be a finite positive number, got ${iterations}`);
-    }
-    if (iterations < 30) {
-      throw new Error(`Minimum 30 iterations required for statistical validity, got ${iterations}`);
+    if (!Number.isInteger(iterations) || iterations < 30) {
+      throw new Error(`Minimum 30 integer iterations required for statistical validity, got ${iterations}`);
     }
 
     const samples: number[] = [];
@@ -37,13 +34,10 @@ export class PerformanceBenchmarker {
     } else {
       for (let i = 0; i < iterations; i++) {
         const result = await fn();
-        if (typeof result !== 'number' || result <= 0) {
+        if (typeof result !== 'number' || !Number.isFinite(result) || result <= 0) {
           throw new Error(
-            `benchmark callback for unit '${unit}' must return positive number, got ${result}`
+            `benchmark callback for unit '${unit}' must return a positive finite measured value, got ${result}`
           );
-        }
-        if (!Number.isFinite(result)) {
-          throw new Error(`Invalid sample: ${result} (not a finite number)`);
         }
         samples.push(result);
       }
@@ -53,7 +47,7 @@ export class PerformanceBenchmarker {
     const variance =
       samples.reduce((sum, x) => sum + Math.pow(x - mean, 2), 0) / (samples.length - 1 || 1);
     const stdDev = Math.sqrt(variance);
-    const cv = mean > 0 ? (stdDev / mean) * 100 : 0; // Coefficient of variation
+    const cv = mean > 0 ? (stdDev / mean) * 100 : 0;
 
     let min = samples[0] ?? 0;
     let max = samples[0] ?? 0;
@@ -63,6 +57,7 @@ export class PerformanceBenchmarker {
     }
 
     const metric: PerformanceMetric = {
+      id: `metric-${++this.sequence}`,
       name,
       unit,
       mean,
@@ -71,6 +66,7 @@ export class PerformanceBenchmarker {
       max,
       samples: samples.length,
       coefficientOfVariation: cv,
+      provenance: { source: 'PerformanceBenchmarker', schemaVersion: 1 },
     };
 
     this.metrics.push(metric);
@@ -78,109 +74,92 @@ export class PerformanceBenchmarker {
   }
 
   getMetrics(): PerformanceMetric[] {
-    return this.metrics;
+    return structuredClone(this.metrics);
   }
 
-  calculatePerformanceScore(baseline?: PerformanceMetric[]): PerformanceScore {
-    // Extract metrics by unit, not by name substring
-    const latencyMetric = this.metrics.find((m) => m.unit === 'ms');
-    const throughputMetric = this.metrics.find((m) => m.unit === 'ops/sec');
-    const memoryMetric = this.metrics.find((m) => m.unit === 'MB');
+  /**
+   * Score measured metrics against explicit, caller-supplied targets.
+   *
+   * Targets are mandatory: scoring purely on variance (coefficient of
+   * variation) lets a metric that is stably bad — e.g. consistently slow,
+   * or consistently near-zero throughput — pass simply because it is
+   * *consistent*. Each target must include at least one of `maxMean` /
+   * `minMean` so scoring reflects a real, domain-meaningful expectation.
+   *
+   * Metrics are matched by exact name + unit. If more than one recorded
+   * metric matches a target, scoring fails loudly instead of silently
+   * taking the first match.
+   */
+  calculatePerformanceScore(
+    targets: PerformanceTarget[],
+    baseline?: PerformanceMetric[]
+  ): PerformanceScore {
+    if (!targets || targets.length === 0) {
+      throw new Error('At least one explicit performance target is required to score performance');
+    }
 
-    // Score latency (lower is better; CV: <10% = 100, 10-20% = 80, >20% = 60)
-    let latencyScore = 0;
-    if (!latencyMetric) {
-      latencyScore = 0; // Missing metric gets 0
-    } else {
-      const cv = latencyMetric.coefficientOfVariation || 0;
-      if (cv < 10) latencyScore = 100; // Excellent
-      else if (cv <= 20) latencyScore = 80; // Acceptable
-      else latencyScore = 60; // Marginal
+    const items = targets.map((target) => {
+      const matches = this.metrics.filter(
+        (m) => m.name === target.metricName && m.unit === target.unit
+      );
+      if (matches.length !== 1) {
+        throw new Error(
+          `Expected exactly one measured metric for '${target.metricName}' (${target.unit}), found ${matches.length}. ` +
+            `Ambiguous or missing metrics cannot be scored.`
+        );
+      }
+      const metric = matches[0];
+
+      if (target.maxMean === undefined && target.minMean === undefined) {
+        throw new Error(
+          `Absolute target required for '${target.metricName}': set maxMean and/or minMean`
+        );
+      }
+
+      const maxCV = target.maxCV ?? 20;
+      const passedVarianceTarget = metric.coefficientOfVariation <= maxCV;
+
+      let passedAbsoluteTarget = true;
+      if (target.maxMean !== undefined) passedAbsoluteTarget = passedAbsoluteTarget && metric.mean <= target.maxMean;
+      if (target.minMean !== undefined) passedAbsoluteTarget = passedAbsoluteTarget && metric.mean >= target.minMean;
+
+      let score = (passedVarianceTarget ? 50 : 0) + (passedAbsoluteTarget ? 50 : 0);
+      let regressionPercent: number | undefined;
 
       if (baseline) {
-        const baselineLatency = baseline.find((m) => m.unit === 'ms');
-        if (baselineLatency && baselineLatency.mean > 0) {
-          const changePercent =
-            ((latencyMetric.mean - baselineLatency.mean) / baselineLatency.mean) * 100;
-          if (changePercent > 10) {
-            latencyScore = 0; // Major regression: hard fail
-          } else if (changePercent > 5) {
-            latencyScore = Math.max(0, latencyScore - 10); // Moderate penalty
-          }
+        const base = baseline.find((b) => b.name === metric.name && b.unit === metric.unit);
+        if (base && base.mean > 0) {
+          regressionPercent = ((metric.mean - base.mean) / base.mean) * 100;
+          // For ops/sec, lower is worse; for ms/MB, higher is worse.
+          const isBad = metric.unit === 'ops/sec' ? regressionPercent < -5 : regressionPercent > 5;
+          const isSevere = metric.unit === 'ops/sec' ? regressionPercent < -10 : regressionPercent > 10;
+          if (isSevere) score = 0;
+          else if (isBad) score = Math.max(0, score - 25);
         }
       }
-    }
 
-    // Score throughput (higher is better; same CV thresholds as latency)
-    let throughputScore = 0;
-    if (!throughputMetric) {
-      throughputScore = 0; // Missing metric gets 0
-    } else {
-      const cv = throughputMetric.coefficientOfVariation || 0;
-      if (cv < 10) throughputScore = 100; // Excellent
-      else if (cv <= 20) throughputScore = 80; // Acceptable
-      else throughputScore = 60; // Marginal
+      return {
+        metricName: metric.name,
+        unit: metric.unit,
+        mean: metric.mean,
+        stdDev: metric.stdDev,
+        score,
+        passedAbsoluteTarget,
+        passedVarianceTarget,
+        regressionPercent,
+      };
+    });
 
-      if (baseline) {
-        const baselineThroughput = baseline.find((m) => m.unit === 'ops/sec');
-        if (baselineThroughput && baselineThroughput.mean > 0) {
-          const changePercent =
-            ((throughputMetric.mean - baselineThroughput.mean) / baselineThroughput.mean) * 100;
-          if (changePercent < -10) {
-            throughputScore = 0; // Major regression: hard fail
-          } else if (changePercent < -5) {
-            throughputScore = Math.max(0, throughputScore - 10); // Moderate penalty
-          }
-        }
-      }
-    }
-
-    // Score memory (lower is better; penalize only increases, not improvements)
-    let memoryScore = 0;
-    let changePercent = 0;
-    if (!memoryMetric) {
-      memoryScore = 0; // Missing metric gets 0
-    } else if (baseline) {
-      const baselineMemory = baseline.find((m) => m.unit === 'MB');
-      if (baselineMemory && baselineMemory.max > 0) {
-        changePercent =
-          ((memoryMetric.max - baselineMemory.max) / baselineMemory.max) * 100;
-        // Only penalize increases, not improvements (negative changes are acceptable)
-        if (changePercent > 10) {
-          memoryScore = 0; // Major regression: hard fail
-        } else if (changePercent > 5) {
-          memoryScore = 80; // Moderate increase: penalize
-        } else {
-          memoryScore = 100; // Within tolerance or improvement
-        }
-      } else {
-        memoryScore = 100; // No baseline, accept as is
-      }
-    } else {
-      memoryScore = 100; // No baseline comparison
-    }
-
-    // Apply documented weights: latency 40%, throughput 40%, memory 20%
-    const aggregateScore =
-      latencyScore * 0.4 + throughputScore * 0.4 + memoryScore * 0.2;
+    const weightSum = targets.reduce((sum, t) => sum + (t.weight ?? 1), 0);
+    const aggregateScore = Math.round(
+      items.reduce((sum, item, i) => sum + item.score * (targets[i].weight ?? 1), 0) / weightSum
+    );
 
     return {
-      latency: {
-        mean: latencyMetric?.mean || 0,
-        stdDev: latencyMetric?.stdDev || 0,
-        score: latencyScore,
-      },
-      throughput: {
-        mean: throughputMetric?.mean || 0,
-        stdDev: throughputMetric?.stdDev || 0,
-        score: throughputScore,
-      },
-      memory: {
-        peakMB: memoryMetric?.max || 0,
-        changePercent,
-        score: memoryScore,
-      },
-      aggregateScore: Math.round(aggregateScore),
+      items,
+      aggregateScore,
+      passed: items.every((i) => i.score >= 75) && aggregateScore >= 90,
+      provenance: { source: 'PerformanceBenchmarker', schemaVersion: 1 },
     };
   }
 }

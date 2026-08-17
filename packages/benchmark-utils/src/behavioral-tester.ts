@@ -3,34 +3,60 @@
  * Measures CORE, REGRESSION, FUNCTIONALITY, and ERROR test pass rates
  */
 
-import { TestResult, TestSuiteResult, ConfidenceInterval } from './types.js';
+import { TestCategory, TestResult, TestSuiteResult } from './types.js';
+import { wilsonInterval } from './statistics.js';
 
 export class BehavioralTester {
   private results: TestSuiteResult[] = [];
 
   async runTestSuite(
-    category: 'CORE' | 'REGRESSION' | 'FUNCTIONALITY' | 'ERROR',
+    category: TestCategory,
     tests: Array<{
       name: string;
-      fn: () => Promise<void>;
+      fn: () => Promise<void> | void;
     }>,
-    options?: { timeout?: number }
+    options?: { timeout?: number; minimumSamples?: number }
   ): Promise<TestSuiteResult> {
-    const timeout = options?.timeout || 30000;
+    const timeout = options?.timeout ?? 30000;
+    const minimumSamples = options?.minimumSamples ?? 1;
+
+    if (!Number.isFinite(timeout) || timeout <= 0) {
+      throw new Error(`timeout must be a positive finite number, got ${timeout}`);
+    }
+    if (!Number.isInteger(minimumSamples) || minimumSamples < 1) {
+      throw new Error(`minimumSamples must be a positive integer, got ${minimumSamples}`);
+    }
+    // Reject empty/undersized suites before any CI math runs on them — an
+    // empty suite has no statistical meaning and must not silently score 0%.
+    if (tests.length < minimumSamples) {
+      throw new Error(
+        `${category} requires at least ${minimumSamples} tests; received ${tests.length}`
+      );
+    }
+
     const testResults: TestResult[] = [];
 
     for (const test of tests) {
       const startTime = performance.now();
-      let timeoutHandle: NodeJS.Timeout | null = null;
-      let racerTimeoutHandle: NodeJS.Timeout | null = null;
+      let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
 
       try {
-        await Promise.race([
-          test.fn(),
+        const result = await Promise.race([
+          Promise.resolve(test.fn()),
           new Promise<never>((_, reject) => {
-            racerTimeoutHandle = setTimeout(() => reject(new Error('Test timeout')), timeout);
+            timeoutHandle = setTimeout(() => reject(new Error('Test timeout')), timeout);
           }),
         ]);
+
+        // Tests must assert by throwing and resolve to undefined. A test
+        // that returns `false` or any other truthy/falsy value instead of
+        // throwing must not be able to silently register as a pass.
+        if (result !== undefined) {
+          throw new Error(
+            'Behavioral tests must assert by throwing and return void; ' +
+              `non-void return values are rejected (got ${JSON.stringify(result)})`
+          );
+        }
 
         testResults.push({
           name: test.name,
@@ -46,48 +72,29 @@ export class BehavioralTester {
         });
       } finally {
         if (timeoutHandle) clearTimeout(timeoutHandle);
-        if (racerTimeoutHandle) clearTimeout(racerTimeoutHandle);
       }
     }
 
     const passCount = testResults.filter((r) => r.passed).length;
     const totalCount = testResults.length;
-    const passRate = totalCount > 0 ? (passCount / totalCount) * 100 : 0;
+    const passRate = (passCount / totalCount) * 100;
 
     const suiteResult: TestSuiteResult = {
       category,
       passCount,
       totalCount,
       passRate,
-      confidenceInterval: this.calculateConfidenceInterval(passRate, totalCount),
+      confidenceInterval: wilsonInterval(passCount, totalCount),
       results: testResults,
+      provenance: { source: 'BehavioralTester', schemaVersion: 1 },
     };
 
     this.results.push(suiteResult);
     return suiteResult;
   }
 
-  private calculateConfidenceInterval(
-    passRate: number,
-    sampleSize: number,
-    confidence = 0.95
-  ): ConfidenceInterval {
-    const p = passRate / 100;
-    const z = confidence === 0.95 ? 1.96 : 2.576; // Z-score for 95% and 99% CI
-
-    const standardError = Math.sqrt((p * (1 - p)) / sampleSize);
-    const margin = z * standardError;
-
-    return {
-      lowerBound: Math.max(0, (p - margin) * 100),
-      upperBound: Math.min(100, (p + margin) * 100),
-      standardError: standardError * 100,
-      confidence,
-    };
-  }
-
   getResults(): TestSuiteResult[] {
-    return this.results;
+    return structuredClone(this.results);
   }
 
   getSummary(): {
@@ -119,14 +126,12 @@ export class BehavioralTester {
       >,
     };
 
-    // Aggregate multiple suites in the same category
     const categoryAggregates: Record<string, { passCount: number; totalCount: number }> = {};
 
     for (const suite of this.results) {
       summary.totalTests += suite.totalCount;
       summary.totalPassed += suite.passCount;
 
-      // Combine suites in the same category
       if (!categoryAggregates[suite.category]) {
         categoryAggregates[suite.category] = { passCount: 0, totalCount: 0 };
       }
@@ -134,11 +139,9 @@ export class BehavioralTester {
       categoryAggregates[suite.category].totalCount += suite.totalCount;
     }
 
-    // Calculate category pass rates from aggregated counts
     for (const [category, aggregate] of Object.entries(categoryAggregates)) {
       const passRate = aggregate.totalCount > 0 ? (aggregate.passCount / aggregate.totalCount) * 100 : 0;
 
-      // Determine if category passed based on DoD thresholds
       let threshold = 90;
       if (category === 'CORE') threshold = 95;
       if (category === 'REGRESSION') threshold = 100;
