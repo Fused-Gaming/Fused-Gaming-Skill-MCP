@@ -12,7 +12,8 @@
 
 import express from 'express';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { Tool, TextContent } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
+import { TextContent } from '@modelcontextprotocol/sdk/types.js';
 import dotenv from 'dotenv';
 
 import { MockCapabilityRegistry } from './services/capability-registry.js';
