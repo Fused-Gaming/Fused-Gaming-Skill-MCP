@@ -1,7 +1,7 @@
 {
   "name": "@h4shed/benchmark-utils",
-  "version": "1.0.0",
-  "description": "Shared benchmark utilities for DoD compliance and performance testing",
+  "version": "2.0.0",
+  "description": "Shared, provenance-hardened benchmark utilities for DoD compliance and performance testing",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,8 +9,8 @@
     "build": "tsc",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
-    "test": "echo 'No tests yet'",
-    "benchmark": "echo 'Benchmarks: OK'"
+    "test": "npm run build && node --test test/*.test.mjs",
+    "benchmark": "npm run test"
   },
   "keywords": [
     "benchmark",

@@ -153,6 +153,9 @@ jobs:
           LATEST_RESULTS="$VERSION_DIR/results.json"
           mkdir -p "$VERSION_DIR"
 
+          # npm ls -p outputs repo root first, then workspace paths - we want the last line
+          WORKSPACE_ROOT=$(npm ls -p --workspace=${{ steps.package-info.outputs.package }} 2>/dev/null | tail -1)
+
           BENCHMARK_SUCCESS=false
 
           if npm run benchmark --workspace=${{ steps.package-info.outputs.package }} > benchmark-output.log 2>&1; then
@@ -161,76 +164,102 @@ jobs:
 
           # Only use results from the current benchmark run, never cached results
           if [ "$BENCHMARK_SUCCESS" = true ]; then
-            # Parse benchmark output and create results JSON
-            # Extract performance metrics from benchmark output
-            # Read output from file to avoid backtick injection in template literals
+            # Prefer the DoD report a real benchmark harness (BehavioralTester /
+            # PerformanceBenchmarker / DoDScorer from @h4shed/benchmark-utils) writes to
+            # <workspace>/.benchmark/results.json — reading that file is reliable, unlike
+            # scraping the JSON a script happens to print to stdout (multi-line pretty JSON
+            # containing nested "}" lines cannot be reliably located with a regex). Only fall
+            # back to a bare performance-only summary — clearly labeled 'not_measured' rather
+            # than a fabricated 'conditional' 0% score — when the package's benchmark script
+            # doesn't write that file.
             node -e "
               const fs = require('fs');
               const output = fs.readFileSync('benchmark-output.log', 'utf8');
               const lines = output.split('\n');
 
-              // Extract performance metrics from benchmark output format: 'X.XXXms/op (Y ops/sec)'
-              // Aggregate multiple measurements by collecting all values and computing means and std dev
-              let latency_values = [], throughput_values = [];
-              lines.forEach(line => {
-                // Match patterns like '0.003ms/op' or 'avg: 0.003ms'
-                const latencyMatch = line.match(/([0-9.]+)\s*ms\/op/) || line.match(/([0-9.]+)\s*ms$/);
-                if (latencyMatch) latency_values.push(parseFloat(latencyMatch[1]));
-                const throughputMatch = line.match(/([0-9.]+)\s*ops\/sec/);
-                if (throughputMatch) throughput_values.push(parseFloat(throughputMatch[1]));
-              });
-
-              // Calculate means and standard deviations if measurements were captured
-              let latency_ms = 0, latency_std_dev = 0, throughput_ops = 0, throughput_std_dev = 0;
-              if (latency_values.length > 0) {
-                latency_ms = latency_values.reduce((a, b) => a + b, 0) / latency_values.length;
-                const latency_variance = latency_values.reduce((sum, val) => sum + Math.pow(val - latency_ms, 2), 0) / latency_values.length;
-                latency_std_dev = Math.sqrt(latency_variance);
-              }
-              if (throughput_values.length > 0) {
-                throughput_ops = throughput_values.reduce((a, b) => a + b, 0) / throughput_values.length;
-                const throughput_variance = throughput_values.reduce((sum, val) => sum + Math.pow(val - throughput_ops, 2), 0) / throughput_values.length;
-                throughput_std_dev = Math.sqrt(throughput_variance);
+              let measured = null;
+              const measuredPath = '$WORKSPACE_ROOT/.benchmark/results.json';
+              if (fs.existsSync(measuredPath)) {
+                try {
+                  const candidate = JSON.parse(fs.readFileSync(measuredPath, 'utf8'));
+                  if (typeof candidate.combined_score === 'number') measured = candidate;
+                } catch {
+                  // not valid JSON, treat as not measured
+                }
               }
 
-              // Report only metrics that were actually captured
-              // Do NOT synthesize passing behavioral/quality results when not measured
-              const results = {
-                package: '${{ steps.package-info.outputs.package }}',
-                version: '${{ steps.package-info.outputs.version }}',
-                timestamp: new Date().toISOString(),
-                behavioral: {
-                  core_pass_rate: 0,
-                  core_total: 0,
-                  regression_pass_rate: 0,
-                  regression_total: 0,
-                  functionality_pass_rate: 0,
-                  functionality_total: 0,
-                  error_pass_rate: 0,
-                  error_total: 0,
-                  behavioral_score: 0
-                },
-                performance: {
-                  latency_ms_mean: latency_ms,
-                  latency_ms_std_dev: latency_std_dev,
-                  latency_sample_count: latency_values.length,
-                  throughput_ops_sec_mean: throughput_ops,
-                  throughput_ops_sec_std_dev: throughput_std_dev,
-                  throughput_sample_count: throughput_values.length,
-                  memory_mb_peak: 0,
-                  performance_score: 0
-                },
-                code_quality: {
-                  complexity_mean: 0,
-                  complexity_max: 0,
-                  duplication_percent: 0,
-                  coverage_percent: 0,
-                  maintainability_index: 0,
-                  quality_score: 0
-                },
-                combined_score: 0,
-                status: 'conditional'
-              };
+              let results;
+              if (measured) {
+                results = {
+                  package: '${{ steps.package-info.outputs.package }}',
+                  version: '${{ steps.package-info.outputs.version }}',
+                  timestamp: new Date().toISOString(),
+                  ...measured,
+                  status: measured.status || (measured.combined_score >= 90 ? 'pass' : 'fail'),
+                };
+              } else {
+                // Extract performance metrics from benchmark output format: 'X.XXXms/op (Y ops/sec)'
+                // Aggregate multiple measurements by collecting all values and computing means and std dev
+                let latency_values = [], throughput_values = [];
+                lines.forEach(line => {
+                  const latencyMatch = line.match(/([0-9.]+)\s*ms\/op/) || line.match(/([0-9.]+)\s*ms$/);
+                  if (latencyMatch) latency_values.push(parseFloat(latencyMatch[1]));
+                  const throughputMatch = line.match(/([0-9.]+)\s*ops\/sec/);
+                  if (throughputMatch) throughput_values.push(parseFloat(throughputMatch[1]));
+                });
+
+                let latency_ms = 0, latency_std_dev = 0, throughput_ops = 0, throughput_std_dev = 0;
+                if (latency_values.length > 0) {
+                  latency_ms = latency_values.reduce((a, b) => a + b, 0) / latency_values.length;
+                  const latency_variance = latency_values.reduce((sum, val) => sum + Math.pow(val - latency_ms, 2), 0) / latency_values.length;
+                  latency_std_dev = Math.sqrt(latency_variance);
+                }
+                if (throughput_values.length > 0) {
+                  throughput_ops = throughput_values.reduce((a, b) => a + b, 0) / throughput_values.length;
+                  const throughput_variance = throughput_values.reduce((sum, val) => sum + Math.pow(val - throughput_ops, 2), 0) / throughput_values.length;
+                  throughput_std_dev = Math.sqrt(throughput_variance);
+                }
+
+                // Report only metrics that were actually captured.
+                // Do NOT synthesize passing behavioral/quality results when not measured,
+                // and do NOT label this 'conditional' — that reads as a scored result.
+                results = {
+                  package: '${{ steps.package-info.outputs.package }}',
+                  version: '${{ steps.package-info.outputs.version }}',
+                  timestamp: new Date().toISOString(),
+                  behavioral: {
+                    core_pass_rate: 0,
+                    core_total: 0,
+                    regression_pass_rate: 0,
+                    regression_total: 0,
+                    functionality_pass_rate: 0,
+                    functionality_total: 0,
+                    error_pass_rate: 0,
+                    error_total: 0,
+                    behavioral_score: 0
+                  },
+                  performance: {
+                    latency_ms_mean: latency_ms,
+                    latency_ms_std_dev: latency_std_dev,
+                    latency_sample_count: latency_values.length,
+                    throughput_ops_sec_mean: throughput_ops,
+                    throughput_ops_sec_std_dev: throughput_std_dev,
+                    throughput_sample_count: throughput_values.length,
+                    memory_mb_peak: 0,
+                    performance_score: 0
+                  },
+                  code_quality: {
+                    complexity_mean: 0,
+                    complexity_max: 0,
+                    duplication_percent: 0,
+                    coverage_percent: 0,
+                    maintainability_index: 0,
+                    quality_score: 0
+                  },
+                  combined_score: 0,
+                  status: 'not_measured'
+                };
+              }
 
               console.log(JSON.stringify(results, null, 2));
             " > "$RESULTS_FILE" || {
