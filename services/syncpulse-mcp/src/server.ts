@@ -12,7 +12,6 @@
 
 import express from 'express';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { TextContent } from '@modelcontextprotocol/sdk/types.js';
 import dotenv from 'dotenv';
 
