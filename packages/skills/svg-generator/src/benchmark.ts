@@ -312,27 +312,49 @@ async function runBenchmarks() {
   console.log(`Code Quality Score: ${codeQualityScore.aggregateScore}/100`);
   console.log(`\n🎯 Combined DoD Score: ${dodReport.combinedScore}/100 ${dodReport.passed ? '✅ PASS' : '❌ FAIL'}`);
 
-  // Emit results to JSON for publish workflow consumption
+  // Emit results in the flat schema the publish/release-issue workflows and
+  // scripts/create-release-issue.ts expect (matches the versioned
+  // benchmarks/packages/<pkg>/v<version>/results.json files). The richer
+  // DoDScore object above (with its scores[]/items[] arrays) is what
+  // DoDScorer.setBaseline/detectRegressions consume internally — it is a
+  // different, nested shape and must not be handed to the CI reporting path
+  // directly, or field lookups like `behavioral.core_pass_rate` come back
+  // undefined.
   const resultsJson = {
+    package: packageJson.name,
     version,
     timestamp: new Date().toISOString(),
-    combined_score: dodReport.combinedScore,
-    passed: dodReport.passed,
     behavioral: {
-      aggregate_score: dodReport.behavioral.aggregateScore,
-      scores: dodReport.behavioral.scores,
+      core_pass_rate: coreResult.passRate,
+      core_total: coreResult.totalCount,
+      regression_pass_rate: regressionResult.passRate,
+      regression_total: regressionResult.totalCount,
+      functionality_pass_rate: functionalityResult.passRate,
+      functionality_total: functionalityResult.totalCount,
+      error_pass_rate: errorResult.passRate,
+      error_total: errorResult.totalCount,
+      behavioral_score: dodReport.behavioral.aggregateScore,
     },
     performance: {
-      aggregate_score: performanceScore.aggregateScore,
-      items: performanceScore.items,
+      latency_ms_mean: latencyResult.mean,
+      latency_ms_std_dev: latencyResult.stdDev,
+      latency_sample_count: latencyResult.samples,
+      throughput_ops_sec_mean: throughputResult.mean,
+      throughput_ops_sec_std_dev: throughputResult.stdDev,
+      throughput_sample_count: throughputResult.samples,
+      memory_mb_peak: memoryResult.max,
+      performance_score: performanceScore.aggregateScore,
     },
     code_quality: {
-      aggregate_score: codeQualityScore.aggregateScore,
-      complexity: codeQualityScore.complexity,
-      duplication: codeQualityScore.duplication,
-      coverage: codeQualityScore.coverage,
-      maintainability: codeQualityScore.maintainability,
+      complexity_mean: codeQualityScore.complexity.mean,
+      complexity_max: codeQualityScore.complexity.max,
+      duplication_percent: codeQualityScore.duplication.percentDuplicated,
+      coverage_percent: codeQualityScore.coverage.percent,
+      maintainability_index: codeQualityScore.maintainability.index,
+      quality_score: codeQualityScore.aggregateScore,
     },
+    combined_score: dodReport.combinedScore,
+    status: dodReport.passed ? 'pass' : 'fail',
     regressions: dodReport.regressions || [],
   };
 

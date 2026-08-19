@@ -150,23 +150,26 @@ jobs:
             mkdir -p "$RESULTS_DIR"
 
             if npm run benchmark --workspace=$PACKAGE > benchmark-output.log 2>&1; then
-              # Parse results. Packages with a real benchmark harness (BehavioralTester /
-              # PerformanceBenchmarker / DoDScorer from @h4shed/benchmark-utils) print their
-              # DoD report as a JSON object to stdout — prefer that over fabricating data.
-              # Packages whose "benchmark" script is still a no-op get an honest
-              # 'not_measured' status instead of a fake zero 'conditional' score, so they
-              # don't generate a misleading "combined score 0% < 90%" warning on every publish.
+              # Prefer the DoD report a real benchmark harness (BehavioralTester /
+              # PerformanceBenchmarker / DoDScorer from @h4shed/benchmark-utils) writes to
+              # <workspace>/.benchmark/results.json — reading that file is reliable, unlike
+              # scraping the JSON that a script happens to print to stdout (multi-line pretty
+              # JSON containing nested "}" lines cannot be reliably located with a regex).
+              # Packages whose "benchmark" script is still a no-op and never write that file
+              # get an honest 'not_measured' status instead of a fake zero 'conditional' score,
+              # so they don't generate a misleading "combined score 0% < 90%" warning on every
+              # publish.
               node -e "
                 const fs = require('fs');
-                const output = fs.readFileSync('benchmark-output.log', 'utf8');
 
                 let measured = null;
-                for (const match of output.matchAll(/\{[\s\S]*?\"combined_score\"[\s\S]*?\n\}/g)) {
+                const measuredPath = '$WORKSPACE_ROOT/.benchmark/results.json';
+                if (fs.existsSync(measuredPath)) {
                   try {
-                    const candidate = JSON.parse(match[0]);
+                    const candidate = JSON.parse(fs.readFileSync(measuredPath, 'utf8'));
                     if (typeof candidate.combined_score === 'number') measured = candidate;
                   } catch {
-                    // not a valid JSON object, skip
+                    // not valid JSON, treat as not measured
                   }
                 }
 
@@ -175,7 +178,7 @@ jobs:
                   version: '$WORKSPACE_VERSION',
                   timestamp: new Date().toISOString(),
                   ...measured,
-                  status: measured.status || (measured.passed ? 'pass' : 'fail'),
+                  status: measured.status || (measured.combined_score >= 90 ? 'pass' : 'fail'),
                 } : {
                   package: '$PACKAGE',
                   version: '$WORKSPACE_VERSION',

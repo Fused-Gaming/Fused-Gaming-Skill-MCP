@@ -153,6 +153,9 @@ jobs:
           LATEST_RESULTS="$VERSION_DIR/results.json"
           mkdir -p "$VERSION_DIR"
 
+          # npm ls -p outputs repo root first, then workspace paths - we want the last line
+          WORKSPACE_ROOT=$(npm ls -p --workspace=${{ steps.package-info.outputs.package }} 2>/dev/null | tail -1)
+
           BENCHMARK_SUCCESS=false
 
           if npm run benchmark --workspace=${{ steps.package-info.outputs.package }} > benchmark-output.log 2>&1; then
@@ -162,22 +165,26 @@ jobs:
           # Only use results from the current benchmark run, never cached results
           if [ "$BENCHMARK_SUCCESS" = true ]; then
             # Prefer the DoD report a real benchmark harness (BehavioralTester /
-            # PerformanceBenchmarker / DoDScorer from @h4shed/benchmark-utils) prints as
-            # JSON to stdout. Only fall back to a bare performance-only summary — clearly
-            # labeled 'not_measured' rather than a fabricated 'conditional' 0% score — when
-            # the package's benchmark script doesn't emit a structured report.
+            # PerformanceBenchmarker / DoDScorer from @h4shed/benchmark-utils) writes to
+            # <workspace>/.benchmark/results.json — reading that file is reliable, unlike
+            # scraping the JSON a script happens to print to stdout (multi-line pretty JSON
+            # containing nested "}" lines cannot be reliably located with a regex). Only fall
+            # back to a bare performance-only summary — clearly labeled 'not_measured' rather
+            # than a fabricated 'conditional' 0% score — when the package's benchmark script
+            # doesn't write that file.
             node -e "
               const fs = require('fs');
               const output = fs.readFileSync('benchmark-output.log', 'utf8');
               const lines = output.split('\n');
 
               let measured = null;
-              for (const match of output.matchAll(/\{[\s\S]*?\"combined_score\"[\s\S]*?\n\}/g)) {
+              const measuredPath = '$WORKSPACE_ROOT/.benchmark/results.json';
+              if (fs.existsSync(measuredPath)) {
                 try {
-                  const candidate = JSON.parse(match[0]);
+                  const candidate = JSON.parse(fs.readFileSync(measuredPath, 'utf8'));
                   if (typeof candidate.combined_score === 'number') measured = candidate;
                 } catch {
-                  // not a valid JSON object, skip
+                  // not valid JSON, treat as not measured
                 }
               }
 
@@ -188,7 +195,7 @@ jobs:
                   version: '${{ steps.package-info.outputs.version }}',
                   timestamp: new Date().toISOString(),
                   ...measured,
-                  status: measured.status || (measured.passed ? 'pass' : 'fail'),
+                  status: measured.status || (measured.combined_score >= 90 ? 'pass' : 'fail'),
                 };
               } else {
                 // Extract performance metrics from benchmark output format: 'X.XXXms/op (Y ops/sec)'
