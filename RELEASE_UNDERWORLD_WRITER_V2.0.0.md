@@ -235,7 +235,7 @@ INDEX.md (navigation guide)
 - [x] All tests passing
 - [x] Documentation complete
 - [x] Backward compatibility verified
-- [x] v2.0.0 tag created
+- [ ] v2.0.0 tag created (create after merging PR #314)
 - [x] Benchmark baseline generated
 - [x] PR #314 ready for merge
 - [x] Deployment successful
@@ -249,8 +249,8 @@ INDEX.md (navigation guide)
 ### For Maintainers
 1. Review and merge PR #314
 2. Create GitHub Release with this content
-3. Tag: `skill-underworld-writer-v2.0.0`
-4. Publish to npm: `npm publish --workspaces`
+3. Tag: `skill-underworld-writer-v2.0.0` (in the repository root)
+4. Publish to npm: `npm publish --workspace=packages/skills/underworld-writer-skill` (publishes only the underworld-writer-skill package)
 
 ### For Users
 1. Update to v2.0.0: `npm install @h4shed/skill-underworld-writer@2.0.0`

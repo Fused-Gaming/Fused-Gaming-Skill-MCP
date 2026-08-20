@@ -66,8 +66,9 @@ now. I can't remember the specific store."
 - Charge description (does it mention early breaches?).
 - Witness statements or victim impact.
 
-**Sample result:**
+**[HYPOTHETICAL EXAMPLE — Not actual source material]**
 
+If such an affidavit existed, it might read:
 ```
 FBI Affidavit (case 03-CR-0322, ¶ 24):
 "Johnson's criminal conduct spans approximately 1996 through 2003. While the 
@@ -77,12 +78,14 @@ early as 1995. [Specific 1998 incidents are not enumerated in public records;
 victim identities are protected per court order.]"
 ```
 
-**Interpretation:**
+**Interpretation (for this hypothetical):**
 - ✓ Confirms early hacking activity (starting ~1995).
 - ✓ Suggests 1998 is within his known activity window.
 - ✗ No specifics on individual 1998 breaches (likely sealed to protect victims).
 
 **Classification:** Tier 1 (court document) but VAGUE (no specific incidents named).
+
+**⚠️ IMPORTANT:** When using this workflow in your own manuscript, replace these synthetic examples with verified excerpts from actual PACER dockets, interviews, or published reporting. Do not attribute hypothetical scenarios to real people or real federal records.
 
 ---
 
@@ -100,8 +103,9 @@ victim identities are protected per court order.]"
 "Brett Johnson" "1998" breach OR hack OR "data theft"
 ```
 
-**Sample result:**
+**[HYPOTHETICAL EXAMPLE — Not actual source material]**
 
+If such a book excerpt existed, it might read:
 ```
 Joseph Menn, "The Darkest Internet" (book, 2011), Chapter 5:
 "Before ShadowCrew, Johnson had cut his teeth on smaller operations. In 
@@ -110,12 +114,14 @@ though the full scope of these early breaches remains unclear due to the
 complexity of victim identification."
 ```
 
-**Interpretation:**
+**Interpretation (for this hypothetical):**
 - ✓ Menn confirms ~1998 timeframe.
 - ✓ Mentions both "retail and financial-services" (resolves the bank vs. retailer question?).
 - ✗ "Remains unclear" = author acknowledges a knowledge gap.
 
 **Classification:** Tier 3 (journalism) but CAUTIOUS (author admits uncertainty).
+
+**⚠️ IMPORTANT:** When using this workflow in your own manuscript, replace these synthetic examples with verified excerpts from actual published reporting. Do not attribute hypothetical scenarios to real authors or publications.
 
 ---
 

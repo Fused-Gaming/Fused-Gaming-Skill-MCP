@@ -130,8 +130,8 @@ That's basically where it all started." (Darknet Diaries Ep. 128)
 
 Example (Paraphrase):
 ```
-Johnson explained to Dan Cody that his initial motivation was simply curiosity—he wanted 
-to test his own abilities. (Darknet Diaries Ep. 128)
+In his Darknet Diaries interview with Jack Rhysider, Johnson explained that his initial 
+motivation was simply curiosity—he wanted to test his own abilities. (Darknet Diaries Ep. 128)
 ```
 
 ### Tier 3 Dialogue (Journalistic Paraphrase)
