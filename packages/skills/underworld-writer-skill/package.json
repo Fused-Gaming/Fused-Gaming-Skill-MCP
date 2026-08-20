@@ -1,7 +1,7 @@
 {
   "name": "@h4shed/skill-underworld-writer",
-  "version": "1.0.24",
-  "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories",
+  "version": "2.0.0",
+  "description": "Dual-methodology skill for fictional underworld narratives and factually sourced true crime writing with systematic character development and editorial verification",
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
@@ -26,7 +26,12 @@
     "underworld",
     "character",
     "narrative",
-    "creative-writing"
+    "creative-writing",
+    "true-crime",
+    "fiction",
+    "journalism",
+    "source-verification",
+    "editorial"
   ],
   "author": "Fused Gaming",
   "license": "Apache-2.0"
