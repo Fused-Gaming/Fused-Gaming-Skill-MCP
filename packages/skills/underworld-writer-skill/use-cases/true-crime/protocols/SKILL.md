@@ -136,4 +136,4 @@ Genuine gaps are not failures. They're opportunities for transparent writing.
 
 ---
 
-**This module is part of `skill-truecrimewriter`.** See the root `SKILL.md` for the full skill overview and integration guide.
+**This module is part of `@h4shed/skill-underworld-writer`.** See the root `SKILL.md` for the full skill overview and integration guide.

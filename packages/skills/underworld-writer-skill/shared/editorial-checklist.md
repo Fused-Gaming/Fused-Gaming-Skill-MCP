@@ -164,7 +164,8 @@ Don't use:
   - [ ] Which sources I considered Tier 1, 2, and 3?
   - [ ] Which claims I could not source (gaps)?
   - [ ] Any reconstructed scenes and their basis?
-  - [ ] Any composite characters or pseudonyms (none should exist in true crime)?
+  - [ ] Any composite characters (none should exist in true crime)?
+  - [ ] Use of pseudonyms or initials for victim/minor privacy protection (if used, disclose in author's note)?
   - [ ] Handling of victim privacy and minor characters?
 
 ---

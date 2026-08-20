@@ -158,8 +158,8 @@ For crimes with multiple co-conspirators:
 1. **Name confusion** — Is the alias known by multiple surnames? Try all variants.
    - Example: "Albert Gonzalez" vs. "Alberto Gonzalez" (different people in news)
    
-2. **Timeline mismatch** — Is the crime after 2020 and pre-PACER electronic filing?
-   - Pre-1994 federal cases may require manual archive requests
+2. **Timeline mismatch** — Is the crime pre-1994 (before PACER's electronic filing system)?
+   - Pre-1994 federal cases may require manual archive requests through NARA or district court record rooms
    
 3. **Jurisdiction surprise** — Did the case move to a different district?
    - Florida case transferred to NY? Check both districts.

@@ -8,6 +8,11 @@ Rank every claim by tier before deciding whether it's usable in your manuscript.
 
 **Definition:** Court dockets (PACER), DOJ/FBI press releases, sentencing transcripts, Bureau of Prisons records, indictments, grand jury findings, FTC complaints, SEC filings, official government investigative reports.
 
+**CRITICAL DISTINCTION:** Tier 1 documents range from *allegations* (indictments, complaints) to *adjudicated facts* (conviction records, sentencing orders).
+- **Indictments & complaints** = allegations of crime; use with claim-type notation ("charged with", "accused of")
+- **Sentencing orders & conviction records** = adjudicated facts; use as direct statements of fact
+- **FBI/DOJ attribution statements** = official determinations; treat as factual unless subsequently disputed
+
 **Characteristics:**
 - Created by law enforcement, prosecutors, or the judiciary
 - Public record (or obtainable through FOIA)
@@ -15,13 +20,15 @@ Rank every claim by tier before deciding whether it's usable in your manuscript.
 - Carries legal weight (admissible in subsequent proceedings)
 
 **Examples:**
-- "Brett Johnson was sentenced to 90 months" per U.S. District Court (D. New Jersey) sentencing order, May 2007
-- "The ShadowCrew conspiracy involved credit-card fraud" per the federal indictment filed May 2004
-- "Lazarus Group attributed to North Korea" per FBI/CISA official attribution statement, 2018
+- "Brett Johnson was charged with credit-card fraud conspiracy" per the federal indictment filed May 2004 (Tier 1 allegation)
+- "Brett Johnson was sentenced to 90 months" per U.S. District Court (D. New Jersey) sentencing order, May 2007 (Tier 1 adjudicated fact)
+- "The ShadowCrew conspiracy involved credit-card fraud" per court-approved plea agreement (Tier 1 adjudicated fact)
+- "Lazarus Group attributed to North Korea" per FBI/CISA official attribution statement, 2018 (Tier 1 official determination)
 
 **Sourcing use:**
-- Tier 1 alone is sufficient; no additional corroboration required
-- If multiple Tier 1 sources **conflict**, disclose both with document references
+- Tier 1 alone is sufficient for adjudicated facts (sentencing, conviction)
+- Tier 1 allegations (indictments) should be attributed as charges/accusations, not facts
+- If multiple Tier 1 sources **conflict**, disclose both with document references and note which represent allegations vs. adjudicated facts
 - Cite by docket number, case name, court, and date
 
 **What's NOT Tier 1:**

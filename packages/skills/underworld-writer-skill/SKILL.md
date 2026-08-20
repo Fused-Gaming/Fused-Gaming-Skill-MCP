@@ -88,9 +88,7 @@ Both methodologies benefit from these shared reference materials:
 The `./examples/` directory contains worked examples demonstrating both methodologies:
 
 **Fiction Examples:**
-- Character profiles with full three-phase development
-- World-building integration documents
-- Relationship mapping exercises
+See [`use-cases/fiction/METHODOLOGY.md`](./use-cases/fiction/METHODOLOGY.md) for detailed character development workflow and success criteria. Build your own character profiles using the three-phase methodology.
 
 **True Crime Examples:**
 - [`chapter-source-audit.md`](./examples/chapter-source-audit.md) - Brett Johnson/ShadowCrew case walkthrough

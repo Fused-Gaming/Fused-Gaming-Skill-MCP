@@ -22,9 +22,11 @@ Not every fact becomes a scene. Use this matrix to decide:
 
 Every dramatized scene needs:
 
-1. **Specificity** (location, time, sensory detail)
-   - ✓ "At 3 AM, the server room was silent except for the hum of cooling fans"
-   - ✗ "It was dark and quiet"
+1. **Specificity** (location, time, sourced sensory detail)
+   - ✓ "According to the FBI affidavit, the breach occurred at 3 AM from a data center in Pennsylvania"
+   - ✓ "The server room, as described in the facility tour documented by law enforcement, contained standard enterprise cooling systems"
+   - ✗ "It was dark and quiet" (unsourced atmosphere)
+   - ✗ "The server room was silent except for the hum of cooling fans" (sensory detail without documented source)
 
 2. **Sourced Action** (what the scene shows must come from a documented source)
    - ✓ "The indictment described Johnson accessing the server from an IP in Pennsylvania"

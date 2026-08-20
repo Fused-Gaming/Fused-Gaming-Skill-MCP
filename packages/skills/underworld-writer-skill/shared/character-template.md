@@ -87,8 +87,12 @@
 Brett describes his approach to the server breach (from Darknet Diaries Ep. 128, ~17:30):
 "I went in through what I thought was going to be a backdoor. When I first hit it, I was like, this is not going to work. This is too protected."
 
-*Dramatized version with attribution:*
-"When Brett first approached the server, his reconnaissance suggested a backdoor was possible. But when he tried it, he realized the defenses were tighter than expected. 'This is not going to work,' he thought. 'This is too protected.' (Darknet Diaries, Ep. 128)"
+*Dramatized version with attribution (correct approach):*
+"When Brett first approached the server, his reconnaissance suggested a backdoor was possible. But when he tried it, the defenses proved tighter than expected. According to his later interview, he recalled: 'This is not going to work. This is too protected.' (Darknet Diaries, Ep. 128)"
+
+**⚠️ WARNING — Avoid this temptation:**
+❌ "When Brett first approached the server, he thought it would be a simple backdoor. But when he tried it, he realized the defenses were tighter than expected. *This is not going to work,* he thought."
+← This transforms a retrospective interview reflection into contemporaneous interior monologue, misrepresenting the source as real-time thought rather than later reflection.
 
 **Red Flags to Avoid:**
 - Don't describe Brett's childhood yearnings; he doesn't discuss them in Darknet Diaries
