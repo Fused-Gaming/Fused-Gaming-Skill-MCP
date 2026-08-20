@@ -37,29 +37,36 @@ fact from reconstructed narrative.
 
 ---
 
-## Template 2: Reconstructed Scenes
+## Template 2: Reconstructed Scenes (Observable Actions Only)
 
-Use this when you dramatize events based on logs, exhibits, or forensic evidence:
+Use this when you describe actions documented in logs, exhibits, or forensic evidence.
+
+**CRITICAL RULE:** Reconstruct only observable *actions*, never dialogue or internal thoughts:
 
 ```
 NARRATIVE RECONSTRUCTION
 
 Chapters 5–7 reconstruct ShadowCrew's marketplace operations based on FBI affidavits, 
 server logs recovered during the 2004 takedown, and transaction records entered into 
-evidence at trial. The specific moment-to-moment pacing and dialogue in these chapters 
-are inferred from the forensic data—particularly server timestamps, IP addresses, and 
-account activity logs—rather than from eyewitness observation or participant interviews.
+evidence at trial. The observable actions described—login timestamps, database accesses, 
+file transfers—are drawn directly from forensic evidence.
 
-For example, Chapter 6 describes Johnson accessing the database "four times between 
-March 1 and March 8, 2003, each session lasting approximately 45 minutes." This detail 
-comes directly from the FBI Affidavit, March 20, 2003 (PACER, case 03-CR-0322). However, 
-the dramatized version—what Johnson might have been thinking, the specific commands he 
-typed, the obstacles he encountered—is reconstructed from the pattern of the logs, not 
-from a first-person account.
+For example, Chapter 6 states: "Between March 1 and March 8, 2003, Johnson accessed 
+the database four times, each session lasting approximately 45 minutes." This detail 
+comes directly from the FBI Affidavit (PACER, case 03-CR-0322) and represents 
+documented fact.
 
-Readers should understand that reconstructed scenes represent the forensic truth of 
-what happened (the logs don't lie) but not the subjective experience of the perpetrator 
-(which no source document captures).
+However, this account does NOT include:
+- Dialogue (fabricated from log patterns) — dialogue must come from interviews or court records
+- Internal thoughts (invented from timestamps) — thoughts require the subject's own words
+- Inferred motives (guessed from activity) — motives must be stated on record by the subject
+
+VIOLATION: Do not write "Johnson must have been frustrated when the query failed" based 
+on a log showing a failed database access. Timestamps show what happened; only sources 
+show why or what someone thought.
+
+Readers should understand that log-based scenes represent the objective sequence of events 
+but exclude subjective experience. If the perpetrator's thoughts matter, cite an interview.
 ```
 
 ---

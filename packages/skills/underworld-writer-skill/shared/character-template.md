@@ -2,9 +2,13 @@
 
 ## Citation Rule for Real Characters
 
-**Every real person must be cited as a *public figure in a crime narrative*.**
+**Classify each real person by public status before deciding sourcing rules:**
 
-Never invent:
+- **Public figures** (defendants, prosecutors, investigators named in media coverage): May be profiled more extensively; sourcing standards remain the same (Tier 1-3)
+- **Private individuals** (victims, minor witnesses, unnamed relatives): Limit details to what appears in court records; do not profile or elaborate beyond court filings unless they consent to interview
+- **Law enforcement/officials** (named agents, judges, prosecutors): Treat as public figures; cite official titles from court records
+
+**For all real people, never invent:
 - Dialogue (unless sourced from interview/court record)
 - Thoughts or feelings
 - Motivations (unless the person states them on record)
@@ -63,13 +67,15 @@ Never invent:
 **Role in Narrative:** Perpetrator; ShadowCrew founder and leader; later, FBI informant
 
 **Verifiable Details:**
-- Born: ~1983 (age 20–21 at ShadowCrew founding in 2002)
+- **Born:** [Verify from PACER docket before use; this template does not include actual DOB]
 - Location: Pennsylvania (indictment shows IP logs)
-- Handle: "Porkchop," later various aliases
-- Known associates: Albert Gonzalez, JiLsi, Cumberbatch (from indictment)
-- Primary crime: Organized trafficking of stolen credit card numbers
-- Sentence: 90 months (DOJ press, PACER, Darknet Diaries confirm)
-- Outcome: Released; cooperated with FBI as informant
+- Handle: Primary alias used in indictment and media
+- Known associates: [From indictment co-conspirator list]
+- Primary crime: [From charging documents]
+- Sentence: [From sentencing order]
+- Outcome: [From post-conviction records]
+
+**NOTE:** This example is a *template*. Do not use specific details (associates, handles, sentences) without verifying them against actual PACER dockets, court records, or authenticated interviews. Using unverified details contradicts the skill's core principles.
 
 **Dramatization Limits:**
 - Can we show internal thoughts? NO (Darknet interview only gives retrospective reflection)

@@ -99,7 +99,7 @@ This workflow produces **sourcing annotations** that feed directly into:
 - Character portrayals (what dialogue can be quoted vs. summarized)
 - Editorial checklists (where `[SINGLE-SOURCE]` items need corroboration)
 
-See `../shared/narrative-architecture.md` and `../shared/editorial-checklist.md` for how to translate verification results into narrative structure.
+See [`../../../shared/narrative-architecture.md`](../../../shared/narrative-architecture.md) and [`../../../shared/editorial-checklist.md`](../../../shared/editorial-checklist.md) for how to translate verification results into narrative structure.
 
 ---
 

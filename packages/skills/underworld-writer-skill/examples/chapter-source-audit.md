@@ -34,8 +34,9 @@ and was now exploring what he could do with it.
 
 **Claim:** Johnson was 22 in January 1997.  
 **Search path:**
-1. Search PACER for docket 03-CR-0322 to find Johnson's DOB.
-2. If DOB is March 1974, then January 1997 = age 22. ✓
+1. Search PACER for docket 03-CR-0322 (or correct docket) to find Johnson's DOB.
+2. Verify: If DOB is March 1974, then January 1997 = age 22 ✓
+3. **Important:** Do not use a calculated age if the actual birth year differs; verify the DOB from primary legal documents first.
 
 **Source classification:** Tier 1 (calculated from court documents)  
 **Verification status:** PASS — court documents confirm.
@@ -56,16 +57,17 @@ and was now exploring what he could do with it.
 
 ### "Journalist Joseph Menn later described Johnson as someone who 'viewed hacking not as a crime but as a game…'"
 
-**Claim:** Joseph Menn (journalist) quoted Johnson with this characterization.  
+**Claim:** A journalist characterized Johnson as viewing hacking as a game rather than a crime.  
 **Search path:**
-1. Find Joseph Menn's books: *All the Hacker's Horses* or *The Darkest Internet* — does this quote appear?
-2. Verify this is a direct quote from Menn or a paraphrase of Johnson's own words.
+1. Darknet Diaries Episode 128 interview with Johnson directly — Does Johnson express this view?
+2. NewsBank/LexisNexis: Search for journalism profiles of Johnson post-conviction that attribute this characterization.
+3. Verify the journalist's name and publication before use.
 
-**Source classification:** Tier 3 (Journalistic paraphrase/reporting)  
-**Citation required:** Must attribute to Menn's published work + year + page.  
-**Example:** `"According to journalist Joseph Menn, Johnson viewed hacking 'not as a crime but as a game, a puzzle to be solved.' (Menn, The Darkest Internet, p. XX)"`
+**Source classification:** Tier 2 (Direct interview where journalist verified surrounding facts) or Tier 3 (Journalistic reporting).  
+**Citation required:** Must cite the actual journalist, publication, date, and ideally a link or archive.  
+**Example:** `"In a 2022 profile, [Journalist Name] noted that Johnson viewed hacking 'not as a crime but as a game.' ([Publication], [Date], [URL])"`
 
-**Verification status:** PASS (if quote found in Menn) — NEEDS VERIFICATION (if not yet confirmed).
+**Verification status:** PENDING — Must verify journalist identity and publication before use. **Do not attribute quotes to authors or publications without confirming the source exists and contains the quote.**
 
 ---
 
