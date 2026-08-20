@@ -83,8 +83,10 @@ For each one:
 - [ ] Or is this my inference from his actions?
 
 **If it's inference:**
-- Mark it with "Johnson appeared to…" or "The investigators suspected…" (hedging)
-- Or remove it entirely
+- **Do NOT use hedging language as a fix.** "Appeared to" and "suspected" are still unsourced claims requiring evidence.
+- **Require a cited source:** "According to FBI affidavits, investigators suspected Johnson had insider help" (cite the affidavit)
+- **Or recast as observable behavior:** Instead of "Johnson felt threatened," write "Johnson relocated immediately after the arrest" (cite the action, not the emotion)
+- **Or remove it entirely** if no source exists
 
 Example:
 ```

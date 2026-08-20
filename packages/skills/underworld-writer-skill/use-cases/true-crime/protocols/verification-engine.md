@@ -116,10 +116,11 @@ If you answer "no" to #1 or #2, it's Tier 3.
 
 **Sourcing use:**
 - Tier 4 **does not count as corroboration**, even if it appears in 100 places
-- Only use Tier 4 to understand how the subject or organization describes itself (useful for character voice, not for fact verification)
+- Only use Tier 4 to understand how the subject or organization may be described in marketing contexts (useful for character voice, not for fact verification)
 - If a fact appears **only** at Tier 4 after thorough Tier 1–3 searching, mark it `[SINGLE-SOURCE]` in your manuscript and either:
-  - Move it to a section flagged as the subject's own claim ("According to Johnson's own account...")
-  - Demote it to an author's-note disclosure as unverified
+  - Attribute it to the marketing source specifically: "According to Johnson's speaker-bureau bio..." (not "according to Johnson's own account" unless Johnson authored it)
+  - Demote it to an author's-note disclosure as unverified marketing copy
+  - Do not attribute Tier 4 marketing text to the subject unless independent evidence shows the subject wrote or endorsed it
 
 ---
 
@@ -135,7 +136,9 @@ If you answer "no" to #1 or #2, it's Tier 3.
 **Operationally:**
 - Track the **origin** of each claim, not the number of sites where you found it
 - One person's blog post cited by three other blogs = 1 origin, 4 repetitions
-- The same fact in a 2020 press release, a 2022 profile, and a 2024 interview = 3 origins (even if the press release is quoted in the profile)
+- A 2020 press release + a 2022 profile that quotes the release = 1 origin, 2 repetitions (not 2 origins)
+- A 2020 press release + a 2022 profile that independently reports the same fact = 2 origins
+- A 2020 press release + a 2022 profile quoting it + a 2024 independent interview = 2 origins (press + interview)
 
 ---
 

@@ -55,9 +55,10 @@ PACER searches directly within court dockets. This is Tier 1 access; use it firs
 
 **But PACER's own search is better:** Log into PACER, use the "Search the dockets" feature:
 1. Choose federal district (if known)
-2. Search `"[surname]" "[entity]"` in defendant name field
+2. Search defendant by **legal name only** in defendant name field (e.g., "Johnson") — do NOT include entity/handle name here
 3. Set date range (if known, e.g., 1995–2010)
-4. Results are docket-level, not snippet-based
+4. Review matching dockets to identify which ones mention the entity/handle in case documents
+5. Results are docket-level, searchable by full text within each docket
 
 **Challenge:** You often don't know the district. Use this strategy:
 - **If state is known,** search only districts in that state (e.g., ShadowCrew defendants were mostly from NJ and CA)

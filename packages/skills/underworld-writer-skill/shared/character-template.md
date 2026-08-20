@@ -171,10 +171,11 @@ what the systems were capable of." (Wired, [date])
 
 Example:
 ```
-The booking photo from his 2003 arrest showed Johnson as a lean, sharp-featured man 
-in his early twenties, with dark hair and an unsettling gaze. (Middle Dist. FL, PACER, 
-case 03-CR-0322, Exhibit A)
+The booking photo from his 2003 arrest documented Johnson as a lean, sharp-featured man 
+in his early twenties with dark hair. (Middle Dist. FL, PACER, case 03-CR-0322, Exhibit A)
 ```
+
+**Note:** Physical traits visible in the photograph (build, hair, features) can be documented. Subjective interpretations of demeanor or expression ("unsettling gaze," "cold stare") cannot be sourced from the image alone and require either attribution to an observer's statement or removal.
 
 ---
 
