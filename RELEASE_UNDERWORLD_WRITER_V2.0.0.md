@@ -58,12 +58,22 @@ Four universal resources supporting both methodologies:
 
 ## 📊 Validation Results
 
-✅ **Behavioral Compliance:** 100/100  
-✅ **Performance Regression:** Zero detected  
-✅ **Code Quality:** 90/100  
-✅ **Combined Score:** 98/100  
+⚠️ **Status:** NOT MEASURED (placeholder test/benchmark scripts)
 
-**All publication guidelines met.** Ready for npm publish.
+The baseline-results.json file documents expected validation structure, but:
+- `test` script: `echo "No tests yet"`
+- `benchmark` script: `echo 'Benchmarks: OK'`
+
+**Real validation required before publishing:**
+- ✓ Code Quality: 90/100 (lint, typecheck, build pass)
+- ⚠️ Behavioral Compliance: Unmeasured (no real tests yet)
+- ⚠️ Performance Regression: Unmeasured (no benchmarks yet)
+- ⚠️ Combined Score: Unmeasured (awaiting test coverage)
+
+**Publication blocked until:**
+1. Real test suite is implemented
+2. Benchmark measurements are recorded
+3. Validation results updated from "not_measured" to actual scores
 
 ---
 
@@ -250,7 +260,8 @@ INDEX.md (navigation guide)
 1. Review and merge PR #314
 2. Create GitHub Release with this content
 3. Tag: `skill-underworld-writer-v2.0.0` (in the repository root)
-4. Publish to npm: `npm publish --workspace=packages/skills/underworld-writer-skill` (publishes only the underworld-writer-skill package)
+4. Build the package: `npm run build --workspace=packages/skills/underworld-writer-skill`
+5. Publish to npm: `npm publish --workspace=packages/skills/underworld-writer-skill` (publishes only the underworld-writer-skill package with built dist/ files)
 
 ### For Users
 1. Update to v2.0.0: `npm install @h4shed/skill-underworld-writer@2.0.0`
