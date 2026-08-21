@@ -76,18 +76,20 @@ The repository is organized into focused documentation categories for easier nav
 | **Getting Started** | Installation, quick-start guides, beginner tutorials | [docs/getting-started/](./docs/getting-started/) |
 | **Architecture & Design** | System design, MCP internals, design patterns | [docs/architecture/](./docs/architecture/) |
 | **Design Systems** | UI components, themes, design tokens | [docs/design/](./docs/design/) |
-| **Reference** | API docs, tool inventory, benchmarks | [docs/reference/](./docs/reference/) |
+| **Reference** | Project status, release notes, testing infrastructure | [docs/reference/](./docs/reference/) |
 
 ### Essential Resources
 
 - **[PLUGIN_GUIDE.md](./docs/PLUGIN_GUIDE.md)** — Complete 30-skill inventory with learning paths
+- **[API_REFERENCE.md](./docs/API_REFERENCE.md)** — Complete API documentation for all tools and skills
+- **[BENCHMARK_RELEASES.md](./docs/BENCHMARK_RELEASES.md)** — Performance benchmarks and metrics
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** — How to contribute and development setup
 - **[CHANGELOG.md](./CHANGELOG.md)** — Release history and version tracking
 - **[VERSION.json](./VERSION.json)** — Authoritative release metadata
 
 ---
 
-## 🎨 Skills Overview (31 Total)
+## 🎨 Skills Overview (30 Total)
 
 Organized by category. Each skill includes a full README in its package directory.
 
