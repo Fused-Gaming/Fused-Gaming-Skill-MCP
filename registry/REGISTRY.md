@@ -1,6 +1,6 @@
 # 🎮 Fused Gaming Skill Registry
 
-**Generated:** 8/19/2026, 11:24:20 AM
+**Generated:** 8/21/2026, 12:19:56 AM
 **Version:** 1.0.0
 
 ## 📊 Summary
@@ -148,8 +148,8 @@
 
 #### 📦 underworld-writer
 - **Package:** `@h4shed/skill-underworld-writer`
-- **Description:** Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories
-- **Version:** 1.0.24
+- **Description:** Dual-methodology skill for fictional underworld narratives and factually sourced true crime writing with systematic character development and editorial verification
+- **Version:** 2.0.0
 
 
 ### Visualization (1 skills)

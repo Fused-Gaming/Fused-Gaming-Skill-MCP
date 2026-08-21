@@ -30,7 +30,7 @@ export interface SkillRegistry {
 
 export const registry: SkillRegistry = {
   "version": "1.0.0",
-  "timestamp": "2026-08-19T11:24:19.434Z",
+  "timestamp": "2026-08-21T00:19:56.899Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -873,8 +873,8 @@ export const registry: SkillRegistry = {
     {
       "name": "underworld-writer",
       "id": "underworld-writer",
-      "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories",
-      "version": "1.0.24",
+      "description": "Dual-methodology skill for fictional underworld narratives and factually sourced true crime writing with systematic character development and editorial verification",
+      "version": "2.0.0",
       "package": "@h4shed/skill-underworld-writer",
       "tools": [],
       "enabled": true,
@@ -886,7 +886,12 @@ export const registry: SkillRegistry = {
         "underworld",
         "character",
         "narrative",
-        "creative-writing"
+        "creative-writing",
+        "true-crime",
+        "fiction",
+        "journalism",
+        "source-verification",
+        "editorial"
       ],
       "repository": "",
       "license": "Apache-2.0"
