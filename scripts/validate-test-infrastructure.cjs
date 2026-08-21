@@ -31,10 +31,10 @@ check('  /docs/TEST_TEMPLATES.md',
   fs.existsSync(path.join(ROOT, 'docs/TEST_TEMPLATES.md')));
 check('  /docs/COVERAGE_STRATEGY.md', 
   fs.existsSync(path.join(ROOT, 'docs/COVERAGE_STRATEGY.md')));
-check('  /JEST_CONFIG_TEMPLATES.md', 
-  fs.existsSync(path.join(ROOT, 'JEST_CONFIG_TEMPLATES.md')));
-check('  /TESTING_READINESS_REPORT.md', 
-  fs.existsSync(path.join(ROOT, 'TESTING_READINESS_REPORT.md')));
+check('  /docs/reference/JEST_CONFIG_TEMPLATES.md',
+  fs.existsSync(path.join(ROOT, 'docs/reference/JEST_CONFIG_TEMPLATES.md')));
+check('  /docs/reference/TESTING_READINESS_REPORT.md',
+  fs.existsSync(path.join(ROOT, 'docs/reference/TESTING_READINESS_REPORT.md')));
 
 // 2. Check Jest configuration files
 console.log('\n⚙️  Jest Configuration Files:');

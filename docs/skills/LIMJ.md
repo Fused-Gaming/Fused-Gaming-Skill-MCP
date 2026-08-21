@@ -71,7 +71,7 @@ LIMJ runs quality gates:
 
 ```bash
 # Copy the full system prompt
-cat LIMJ/LIMJ_System_Prompt.md
+cat docs/skills/limj-system-prompt/LIMJ_System_Prompt.md
 
 # Paste into Claude with your brief:
 TOPIC: AI-assisted legal research for founders
@@ -87,10 +87,10 @@ HAVE_STATS: Please research
 
 ```
 Use LIMJ by referencing the skill docs:
-- System Prompt: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/blob/main/LIMJ/LIMJ_System_Prompt.md
-- Quick Start: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/blob/main/LIMJ/quickstart.md
-- Guidelines: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/tree/main/LIMJ/guidelines
-- Templates: https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/tree/main/LIMJ/templates
+- System Prompt: docs/skills/limj-system-prompt/LIMJ_System_Prompt.md
+- Quick Start: docs/skills/limj-system-prompt/quickstart.md
+- Guidelines: docs/skills/limj-system-prompt/guidelines/
+- Templates: docs/skills/limj-system-prompt/templates/
 ```
 
 ### Option 3: Import as MCP Skill (Once Published)

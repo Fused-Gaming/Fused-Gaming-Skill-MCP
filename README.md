@@ -23,7 +23,7 @@
 - **🎨 31 AI Skills** — Design systems, generative art, content creation, project management, and more
 - **🛠️ 28 Specialized Tools** — Build tools, testing, CSS, documentation, and automation
 - **🤖 SyncPulse Orchestration** — Enterprise multi-agent coordination with 9 email workflows
-- **📦 Production Ready** — TypeScript, npm-published, fully tested and benchmarked
+- **📦 Production Ready** — TypeScript, npm-published, 12 published packages with continuous benchmarking
 
 ---
 
@@ -73,7 +73,7 @@ The repository is organized into focused documentation categories for easier nav
 
 | Section | Purpose | Location |
 |---------|---------|----------|
-| **Getting Started** | Installation, quick-start guides, beginner tutorials | [docs/guides/](./docs/guides/) |
+| **Getting Started** | Installation, quick-start guides, beginner tutorials | [docs/getting-started/](./docs/getting-started/) |
 | **Architecture & Design** | System design, MCP internals, design patterns | [docs/architecture/](./docs/architecture/) |
 | **Design Systems** | UI components, themes, design tokens | [docs/design/](./docs/design/) |
 | **Reference** | API docs, tool inventory, benchmarks | [docs/reference/](./docs/reference/) |
@@ -231,13 +231,13 @@ Every package undergoes continuous benchmarking:
 
 **Combined Precision Score:** ≥90% required for release
 
-**[View Benchmarks →](./docs/reference/BENCHMARK_RELEASES.md)**
+**[View Benchmarks →](./docs/BENCHMARK_RELEASES.md)**
 
 ---
 
 ## 🌍 Community & Support
 
-- 📖 **Documentation** — Start with [docs/guides/](./docs/guides/)
+- 📖 **Documentation** — Start with [docs/getting-started/](./docs/getting-started/)
 - 💬 **Discussions** — [GitHub Discussions](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/discussions)
 - 🐛 **Issues** — [GitHub Issues](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues)
 - 📧 **Contact** — [support@vln.gg](mailto:support@vln.gg)
