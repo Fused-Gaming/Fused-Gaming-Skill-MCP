@@ -2,7 +2,7 @@
 
 <div align="center"> 
 
-# 📊 SYNCPULSE MCP 
+# 📊 FUSED GAMING MCP
 ![SyncPulse Agent Swarms - Production Ready](.github/assets/syncpulse-hero.png)
 
 <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/0b5dc2bb-4f0d-45f5-8632-8e89de49571b" />
@@ -16,569 +16,246 @@
 
 ---
 
-## 🚀 The Ultimate AI-Powered Skill Ecosystem
+## Overview
 
-**Fused Gaming MCP** is a modular, production-ready Model Context Protocol server with **61 total packages** organized as:
-- **31 reusable AI skills** (across 11 functional categories)
-- **28 specialized MCP tools**
-- **2 core infrastructure packages**
+**Fused Gaming MCP** is a comprehensive, production-ready Model Context Protocol server featuring **31 reusable AI skills**, **28 specialized tools**, and enterprise-grade multi-agent orchestration. Build AI-powered workflows for design, content, development, and automation.
 
-All skills, tools, and infrastructure are documented with individual READMEs in their respective package directories. This root README provides a focused navigation index and quick-start guide.
-
-### 📜 Dual License Model
-
-**Fused Gaming MCP** is available under two flexible licensing options:
-
-1. **Prosperity Public License 3.0.0** (Free)
-   - ✅ Personal use, educational projects, open-source development
-   - ✅ Community forum support
-   - 📄 See [LICENSE](./LICENSE) for full details
-
-2. **Commercial License** (Paid)
-   - ✅ Commercial applications, closed-source products, SaaS platforms
-   - ✅ Tiered pricing: Startup ($500/yr), Growth ($5K/yr), Enterprise (custom)
-   - ✅ 30-day free trial available
-   - 📞 Priority support included
-   - 📄 See [COMMERCIAL_LICENSE.md](./COMMERCIAL_LICENSE.md) for full details
-
-**Starting your free trial?** Contact: jlucus916@gmail.com
-
-### 🐝 SyncPulse Agent Orchestration (v0.2.2)
-**SyncPulse** brings enterprise-grade multi-agent orchestration with:
-- **Performance**: 100-500x vector search speedup via hierarchical indexing
-- **Reliability**: LRU cache eviction preventing OOM in 24h+ deployments
-- **Scale**: Work-stealing load balancing for heterogeneous swarms
-- **Email Workflows**: 9 templated automation workflows (authentication, business, operations)
-
-**SyncPulse Hub** (v0.1.1) provides:
-- Orchestration dashboard for real-time swarm monitoring
-- Agent health metrics and performance analytics
-- Task queue management and load visualization
-- Integration with SyncPulse v0.2.2+ for seamless orchestration
-
-### 📌 Dual Naming Convention
-The ecosystem uses intentional dual naming to separate internal development from published packages:
-- **Internal Workspace Names** (in git): `@fused-gaming/skill-*` or `@fused-gaming/tool-*`
-- **Published NPM Names**: `@h4shed/skill-*` or `@h4shed/tool-*`
-
-This allows flexible internal development while maintaining a consistent, branded public presence on npm.
+- **🎨 31 AI Skills** — Design systems, generative art, content creation, project management, and more
+- **🛠️ 28 Specialized Tools** — Build tools, testing, CSS, documentation, and automation
+- **🤖 SyncPulse Orchestration** — Enterprise multi-agent coordination with 9 email workflows
+- **📦 Production Ready** — TypeScript, npm-published, fully tested and benchmarked
 
 ---
 
-## ✨ Why Fused Gaming MCP?
+## 🚀 Quick Start
 
-Transform your Claude workflow with meticulously crafted tools designed for:
-
-- ✔️ **Generative Art** — Create algorithmic artwork and visualizations  
-- ✔️ **UI/UX Design** — Build design systems and component libraries  
-- ✔️ **Web Development** — Scaffold projects and validate deployments  
-- ✔️ **Game Development** — Asset generation and rapid prototyping  
-- ✔️ **AI Automation** — Streamline creative and technical workflows  
-
-**Trusted by:** Fused Gaming • VLN Security • Design Studios • AI Development Teams
-
----
-
-## 🎬 Quick Start (2 Minutes)
-
-### Option 1: Interactive Installation (Recommended)
+### 1. Clone & Install
 
 ```bash
-# Clone and navigate to the repo
 git clone https://github.com/fused-gaming/fused-gaming-skill-mcp.git
 cd fused-gaming-skill-mcp
-
-# Run the interactive installer
-npm run mcp:install
-```
-
-### Option 2: Manual Setup
-
-```bash
-# Install dependencies
 npm install
-
-# Initialize MCP core
-npm run mcp:init
-
-# Generate skill registry
-npm run registry:generate
-
-# Build all packages
 npm run build
 ```
 
-### Option 3: Published Packages Only
+### 2. Use with Claude Desktop
+
+Update `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "fused-gaming-mcp": {
+      "command": "npm",
+      "args": ["run", "dev"],
+      "cwd": "/path/to/fused-gaming-skill-mcp",
+      "alwaysAllow": ["tools/all"]
+    }
+  }
+}
+```
+
+**macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`  
+**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`  
+**Linux:** `~/.config/Claude/claude_desktop_config.json`
+
+### 3. Install Published Packages Only
 
 ```bash
-# Install published packages (scope: @h4shed)
-npm install @h4shed/mcp-core @h4shed/mcp-cli
-
-# Add selected skills
-npm install \
-  @h4shed/skill-algorithmic-art \
-  @h4shed/skill-theme-factory \
-  @h4shed/skill-underworld-writer
+npm install @h4shed/mcp-core @h4shed/skill-theme-factory @h4shed/skill-underworld-writer
 ```
 
 ---
 
-## 🔌 Using with Claude Plugins
+## 📚 Documentation Hub
 
-The Fused Gaming MCP is fully compatible with Claude Desktop Client and Claude.ai plugins!
+The repository is organized into focused documentation categories for easier navigation:
 
-### For Claude Desktop Users (Recommended)
+| Section | Purpose | Location |
+|---------|---------|----------|
+| **Getting Started** | Installation, quick-start guides, beginner tutorials | [docs/guides/](./docs/guides/) |
+| **Architecture & Design** | System design, MCP internals, design patterns | [docs/architecture/](./docs/architecture/) |
+| **Design Systems** | UI components, themes, design tokens | [docs/design/](./docs/design/) |
+| **Reference** | API docs, tool inventory, benchmarks | [docs/reference/](./docs/reference/) |
 
-1. **Clone the repository** (see Quick Start above)
-2. **Update your Claude Desktop config:**
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-   - Linux: `~/.config/Claude/claude_desktop_config.json`
+### Essential Resources
 
-3. **Add this configuration:**
-   ```json
-   {
-     "mcpServers": {
-       "fused-gaming-mcp": {
-         "command": "npm",
-         "args": ["run", "dev"],
-         "cwd": "/path/to/fused-gaming-skill-mcp",
-         "alwaysAllow": ["tools/all"]
-       }
-     }
-   }
-   ```
-
-4. **Restart Claude Desktop** — all 31 skills will be available!
-
-### For Claude.ai Web Users
-
-Coming soon! Claude.ai will support MCP server plugins directly. You'll be able to add Fused Gaming MCP with a single click.
-
-### Troubleshooting
-
-**Error: "No manifest or registry for tools/plugins"?**
-
-→ Ensure `claude.json` exists in the repository root and `npm run build` succeeds.
-
-**MCP server not connecting?**
-
-→ See [CLAUDE_PLUGINS_INTEGRATION.md](./docs/CLAUDE_PLUGINS_INTEGRATION.md) for detailed troubleshooting.
-
-**Full integration guide:** [CLAUDE_PLUGINS_INTEGRATION.md](./docs/CLAUDE_PLUGINS_INTEGRATION.md)
+- **[PLUGIN_GUIDE.md](./docs/PLUGIN_GUIDE.md)** — Complete 30-skill inventory with learning paths
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** — How to contribute and development setup
+- **[CHANGELOG.md](./CHANGELOG.md)** — Release history and version tracking
+- **[VERSION.json](./VERSION.json)** — Authoritative release metadata
 
 ---
 
-## 📊 Performance & Quality Metrics
+## 🎨 Skills Overview (31 Total)
 
-Every skill, tool, and package in this ecosystem is automatically benchmarked and tracked for quality metrics.
+Organized by category. Each skill includes a full README in its package directory.
 
-### Benchmark Tracking
+| Category | Count | Skills |
+|----------|-------|--------|
+| 🎨 Design & Styling | 8 | Canvas, Frontend, Theme Factory, SVG, TailwindCSS, Style Dictionary, Agentic Flow, UX Journey Mapper |
+| 🎭 Generative Art | 3 | Algorithmic Art, NFT Art, Smart Contracts |
+| 🛠️ Build Tools | 4 | TypeScript Toolchain, Vite Bundler, Mermaid Terminal, Vercel NextJS |
+| 🧪 Testing & Validation | 2 | Playwright Testing, Pre-Deploy Validator |
+| 📚 Components & Docs | 2 | Storybook, ASCII Mockup |
+| 🔧 MCP Scaffolding | 2 | MCP Builder, Skill Creator |
+| 📝 Content Creation | 2 | LinkedIn Master, Underworld Writer |
+| 🤖 Orchestration | 2 | SyncPulse, SyncPulse Hub |
+| 📊 Project Management | 3 | Project Manager, Skill Manager, Status Tool |
+| 🎯 Productivity | 2 | Daily Review, Session Tracking |
 
-All 39 packages undergo continuous performance and quality validation:
-
-- **Behavioral Testing** (40% weight) — Test pass rates (CORE, REGRESSION, FUNCTIONALITY, ERROR)
-- **Performance Testing** (35% weight) — Latency, throughput, and memory usage metrics
-- **Code Quality** (25% weight) — Complexity, duplication, coverage, and maintainability
-
-**Combined Precision Score:** Unified metric that gates releases (target: ≥90%)
-- Formula: `(Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)`
-
-### Release Quality Gates
-
-Before packages are released, all mandatory gates must pass:
-
-✅ **Behavioral Score** ≥90% (CORE ≥95%, REGRESSION 100%, min 30 test samples)  
-✅ **Performance Score** ≥85% (Latency & Throughput CV <10%)  
-✅ **Code Quality Score** ≥80% (Complexity ≤3.0 mean, Duplication <5%, Coverage ≥80%)  
-✅ **Combined Score** ≥90%  
-
-### Viewing Benchmark Results
-
-**GitHub Release Issues:** Each version bump creates an issue with detailed metrics
-- Title: `[Benchmark] {Package Name} v{Version} Baseline`
-- Includes: Regression analysis, version-to-version comparison, detailed metrics
-- Access via: [GitHub Issues → filter by `benchmark` label](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues?q=label%3Abenchmark)
-
-**Benchmark Registry:** Central tracking of all versions and metrics
-- Location: `benchmarks/packages-registry.json`
-- Updated on every release
-- Shows: Historical scores, performance trends, regression detection
-
-### Running Benchmarks Locally
-
-```bash
-# Benchmark a single package
-npm run benchmark --workspace=@h4shed/skill-creator
-
-# Benchmark all packages
-npm run benchmark --workspaces
-
-# Release-quality benchmarks (higher iterations)
-npm run benchmark:release --workspace=@h4shed/skill-creator
-```
-
-For detailed information, see [Benchmark Releases Documentation](./docs/BENCHMARK_RELEASES.md).
+**[View Complete Skill Inventory →](./docs/PLUGIN_GUIDE.md)**
 
 ---
 
-## 📚 Skills Index (31 Total)
+## 🛠️ Tools Overview (28 Total)
 
-All skills include individual documentation in their respective directories at `packages/skills/<skill>/README.md`.
+Comprehensive tooling ecosystem for bundlers, testing, styling, docs, and automation.
 
-### 🎨 Design & Styling (8 Skills)
+| Category | Count | Tools |
+|----------|-------|-------|
+| 📦 Build & Bundling | 7 | esbuild, rollup, tsup, vite, vitepress, webpack, docusaurus |
+| 🎨 Style & CSS | 6 | PostCSS, Sass, Less, CSSNano, TailwindCSS, Style Dictionary |
+| 🧪 Testing & QA | 6 | Jest, Vitest, Cypress, Playwright, Pa11y, Axe Core |
+| 📚 Documentation | 4 | Storybook, TypeDoc, Markdown-it, Husky |
+| 🔧 CLI & Automation | 3 | Commander, Inquirer, Ora |
+| 📊 Analysis & Reporting | 2 | Istanbul, Release Manager |
 
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| agentic-flow-devkit | @h4shed/skill-agentic-flow-devkit | Agentic orchestration GUI + trailer A/B-roll planning |
-| canvas-design | @h4shed/skill-canvas-design | SVG-based visual design and asset generation |
-| frontend-design | @h4shed/skill-frontend-design | HTML/CSS component design and prototyping |
-| style-dictionary-system | @h4shed/skill-style-dictionary-system | Design tokens and cross-platform theming |
-| svg-generator | @h4shed/skill-svg-generator | Scalable vector graphics generation |
-| tailwindcss-style-builder | @h4shed/skill-tailwindcss-style-builder | Utility-first styling and design system builder |
-| theme-factory | @h4shed/skill-theme-factory | Design system generation and customization |
-| ux-journeymapper | @h4shed/skill-ux-journeymapper | User journey mapping and experience design |
-
-### 🎭 Generative Art & Blockchain (3 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| algorithmic-art | @h4shed/skill-algorithmic-art | Generative art using p5.js and procedural generation |
-| nft-generative-art | @h4shed/skill-nft-generative-art | NFT artwork generation and blockchain assets |
-| smart-contract-tools | @h4shed/skill-smart-contract-tools | Hardhat, Truffle, and Foundry integration |
-
-### 🛠️ Build Tools & Bundling (4 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| mermaid-terminal | @h4shed/skill-mermaid-terminal | Mermaid diagram generation and terminal rendering |
-| typescript-toolchain | @h4shed/skill-typescript-toolchain | Advanced TypeScript configuration and analysis |
-| vite-module-bundler | @h4shed/skill-vite-module-bundler | Next-generation JavaScript module bundler |
-| vercel-nextjs-deployment | @h4shed/skill-vercel-nextjs-deployment | Vercel deployment and Next.js integration |
-
-### 🧪 Testing & Validation (2 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| playwright-test-automation | @h4shed/skill-playwright-test-automation | End-to-end testing automation framework |
-| pre-deploy-validator | @h4shed/skill-pre-deploy-validator | Deployment validation and safety checks |
-
-### 📚 Documentation & Components (2 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| storybook-component-library | @h4shed/skill-storybook-component-library | Component documentation and visual testing |
-| ascii-mockup | @h4shed/skill-ascii-mockup | Mobile-first wireframe designs |
-
-### 🔧 MCP Scaffolding (2 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| mcp-builder | @h4shed/skill-mcp-builder | MCP server scaffolding and code generation |
-| skill-creator | @h4shed/skill-skill-creator | Custom skill builder and framework |
-
-### 📝 Content Creation (2 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| linkedin-master-journalist | @h4shed/skill-linkedin-master-journalist | LinkedIn article + dual posts + branded covers |
-| underworld-writer-skill | @h4shed/skill-underworld-writer | Character/world narrative generation |
-
-### 🤖 Agent Orchestration (2 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| syncpulse | @h4shed/skill-syncpulse | Multi-agent coordination + 9 email workflow templates |
-| syncpulse-hub | @h4shed/skill-syncpulse-hub | SyncPulse orchestration dashboard and agent management |
-
-### 📊 Project Management (3 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| project-manager | @h4shed/skill-project-manager | Project planning and execution orchestration |
-| project-manager-skill | @h4shed/skill-project-manager-skill | Project workflow coordination and automation |
-| project-status-tool | @h4shed/skill-project-status-tool | Project status tracking and reporting |
-
-### 🎯 Productivity & Session Management (2 Skills)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| daily-review-skill | @h4shed/skill-daily-review | Daily review and reflection automation |
-| multi-account-session-tracking | @h4shed/skill-multi-account-session-tracking | Multi-account session management and persistence |
-| multi-account-session-tracking-skill | @h4shed/skill-multi-account-session-tracking-skill | Advanced session tracking across platforms |
-
----
-
-## 🛠️ MCP Tools (28 Total)
-
-All tools include individual documentation in their respective directories at `packages/tools/tool-*/README.md`.
-
-### 📦 Build & Bundling Tools (7 Tools)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| tool-esbuild | @h4shed/tool-esbuild | Fast JavaScript bundler with TypeScript support |
-| tool-rollup | @h4shed/tool-rollup | Module bundler for JavaScript libraries |
-| tool-tsup | @h4shed/tool-tsup | Minimal TypeScript to JavaScript transpiler |
-| tool-vite | @h4shed/tool-vite | Next-generation frontend build tool |
-| tool-vitepress | @h4shed/tool-vitepress | Static site generator powered by Vite |
-| tool-webpack | @h4shed/tool-webpack | Powerful module bundler for applications |
-| tool-docusaurus | @h4shed/tool-docusaurus | Documentation site generator |
-
-### 🎨 Style & CSS Tools (6 Tools)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| tool-postcss | @h4shed/tool-postcss | CSS processor with plugin ecosystem |
-| tool-sass | @h4shed/tool-sass | CSS preprocessor with nesting and variables |
-| tool-less | @h4shed/tool-less | Dynamic stylesheet language |
-| tool-cssnano | @h4shed/tool-cssnano | CSS minifier and optimizer |
-| tool-tailwindcss | @h4shed/tool-tailwindcss | Utility-first CSS framework |
-| tool-style-dictionary | @h4shed/tool-style-dictionary | Design token management system |
-
-### 🧪 Testing & QA Tools (6 Tools)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| tool-jest | @h4shed/tool-jest | JavaScript testing framework |
-| tool-vitest | @h4shed/tool-vitest | Vite-native unit testing framework |
-| tool-cypress | @h4shed/tool-cypress | End-to-end testing platform |
-| tool-playwright | @h4shed/tool-playwright | Cross-browser automation and testing |
-| tool-pa11y | @h4shed/tool-pa11y | Accessibility testing runner |
-| tool-axe-core | @h4shed/tool-axe-core | Accessibility engine and testing |
-
-### 📚 Documentation & Component Tools (4 Tools)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| tool-storybook | @h4shed/tool-storybook | UI component development and documentation |
-| tool-typedoc | @h4shed/tool-typedoc | TypeScript documentation generator |
-| tool-markdown-it | @h4shed/tool-markdown-it | Markdown parser with plugins |
-| tool-husky | @h4shed/tool-husky | Git hooks framework |
-
-### 🔧 CLI & Automation Tools (3 Tools)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| tool-commander | @h4shed/tool-commander | CLI framework for Node.js |
-| tool-inquirer | @h4shed/tool-inquirer | Interactive command-line prompts |
-| tool-ora | @h4shed/tool-ora | Elegant terminal spinners |
-
-### 📊 Analysis & Reporting Tools (2 Tools)
-
-| Package | NPM Name | Description |
-|---------|----------|-------------|
-| tool-istanbul | @h4shed/tool-istanbul | Code coverage analysis tool |
-| tool-release-manager | @h4shed/tool-release-manager | Automated version bumping and release notes |
-
----
-
-## 📦 Core Infrastructure Packages (2 Total)
-
-| Package | NPM Name | Purpose |
-|---------|----------|---------|
-| **cli** | @h4shed/mcp-cli | Command-line interface for MCP orchestration and skill management |
-| **core** | @h4shed/mcp-core | Core MCP framework, server runtime, and protocol implementation |
-
-### 🌟 New Packages in Development (4 Total)
-
-These packages are actively in development and will be published to npm:
-
-| Package | NPM Name (Target) | Description |
-|---------|----------|-------------|
-| **deploy-wizard** | @h4shed/skill-deploy-wizard | Interactive setup CLI for rapid MCP deployment |
-| **mcp-orchestrator** | @h4shed/skill-mcp-orchestrator | Agentic task coordination and workflow management |
-| **mvp-generator** | @h4shed/skill-mvp-generator | MVP generation service for rapid prototyping |
-| **templates** | @h4shed/templates | Reusable generation templates and scaffolding |
+**[View Complete Tool Inventory →](./docs/PLUGIN_GUIDE.md)**
 
 ---
 
 ## ✨ Key Features
 
-✔️ **Orchestration & Coordination** — SyncPulse multi-agent coordination with 9 email workflow templates  
-✔️ **Security & Authentication** — JWT-based endpoint protection with role-based access control for sensitive APIs  
-✔️ **Design Systems** — Complete design tokens, theming, and component documentation  
-✔️ **Generative Art** — Algorithmic and NFT artwork generation with blockchain tools  
-✔️ **Content Creation** — Autonomous article generation, social posts, and branded assets  
-✔️ **Automation & Testing** — E2E testing, deployment validation, and workflow automation  
-✔️ **User Experience** — Journey mapping, wireframing, and interactive prototyping  
-✔️ **Development Tools** — MCP scaffolding, TypeScript toolchain, and bundler integration  
+✔️ **Multi-Agent Orchestration** — SyncPulse with 9 templated email workflows  
+✔️ **Security-First** — JWT authentication, role-based access control, signed releases  
+✔️ **Design Systems** — Complete design tokens, theming, component libraries  
+✔️ **Generative Capabilities** — Art, content, code, assets, and automation  
+✔️ **Production Quality** — TypeScript strict mode, benchmarks, comprehensive testing  
+✔️ **Developer Experience** — Clear documentation, quick-start paths, scaffolding tools  
+
+---
+
+## 💼 Licensing
+
+| License | Use Case | Features |
+|---------|----------|----------|
+| **PPL 3.0.0** (Free) | Personal, open-source, educational | Community support |
+| **Commercial** (Paid) | Business, SaaS, closed-source | Priority support, tiered pricing |
+
+**[Full License Details →](./COMMERCIAL_LICENSE.md)**
 
 ---
 
 ## 📋 Essential Commands
 
-### Setup & Installation
-
 ```bash
+# Setup
 npm install                      # Install dependencies
-npm run mcp:install              # Run interactive installer
-npm run mcp:init                 # Initialize MCP core
-npm run registry:generate        # Generate skill registry
-npm run registry:validate        # Validate registry & code quality
 npm run build                    # Build all packages
-```
+npm run dev                      # Start dev server
 
-### Development
-
-```bash
-npm run dev                      # Start development server
-npm run lint                     # Check code quality
-npm run typecheck                # Validate TypeScript
+# Quality & Validation
+npm run lint                     # Code quality checks
+npm run typecheck                # TypeScript validation
 npm run test                     # Run test suites
-```
 
-### Publishing
-
-```bash
-npm run publish:packages         # Publish all packages to npm
+# Registry & Publishing
+npm run registry:generate        # Generate skill registry
+npm run registry:update          # Update and sync registry
 npm run publish:prepare          # Prepare versions for publish
 ```
 
-> CI tip: keep lint output warning-free in addition to error-free to avoid stricter pipeline gates in downstream environments.
+---
+
+## 🐝 SyncPulse: Enterprise Orchestration
+
+**SyncPulse (v0.2.2)** powers multi-agent coordination with:
+
+- **100-500x** vector search speedup via hierarchical indexing
+- **9 email workflows** for authentication, business, operations
+- **Work-stealing load balancing** for heterogeneous swarms
+- **LRU cache management** preventing OOM in 24h+ deployments
+
+**SyncPulse Hub (v0.1.1)** adds:
+
+- Real-time swarm monitoring dashboard
+- Agent health metrics and performance analytics
+- Task queue visualization and management
 
 ---
 
-## 📚 Documentation
+## 📦 What's Included
 
-| Resource | Purpose |
-|----------|---------|
-| [docs/](./docs/) | Documentation directory index |
-| [QUICKSTART.md](./docs/getting-started/QUICKSTART.md) | Get started in minutes |
-| [ARCHITECTURE.md](./docs/ARCHITECTURE.md) | System design & internals |
-| [SKILLS_GUIDE.md](./docs/SKILLS_GUIDE.md) | Build custom skills |
-| [API_REFERENCE.md](./docs/API_REFERENCE.md) | Complete API docs |
-| [ROADMAP.md](./docs/ROADMAP.md) | Published/missing/planned skills |
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | How to contribute |
-| [VERSION.json](./VERSION.json) | Release metadata and version authority |
-| [registry/REGISTRY.md](./registry/REGISTRY.md) | Authoritative package inventory |
+| Type | Count | Status |
+|------|-------|--------|
+| **Skills (Published)** | 12 | ✅ Available on npm |
+| **Skills (Queued)** | 19 | 📦 Ready for publishing |
+| **Tools** | 28 | 📦 Scaffolded, queued |
+| **Core Packages** | 2 | ✅ Published |
+| **Dev Packages** | 4 | 🚧 In progress |
+| **Total** | 65 | — |
 
----
-
-## 🚢 Publishing & Releases
-
-**Current Status:** 
-- **Latest Stable:** `1.1.5` (Stable — Released 2026-05-19)
-- **Development:** `1.2.0-w2.0` (Week 2 Sprint — In Progress)
-- **Next Release:** `1.2.0` (Planned June 2026)
-
-**Total Packages:** 61 (31 skills + 28 tools + 2 core)
-
-### Published on npm (12 Packages)
-
-**Core Infrastructure:**
-- `@h4shed/mcp-cli` - Command-line orchestration interface
-- `@h4shed/mcp-core` - Core MCP framework
-
-**Published Skills:**
-- `@h4shed/skill-algorithmic-art` - Generative art using p5.js
-- `@h4shed/skill-ascii-mockup` - Mobile-first wireframe designs
-- `@h4shed/skill-canvas-design` - SVG-based visual design
-- `@h4shed/skill-frontend-design` - HTML/CSS component design
-- `@h4shed/skill-mcp-builder` - MCP server scaffolding
-- `@h4shed/skill-pre-deploy-validator` - Deployment validation
-- `@h4shed/skill-skill-creator` - Custom skill builder
-- `@h4shed/skill-theme-factory` - Design system generation
-- `@h4shed/skill-underworld-writer` - Character/world narrative generation
-- `@h4shed/skill-syncpulse` - Multi-agent orchestration (v0.2.2)
-- `@h4shed/skill-syncpulse-hub` - Agent orchestration dashboard (v0.1.1)
-
-### Scaffolded & Queued for Publishing (47 Packages)
-
-**Skills (19):** mermaid-terminal, ux-journeymapper, svg-generator, project-manager, project-manager-skill, project-status-tool, daily-review, multi-account-session-tracking (x2 variants), linkedin-master-journalist, tailwindcss-style-builder, storybook-component-library, playwright-test-automation, vite-module-bundler, typescript-toolchain, vercel-nextjs-deployment, style-dictionary-system, nft-generative-art, smart-contract-tools, and agentic-flow-devkit.
-
-**Tools (28):** tool-axe-core, tool-commander, tool-cssnano, tool-cypress, tool-docusaurus, tool-esbuild, tool-husky, tool-inquirer, tool-istanbul, tool-jest, tool-less, tool-markdown-it, tool-ora, tool-pa11y, tool-playwright, tool-postcss, tool-release-manager, tool-rollup, tool-sass, tool-storybook, tool-style-dictionary, tool-tailwindcss, tool-tsup, tool-typedoc, tool-vite, tool-vitepress, tool-vitest, and tool-webpack.
-
-**Infrastructure (4 New Packages):** deploy-wizard (skill-deploy-wizard), mcp-orchestrator (skill-mcp-orchestrator), mvp-generator (skill-mvp-generator), and templates.
-
-### Week 2 Sprint Progress (May 20-26, 2026)
-
-**Branch:** `feat/atomic-components-w2` → `dev/w2-implementation-phase`
-
-**Deliverables In Progress:**
-- 📦 **20+ Atomic React Components** (Button, Input, Badge, etc. with full TypeScript + design tokens)
-- 📦 **5 License CLI Commands** (validate, install, status, list, init with SQLite + JWT)
-- 📦 **80%+ Test Coverage** (Jest + React Testing Library + jest-axe for a11y)
-- 📦 **Design System Integration** (colors, typography, spacing, shadows, motion)
-
-**Quality Metrics (May 21, 2026):**
-```
-TypeScript Strict Mode:    ✅ PASS (0 errors)
-ESLint Validation:         ✅ PASS (0 errors, 17 warnings)
-Build Compilation:         ✅ SUCCESS (Vercel optimized)
-Type Definitions:          ✅ 22/22 Complete
-Component Scaffolding:     ✅ 38+ Files Ready
-```
-
-**Timeline:**
-- May 20-21: Implementation Phase 1 (Buttons, TextInputs, SQLite foundation)
-- May 22-24: Implementation Phase 2 (Complete components, all CLI commands, tests)
-- May 25: Phase 3 (Validation, QA, merge readiness, 80%+ coverage verification)
-- May 26: Merge to main (v1.1.5 → v1.2.0)
-
-**Documentation:**
-- [docs/WEEK2_RELEASE_NOTES.md](./docs/WEEK2_RELEASE_NOTES.md) — Comprehensive sprint overview
-- [COMPONENT_ARCHITECTURE.md](./COMPONENT_ARCHITECTURE.md) — Component implementation guide
-- [DESIGN_LICENSE_CLI.md](./DESIGN_LICENSE_CLI.md) — CLI specification
-- [INTEGRATION_VALIDATION_PLAN.md](./INTEGRATION_VALIDATION_PLAN.md) — Validation framework
-
-### Release Workflow
-
-All releases use **GPG-signed commits and tags** for security:
-
-```bash
-# Local setup (one-time)
-bash scripts/setup-gpg-signing.sh
-
-# Or push to main for automatic workflow
-git add .
-git commit -m "feat: your changes"
-git push origin main
-```
-
-**Full guide:** [docs/NPM_PUBLISHING.md](./docs/NPM_PUBLISHING.md)
+**[View Release Status →](./CHANGELOG.md)**
 
 ---
 
-## 💡 Use Cases
+## 🎯 Use Cases
 
-🎨 **Generative Art** — Create procedural artwork and visual effects  
-🖼️ **Design Systems** — Build cohesive UI components and themes  
-🛠️ **Development** — MCP builders, validators, and scaffolding  
-📱 **Prototyping** — Rapid wireframing and layout design  
-🎮 **Game Development** — Asset generation and design automation  
-📝 **Content Creation** — Autonomous article, social post, and asset generation  
-🤖 **AI Automation** — Multi-agent coordination with SyncPulse  
-
----
-
-## 📦 System Requirements
-
-```
-Node.js ≥ 20.0.0
-npm ≥ 8.0.0
-```
+- 🎨 **Design Systems** — Build cohesive UI components and themes
+- 🖼️ **Generative Art** — Create procedural artwork and NFTs
+- 🛠️ **Development** — MCP builders, validators, bundlers, and scaffolding
+- 📱 **Prototyping** — Rapid wireframing and component design
+- 📝 **Content Creation** — Autonomous articles, posts, and assets
+- 🤖 **AI Automation** — Multi-agent workflows and orchestration
+- 🎮 **Game Development** — Asset generation and design automation
 
 ---
 
-## 🤝 Contributing
+## 🔗 Dual Naming Convention
 
-We'd love your involvement!
+- **Internal Git Names:** `@fused-gaming/skill-*` or `@fused-gaming/tool-*`
+- **Published NPM Names:** `@h4shed/skill-*` or `@h4shed/tool-*`
 
-- 🐛 **Report Issues** → [GitHub Issues](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues)
-- 💡 **Suggest Features** → [GitHub Discussions](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/discussions)
-- 🤝 **Contribute Code** → [CONTRIBUTING.md](./CONTRIBUTING.md)
-- 📧 **Get Support** → [support@vln.gg](mailto:support@vln.gg)
+This separation allows flexible internal development while maintaining a consistent, branded public presence on npm.
+
+---
+
+## 📊 Performance & Quality
+
+Every package undergoes continuous benchmarking:
+
+- ✅ **Behavioral Testing** (40% weight) — 90%+ pass rate required
+- ✅ **Performance Testing** (35% weight) — Latency/throughput validation
+- ✅ **Code Quality** (25% weight) — Complexity, coverage, maintainability
+
+**Combined Precision Score:** ≥90% required for release
+
+**[View Benchmarks →](./docs/reference/BENCHMARK_RELEASES.md)**
+
+---
+
+## 🌍 Community & Support
+
+- 📖 **Documentation** — Start with [docs/guides/](./docs/guides/)
+- 💬 **Discussions** — [GitHub Discussions](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/discussions)
+- 🐛 **Issues** — [GitHub Issues](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues)
+- 📧 **Contact** — [support@vln.gg](mailto:support@vln.gg)
 
 ---
 
 ## 📄 License
 
-Apache 2.0 — See [LICENSE](./LICENSE) for details
+**Prosperity Public License 3.0.0** (Free) + **Commercial License** (Paid)
+
+See [LICENSE](./LICENSE) and [COMMERCIAL_LICENSE.md](./COMMERCIAL_LICENSE.md) for details.
 
 ---
 
-[![Version 1.0.5](https://img.shields.io/badge/version-1.0.5-blue)](./VERSION.json)
-[![Released April 27, 2026](https://img.shields.io/badge/released-april%2027%2C%202026-brightgreen)](./docs/releases/RELEASE_NOTES.md)
-[![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen)](./CHANGELOG.md)
-[![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen)](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP)
+<div align="center">
+
+**Built with ❤️ by Fused Gaming**
+
+[![GitHub](https://img.shields.io/badge/GitHub-Fused--Gaming-181717?logo=github)](https://github.com/Fused-Gaming) · [![npm](https://img.shields.io/badge/npm-@h4shed-CB3837?logo=npm)](https://www.npmjs.com/~h4shed)
+
+</div>
