@@ -66,31 +66,34 @@ Do NOT write `[GAP]` alone—that suggests you haven't searched yet.
    - Sentencing memo
    - Plea agreement (if guilty plea)
 5. Cross-reference prison sentence dates with:
-   - BOP inmate locator (bop.gov) — **NOTE:** Historical records only; does not list released prisoners
+   - BOP inmate locator (bop.gov) — retains records for prisoners released after 1982
    - Sentencing order date vs. reported release date
 
 ---
 
-## BOP (Bureau of Prisons) Inmate Locator Limitations
+## BOP (Bureau of Prisons) Inmate Locator Coverage
 
-The inmate locator shows **currently incarcerated** prisoners only.
+The inmate locator maintains records for both **currently incarcerated and released prisoners** (post-1982).
 
 **What it can confirm:**
 - Current incarceration status (if still in system)
 - Facility assignment
-- Release date (if scheduled)
+- Release date and status for released prisoners (post-1982)
+- Historical custody records and transfers
 
 **What it cannot do:**
-- Show released prisoners (use sentencing order + news reports)
-- Verify historical incarceration periods
-- Show transfers post-release
+- Show prisoners released before 1982 (use sentencing order + news reports + archives)
+- Provide sealed or expunged records
+- Access details for witness protection or identity-protection cases
 
-**Workaround for historical verification:**
-- Use sentencing order + release news + Federal Prison Bureau news releases
+**Optimal verification workflow:**
+- Query BOP locator first: determines current/released status and release date
+- If released after 1982: record appears in BOP (Tier 1)
+- If released before 1982 or status unclear: escalate to sentencing order + news archives
 - Example: Brett Johnson released Oct. 8, 2007 → verify via:
-  - Sentencing order dated 2005 (PACER)
-  - News reports from late 2007 announcing his release
-  - FCI Loretto facility records if disclosed in interviews
+  - BOP inmate locator confirms release date (Tier 1)
+  - Cross-check with sentencing order (PACER, Tier 1)
+  - News reports from 2007 as corroboration (Tier 3)
 
 ---
 

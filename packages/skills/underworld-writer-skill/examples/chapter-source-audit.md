@@ -149,11 +149,10 @@ northeastern Pennsylvania, staring at screen after screen of stolen credit
 card data. His handle was "Gollumfun"—a reference to the Tolkien creature 
 who coveted the One Ring. (Darknet Diaries, Ep. 128)
 
-Journalist Joseph Menn, who interviewed Johnson years later, characterized 
-him as someone who "viewed hacking not as a crime but as a game, a puzzle 
-to be solved." (Menn, The Darkest Internet, p. XX) In those early days, 
-Johnson didn't yet grasp the implications of his actions. He was intelligent, 
-driven—and utterly convinced he wouldn't get caught.
+In those early days, Johnson didn't yet grasp the implications of his actions. 
+According to his later Darknet Diaries interview, he approached hacking with a 
+sense of curiosity and experimentation rather than criminal intent. He was intelligent, 
+driven—and utterly convinced he wouldn't get caught. (Darknet Diaries, Ep. 128)
 
 According to the FBI's investigation, the data Johnson was analyzing had 
 originated from a data breach at a financial-services company in the Midwest 
