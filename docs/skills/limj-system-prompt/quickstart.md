@@ -73,7 +73,7 @@ Specify exactly what's wrong, LIMJ fixes only that.
 
 ## Template Files
 
-See `/templates/` for:
+See `./templates/` for:
 - `example-Article.md` — Real published article (anonymized)
 - `example-Posts.md` — Real post versions
 - `example-Cover.html` — Rendered cover image

@@ -168,8 +168,8 @@ READMES=(
   "packages/license-client/README.md"
   "packages/cli/README.md"
   "packages/core/README.md"
-  "INTEGRATION_VALIDATION_PLAN.md"
-  "MERGE_GATE_CRITERIA.md"
+  "docs/guides/INTEGRATION_VALIDATION_PLAN.md"
+  "docs/reference/MERGE_GATE_CRITERIA.md"
 )
 
 for readme in "${READMES[@]}"; do

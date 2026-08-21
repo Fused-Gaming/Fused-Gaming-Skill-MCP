@@ -218,12 +218,12 @@ Total 5-7 hashtags per post: 1-2 high + 2-3 medium + 1-2 niche
 ## Examples & Templates
 
 ### Files in Repository
-- `LIMJ/templates/article-template.md` — Blank article template with structure
-- `LIMJ/templates/posts-template.md` — Blank posts template
-- `LIMJ/templates/cover-template.html` — Blank HTML cover
-- `LIMJ/templates/example-Article.md` — Real published article (anonymized)
-- `LIMJ/templates/example-Posts.md` — Real post variants
-- `LIMJ/templates/example-Cover.html` — Real rendered cover
+- `limj-system-prompt/templates/article-template.md` — Blank article template with structure
+- `limj-system-prompt/templates/posts-template.md` — Blank posts template
+- `limj-system-prompt/templates/cover-template.html` — Blank HTML cover
+- `limj-system-prompt/templates/example-Article.md` — Real published article (anonymized)
+- `limj-system-prompt/templates/example-Posts.md` — Real post variants
+- `limj-system-prompt/templates/example-Cover.html` — Real rendered cover
 
 ---
 
@@ -282,7 +282,7 @@ Total 5-7 hashtags per post: 1-2 high + 2-3 medium + 1-2 niche
 
 ### Questions?
 - **GitHub**: [Fused-Gaming/Fused-Gaming-Skill-MCP/issues](https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP/issues)
-- **Documentation**: [LIMJ/README.md](../../LIMJ/README.md)
+- **Documentation**: [LIMJ System Prompt](./limj-system-prompt/README.md)
 - **Author**: J. (supitsj) — Fused Gaming LLC
 
 ### Contributing
