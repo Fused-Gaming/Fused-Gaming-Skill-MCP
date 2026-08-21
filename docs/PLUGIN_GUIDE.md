@@ -198,7 +198,7 @@ npm run dev
 4. Document with `storybook-component-library`
 
 ### Path 2: Creative Writer
-1. Begin with `underworld-writer` for narrative writing
+1. Begin with `underworld-writer-skill` for narrative writing
 2. Use `daily-review` for summaries
 3. Share with `linkedin-master-journalist`
 
