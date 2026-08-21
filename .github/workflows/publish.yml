@@ -59,7 +59,6 @@ jobs:
 
       - name: Auto-bump workspace versions for npm publish
         run: node scripts/auto-bump-publish-versions.js
-        continue-on-error: true
 
       - name: Sync package-lock.json after version bumps
         run: npm install --package-lock-only --ignore-scripts
@@ -80,7 +79,6 @@ jobs:
 
       - name: Preflight publish version check
         run: node scripts/preflight-publish-check.js
-        continue-on-error: true
 
       - name: Lint
         run: npm run lint --if-present
