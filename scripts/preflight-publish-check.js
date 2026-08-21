@@ -43,10 +43,15 @@ function npmVersionExists(name, version) {
   try {
     execSync(`npm view ${JSON.stringify(`${name}@${version}`)} version`, {
       stdio: 'pipe',
-      encoding: 'utf8'
+      encoding: 'utf8',
+      timeout: 5000
     });
     return true;
-  } catch {
+  } catch (error) {
+    if (error.signal === 'SIGTERM') {
+      console.warn(`⚠️ Timeout checking ${name}@${version} on npm registry (unknown state, proceeding cautiously)`);
+      return false;
+    }
     return false;
   }
 }
