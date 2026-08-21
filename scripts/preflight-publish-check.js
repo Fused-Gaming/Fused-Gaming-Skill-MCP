@@ -49,8 +49,7 @@ function npmVersionExists(name, version) {
     return true;
   } catch (error) {
     if (error.signal === 'SIGTERM') {
-      console.warn(`⚠️ Timeout checking ${name}@${version} on npm registry (unknown state, proceeding cautiously)`);
-      return false;
+      throw new Error(`⚠️ Timeout checking ${name}@${version} on npm registry. Unable to verify version state. Failing closed to prevent publishing unverified versions.`);
     }
     return false;
   }

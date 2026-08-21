@@ -10,85 +10,152 @@
 ```bash
 npm install
 npm run build
-npm start
+npm run typecheck
+npm run lint
 ```
 
-### List All Available Skills
+### Generate and Update Registry
 ```bash
 npm run registry:generate
-npm run registry:view
+npm run registry:update
 ```
 
-### Use a Specific Skill
+### Start Development
 ```bash
-npm run skill:load -- underworld-writer-skill
-npm run skill:load -- canvas-design
+npm run dev
 ```
 
 ---
 
-## 📚 Complete Skill Inventory
+## 📚 Complete Skill Inventory (30 Skills)
 
 ### 🎨 **Design Skills (7 total)**
 
-| Skill | Package | Use Case | Quick Command |
-|-------|---------|----------|---------------|
-| **Agentic Flow DevKit** | `@h4shed/skill-agentic-flow-devkit` | Design and visualize AI orchestration flows, multi-agent coordination | `/agentic-flow-devkit` |
-| **Canvas Design** | `@h4shed/skill-canvas-design` | Visual design with SVG and canvas rendering | `/canvas-design` |
-| **Frontend Design** | `@h4shed/skill-frontend-design` | Component design and HTML/CSS generation | `/frontend-design` |
-| **Style Dictionary** | `@h4shed/skill-style-dictionary-system` | Design tokens and style system management | `/style-dictionary-system` |
-| **SVG Generator** | `@h4shed/skill-svg-generator` | Generate SVG assets and icons from prompts | `/svg-generator` |
-| **TailwindCSS Builder** | `@h4shed/skill-tailwindcss-style-builder` | Utility-first styling and rapid UI development | `/tailwindcss-style-builder` |
-| **Theme Factory** | `@h4shed/skill-theme-factory` | Design system and theme generation | `/theme-factory` |
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **Agentic Flow DevKit** | `@h4shed/skill-agentic-flow-devkit` | Design and visualize agentic orchestration flows with trailer A/B-roll planning support |
+| **Canvas Design** | `@h4shed/skill-canvas-design` | Visual design generation for web with SVG and canvas rendering |
+| **Frontend Design** | `@h4shed/skill-frontend-design` | Frontend component design and HTML/CSS generation for modern web applications |
+| **Style Dictionary** | `@h4shed/skill-style-dictionary-system` | Design tokens and style dictionary generation for cross-platform design system management |
+| **SVG Generator** | `@h4shed/skill-svg-generator` | Generate SVG assets and icon concepts from structured prompts |
+| **TailwindCSS Builder** | `@h4shed/skill-tailwindcss-style-builder` | Tailwind CSS utility-first styling and design system builder for rapid UI development |
+| **Theme Factory** | `@h4shed/skill-theme-factory` | Design system and theme generation for consistent UI/UX across applications |
 
 ### 🎭 **Generative Art Skills (3 total)**
 
-| Skill | Package | Use Case | Quick Command |
-|-------|---------|----------|---------------|
-| **Algorithmic Art** | `@h4shed/skill-algorithmic-art` | p5.js generative art, flow fields, particles | `/algorithmic-art` |
-| **NFT Generative Art** | `@h4shed/skill-nft-generative-art` | NFT artwork and blockchain asset creation | `/nft-generative-art` |
-| **Smart Contract Tools** | `@h4shed/skill-smart-contract-tools` | Hardhat, Truffle, Foundry ecosystem tools | `/smart-contract-tools` |
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **Algorithmic Art** | `@h4shed/skill-algorithmic-art` | Generative art using p5.js with seeded randomness, flow fields, and particle systems |
+| **NFT Generative Art** | `@h4shed/skill-nft-generative-art` | NFT artwork generation, metadata creation, and blockchain-ready asset creation |
+| **Smart Contract Tools** | `@h4shed/skill-smart-contract-tools` | Smart contract development tools for Hardhat, Truffle, and Foundry ecosystems |
 
 ### 📱 **General Purpose Skills (7 total)**
 
-| Skill | Package | Use Case | Quick Command |
-|-------|---------|----------|---------------|
-| **ASCII Mockup** | `@h4shed/skill-ascii-mockup` | Mobile-first wireframe prototyping | `/ascii-mockup` |
-| **Playwright Testing** | `@h4shed/skill-playwright-test-automation` | End-to-end web testing automation | `/playwright-test-automation` |
-| **Storybook Components** | `@h4shed/skill-storybook-component-library` | Component library documentation | `/storybook-component-library` |
-| **SyncPulse** | `@h4shed/skill-syncpulse` | Project caching, email automation, coordination | `/syncpulse` |
-| **Daily Review** | `@h4shed/skill-daily-review` | Daily work summary and review generation | `/daily-review-skill` |
-| **Mermaid Terminal** | `@h4shed/skill-mermaid-terminal` | ASCII diagram generation in terminal | `/mermaid-terminal` |
-| **UX Journey Mapper** | `@h4shed/skill-ux-journeymapper` | User experience and journey mapping | `/ux-journeymapper` |
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **ASCII Mockup** | `@h4shed/skill-ascii-mockup` | Mobile-first ASCII wireframe mockup generator for rapid UI prototyping |
+| **Playwright Testing** | `@h4shed/skill-playwright-test-automation` | End-to-end testing automation framework for web applications with cross-browser support |
+| **Storybook Components** | `@h4shed/skill-storybook-component-library` | Component library documentation and visual testing with Storybook integration |
+| **SyncPulse** | `@h4shed/skill-syncpulse` | Intelligent project state caching, multi-agent coordination, and secure email automation |
+| **SyncPulse Hub** | `@h4shed/syncpulse-hub` | Centralized orchestration and installation of all @h4shed packages |
+| **TypeScript Toolchain** | `@h4shed/skill-typescript-toolchain` | Advanced TypeScript configuration, type generation, and static analysis tooling |
+| **Vite Module Bundler** | `@h4shed/skill-vite-module-bundler` | Next-generation JavaScript module bundler for lightning-fast development |
 
-### 💼 **Content Creation Skills (3 total)**
+### 💼 **Content Creation Skills (2 total)**
 
-| Skill | Package | Use Case | Quick Command |
-|-------|---------|----------|---------------|
-| **LinkedIn Master Journalist** | `@h4shed/skill-linkedin-master-journalist` | Professional content and LinkedIn posting | `/linkedin-master-journalist` |
-| **Underworld Writer** | `@h4shed/skill-underworld-writer` | Dual-methodology narrative writing (fiction + true crime) | `/underworld-writer-skill` |
-| **Project Manager** | `@h4shed/skill-project-manager-skill` | Project planning and task management | `/project-manager-skill` |
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **LinkedIn Master Journalist** | `@h4shed/skill-linkedin-master-journalist` | Draft polished LinkedIn release and thought-leadership posts |
+| **Underworld Writer** | `@h4shed/skill-underworld-writer` | Dual-methodology skill for fictional underworld narratives and factually sourced true crime writing |
 
-### 🛠️ **MCP & Development Tools (3 total)**
+### 🛠️ **MCP & Development Tools (2 total)**
 
-| Skill | Package | Use Case | Quick Command |
-|-------|---------|----------|---------------|
-| **MCP Builder** | `@h4shed/skill-mcp-builder` | Create custom MCP servers and tools | `/mcp-builder` |
-| **Pre-Deploy Validator** | `@h4shed/skill-pre-deploy-validator` | Pre-deployment quality validation | `/pre-deploy-validator` |
-| **Project Status Tool** | `@h4shed/skill-project-status-tool` | Real-time project status and metrics | `/project-status-tool` |
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **Skill Creator** | `@h4shed/skill-creator` | Create custom skills and tools for the Fused Gaming MCP ecosystem |
+| **MCP Builder** | `@h4shed/skill-mcp-builder` | Build and scaffold MCP servers and skills with best practices |
 
-### 🔗 **Session & Tracking (1 total)**
+### 🔗 **Session Management (1 total)**
 
-| Skill | Package | Use Case | Quick Command |
-|-------|---------|----------|---------------|
-| **Multi-Account Tracking** | `@h4shed/multi-account-session-tracking-skill` | Cross-session account and data management | `/multi-account-session-tracking-skill` |
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **Multi-Account Tracking** | `@h4shed/skill-multi-account-session-tracking` | Extended framework for tracking Claude sessions across multiple accounts with unified metrics |
+
+### 📊 **Project Management (3 total)**
+
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **Project Manager** | `@h4shed/skill-project-manager` | Plan projects with milestones, dependencies, and delivery phases |
+| **Project Manager Skill** | `@h4shed/skill-project-manager-skill` | Task and project management skill for tracking work items and team collaboration |
+| **Project Status Tool** | `@h4shed/skill-project-status-tool` | Summarize current project status, risks, and next actions |
+
+### 📈 **Productivity (1 total)**
+
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **Daily Review** | `@h4shed/skill-daily-review` | Productivity tracking and daily review skill for session aggregation and metrics analysis |
 
 ### 🌐 **Web & Deployment (2 total)**
 
-| Skill | Package | Use Case | Quick Command |
-|-------|---------|----------|---------------|
-| **Vercel NextJS Deploy** | `@h4shed/skill-vercel-nextjs-deployment` | Next.js deployment and Vercel integration | `/vercel-nextjs-deployment` |
-| **Vite Module Bundler** | `@h4shed/skill-vite-module-bundler` | Vite-based module bundling and builds | `/vite-module-bundler` |
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **Vercel NextJS Deploy** | `@h4shed/skill-vercel-nextjs-deployment` | Vercel deployment optimization and Next.js framework integration for serverless applications |
+| **Pre-Deploy Validator** | `@h4shed/skill-pre-deploy-validator` | Pre-deployment validation and quality checks for production readiness |
+
+### 📊 **User Experience (1 total)**
+
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **UX Journey Mapper** | `@h4shed/skill-ux-journeymapper` | Create UX journey maps with pain points, touchpoints, and opportunities |
+
+### 📈 **Visualization (1 total)**
+
+| Skill | Package | Description |
+|-------|---------|-------------|
+| **Mermaid Terminal** | `@h4shed/skill-mermaid-terminal` | Generate terminal-friendly Mermaid diagrams and flowcharts |
+
+---
+
+## 🛠️ Complete Tool Inventory (60+ Tools)
+
+### Design Tools
+- `plan_trailer_rolls` - Plan A/B-roll sequences for trailers
+- `visualize_agentic_flow` - Visualize multi-agent orchestration
+- `generate_svg` - Create vector graphics from descriptions
+- `generate_component` - Generate HTML/CSS components
+- `generate_svg_asset` - Create SVG icons and assets
+- `generate_theme` - Generate complete theme systems
+- `flow_field` - Create flow field visualizations
+- `generate_art` - Generate algorithmic art pieces
+- `generate_mockup` - Create ASCII wireframe mockups
+
+### Content & Communication Tools
+- `draft_linkedin_post` - Draft polished LinkedIn posts
+- `analyze_content_quality` - Analyze content for quality metrics
+- `track_content_performance` - Track content performance metrics
+- `verify_hashtags` - Verify and optimize hashtags
+
+### Productivity & Project Tools
+- `generate_daily_review` - Generate daily work summaries
+- `analyze_weekly` - Analyze weekly metrics
+- `log_session` - Log session data
+- `plan_project` - Plan projects with dependencies
+- `task_management` - Manage project tasks
+- `create_project` - Create and initialize projects
+- `summarize_project_status` - Summarize project status and risks
+- `dashboard` - Access project dashboard
+
+### Testing & Validation Tools
+- `validate_deployment` - Pre-deployment validation checks
+
+### Development & Infrastructure Tools
+- `scaffold_skill` - Scaffold new MCP skills
+- `create_skill` - Create custom skills
+- `map_user_journey` - Map user journey and touchpoints
+- `generate_mermaid_diagram` - Generate Mermaid diagrams
+- `session_aggregation` - Aggregate session data
+- `email_tools` - Email automation tools
+- `email_workflows` - Pre-built email workflows
 
 ---
 
@@ -113,72 +180,45 @@ npm run skill:load -- canvas-design
 - Best for: QA automation, component docs, release validation
 
 #### **Project & Process Management**
-- Project Manager, Project Status Tool, SyncPulse
+- Project Manager, Project Manager Skill, Project Status Tool
 - Best for: Team coordination, progress tracking, workflows
 
 #### **Advanced Infrastructure**
-- MCP Builder, Vercel NextJS Deploy, Vite Module Bundler, Smart Contracts
+- MCP Builder, Skill Creator, Vercel NextJS Deploy, Vite Module Bundler, Smart Contracts
 - Best for: Custom tools, cloud deployment, blockchain
-
----
-
-## 📋 Complete Tool Inventory (60+ Tools)
-
-### Design Tools
-- `plan_trailer_rolls` - Plan A/B-roll sequences for trailers
-- `visualize_agentic_flow` - Visualize multi-agent orchestration
-- `generate_svg` - Create vector graphics from descriptions
-- `generate_component` - Generate HTML/CSS components
-- `generate_svg_asset` - Create SVG icons and assets
-- `generate_theme` - Generate complete theme systems
-
-### Generative Art Tools
-- `flow_field` - Create flow field visualizations
-- `generate_art` - Generate algorithmic art pieces
-
-### Testing & Validation Tools
-- `generate_mockup` - Create ASCII wireframe mockups
-
-### Content Tools
-- `email_tools` - Email automation and scheduling
-- `email_workflows` - Email workflow templates
-
-### Utility & Infrastructure Tools
-- Registry generation
-- Project status tracking
-- Deployment automation
-- Smart contract compilation
 
 ---
 
 ## 🚀 Getting Started Paths
 
 ### Path 1: Visual Designer
-1. Start with `/canvas-design` or `/svg-generator`
-2. Use `/theme-factory` for system design
-3. Apply with `/frontend-design` for components
-4. Document with `/storybook-component-library`
+1. Use `canvas-design` for initial mockups
+2. Apply `theme-factory` for system design
+3. Reference `frontend-design` for components
+4. Document with `storybook-component-library`
 
 ### Path 2: Creative Writer
-1. Begin with `/underworld-writer-skill` for narrative writing
-2. Use `/daily-review` for summaries
-3. Share with `/linkedin-master-journalist`
+1. Begin with `underworld-writer` for narrative writing
+2. Use `daily-review` for summaries
+3. Share with `linkedin-master-journalist`
 
 ### Path 3: Full-Stack Developer
-1. Use `/mcp-builder` to create custom tools
-2. Build with `/vite-module-bundler` or `/vercel-nextjs-deployment`
-3. Test with `/playwright-test-automation`
-4. Validate with `/pre-deploy-validator`
+1. Use `mcp-builder` to create custom tools
+2. Build with `vite-module-bundler`
+3. Deploy with `vercel-nextjs-deployment`
+4. Test with `playwright-test-automation`
+5. Validate with `pre-deploy-validator`
 
 ### Path 4: AI Orchestration
-1. Design flows with `/agentic-flow-devkit`
-2. Coordinate with `/syncpulse`
-3. Track progress with `/project-status-tool`
+1. Design flows with `agentic-flow-devkit`
+2. Coordinate with `syncpulse`
+3. Track progress with `project-status-tool`
 
-### Path 5: Content Creator
-1. Generate art with `/algorithmic-art`
-2. Write with `/underworld-writer-skill`
-3. Publish with `/linkedin-master-journalist`
+### Path 5: Project Manager
+1. Plan with `project-manager`
+2. Track tasks with `project-manager-skill`
+3. Monitor status with `project-status-tool`
+4. Coordinate with `syncpulse`
 
 ---
 
@@ -186,113 +226,91 @@ npm run skill:load -- canvas-design
 
 ### Environment Setup
 ```bash
-# Load environment
-export NODE_ENV=production
-export DEBUG=false
+# Build all workspaces
+npm run build
 
-# Configure logging
-export LOG_LEVEL=info
-export LOG_FORMAT=json
+# Type checking
+npm run typecheck
+
+# Linting
+npm run lint
+
+# Development server (core package)
+npm run dev
 ```
-
-### MCP Configuration
-Edit `.mcp/config.json` to:
-- Enable/disable specific skills
-- Set performance parameters
-- Configure registry auto-generation
-- Adjust caching and logging
 
 ### Registry Management
 ```bash
-# Generate all registries
+# Generate registry from skills
 npm run registry:generate
 
-# View HTML registry
-npm run registry:view
+# Sync registry with Claude
+npm run registry:sync-claude
 
-# Export for external tools
-npm run registry:export
+# Both in one command
+npm run registry:update
 ```
+
+### Project Configuration
+- **Workspace Config**: `package.json` workspaces section
+- **Build Config**: `tsconfig.json` for TypeScript
+- **Version Config**: `VERSION.json` for release metadata
+- **Swarm Config**: `.claude-flow/config.yaml` for multi-agent coordination
 
 ---
 
-## 📚 Documentation
+## 📚 Documentation & Examples
 
-- **Full Registry:** `/registry/REGISTRY.md`
-- **Skills Directory:** `/packages/skills/`
-- **API Documentation:** `/docs/API.md`
-- **Configuration:** `/docs/CONFIGURATION.md`
+### Reference Documentation
+- **Skills Registry**: `registry/REGISTRY.md`
+- **Skills Directory**: `packages/skills/`
+- **Core API**: `packages/core/`
+- **CLI Tools**: `packages/cli/`
 
----
+### Skills by Example
+- **Design System**: `packages/skills/theme-factory/`
+- **Testing**: `packages/skills/playwright-test-automation/`
+- **Writing**: `packages/skills/underworld-writer-skill/`
+- **AI Orchestration**: `packages/skills/agentic-flow-devkit/`
 
-## 🎓 Learning Resources
-
-### By Skill Type
-- **Design System:** See `/packages/skills/theme-factory/`
-- **Testing:** See `/packages/skills/playwright-test-automation/`
-- **Writing:** See `/packages/skills/underworld-writer-skill/`
-- **AI Orchestration:** See `/packages/skills/agentic-flow-devkit/`
-
-### Examples
-- Design System Examples: `/docs/examples/design/`
-- Testing Examples: `/docs/examples/testing/`
-- Content Examples: `/docs/examples/content/`
-
----
-
-## ⚙️ Configuration Quick Reference
-
-### Enable/Disable Skills
-```json
-{
-  "skills": {
-    "enabled": ["underworld-writer-skill", "canvas-design"],
-    "disabled": [],
-    "auto_discover": true
-  }
-}
-```
-
-### Performance Tuning
-```json
-{
-  "performance": {
-    "cache_enabled": true,
-    "cache_ttl": 3600,
-    "max_workers": 4
-  }
-}
-```
+### Configuration
+- **MCP Config**: `.mcp/config.json`
+- **Git Config**: `.git/config`
+- **Environment**: `.env.local` (create if needed)
 
 ---
 
 ## 💡 Pro Tips
 
-1. **Combine Skills:** Use multiple skills together (e.g., design + content + publishing)
-2. **Batch Operations:** Use project-manager-skill to orchestrate workflows
-3. **Monitor Progress:** Check `/project-status-tool` for real-time metrics
-4. **Cache Optimization:** Enable caching for frequently used skills
-5. **Version Management:** Keep skills updated with `npm update --workspace`
+1. **Combine Skills**: Use multiple skills together (e.g., design + content + publishing)
+2. **Registry Updates**: Run `npm run registry:update` after adding new skills
+3. **Workspace Builds**: Use `npm run build --workspaces` for complete validation
+4. **Performance**: Use `npm run typecheck` to catch issues before build
+5. **Version Management**: Keep skills updated with workspace builds
+6. **Multi-Agent Coordination**: Use SyncPulse for intelligent project state management
+7. **Documentation**: Generate and sync registry frequently for accurate skill discovery
+8. **Batch Operations**: Use project-manager-skill to orchestrate complex workflows
+9. **Progress Tracking**: Check project-status-tool for real-time project metrics
 
 ---
 
 ## 🤝 Contributing
 
 Want to add a new skill?
-1. Use `/mcp-builder` to scaffold the skill
+1. Use `mcp-builder` to scaffold the skill
 2. Implement tools in `src/tools/`
-3. Add tests and benchmarks
-4. Run `npm run registry:generate`
+3. Add tests and documentation
+4. Run `npm run registry:update` to regenerate registry
 5. Submit PR with updated registry
 
 ---
 
 ## 📞 Support
 
-- **Issues:** GitHub Issues in repository
-- **Discussions:** GitHub Discussions
-- **Documentation:** See `/docs/` directory
-- **Examples:** See `/docs/examples/` directory
+- **Issues**: GitHub Issues in repository
+- **Discussions**: GitHub Discussions
+- **Documentation**: See `docs/` directory
+- **Registry**: See `registry/REGISTRY.md`
 
 ---
 
@@ -300,4 +318,3 @@ Want to add a new skill?
 **Registry Version:** 1.0.0  
 **Total Skills:** 30 | **Total Tools:** 60+  
 **Status:** Production Ready ✅
-
