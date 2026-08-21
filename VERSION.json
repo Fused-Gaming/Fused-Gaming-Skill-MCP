@@ -10,7 +10,7 @@
     "nodeMinimum": "20.0.0",
     "npmMinimum": "8.0.0",
     "typescriptVersion": "5.3.2",
-    "buildNumber": 1027
+    "buildNumber": 1028
   },
   "packageInfo": {
     "name": "@h4shed/mcp",

@@ -119,13 +119,13 @@ npm run dev
 ## 🛠️ Complete Tool Inventory (60+ Tools)
 
 ### Design Tools
-- `plan_trailer_rolls` - Plan A/B-roll sequences for trailers
-- `visualize_agentic_flow` - Visualize multi-agent orchestration
+- `plan-trailer-rolls` - Plan A/B-roll sequences for trailers
+- `visualize-agentic-flow` - Visualize multi-agent orchestration
 - `generate_svg` - Create vector graphics from descriptions
 - `generate_component` - Generate HTML/CSS components
 - `generate_svg_asset` - Create SVG icons and assets
 - `generate_theme` - Generate complete theme systems
-- `flow_field` - Create flow field visualizations
+- `create-flow-field` - Create flow field visualizations
 - `generate_art` - Generate algorithmic art pieces
 - `generate_mockup` - Create ASCII wireframe mockups
 
