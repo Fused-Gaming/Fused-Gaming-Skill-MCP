@@ -96,10 +96,14 @@ function checkAlreadyPublished(records) {
     try {
       execSync(`npm view ${JSON.stringify(spec)} version`, {
         stdio: 'pipe',
-        encoding: 'utf8'
+        encoding: 'utf8',
+        timeout: 5000
       });
       duplicates.push(spec);
-    } catch {
+    } catch (error) {
+      if (error.signal === 'SIGTERM') {
+        console.warn(`⚠️ Timeout checking ${spec} on npm registry (treating as not published)`);
+      }
       // Missing version is expected and means publish is possible.
     }
   }

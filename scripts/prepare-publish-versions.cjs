@@ -68,7 +68,8 @@ function npmVersionExists(name, version) {
     const out = execSync(`npm view ${JSON.stringify(`${name}@${version}`)} version --json`, {
       cwd: repoRoot,
       stdio: ['ignore', 'pipe', 'pipe'],
-      encoding: 'utf8'
+      encoding: 'utf8',
+      timeout: 5000
     }).trim();
 
     if (!out) return false;
@@ -76,6 +77,10 @@ function npmVersionExists(name, version) {
     return Boolean(parsed);
   } catch (error) {
     const stderr = String(error.stderr || error.message || '');
+    if (error.signal === 'SIGTERM') {
+      console.warn(`⚠️ Timeout checking ${name}@${version} on npm registry (treating as not published)`);
+      return false;
+    }
     if (/E404|404/.test(stderr)) return false;
 
     console.error(`❌ Failed to check npm for ${name}@${version}`);
