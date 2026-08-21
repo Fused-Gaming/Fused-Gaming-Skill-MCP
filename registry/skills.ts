@@ -30,7 +30,7 @@ export interface SkillRegistry {
 
 export const registry: SkillRegistry = {
   "version": "1.0.0",
-  "timestamp": "2026-08-21T00:19:56.899Z",
+  "timestamp": "2026-08-21T06:41:35.418Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
