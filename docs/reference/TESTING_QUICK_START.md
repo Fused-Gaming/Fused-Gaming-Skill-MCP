@@ -57,13 +57,13 @@ xdg-open coverage/lcov-report/index.html
 ### Step 1: Find the Test Template
 
 For **React components** (e.g., Button):
-→ See `/docs/TEST_TEMPLATES.md` Section 3 (page ~300)
+→ See `../TEST_TEMPLATES.md` Section 3 (page ~300)
 
 For **Node.js services**:
-→ See `/docs/TEST_TEMPLATES.md` Section 1 (page ~100)
+→ See `../TEST_TEMPLATES.md` Section 1 (page ~100)
 
 For **Integration tests**:
-→ See `/docs/TEST_TEMPLATES.md` Section 2 (page ~200)
+→ See `../TEST_TEMPLATES.md` Section 2 (page ~200)
 
 ### Step 2: Create Test File
 
@@ -323,11 +323,11 @@ export const Disabled: Story = {
 
 | Need | Document | Location |
 |---|---|---|
-| Full guide | Testing Infrastructure | `/docs/TESTING_INFRASTRUCTURE.md` |
-| Test templates | Test Templates Reference | `/docs/TEST_TEMPLATES.md` |
-| Jest configs | Jest Config Templates | `/JEST_CONFIG_TEMPLATES.md` |
-| Coverage details | Coverage Strategy | `/docs/COVERAGE_STRATEGY.md` |
-| Status & roadmap | Readiness Report | `/TESTING_READINESS_REPORT.md` |
+| Full guide | Testing Infrastructure | `../TESTING_INFRASTRUCTURE.md` |
+| Test templates | Test Templates Reference | `../TEST_TEMPLATES.md` |
+| Jest configs | Jest Config Templates | `./JEST_CONFIG_TEMPLATES.md` |
+| Coverage details | Coverage Strategy | `../COVERAGE_STRATEGY.md` |
+| Status & roadmap | Readiness Report | `./TESTING_READINESS_REPORT.md` |
 
 ---
 
@@ -362,11 +362,11 @@ Before each commit:
 
 ## Need Help?
 
-1. **Test patterns:** See `/docs/TEST_TEMPLATES.md`
-2. **Configuration:** See `/JEST_CONFIG_TEMPLATES.md`
-3. **Coverage strategy:** See `/docs/COVERAGE_STRATEGY.md`
-4. **Full guide:** See `/docs/TESTING_INFRASTRUCTURE.md`
-5. **Status:** See `/TESTING_READINESS_REPORT.md`
+1. **Test patterns:** See `../TEST_TEMPLATES.md`
+2. **Configuration:** See `./JEST_CONFIG_TEMPLATES.md`
+3. **Coverage strategy:** See `../COVERAGE_STRATEGY.md`
+4. **Full guide:** See `../TESTING_INFRASTRUCTURE.md`
+5. **Status:** See `./TESTING_READINESS_REPORT.md`
 
 ---
 

@@ -32,9 +32,9 @@ fused-gaming-mcp license status    # Dashboard view
 - Get file locations
 
 ### 2. Read Full Design Documents
-1. `DESIGN_LICENSE_CLI.md` (1140 lines) - Complete spec
-2. `docs/LICENSE-CLI-ARCHITECTURE.md` - Architecture diagram
-3. `LICENSE_CLI_DESIGN_SUMMARY.md` - Summary of key decisions
+1. `docs/design/DESIGN_LICENSE_CLI.md` (1140 lines) - Complete spec
+2. `docs/design/LICENSE_CLI_DESIGN_INDEX.md` - Architecture and navigation guide
+3. `docs/design/LICENSE_CLI_DESIGN_SUMMARY.md` - Summary of key decisions
 
 ### 3. Understand Current CLI Structure
 - `/packages/cli/src/index.ts` - Entry point (uses yargs)
