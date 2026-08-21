@@ -1,10 +1,10 @@
 {
-  "version": "1.4.0",
-  "releaseDate": "2026-08-16",
+  "version": "1.4.1",
+  "releaseDate": "2026-08-21",
   "status": "stable",
   "majorVersion": 1,
   "minorVersion": 4,
-  "patchVersion": 0,
+  "patchVersion": 1,
   "prerelease": null,
   "metadata": {
     "nodeMinimum": "20.0.0",
