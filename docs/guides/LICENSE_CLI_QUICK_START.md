@@ -483,11 +483,11 @@ npm run build && npm run typecheck && npm run lint && npm test
 - boxen: https://github.com/sindresorhus/boxen
 
 ### Project Files
-- Design spec: `/DESIGN_LICENSE_CLI.md`
-- Architecture: `/docs/LICENSE-CLI-ARCHITECTURE.md`
-- Summary: `/LICENSE_CLI_DESIGN_SUMMARY.md`
-- This guide: `/LICENSE_CLI_QUICK_START.md`
-- Implementation plan: `/LICENSE_CLI_IMPLEMENTATION_PLAN.md`
+- Design spec: `../../docs/design/DESIGN_LICENSE_CLI.md`
+- Architecture: `../../docs/design/LICENSE_CLI_DESIGN_INDEX.md`
+- Summary: `../../docs/design/LICENSE_CLI_DESIGN_SUMMARY.md`
+- This guide: `./LICENSE_CLI_QUICK_START.md`
+- Implementation plan: `../../docs/design/LICENSE_CLI_IMPLEMENTATION_PLAN.md`
 
 ### Example Code
 - CLI routing: `/packages/cli/src/index.ts`

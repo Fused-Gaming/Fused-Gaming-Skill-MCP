@@ -223,11 +223,11 @@ INDEX.md (navigation guide)
 
 ## 📖 Documentation Links
 
-- **Main Skill:** [SKILL.md](packages/skills/underworld-writer-skill/SKILL.md)
-- **Navigation:** [INDEX.md](packages/skills/underworld-writer-skill/INDEX.md)
-- **README:** [README.md](packages/skills/underworld-writer-skill/README.md)
-- **Fiction Guide:** [use-cases/fiction/METHODOLOGY.md](packages/skills/underworld-writer-skill/use-cases/fiction/METHODOLOGY.md)
-- **True Crime Guide:** [use-cases/true-crime/protocols/SKILL.md](packages/skills/underworld-writer-skill/use-cases/true-crime/protocols/SKILL.md)
+- **Main Skill:** [SKILL.md](../../packages/skills/underworld-writer-skill/SKILL.md)
+- **Navigation:** [INDEX.md](../../packages/skills/underworld-writer-skill/INDEX.md)
+- **README:** [README.md](../../packages/skills/underworld-writer-skill/README.md)
+- **Fiction Guide:** [use-cases/fiction/METHODOLOGY.md](../../packages/skills/underworld-writer-skill/use-cases/fiction/METHODOLOGY.md)
+- **True Crime Guide:** [use-cases/true-crime/protocols/SKILL.md](../../packages/skills/underworld-writer-skill/use-cases/true-crime/protocols/SKILL.md)
 
 ---
 
