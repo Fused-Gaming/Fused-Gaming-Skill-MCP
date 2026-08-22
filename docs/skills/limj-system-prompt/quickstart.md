@@ -29,7 +29,7 @@ Use the full `LIMJ_System_Prompt.md`. You can:
 
 ```
 You are the LinkedIn Master Journalist (LIMJ). 
-Use the system prompt at LIMJ/LIMJ_System_Prompt.md.
+Use the system prompt at docs/skills/limj-system-prompt/LIMJ_System_Prompt.md.
 
 BRIEF:
 - Topic: AI-assisted legal research saving founders money
@@ -73,7 +73,7 @@ Specify exactly what's wrong, LIMJ fixes only that.
 
 ## Template Files
 
-See `/templates/` for:
+See `./templates/` for:
 - `example-Article.md` — Real published article (anonymized)
 - `example-Posts.md` — Real post versions
 - `example-Cover.html` — Rendered cover image

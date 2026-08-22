@@ -16,6 +16,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Comprehensive HANDOFF.md documentation for migration to `fused-gaming/queen-vln-gg` repo
   - Full scaffold ready for production deployment at `queen.vln.gg`
 
+## [1.4.1] - 2026-08-21
+
+### Changed
+- **Documentation Reorganization** — Restructured root documentation into category-based organization hub
+  - Moved 55+ documentation files from root to organized subdirectories: `docs/architecture/`, `docs/design/`, `docs/guides/`, `docs/reference/`
+  - Created comprehensive `docs/README.md` navigation hub with category descriptions and purpose statements
+  - Reorganized by function: getting started, architecture & design, reference (status, releases, testing), process & workflow
+  - Relocated essential resources (STATUS.md, BENCHMARK_RELEASES.md, API_REFERENCE.md) to appropriate category folders
+  - Updated all internal cross-references and relative paths to maintain link integrity across reorganized structure
+  - Enhanced discoverability with category-based documentation taxonomy aligned with developer workflows
+
+### Fixed
+- **Documentation Link Integrity** — Corrected all cross-references following reorganization
+  - Updated validator scripts (validate-test-infrastructure.cjs/.js) to reference new docs/reference/ locations
+  - Fixed CONTRIBUTING.md to reflect STATUS.md relocation to docs/reference/
+  - Corrected all relative path traversals in moved documentation files (TESTING_QUICK_START.md, LICENSE_CLI_QUICK_START.md, etc.)
+  - Preserved LIMJ workflow system prompt and templates in docs/skills/limj-system-prompt/
+  - Validated all documentation links with Codex automated review (4 review cycles, 10 P2 issues resolved)
+
+### Improved
+- **Project README** — Completely rewritten for clarity and navigation
+  - Single entry point to all documentation categories with clear purpose statements
+  - Fixed skill inventory count accuracy (30 skills, 28 tools)
+  - Organized quick-start instructions with environment setup sequence
+  - Added comprehensive documentation hub table mapping resources to locations
+  - Included complete feature list, use cases, and licensing information
+
 ## [1.4.0] - In Progress (v1.4.0 Feature Release)
 
 ### Added (Preparing for Release)

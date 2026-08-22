@@ -388,7 +388,7 @@ Documentation is organized under `docs/` in the following subdirectories:
 - **`docs/analysis/`** — Performance reports, benchmarks, security audits
 - **`docs/archive/`** — Historical documentation, session notes, prior releases
 
-Essential files remain in root: `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CLAUDE.md`, `STATUS.md`
+Essential files remain in root: `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CLAUDE.md`. Project status documentation moved to `docs/reference/STATUS.md`.
 
 ### README Updates
 

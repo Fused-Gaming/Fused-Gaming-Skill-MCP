@@ -32,9 +32,9 @@ fused-gaming-mcp license status    # Dashboard view
 - Get file locations
 
 ### 2. Read Full Design Documents
-1. `DESIGN_LICENSE_CLI.md` (1140 lines) - Complete spec
-2. `docs/LICENSE-CLI-ARCHITECTURE.md` - Architecture diagram
-3. `LICENSE_CLI_DESIGN_SUMMARY.md` - Summary of key decisions
+1. `docs/design/DESIGN_LICENSE_CLI.md` (1140 lines) - Complete spec
+2. `docs/design/LICENSE_CLI_DESIGN_INDEX.md` - Architecture and navigation guide
+3. `docs/design/LICENSE_CLI_DESIGN_SUMMARY.md` - Summary of key decisions
 
 ### 3. Understand Current CLI Structure
 - `/packages/cli/src/index.ts` - Entry point (uses yargs)
@@ -483,11 +483,11 @@ npm run build && npm run typecheck && npm run lint && npm test
 - boxen: https://github.com/sindresorhus/boxen
 
 ### Project Files
-- Design spec: `/DESIGN_LICENSE_CLI.md`
-- Architecture: `/docs/LICENSE-CLI-ARCHITECTURE.md`
-- Summary: `/LICENSE_CLI_DESIGN_SUMMARY.md`
-- This guide: `/LICENSE_CLI_QUICK_START.md`
-- Implementation plan: `/LICENSE_CLI_IMPLEMENTATION_PLAN.md`
+- Design spec: `../../docs/design/DESIGN_LICENSE_CLI.md`
+- Architecture: `../../docs/design/LICENSE_CLI_DESIGN_INDEX.md`
+- Summary: `../../docs/design/LICENSE_CLI_DESIGN_SUMMARY.md`
+- This guide: `./LICENSE_CLI_QUICK_START.md`
+- Implementation plan: `../../docs/design/LICENSE_CLI_IMPLEMENTATION_PLAN.md`
 
 ### Example Code
 - CLI routing: `/packages/cli/src/index.ts`

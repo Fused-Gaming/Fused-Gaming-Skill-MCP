@@ -10,7 +10,7 @@ Start here for core project information:
 - [`../CHANGELOG.md`](../CHANGELOG.md) — Version history & release notes
 - [`../SECURITY.md`](../SECURITY.md) — Security policies & reporting
 - [`../CLAUDE.md`](../CLAUDE.md) — Agent-specific instructions & constraints
-- [`../STATUS.md`](../STATUS.md) — Project status & milestones
+- [`./reference/STATUS.md`](./reference/STATUS.md) — Project status & milestones
 
 ## Documentation by Category
 

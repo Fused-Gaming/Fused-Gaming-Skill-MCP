@@ -40,10 +40,10 @@ check('  /docs/TEST_TEMPLATES.md exists',
   fs.existsSync(path.join(ROOT, 'docs/TEST_TEMPLATES.md')));
 check('  /docs/COVERAGE_STRATEGY.md exists', 
   fs.existsSync(path.join(ROOT, 'docs/COVERAGE_STRATEGY.md')));
-check('  /JEST_CONFIG_TEMPLATES.md exists', 
-  fs.existsSync(path.join(ROOT, 'JEST_CONFIG_TEMPLATES.md')));
-check('  /TESTING_READINESS_REPORT.md exists', 
-  fs.existsSync(path.join(ROOT, 'TESTING_READINESS_REPORT.md')));
+check('  /docs/reference/JEST_CONFIG_TEMPLATES.md exists',
+  fs.existsSync(path.join(ROOT, 'docs/reference/JEST_CONFIG_TEMPLATES.md')));
+check('  /docs/reference/TESTING_READINESS_REPORT.md exists',
+  fs.existsSync(path.join(ROOT, 'docs/reference/TESTING_READINESS_REPORT.md')));
 
 // 2. Check Jest configuration files
 console.log('\n⚙️  Jest Configuration Files:');
@@ -99,8 +99,8 @@ const docContent = {
   'docs/TESTING_INFRASTRUCTURE.md': ['Jest Configuration', 'Test Templates', '80%'],
   'docs/TEST_TEMPLATES.md': ['Unit Test', 'Integration Test', 'React Component'],
   'docs/COVERAGE_STRATEGY.md': ['80% Code Coverage', 'Coverage Thresholds', 'Edge Cases'],
-  'JEST_CONFIG_TEMPLATES.md': ['jest.config.js', 'jsdom', 'Node.js'],
-  'TESTING_READINESS_REPORT.md': ['Readiness', 'Week 2', '80%+'],
+  'docs/reference/JEST_CONFIG_TEMPLATES.md': ['jest.config.js', 'jsdom', 'Node.js'],
+  'docs/reference/TESTING_READINESS_REPORT.md': ['Readiness', 'Week 2', '80%+'],
 };
 
 Object.entries(docContent).forEach(([file, keywords]) => {

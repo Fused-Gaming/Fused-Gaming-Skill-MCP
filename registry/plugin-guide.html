@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fused Gaming MCP Plugin Guide</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --accent: #ec4899;
+      --bg-light: #f9fafb;
+      --bg-white: #ffffff;
+      --bg-dark: #1f2937;
+      --bg-darker: #111827;
+      --text-light: #6b7280;
+      --text-dark: #111827;
+      --border-light: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-light: #1f2937;
+        --bg-white: #111827;
+        --bg-dark: #0f172a;
+        --bg-darker: #020617;
+        --text-light: #d1d5db;
+        --text-dark: #f3f4f6;
+        --border-light: #374151;
+        --border-dark: #1e293b;
+      }
+    }
+
+    [data-theme="dark"] {
+      --bg-light: #1f2937;
+      --bg-white: #111827;
+      --bg-dark: #0f172a;
+      --bg-darker: #020617;
+      --text-light: #d1d5db;
+      --text-dark: #f3f4f6;
+      --border-light: #374151;
+      --border-dark: #1e293b;
+    }
+
+    [data-theme="light"] {
+      --bg-light: #f9fafb;
+      --bg-white: #ffffff;
+      --bg-dark: #1f2937;
+      --bg-darker: #111827;
+      --text-light: #6b7280;
+      --text-dark: #111827;
+      --border-light: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      padding: 40px 20px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 1.1em;
+      opacity: 0.95;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .tab-button {
+      padding: 12px 24px;
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .tab-button:hover {
+      color: var(--primary);
+    }
+
+    .tab-button.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .skill-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      border-color: var(--primary);
+    }
+
+    .skill-card h3 {
+      margin: 0 0 8px 0;
+      color: var(--primary);
+      font-size: 1.2em;
+    }
+
+    .skill-card .package {
+      font-family: monospace;
+      font-size: 0.85em;
+      color: var(--text-light);
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+
+    .skill-card p {
+      margin: 0;
+      color: var(--text-dark);
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+
+    .category-header {
+      font-size: 1.3em;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 30px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .quick-start {
+      background: var(--bg-white);
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .quick-start h3 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+
+    .quick-start code {
+      background: var(--bg-light);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+
+    .quick-start pre {
+      background: var(--bg-light);
+      padding: 12px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+
+    .tool-list {
+      background: var(--bg-white);
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+
+    .tool-list h4 {
+      color: var(--primary);
+      margin-top: 0;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 10px;
+    }
+
+    .tool-list ul {
+      column-count: 2;
+      column-gap: 20px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tool-list li {
+      margin-bottom: 10px;
+      font-size: 0.95em;
+    }
+
+    .tool-list code {
+      background: var(--bg-light);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+
+    .learning-path {
+      background: var(--bg-white);
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .learning-path h3 {
+      color: var(--primary);
+      margin-top: 0;
+    }
+
+    .learning-path ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .learning-path li {
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background: var(--bg-white);
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      font-size: 1em;
+    }
+
+    .search-box::placeholder {
+      color: var(--text-light);
+    }
+
+    .pro-tips {
+      background: var(--bg-white);
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .pro-tips h3 {
+      color: var(--accent);
+      margin-top: 0;
+    }
+
+    .pro-tips ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .pro-tips li {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-light);
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 1.8em;
+      }
+
+      .tabs {
+        flex-wrap: wrap;
+      }
+
+      .tab-button {
+        padding: 10px 16px;
+        font-size: 0.95em;
+      }
+
+      .tool-list ul {
+        column-count: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 Fused Gaming MCP Plugin Guide</h1>
+      <p>Get Started with 30 Skills, 60+ Tools, and Advanced AI Orchestration</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-button active" data-tab="quick-start">⚡ Quick Start</button>
+      <button class="tab-button" data-tab="all-skills">📚 All Skills (30)</button>
+      <button class="tab-button" data-tab="learning-paths">🎯 Learning Paths</button>
+      <button class="tab-button" data-tab="tools">🛠️ Tools (60+)</button>
+      <button class="tab-button" data-tab="config">⚙️ Configuration</button>
+      <button class="tab-button" data-tab="pro-tips">💡 Pro Tips</button>
+    </div>
+
+    <!-- Quick Start Tab -->
+    <div id="quick-start" class="tab-content active">
+      <div class="quick-start">
+        <h3>Initialize the MCP Server</h3>
+        <pre>npm install
+npm run build
+npm run typecheck
+npm run lint</pre>
+      </div>
+
+      <div class="quick-start">
+        <h3>Generate and Update Registry</h3>
+        <pre>npm run registry:generate
+npm run registry:update</pre>
+      </div>
+
+      <div class="quick-start">
+        <h3>Start Development</h3>
+        <pre>npm run dev</pre>
+      </div>
+
+      <div class="quick-start">
+        <h3>Available Commands</h3>
+        <ul>
+          <li><code>npm run build</code> - Build all workspaces</li>
+          <li><code>npm run test</code> - Run tests across workspaces</li>
+          <li><code>npm run lint</code> - Run linting checks</li>
+          <li><code>npm run typecheck</code> - TypeScript type checking</li>
+          <li><code>npm run dev</code> - Start development server</li>
+          <li><code>npm run registry:generate</code> - Generate registry from skills</li>
+          <li><code>npm run registry:update</code> - Generate and sync registry</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- All Skills Tab -->
+    <div id="all-skills" class="tab-content">
+      <input type="text" class="search-box" id="skillSearch" placeholder="Search skills...">
+
+      <div class="category-header">🎨 Design Skills (7)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Agentic Flow DevKit</h3>
+          <div class="package">@h4shed/skill-agentic-flow-devkit</div>
+          <p>Design and visualize agentic orchestration flows with trailer A/B-roll planning support</p>
+        </div>
+        <div class="skill-card">
+          <h3>Canvas Design</h3>
+          <div class="package">@h4shed/skill-canvas-design</div>
+          <p>Visual design generation for web with SVG and canvas rendering</p>
+        </div>
+        <div class="skill-card">
+          <h3>Frontend Design</h3>
+          <div class="package">@h4shed/skill-frontend-design</div>
+          <p>Frontend component design and HTML/CSS generation for modern web applications</p>
+        </div>
+        <div class="skill-card">
+          <h3>Style Dictionary</h3>
+          <div class="package">@h4shed/skill-style-dictionary-system</div>
+          <p>Design tokens and style dictionary generation for cross-platform design system management</p>
+        </div>
+        <div class="skill-card">
+          <h3>SVG Generator</h3>
+          <div class="package">@h4shed/skill-svg-generator</div>
+          <p>Generate SVG assets and icon concepts from structured prompts</p>
+        </div>
+        <div class="skill-card">
+          <h3>TailwindCSS Builder</h3>
+          <div class="package">@h4shed/skill-tailwindcss-style-builder</div>
+          <p>Tailwind CSS utility-first styling and design system builder for rapid UI development</p>
+        </div>
+        <div class="skill-card">
+          <h3>Theme Factory</h3>
+          <div class="package">@h4shed/skill-theme-factory</div>
+          <p>Design system and theme generation for consistent UI/UX across applications</p>
+        </div>
+      </div>
+
+      <div class="category-header">🎭 Generative Art Skills (3)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Algorithmic Art</h3>
+          <div class="package">@h4shed/skill-algorithmic-art</div>
+          <p>Generative art using p5.js with seeded randomness, flow fields, and particle systems</p>
+        </div>
+        <div class="skill-card">
+          <h3>NFT Generative Art</h3>
+          <div class="package">@h4shed/skill-nft-generative-art</div>
+          <p>NFT artwork generation, metadata creation, and blockchain-ready asset creation</p>
+        </div>
+        <div class="skill-card">
+          <h3>Smart Contract Tools</h3>
+          <div class="package">@h4shed/skill-smart-contract-tools</div>
+          <p>Smart contract development tools for Hardhat, Truffle, and Foundry ecosystems</p>
+        </div>
+      </div>
+
+      <div class="category-header">📱 General Purpose Skills (7)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>ASCII Mockup</h3>
+          <div class="package">@h4shed/skill-ascii-mockup</div>
+          <p>Mobile-first ASCII wireframe mockup generator for rapid UI prototyping</p>
+        </div>
+        <div class="skill-card">
+          <h3>Playwright Testing</h3>
+          <div class="package">@h4shed/skill-playwright-test-automation</div>
+          <p>End-to-end testing automation framework for web applications with cross-browser support</p>
+        </div>
+        <div class="skill-card">
+          <h3>Storybook Components</h3>
+          <div class="package">@h4shed/skill-storybook-component-library</div>
+          <p>Component library documentation and visual testing with Storybook integration</p>
+        </div>
+        <div class="skill-card">
+          <h3>SyncPulse</h3>
+          <div class="package">@h4shed/skill-syncpulse</div>
+          <p>Intelligent project state caching, multi-agent coordination, and secure email automation</p>
+        </div>
+        <div class="skill-card">
+          <h3>SyncPulse Hub</h3>
+          <div class="package">@h4shed/syncpulse-hub</div>
+          <p>Centralized orchestration and installation of all @h4shed packages</p>
+        </div>
+        <div class="skill-card">
+          <h3>TypeScript Toolchain</h3>
+          <div class="package">@h4shed/skill-typescript-toolchain</div>
+          <p>Advanced TypeScript configuration, type generation, and static analysis tooling</p>
+        </div>
+        <div class="skill-card">
+          <h3>Vite Module Bundler</h3>
+          <div class="package">@h4shed/skill-vite-module-bundler</div>
+          <p>Next-generation JavaScript module bundler for lightning-fast development</p>
+        </div>
+      </div>
+
+      <div class="category-header">💼 Content Creation Skills (2)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>LinkedIn Master Journalist</h3>
+          <div class="package">@h4shed/skill-linkedin-master-journalist</div>
+          <p>Draft polished LinkedIn release and thought-leadership posts</p>
+        </div>
+        <div class="skill-card">
+          <h3>Underworld Writer</h3>
+          <div class="package">@h4shed/skill-underworld-writer</div>
+          <p>Dual-methodology skill for fictional underworld narratives and factually sourced true crime writing</p>
+        </div>
+      </div>
+
+      <div class="category-header">🛠️ MCP & Development Tools (2)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Skill Creator</h3>
+          <div class="package">@h4shed/skill-creator</div>
+          <p>Create custom skills and tools for the Fused Gaming MCP ecosystem</p>
+        </div>
+        <div class="skill-card">
+          <h3>MCP Builder</h3>
+          <div class="package">@h4shed/skill-mcp-builder</div>
+          <p>Build and scaffold MCP servers and skills with best practices</p>
+        </div>
+      </div>
+
+      <div class="category-header">🔗 Session Management (1)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Multi-Account Tracking</h3>
+          <div class="package">@h4shed/skill-multi-account-session-tracking</div>
+          <p>Extended framework for tracking Claude sessions across multiple accounts with unified metrics</p>
+        </div>
+      </div>
+
+      <div class="category-header">📊 Project Management (3)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Project Manager</h3>
+          <div class="package">@h4shed/skill-project-manager</div>
+          <p>Plan projects with milestones, dependencies, and delivery phases</p>
+        </div>
+        <div class="skill-card">
+          <h3>Project Manager Skill</h3>
+          <div class="package">@h4shed/skill-project-manager-skill</div>
+          <p>Task and project management skill for tracking work items and team collaboration</p>
+        </div>
+        <div class="skill-card">
+          <h3>Project Status Tool</h3>
+          <div class="package">@h4shed/skill-project-status-tool</div>
+          <p>Summarize current project status, risks, and next actions</p>
+        </div>
+      </div>
+
+      <div class="category-header">📈 Productivity (1)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Daily Review</h3>
+          <div class="package">@h4shed/skill-daily-review</div>
+          <p>Productivity tracking and daily review skill for session aggregation and metrics analysis</p>
+        </div>
+      </div>
+
+      <div class="category-header">🌐 Web & Deployment (2)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Vercel NextJS Deploy</h3>
+          <div class="package">@h4shed/skill-vercel-nextjs-deployment</div>
+          <p>Vercel deployment optimization and Next.js framework integration for serverless applications</p>
+        </div>
+        <div class="skill-card">
+          <h3>Pre-Deploy Validator</h3>
+          <div class="package">@h4shed/skill-pre-deploy-validator</div>
+          <p>Pre-deployment validation and quality checks for production readiness</p>
+        </div>
+      </div>
+
+      <div class="category-header">📊 User Experience (1)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>UX Journey Mapper</h3>
+          <div class="package">@h4shed/skill-ux-journeymapper</div>
+          <p>Create UX journey maps with pain points, touchpoints, and opportunities</p>
+        </div>
+      </div>
+
+      <div class="category-header">📈 Visualization (1)</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Mermaid Terminal</h3>
+          <div class="package">@h4shed/skill-mermaid-terminal</div>
+          <p>Generate terminal-friendly Mermaid diagrams and flowcharts</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learning Paths Tab -->
+    <div id="learning-paths" class="tab-content">
+      <div class="learning-path">
+        <h3>🎨 Path 1: Visual Designer</h3>
+        <ol>
+          <li>Use <code>canvas-design</code> for initial mockups</li>
+          <li>Apply <code>theme-factory</code> for system design</li>
+          <li>Reference <code>frontend-design</code> for components</li>
+          <li>Document with <code>storybook-component-library</code></li>
+        </ol>
+      </div>
+
+      <div class="learning-path">
+        <h3>✍️ Path 2: Creative Writer</h3>
+        <ol>
+          <li>Begin with <code>underworld-writer-skill</code> for narrative writing</li>
+          <li>Use <code>daily-review</code> for summaries</li>
+          <li>Share with <code>linkedin-master-journalist</code></li>
+        </ol>
+      </div>
+
+      <div class="learning-path">
+        <h3>💻 Path 3: Full-Stack Developer</h3>
+        <ol>
+          <li>Use <code>mcp-builder</code> to create custom tools</li>
+          <li>Build with <code>vite-module-bundler</code></li>
+          <li>Deploy with <code>vercel-nextjs-deployment</code></li>
+          <li>Test with <code>playwright-test-automation</code></li>
+          <li>Validate with <code>pre-deploy-validator</code></li>
+        </ol>
+      </div>
+
+      <div class="learning-path">
+        <h3>🤖 Path 4: AI Orchestration</h3>
+        <ol>
+          <li>Design flows with <code>agentic-flow-devkit</code></li>
+          <li>Coordinate with <code>syncpulse</code></li>
+          <li>Track progress with <code>project-status-tool</code></li>
+        </ol>
+      </div>
+
+      <div class="learning-path">
+        <h3>📋 Path 5: Project Manager</h3>
+        <ol>
+          <li>Plan with <code>project-manager</code></li>
+          <li>Track tasks with <code>project-manager-skill</code></li>
+          <li>Monitor status with <code>project-status-tool</code></li>
+          <li>Coordinate with <code>syncpulse</code></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Tools Tab -->
+    <div id="tools" class="tab-content">
+      <div class="tool-list">
+        <h4>🎨 Design Tools (9)</h4>
+        <ul>
+          <li><code>plan_trailer_rolls</code> - Plan A/B-roll sequences</li>
+          <li><code>visualize_agentic_flow</code> - Visualize multi-agent orchestration</li>
+          <li><code>generate_svg</code> - Create vector graphics</li>
+          <li><code>generate_component</code> - Generate HTML/CSS components</li>
+          <li><code>generate_svg_asset</code> - Create SVG icons and assets</li>
+          <li><code>generate_theme</code> - Generate complete theme systems</li>
+          <li><code>flow_field</code> - Create flow field visualizations</li>
+          <li><code>generate_art</code> - Generate algorithmic art pieces</li>
+          <li><code>generate_mockup</code> - Create ASCII wireframe mockups</li>
+        </ul>
+      </div>
+
+      <div class="tool-list">
+        <h4>💬 Content & Communication (4)</h4>
+        <ul>
+          <li><code>draft_linkedin_post</code> - Draft polished LinkedIn posts</li>
+          <li><code>analyze_content_quality</code> - Analyze content quality metrics</li>
+          <li><code>track_content_performance</code> - Track content performance</li>
+          <li><code>verify_hashtags</code> - Verify and optimize hashtags</li>
+        </ul>
+      </div>
+
+      <div class="tool-list">
+        <h4>📊 Productivity & Project (8)</h4>
+        <ul>
+          <li><code>generate_daily_review</code> - Generate daily work summaries</li>
+          <li><code>analyze_weekly</code> - Analyze weekly metrics</li>
+          <li><code>log_session</code> - Log session data</li>
+          <li><code>plan_project</code> - Plan projects with dependencies</li>
+          <li><code>task_management</code> - Manage project tasks</li>
+          <li><code>create_project</code> - Create and initialize projects</li>
+          <li><code>summarize_project_status</code> - Summarize project status</li>
+          <li><code>dashboard</code> - Access project dashboard</li>
+        </ul>
+      </div>
+
+      <div class="tool-list">
+        <h4>✅ Testing & Validation (1)</h4>
+        <ul>
+          <li><code>validate_deployment</code> - Pre-deployment validation checks</li>
+        </ul>
+      </div>
+
+      <div class="tool-list">
+        <h4>🛠️ Development & Infrastructure (7)</h4>
+        <ul>
+          <li><code>scaffold_skill</code> - Scaffold new MCP skills</li>
+          <li><code>create_skill</code> - Create custom skills</li>
+          <li><code>map_user_journey</code> - Map user journey and touchpoints</li>
+          <li><code>generate_mermaid_diagram</code> - Generate Mermaid diagrams</li>
+          <li><code>session_aggregation</code> - Aggregate session data</li>
+          <li><code>email_tools</code> - Email automation tools</li>
+          <li><code>email_workflows</code> - Pre-built email workflows</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Configuration Tab -->
+    <div id="config" class="tab-content">
+      <div class="quick-start">
+        <h3>Environment Setup</h3>
+        <pre>npm run build
+npm run typecheck
+npm run lint
+npm run dev</pre>
+      </div>
+
+      <div class="quick-start">
+        <h3>Registry Management</h3>
+        <pre>npm run registry:generate
+npm run registry:sync-claude
+npm run registry:update</pre>
+      </div>
+
+      <div class="quick-start">
+        <h3>Project Configuration</h3>
+        <ul>
+          <li><strong>Workspace Config:</strong> <code>package.json</code> workspaces section</li>
+          <li><strong>Build Config:</strong> <code>tsconfig.json</code> for TypeScript</li>
+          <li><strong>Version Config:</strong> <code>VERSION.json</code> for release metadata</li>
+          <li><strong>Swarm Config:</strong> <code>.claude-flow/config.yaml</code> for multi-agent coordination</li>
+          <li><strong>MCP Config:</strong> <code>.mcp/config.json</code></li>
+        </ul>
+      </div>
+
+      <div class="quick-start">
+        <h3>Documentation & Examples</h3>
+        <ul>
+          <li><strong>Skills Registry:</strong> <code>registry/REGISTRY.md</code></li>
+          <li><strong>Skills Directory:</strong> <code>packages/skills/</code></li>
+          <li><strong>Core API:</strong> <code>packages/core/</code></li>
+          <li><strong>CLI Tools:</strong> <code>packages/cli/</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pro Tips Tab -->
+    <div id="pro-tips" class="tab-content">
+      <div class="pro-tips">
+        <h3>💡 9 Pro Tips</h3>
+        <ol>
+          <li><strong>Combine Skills:</strong> Use multiple skills together (e.g., design + content + publishing)</li>
+          <li><strong>Registry Updates:</strong> Run <code>npm run registry:update</code> after adding new skills</li>
+          <li><strong>Workspace Builds:</strong> Use <code>npm run build</code> for complete validation</li>
+          <li><strong>Performance:</strong> Use <code>npm run typecheck</code> to catch issues before build</li>
+          <li><strong>Version Management:</strong> Keep skills updated with workspace builds</li>
+          <li><strong>Multi-Agent Coordination:</strong> Use SyncPulse for intelligent project state management</li>
+          <li><strong>Documentation:</strong> Generate and sync registry frequently for accurate skill discovery</li>
+          <li><strong>Batch Operations:</strong> Use project-manager-skill to orchestrate complex workflows</li>
+          <li><strong>Progress Tracking:</strong> Check project-status-tool for real-time project metrics</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Last Updated: August 21, 2026 | Registry Version: 1.0.0 | Total Skills: 30 | Total Tools: 60+ | Status: Production Ready ✅</p>
+  </footer>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const tabId = button.dataset.tab;
+
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        button.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+
+    // Search functionality
+    const searchBox = document.getElementById('skillSearch');
+    if (searchBox) {
+      searchBox.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        document.querySelectorAll('.skill-card').forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+    }
+
+    // Dark mode support
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (prefersDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+</body>
+</html>

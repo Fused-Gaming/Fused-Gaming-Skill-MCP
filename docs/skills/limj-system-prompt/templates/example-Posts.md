@@ -116,5 +116,3 @@ The conversation is happening now. Where do you stand?
 - Post once per week on this topic
 - Comment authentically 2-3x per week on related posts
 - Save strong engagement comments for other posts (build network equity)
-
----

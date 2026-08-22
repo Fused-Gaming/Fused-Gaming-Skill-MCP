@@ -224,12 +224,12 @@
 
 | Document | Purpose |
 |----------|---------|
-| [README.md](./README.md) | Project overview and quick start |
-| [ROADMAP.md](./docs/ROADMAP.md) | Published/planned skill inventory and backlog |
-| [CHANGELOG.md](./CHANGELOG.md) | Detailed release notes and change history |
-| [VERSION.json](./VERSION.json) | Machine-readable version metadata |
-| [CLAUDE.md](./CLAUDE.md) | Agent handoff notes and operational context |
-| [docs/process/](./docs/process/) | GitHub automation orientation, PR checklists, setup guides |
+| [README.md](../../README.md) | Project overview and quick start |
+| [ROADMAP.md](../../docs/ROADMAP.md) | Published/planned skill inventory and backlog |
+| [CHANGELOG.md](../../CHANGELOG.md) | Detailed release notes and change history |
+| [VERSION.json](../../VERSION.json) | Machine-readable version metadata |
+| [CLAUDE.md](../../CLAUDE.md) | Agent handoff notes and operational context |
+| [docs/process/](../process/) | GitHub automation orientation, PR checklists, setup guides |
 
 ---
 
