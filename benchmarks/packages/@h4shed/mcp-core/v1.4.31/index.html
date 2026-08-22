@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Benchmark Report</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    .metric { display: inline-block; margin: 10px; padding: 15px; border-radius: 8px; background: #f5f5f5; }
+    .score { font-size: 2em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Benchmark Report</h1>
+  <div id="results"></div>
+  <script>
+    fetch('results.json').then(r => r.json()).then(data => {
+      // Recalculate validated combined score using canonical formula
+      // Combined score = (Behavioral × 0.40) + (Performance × 0.35) + (Code Quality × 0.25)
+      const validatedScore = (
+        (data.behavioral.behavioral_score * 0.40) +
+        (data.performance.performance_score * 0.35) +
+        (data.code_quality.quality_score * 0.25)
+      );
+      const html = `
+        <h2>${data.package} v${data.version}</h2>
+        <div class="metric">
+          <div class="score">${validatedScore.toFixed(1)}%</div>
+          <div>Combined Score</div>
+        </div>
+        <div class="metric">
+          <div class="score">${data.behavioral.behavioral_score.toFixed(1)}%</div>
+          <div>Behavioral</div>
+        </div>
+        <div class="metric">
+          <div class="score">${data.performance.performance_score.toFixed(1)}%</div>
+          <div>Performance</div>
+        </div>
+        <div class="metric">
+          <div class="score">${data.code_quality.quality_score.toFixed(1)}%</div>
+          <div>Code Quality</div>
+        </div>
+      `;
+      document.getElementById('results').innerHTML = html;
+    });
+  </script>
+</body>
+</html>
