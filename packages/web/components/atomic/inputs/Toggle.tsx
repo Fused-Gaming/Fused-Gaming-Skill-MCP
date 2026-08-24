@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface ToggleProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
+export interface ToggleProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'size'> {
   /**
    * Toggle size
    * @default 'md'

@@ -94,13 +94,12 @@ export const Divider = React.forwardRef<HTMLHRElement, DividerProps>(
 
       return (
         <div
-          ref={ref as any}
           className={combinedClassName}
           style={{
             height: height || '1em',
             borderLeftWidth: `${thickness}px`,
           }}
-          {...(props as any)}
+          {...props}
         />
       );
     }

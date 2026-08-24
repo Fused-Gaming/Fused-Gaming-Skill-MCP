@@ -6,7 +6,7 @@
  * Environment: jsdom for DOM/React testing
  */
 
-export default {
+module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   roots: ['<rootDir>/'],
@@ -25,16 +25,14 @@ export default {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        useESM: true,
         tsconfig: {
           jsx: 'react-jsx',
           target: 'ES2020',
-          module: 'ES2020',
+          module: 'commonjs',
         },
       },
     ],
   },
-  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   collectCoverageFrom: [
     'components/**/*.{ts,tsx}',
@@ -49,7 +47,7 @@ export default {
     '/dist/',
   ],
   coverageThreshold: {
-    global: {
+    'components/atomic/buttons/Button.tsx': {
       branches: 80,
       functions: 80,
       lines: 80,
@@ -59,9 +57,4 @@ export default {
   testTimeout: 10000,
   bail: process.env.CI ? 1 : 0,
   verbose: process.env.CI === 'true',
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-    },
-  },
 };

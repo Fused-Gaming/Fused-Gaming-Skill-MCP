@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
+export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'size'> {
   /**
    * Checkbox size
    * @default 'md'
@@ -66,6 +66,16 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     className,
     ...props
   }, ref) => {
+    const checkboxRef = React.useRef<HTMLInputElement>(null);
+
+    React.useImperativeHandle(ref, () => checkboxRef.current as HTMLInputElement);
+
+    React.useEffect(() => {
+      if (checkboxRef.current) {
+        checkboxRef.current.indeterminate = indeterminate;
+      }
+    }, [indeterminate]);
+
     const sizeMap = {
       sm: 'w-4 h-4',
       md: 'w-5 h-5',
@@ -86,7 +96,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 
     const checkboxEl = (
       <input
-        ref={ref}
+        ref={checkboxRef}
         type="checkbox"
         className={`${sizeMap[size]} ${colorClasses[color]} cursor-pointer transition-colors ${
           disabled ? 'opacity-50 cursor-not-allowed' : ''

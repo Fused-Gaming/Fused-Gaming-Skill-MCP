@@ -4,7 +4,7 @@
  */
 
 // Add React Testing Library matchers
-import '@testing-library/jest-dom';
+require('@testing-library/jest-dom');
 
 // Mock window.matchMedia for responsive component testing
 Object.defineProperty(window, 'matchMedia', {

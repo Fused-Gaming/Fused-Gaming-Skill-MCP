@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface ChipProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ChipProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   /**
    * Chip variant/semantic color
    * @default 'primary'

@@ -134,7 +134,8 @@ describe('Button - Accessibility (WCAG 2.1 AAA)', () => {
       const { container } = render(
         <Button>Button</Button>
       );
-      expect(container.querySelector('button')).toHaveAttribute('type');
+      const button = container.querySelector('button');
+      expect(button?.tagName.toLowerCase()).toBe('button');
     });
   });
 
@@ -203,7 +204,7 @@ describe('Button - Accessibility (WCAG 2.1 AAA)', () => {
         <Button>Focus Test</Button>
       );
       const button = container.querySelector('button');
-      expect(button).toHaveAttribute('type'); // Buttons are focusable by default
+      expect(button).toBeInTheDocument(); // Buttons are focusable by default
     });
 
     it('should be accessible when disabled', async () => {

@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button Component Snapshot Tests should match danger variant snapshot 1`] = `
+<button
+  class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 px-4 py-2 text-base"
+>
+  Danger Button
+</button>
+`;
+
+exports[`Button Component Snapshot Tests should match disabled state snapshot 1`] = `
+<button
+  class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 px-4 py-2 text-base opacity-50 cursor-not-allowed"
+  disabled=""
+>
+  Disabled Button
+</button>
+`;
+
+exports[`Button Component Snapshot Tests should match full width snapshot 1`] = `
+<button
+  class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 px-4 py-2 text-base w-full"
+>
+  Full Width Button
+</button>
+`;
+
+exports[`Button Component Snapshot Tests should match loading state snapshot 1`] = `
+<button
+  class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 px-4 py-2 text-base opacity-50 cursor-not-allowed"
+  disabled=""
+>
+  <span
+    class="flex items-center gap-2"
+  >
+    <span
+      class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
+    />
+    Loading Button
+  </span>
+</button>
+`;
+
+exports[`Button Component Snapshot Tests should match primary variant snapshot 1`] = `
+<button
+  class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 px-4 py-2 text-base"
+>
+  Primary Button
+</button>
+`;
+
+exports[`Button Component Snapshot Tests should match secondary variant snapshot 1`] = `
+<button
+  class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 px-4 py-2 text-base"
+>
+  Secondary Button
+</button>
+`;
+
+exports[`Button Component Snapshot Tests should match size variants snapshot 1`] = `
+<div>
+  <div>
+    <button
+      class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 px-3 py-1.5 text-sm"
+    >
+      Small
+    </button>
+    <button
+      class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 px-4 py-2 text-base"
+    >
+      Medium
+    </button>
+    <button
+      class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 px-6 py-3 text-lg"
+    >
+      Large
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Button Component Snapshot Tests should match tertiary variant snapshot 1`] = `
+<button
+  class="font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-transparent text-gray-900 hover:bg-gray-100 focus:ring-gray-500 px-4 py-2 text-base"
+>
+  Tertiary Button
+</button>
+`;

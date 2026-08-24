@@ -94,7 +94,7 @@ export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className={`${sizeClasses.sm} rounded-full ${colorClasses[variant]} animate-bounce`}
+                  className={`w-2 h-2 rounded-full ${colorClasses[variant]} animate-bounce`}
                   style={{ animationDelay: `${i * 100}ms` }}
                 />
               ))}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
+export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'size'> {
   /**
    * Radio size
    * @default 'md'
