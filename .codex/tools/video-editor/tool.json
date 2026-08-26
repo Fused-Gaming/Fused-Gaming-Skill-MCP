@@ -1,0 +1,44 @@
+{
+  "name": "video-editor",
+  "version": "0.1.0",
+  "kind": "cross-agent-tool",
+  "description": "Automation-first video editing facade over FFmpeg, transcription, MCP editors, and optional Modal GPU workers.",
+  "owners": ["codex", "claude", "chatgpt", "syncpulse"],
+  "entrypoints": {
+    "documentation": ".codex/tools/video-editor/README.md",
+    "skill": ".codex/skills/video-editing/SKILL.md",
+    "flows": ".codex/automation/video-editing-flows.json",
+    "architecture": "docs/architecture/CROSS_AGENT_VIDEO_AUTOMATION.md"
+  },
+  "backends": {
+    "required": ["ffmpeg"],
+    "preferred": ["whisperx", "synthcut"],
+    "optional": ["video-use", "autobroll", "remotion", "moviepy", "modal", "huggingface"]
+  },
+  "capabilities": [
+    "probe",
+    "transcribe",
+    "trim",
+    "split",
+    "concat",
+    "remove_silence",
+    "remove_fillers",
+    "caption",
+    "reframe",
+    "overlay",
+    "mix_audio",
+    "render",
+    "inspect"
+  ],
+  "execution_policy": {
+    "default": "local-first",
+    "remote_fallback": "modal",
+    "gpu_for": ["transcription-large", "vision", "segmentation", "generation"],
+    "cache": ["model_weights", "transcripts", "proxies", "scene_embeddings"]
+  },
+  "handoff_contract": {
+    "format": "video-job-manifest/v1",
+    "required_fields": ["version", "job_id", "source", "intent", "operations", "execution"],
+    "state_fields": ["status", "agent", "attempt", "artifacts", "errors", "updated_at"]
+  }
+}

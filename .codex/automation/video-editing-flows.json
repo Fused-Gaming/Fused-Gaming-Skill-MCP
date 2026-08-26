@@ -1,0 +1,67 @@
+{
+  "schema": "fused-gaming/video-automation-flows/v1",
+  "tool": "video-editor",
+  "flows": [
+    {
+      "id": "daily-social-cut",
+      "trigger": "schedule_or_external_event",
+      "intent": "Turn newly available long-form source media into a short vertical social clip.",
+      "stages": [
+        { "id": "ingest", "owner": "chatgpt", "action": "resolve source artifact and create job manifest" },
+        { "id": "probe", "owner": "codex", "action": "probe source with ffmpeg/ffprobe" },
+        { "id": "transcribe", "owner": "worker", "action": "transcribe with WhisperX; local first, Modal fallback" },
+        { "id": "select", "owner": "claude", "action": "select candidate clip ranges from transcript and intent" },
+        { "id": "edit", "owner": "codex", "action": "cut, remove silence, reframe, caption, mix audio" },
+        { "id": "render", "owner": "worker", "action": "render 9:16 preview and final MP4" },
+        { "id": "inspect", "owner": "codex", "action": "validate media and expected overlays/captions" },
+        { "id": "deliver", "owner": "chatgpt", "action": "surface artifacts and status to user or downstream connector" }
+      ]
+    },
+    {
+      "id": "podcast-to-clips",
+      "trigger": "manual_or_schedule",
+      "intent": "Generate multiple candidate clips from a podcast or interview.",
+      "fanout": true,
+      "stages": [
+        { "id": "transcribe", "owner": "worker", "action": "word-timestamp transcription" },
+        { "id": "rank", "owner": "claude", "action": "rank self-contained segments by narrative and hook strength" },
+        { "id": "fanout", "owner": "syncpulse", "action": "create one child manifest per selected segment" },
+        { "id": "render", "owner": "codex", "action": "parallel deterministic renders" },
+        { "id": "fanin", "owner": "syncpulse", "action": "collect artifacts and terminal states" },
+        { "id": "present", "owner": "chatgpt", "action": "present candidate outputs and metadata" }
+      ]
+    },
+    {
+      "id": "revision-loop",
+      "trigger": "user_feedback",
+      "intent": "Revise an existing rendered video without losing prior versions.",
+      "stages": [
+        { "id": "load", "owner": "chatgpt", "action": "load prior manifest and user revision intent" },
+        { "id": "revise_manifest", "owner": "codex", "action": "append revision operations; never mutate completed history" },
+        { "id": "rerender_delta", "owner": "worker", "action": "reuse cached transcript/proxies and rerender changed stages" },
+        { "id": "inspect", "owner": "codex", "action": "validate new revision" },
+        { "id": "deliver", "owner": "chatgpt", "action": "surface new artifact while retaining previous version references" }
+      ]
+    },
+    {
+      "id": "generative-broll",
+      "trigger": "explicit_request_only",
+      "intent": "Generate missing B-roll only when requested and cheaper stock/local assets are insufficient.",
+      "stages": [
+        { "id": "gap_analysis", "owner": "claude", "action": "identify exact B-roll gaps and prompts" },
+        { "id": "model_route", "owner": "codex", "action": "select Hugging Face model and Modal GPU class" },
+        { "id": "generate", "owner": "worker", "action": "generate bounded clips" },
+        { "id": "compose", "owner": "codex", "action": "insert generated assets into deterministic timeline" },
+        { "id": "inspect", "owner": "chatgpt", "action": "surface result for subjective review before publishing" }
+      ]
+    }
+  ],
+  "shared_policy": {
+    "state_owner": "syncpulse_when_available",
+    "local_first": true,
+    "remote_compute": "modal_on_demand",
+    "model_registry": "huggingface",
+    "renderer": "ffmpeg",
+    "subjective_decisions_require_revisionable_metadata": true
+  }
+}
