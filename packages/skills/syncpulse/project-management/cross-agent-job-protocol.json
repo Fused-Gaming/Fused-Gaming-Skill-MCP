@@ -1,0 +1,104 @@
+{
+  "project": {
+    "id": "syncpulse-cross-agent-job-protocol",
+    "title": "SyncPulse Cross-Agent Job Protocol",
+    "objective": "Add a provider-neutral, durable cross-agent job protocol to SyncPulse so heterogeneous runtimes can delegate, claim, execute, and return artifact-producing work.",
+    "status": "in-progress",
+    "priority": "critical",
+    "labels": ["syncpulse", "mcp", "orchestration", "cross-agent", "design-fulfillment"]
+  },
+  "planningToolInvocation": {
+    "tool": "plan-project",
+    "objective": "Implement the SyncPulse cross-agent job protocol and first filesystem transport, then validate it with a Claude/Codex design-fulfillment profile.",
+    "context": "Provider-neutral core. Claude is initially preferred for planning and multi-agent containerization; Codex is initially preferred for rapid mockups and image processing. Project-local .codex/jobs is a filesystem transport adapter, not a core protocol dependency."
+  },
+  "tasks": [
+    {
+      "id": "CAJ-001",
+      "title": "Define CrossAgentJob contract",
+      "description": "Create canonical job, claim, provenance, artifact, status, and provider-capability types.",
+      "status": "in-progress",
+      "priority": "critical",
+      "assignee": "codex",
+      "estimatedHours": 2,
+      "labels": ["types", "protocol"]
+    },
+    {
+      "id": "CAJ-002",
+      "title": "Define JobTransport interface",
+      "description": "Specify submit, read, list, claim, heartbeat, complete, fail, and expired-claim release semantics.",
+      "status": "todo",
+      "priority": "critical",
+      "assignee": "codex",
+      "estimatedHours": 2,
+      "dependencies": ["CAJ-001"],
+      "labels": ["transport", "protocol"]
+    },
+    {
+      "id": "CAJ-003",
+      "title": "Implement FilesystemJobTransport",
+      "description": "Persist jobs atomically on local filesystems with claim leases and artifact manifests.",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "codex",
+      "estimatedHours": 4,
+      "dependencies": ["CAJ-001", "CAJ-002"],
+      "labels": ["filesystem", "transport"]
+    },
+    {
+      "id": "CAJ-004",
+      "title": "Implement capability/provider router",
+      "description": "Match required capabilities to available providers while honoring optional provider preferences.",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "claude-or-codex",
+      "estimatedHours": 4,
+      "dependencies": ["CAJ-001"],
+      "labels": ["routing", "providers"]
+    },
+    {
+      "id": "CAJ-005",
+      "title": "Add SyncPulse coordinator integration",
+      "description": "Allow coordinated workflows to emit and consume CrossAgentJob lifecycle events.",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "claude",
+      "estimatedHours": 5,
+      "dependencies": ["CAJ-002", "CAJ-004"],
+      "labels": ["syncpulse", "coordinator"]
+    },
+    {
+      "id": "CAJ-006",
+      "title": "Add Claude and Codex provider profiles",
+      "description": "Define initial capability preferences without hard-coding provider-specific behavior into the protocol.",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "claude",
+      "estimatedHours": 3,
+      "dependencies": ["CAJ-004"],
+      "labels": ["provider", "profile"]
+    },
+    {
+      "id": "CAJ-007",
+      "title": "Add protocol tests",
+      "description": "Test state transitions, exclusive claims, lease expiry, retry, artifact completion, and provider-neutral routing.",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "codex",
+      "estimatedHours": 5,
+      "dependencies": ["CAJ-003", "CAJ-004"],
+      "labels": ["tests", "quality"]
+    },
+    {
+      "id": "CAJ-008",
+      "title": "Validate with Hiram design fulfillment",
+      "description": "Use Hiram's Bunker as the first integration test: planning request to Claude-capable worker, mockup/image task to Codex-capable worker, artifact return, implementation/QA follow-up.",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "claude-and-codex",
+      "estimatedHours": 4,
+      "dependencies": ["CAJ-003", "CAJ-005", "CAJ-006", "CAJ-007"],
+      "labels": ["integration", "hiramsbunker", "design-fulfillment"]
+    }
+  ]
+}
