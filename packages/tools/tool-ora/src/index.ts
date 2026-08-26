@@ -1,7 +1,8 @@
+import { type Writable } from 'node:stream';
 import ora, { type Ora, type Options as OraOptions } from 'ora';
 
 export const name = 'ora';
-export const version = '1.1.0';
+export const version = '7.0.0';
 export const description =
   'Agent-aware terminal progress and task-context rendering for the @h4shed ecosystem';
 
@@ -47,7 +48,7 @@ export interface AgentContextRendererOptions {
   /** Force spinner behavior. Defaults to TTY detection. */
   enabled?: boolean;
   /** Output stream used by Ora. */
-  stream?: NodeJS.WritableStream;
+  stream?: Writable;
   /** Ora spinner options. */
   ora?: Omit<OraOptions, 'text' | 'stream' | 'isEnabled'>;
 }
@@ -140,7 +141,7 @@ export function createAgentProgress(
   options: AgentContextRendererOptions = {},
 ): AgentProgressController {
   const stream = options.stream ?? process.stderr;
-  const isEnabled = options.enabled ?? Boolean((stream as NodeJS.WriteStream).isTTY);
+  const isEnabled = options.enabled ?? Boolean((stream as Writable & { isTTY?: boolean }).isTTY);
   const initialText = context.currentStep ?? context.objective;
   const spinner = ora({
     ...options.ora,
