@@ -1,13 +1,24 @@
 {
   "name": "@h4shed/tool-ora",
   "version": "7.0.0",
-  "description": "Terminal spinners and progress indicators integration for @h4shed ecosystem",
+  "description": "Agent-aware terminal spinners, progress indicators, and task-context rendering for @h4shed ecosystem",
   "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
-    "test": "echo \"Tests coming soon\""
+    "test": "npm run build && node --test dist/index.test.js"
   },
   "peerDependencies": {
     "ora": "^7.0.0"
@@ -17,11 +28,17 @@
     "typescript": "^5.3.2",
     "ora": "^7.0.0"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "keywords": [
     "ora",
     "spinner",
     "progress",
     "cli",
+    "agents",
+    "task-queue",
+    "syncpulse",
     "@h4shed",
     "fused-gaming"
   ],
