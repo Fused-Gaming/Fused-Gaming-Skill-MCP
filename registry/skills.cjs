@@ -1,6 +1,6 @@
 module.exports = {
   "version": "1.0.0",
-  "timestamp": "2026-08-21T06:41:35.418Z",
+  "timestamp": "2026-08-29T12:09:31.778Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -231,6 +231,50 @@ module.exports = {
         "session-tracking",
         "metrics",
         "reporting"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "dynagraph",
+      "id": "dynagraph",
+      "description": "MCP skill adapter for Dynagraph - vector-first dynamic Open Graph image renderer",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-dynagraph",
+      "tools": [
+        {
+          "name": "dynagraph_list_templates",
+          "file": "dynagraph_list_templates.ts",
+          "description": "dynagraph_list_templates from dynagraph"
+        },
+        {
+          "name": "dynagraph_preview",
+          "file": "dynagraph_preview.ts",
+          "description": "dynagraph_preview from dynagraph"
+        },
+        {
+          "name": "dynagraph_render",
+          "file": "dynagraph_render.ts",
+          "description": "dynagraph_render from dynagraph"
+        },
+        {
+          "name": "dynagraph_validate_template",
+          "file": "dynagraph_validate_template.ts",
+          "description": "dynagraph_validate_template from dynagraph"
+        }
+      ],
+      "enabled": true,
+      "category": "mcp-tools",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "dynagraph",
+        "open-graph",
+        "og-image",
+        "rendering",
+        "vector",
+        "svg"
       ],
       "repository": "",
       "license": "Apache-2.0"
@@ -939,15 +983,15 @@ module.exports = {
       "license": "Apache-2.0"
     }
   ],
-  "totalSkills": 30,
-  "totalTools": 60,
+  "totalSkills": 31,
+  "totalTools": 64,
   "categories": {
     "design": 7,
     "generative-art": 3,
     "general": 7,
     "productivity": 1,
+    "mcp-tools": 3,
     "content-creation": 2,
-    "mcp-tools": 2,
     "visualization": 1,
     "session-management": 1,
     "development": 2,
