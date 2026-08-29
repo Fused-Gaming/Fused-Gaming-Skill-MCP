@@ -1,6 +1,9 @@
 /**
  * Dynagraph Render Tool
  * Renders dynamic Open Graph images using templates
+ *
+ * Note: Phase 1 placeholder. In Phase 8+, this will delegate to @h4shed/dynagraph
+ * core rendering engine from the standalone repository (fused-gaming/dynagraph).
  */
 
 import type { ToolDefinition } from "@h4shed/mcp-core";

@@ -14,6 +14,7 @@
     "benchmark": "echo 'Benchmarks: OK'"
   },
   "dependencies": {
+    "@h4shed/dynagraph": "^0.1.0",
     "@h4shed/mcp-core": "^1.0.24"
   },
   "devDependencies": {

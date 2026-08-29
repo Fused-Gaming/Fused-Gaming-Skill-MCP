@@ -150,18 +150,23 @@ Generates a quick SVG preview of a template.
 Claude Desktop / API
   ↓ (tool_use)
 MCP Core
-  ├─ @h4shed/skill-dynagraph (this package)
+  ├─ @h4shed/skill-dynagraph (this package — MCP adapter)
   │   ├─ depends: @h4shed/mcp-core
-  │   └─ integrates: @h4shed/dynagraph (SDK from standalone repo — Phase 7+)
+  │   └─ depends: @h4shed/dynagraph (core engine — Phase 7+)
   │
   └─ [Other skills]
 
-@h4shed/dynagraph (Standalone Repository — Phase 7+)
-  ├─ Core rendering engine
-  ├─ Template system
-  ├─ SVG → PNG/WebP rasterization
-  └─ Licensing system
+@h4shed/dynagraph (Standalone Repository)
+  ├─ Core rendering engine (SVG generation)
+  ├─ Template system (profile, article, product, custom)
+  ├─ SVG → PNG/WebP rasterization (Phase 8+)
+  ├─ HTTP API server (Phase 8+)
+  └─ Licensing system (Phase 9+)
 ```
+
+**Repository Structure**:
+- **This package** (`fused-gaming/Fused-Gaming-Skill-MCP`): MCP skill adapter for Claude integration
+- **Core library** (`fused-gaming/dynagraph`): Standalone rendering engine used by this adapter
 
 See [`DYNAGRAPH-INTEGRATION.md`](../../docs/architecture/DYNAGRAPH-INTEGRATION.md) for full architecture.
 
