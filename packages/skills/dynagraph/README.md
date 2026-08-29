@@ -55,7 +55,9 @@ Then ensure `dynagraph` is listed in your `.fused-gaming-mcp.json` configuration
 
 ```json
 {
-  "skills": ["dynagraph"]
+  "skills": {
+    "enabled": ["dynagraph"]
+  }
 }
 ```
 
