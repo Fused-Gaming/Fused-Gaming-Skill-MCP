@@ -24,6 +24,7 @@ function extractSkillFromBranch(branchName) {
     /feature\/([a-z0-9-]+)/,
     /skill\/([a-z0-9-]+)/,
     /claude\/implement-([a-z0-9-]+?)(?:-[0-9A-Za-z]+)?$/,  // Handles version suffixes like -6WZpc
+    /claude\/([a-z0-9-]+)-development-[0-9A-Za-z]+$/,  // Handles claude/{skill}-development-{suffix} pattern
     /fix\/([a-z0-9-]+)/,
     /chore\/([a-z0-9-]+)/,
   ];
@@ -65,6 +66,7 @@ function validateBranchNaming(branchName) {
     /^feature\/[a-z0-9-]+$/,
     /^skill\/[a-z0-9-]+$/,
     /^claude\/implement-[a-z0-9-]+$/,
+    /^claude\/[a-z0-9-]+-development-[0-9A-Za-z]+$/,  // Handles claude/{skill}-development-{suffix} pattern
     /^fix\/[a-z0-9-]+$/,
     /^docs\/[a-z0-9-]+$/,
     /^chore\/[a-z0-9-]+$/,
