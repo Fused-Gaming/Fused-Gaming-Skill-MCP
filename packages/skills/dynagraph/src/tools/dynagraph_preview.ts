@@ -41,6 +41,19 @@ export const previewTool: ToolDefinition = {
     };
 
     try {
+      // Escape XML special characters to prevent injection
+      const escapeXml = (text: string): string => {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&apos;");
+      };
+
+      const propsText = escapeXml(JSON.stringify(props).substring(0, 50));
+      const templateText = escapeXml(template);
+
       // Phase 1: Return simple preview SVG
       // In Phase 8+, this will integrate with the Dynagraph rendering engine
       const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
@@ -59,12 +72,12 @@ export const previewTool: ToolDefinition = {
 
         <!-- Template identifier -->
         <text x="${width / 2}" y="30" text-anchor="middle" fill="#374151" font-size="16" font-weight="600" font-family="system-ui, sans-serif">
-          ${template} Preview
+          ${templateText} Preview
         </text>
 
         <!-- Props display -->
         <text x="20" y="60" fill="#6b7280" font-size="12" font-family="monospace">
-          Props: ${JSON.stringify(props).substring(0, 50)}...
+          Props: ${propsText}...
         </text>
 
         <!-- Placeholder content -->

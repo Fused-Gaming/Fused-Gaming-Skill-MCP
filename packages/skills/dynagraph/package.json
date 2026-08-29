@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "MCP skill adapter for Dynagraph - vector-first dynamic Open Graph image renderer",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/packages/skills/dynagraph/src/index.js",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/packages/skills/dynagraph/src/index.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",

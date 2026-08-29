@@ -5,10 +5,13 @@
  */
 
 import type { Skill, SkillConfig } from "@h4shed/mcp-core";
-import { renderTool } from "./tools/render.js";
-import { listTemplatesTool } from "./tools/list-templates.js";
-import { validateTemplateTool } from "./tools/validate-template.js";
-import { previewTool } from "./tools/preview.js";
+import { renderTool } from "./tools/dynagraph_render.js";
+import { listTemplatesTool } from "./tools/dynagraph_list_templates.js";
+import { validateTemplateTool } from "./tools/dynagraph_validate_template.js";
+import { previewTool } from "./tools/dynagraph_preview.js";
+
+// Export individual tools for manual invocation
+export { renderTool, listTemplatesTool, validateTemplateTool, previewTool };
 
 /**
  * Dynagraph Skill

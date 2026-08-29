@@ -35,21 +35,32 @@ npm install @h4shed/skill-dynagraph
 
 ## Usage
 
-### With Claude Desktop
+### With Claude Desktop or MCP
 
-The skill automatically integrates with MCP when loaded:
+To enable the skill, add it to your MCP configuration (e.g., `claude_desktop_config.json`):
 
-```typescript
-import dynagraphSkill from "@h4shed/skill-dynagraph";
-
-// Skill registers its tools with MCP automatically
+```json
+{
+  "mcpServers": {
+    "fused-gaming-skill-mcp": {
+      "command": "node",
+      "args": ["/path/to/fused-gaming-skill-mcp/dist/index.js"],
+      "env": {
+        "ENABLED_SKILLS": "dynagraph"
+      }
+    }
+  }
+}
 ```
+
+Once enabled, all four Dynagraph tools (`dynagraph_render`, `dynagraph_list_templates`, `dynagraph_validate_template`, `dynagraph_preview`) become available to Claude.
 
 ### Manual Tool Invocation
 
 ```typescript
-import { renderTool } from "@h4shed/skill-dynagraph";
+import { renderTool, dynagraphSkill } from "@h4shed/skill-dynagraph";
 
+// Use the exported tool directly
 const result = await renderTool.handler({
   template: "profile",
   props: {
@@ -60,6 +71,9 @@ const result = await renderTool.handler({
   height: 630,
   format: "svg",
 });
+
+// Or initialize the skill and access tools via the skill object
+const skill = dynagraphSkill;
 ```
 
 ## Tools
