@@ -1,12 +1,12 @@
 # 🎮 Fused Gaming Skill Registry
 
-**Generated:** 8/21/2026, 6:41:35 AM
+**Generated:** 8/29/2026, 11:30:25 AM
 **Version:** 1.0.0
 
 ## 📊 Summary
 
-- **Total Skills:** 30
-- **Total Tools:** 60
+- **Total Skills:** 31
+- **Total Tools:** 64
 - **Categories:** 11
 
 ## 📑 Skills by Category
@@ -114,13 +114,19 @@
 - **Version:** 1.0.15
 
 
-### Mcp Tools (2 skills)
+### Mcp Tools (3 skills)
 
 #### 📦 creator
 - **Package:** `@h4shed/skill-creator`
 - **Description:** Create custom skills and tools for the Fused Gaming MCP ecosystem
 - **Version:** 1.0.24
 - **Tools:** `create_skill.d`, `create_skill`
+
+#### 📦 dynagraph
+- **Package:** `@h4shed/skill-dynagraph`
+- **Description:** MCP skill adapter for Dynagraph - vector-first dynamic Open Graph image renderer
+- **Version:** 1.0.0
+- **Tools:** `list_templates`, `preview`, `render`, `validate_template`
 
 #### 📦 mcp-builder
 - **Package:** `@h4shed/skill-mcp-builder`
@@ -238,6 +244,10 @@
 | `daily-review` | `generate_daily_review` | `generate-daily-review.ts` |
 | `daily-review` | `log_session.d` | `log-session.d.ts` |
 | `daily-review` | `log_session` | `log-session.ts` |
+| `dynagraph` | `list_templates` | `list-templates.ts` |
+| `dynagraph` | `preview` | `preview.ts` |
+| `dynagraph` | `render` | `render.ts` |
+| `dynagraph` | `validate_template` | `validate-template.ts` |
 | `frontend-design` | `generate_component.d` | `generate-component.d.ts` |
 | `frontend-design` | `generate_component` | `generate-component.ts` |
 | `linkedin-master-journalist` | `analyze_content_quality.d` | `analyze-content-quality.d.ts` |

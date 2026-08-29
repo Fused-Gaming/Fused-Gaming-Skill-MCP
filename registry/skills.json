@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "timestamp": "2026-08-21T06:41:35.418Z",
+  "timestamp": "2026-08-29T11:30:25.803Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -231,6 +231,50 @@
         "session-tracking",
         "metrics",
         "reporting"
+      ],
+      "repository": "",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "dynagraph",
+      "id": "dynagraph",
+      "description": "MCP skill adapter for Dynagraph - vector-first dynamic Open Graph image renderer",
+      "version": "1.0.0",
+      "package": "@h4shed/skill-dynagraph",
+      "tools": [
+        {
+          "name": "list_templates",
+          "file": "list-templates.ts",
+          "description": "list_templates from dynagraph"
+        },
+        {
+          "name": "preview",
+          "file": "preview.ts",
+          "description": "preview from dynagraph"
+        },
+        {
+          "name": "render",
+          "file": "render.ts",
+          "description": "render from dynagraph"
+        },
+        {
+          "name": "validate_template",
+          "file": "validate-template.ts",
+          "description": "validate_template from dynagraph"
+        }
+      ],
+      "enabled": true,
+      "category": "mcp-tools",
+      "author": "Fused Gaming",
+      "keywords": [
+        "mcp",
+        "skill",
+        "dynagraph",
+        "open-graph",
+        "og-image",
+        "rendering",
+        "vector",
+        "svg"
       ],
       "repository": "",
       "license": "Apache-2.0"
@@ -939,15 +983,15 @@
       "license": "Apache-2.0"
     }
   ],
-  "totalSkills": 30,
-  "totalTools": 60,
+  "totalSkills": 31,
+  "totalTools": 64,
   "categories": {
     "design": 7,
     "generative-art": 3,
     "general": 7,
     "productivity": 1,
+    "mcp-tools": 3,
     "content-creation": 2,
-    "mcp-tools": 2,
     "visualization": 1,
     "session-management": 1,
     "development": 2,
