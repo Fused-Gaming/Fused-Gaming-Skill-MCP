@@ -54,7 +54,7 @@ export const renderTool: ToolDefinition = {
   async handler(input: Record<string, unknown>): Promise<Record<string, unknown>> {
     const {
       template,
-      props,
+      props: _props,
       width = 1200,
       height = 630,
       dpr = 1,
