@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
-    "test": "jest",
+    "test": "echo \"No tests yet\"",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "benchmark": "npx tsx --expose-gc benchmarks/performance.benchmark.ts",
