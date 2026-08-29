@@ -25,12 +25,14 @@ jobs:
           BRANCH=${{ github.ref_name }}
 
           # Extract skill from branch name
-          # Handles feat/*, skill/*, and claude/implement-* (with optional version suffix like -6WZpc)
+          # Handles feat/*, skill/*, claude/implement-*, and claude/{skill}-development-{suffix}
           if [[ "$BRANCH" =~ ^feat/([a-z0-9-]+) ]]; then
             SKILL="${BASH_REMATCH[1]}"
           elif [[ "$BRANCH" =~ ^skill/([a-z0-9-]+) ]]; then
             SKILL="${BASH_REMATCH[1]}"
           elif [[ "$BRANCH" =~ ^claude/implement-([a-z0-9-]+?)(-[0-9A-Za-z]+)?$ ]]; then
+            SKILL="${BASH_REMATCH[1]}"
+          elif [[ "$BRANCH" =~ ^claude/([a-z0-9-]+)-development-[0-9A-Za-z]+$ ]]; then
             SKILL="${BASH_REMATCH[1]}"
           else
             SKILL=""
