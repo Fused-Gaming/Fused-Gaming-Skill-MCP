@@ -5,6 +5,15 @@
 
 import type { ToolDefinition } from "@h4shed/mcp-core";
 
+const escapeXml = (text: string): string => {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+};
+
 export const renderTool: ToolDefinition = {
   name: "dynagraph_render",
   description:
@@ -71,7 +80,7 @@ export const renderTool: ToolDefinition = {
         </defs>
         <rect width="${width}" height="${height}" fill="url(#grad)"/>
         <text x="${width / 2}" y="${height / 2}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="32" font-family="system-ui, sans-serif">
-          Dynagraph: ${template}
+          Dynagraph: ${escapeXml(template)}
         </text>
       </svg>`;
 

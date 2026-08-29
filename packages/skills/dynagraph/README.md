@@ -44,12 +44,17 @@ To enable the skill, add it to your MCP configuration (e.g., `claude_desktop_con
   "mcpServers": {
     "fused-gaming-skill-mcp": {
       "command": "node",
-      "args": ["/path/to/fused-gaming-skill-mcp/dist/index.js"],
-      "env": {
-        "ENABLED_SKILLS": "dynagraph"
-      }
+      "args": ["/path/to/fused-gaming-skill-mcp/dist/index.js"]
     }
   }
+}
+```
+
+Then ensure `dynagraph` is listed in your `.fused-gaming-mcp.json` configuration file:
+
+```json
+{
+  "skills": ["dynagraph", "...other-skills"]
 }
 ```
 
