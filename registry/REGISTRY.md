@@ -1,6 +1,6 @@
 # 🎮 Fused Gaming Skill Registry
 
-**Generated:** 8/29/2026, 11:30:25 AM
+**Generated:** 8/29/2026, 11:50:16 AM
 **Version:** 1.0.0
 
 ## 📊 Summary
@@ -126,7 +126,7 @@
 - **Package:** `@h4shed/skill-dynagraph`
 - **Description:** MCP skill adapter for Dynagraph - vector-first dynamic Open Graph image renderer
 - **Version:** 1.0.0
-- **Tools:** `list_templates`, `preview`, `render`, `validate_template`
+- **Tools:** `dynagraph_list_templates`, `dynagraph_preview`, `dynagraph_render`, `dynagraph_validate_template`
 
 #### 📦 mcp-builder
 - **Package:** `@h4shed/skill-mcp-builder`
@@ -244,10 +244,10 @@
 | `daily-review` | `generate_daily_review` | `generate-daily-review.ts` |
 | `daily-review` | `log_session.d` | `log-session.d.ts` |
 | `daily-review` | `log_session` | `log-session.ts` |
-| `dynagraph` | `list_templates` | `list-templates.ts` |
-| `dynagraph` | `preview` | `preview.ts` |
-| `dynagraph` | `render` | `render.ts` |
-| `dynagraph` | `validate_template` | `validate-template.ts` |
+| `dynagraph` | `dynagraph_list_templates` | `dynagraph_list_templates.ts` |
+| `dynagraph` | `dynagraph_preview` | `dynagraph_preview.ts` |
+| `dynagraph` | `dynagraph_render` | `dynagraph_render.ts` |
+| `dynagraph` | `dynagraph_validate_template` | `dynagraph_validate_template.ts` |
 | `frontend-design` | `generate_component.d` | `generate-component.d.ts` |
 | `frontend-design` | `generate_component` | `generate-component.ts` |
 | `linkedin-master-journalist` | `analyze_content_quality.d` | `analyze-content-quality.d.ts` |

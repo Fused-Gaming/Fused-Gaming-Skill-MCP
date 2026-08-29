@@ -30,7 +30,7 @@ export interface SkillRegistry {
 
 export const registry: SkillRegistry = {
   "version": "1.0.0",
-  "timestamp": "2026-08-29T11:30:25.803Z",
+  "timestamp": "2026-08-29T11:50:16.154Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -273,24 +273,24 @@ export const registry: SkillRegistry = {
       "package": "@h4shed/skill-dynagraph",
       "tools": [
         {
-          "name": "list_templates",
-          "file": "list-templates.ts",
-          "description": "list_templates from dynagraph"
+          "name": "dynagraph_list_templates",
+          "file": "dynagraph_list_templates.ts",
+          "description": "dynagraph_list_templates from dynagraph"
         },
         {
-          "name": "preview",
-          "file": "preview.ts",
-          "description": "preview from dynagraph"
+          "name": "dynagraph_preview",
+          "file": "dynagraph_preview.ts",
+          "description": "dynagraph_preview from dynagraph"
         },
         {
-          "name": "render",
-          "file": "render.ts",
-          "description": "render from dynagraph"
+          "name": "dynagraph_render",
+          "file": "dynagraph_render.ts",
+          "description": "dynagraph_render from dynagraph"
         },
         {
-          "name": "validate_template",
-          "file": "validate-template.ts",
-          "description": "validate_template from dynagraph"
+          "name": "dynagraph_validate_template",
+          "file": "dynagraph_validate_template.ts",
+          "description": "dynagraph_validate_template from dynagraph"
         }
       ],
       "enabled": true,
