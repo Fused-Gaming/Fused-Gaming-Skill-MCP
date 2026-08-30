@@ -497,7 +497,17 @@ jobs:
                 "status": $status,
                 "published_date": $date,
                 "benchmark_results": (
-                  if $benchmarks != {} then
+                  # A rerun that hits a genuine infrastructure failure (not a
+                  # scored DoD fail) writes the hardcoded all-zero fallback
+                  # object — that is not "measured data" and must not
+                  # overwrite a real result an earlier run for this same
+                  # version already recorded.
+                  if ($benchmarks != {}) and (
+                    (($benchmarks.combined_score // 0) > 0) or
+                    (($benchmarks.behavioral.core_total // 0) > 0) or
+                    (($benchmarks.performance.performance_score // 0) > 0) or
+                    (($benchmarks.code_quality.quality_score // 0) > 0)
+                  ) then
                     {
                       "behavioral_score": ($benchmarks.behavioral.behavioral_score // 0),
                       "performance_score": ($benchmarks.performance.performance_score // 0),
