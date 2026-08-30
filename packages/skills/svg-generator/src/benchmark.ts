@@ -283,12 +283,14 @@ async function runBenchmarks() {
   const baselineFile = path.join(baselineDir, 'baseline.json');
 
   // Try to load baseline for regression detection
+  let baselineLoaded = false;
   try {
     try {
       const baselineData = await fs.readFile(baselineFile, 'utf8');
       const baseline: DoDScore = JSON.parse(baselineData);
       if (baseline.combinedScore !== undefined) {
         scorer.setBaseline(baseline.version || 'unknown', baseline);
+        baselineLoaded = true;
         console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
       }
     } catch {
@@ -326,6 +328,25 @@ async function runBenchmarks() {
   // different, nested shape and must not be handed to the CI reporting path
   // directly, or field lookups like `behavioral.core_pass_rate` come back
   // undefined.
+  // create-release-issue.yml's registry-update step reads `regression_detection`
+  // (a summary object), not the raw `regressions` array DoDScorer produces —
+  // translate one into the other so a completed comparison isn't silently
+  // discarded in favor of the workflow's "Pending baseline comparison" fallback.
+  const performanceMetricNames = new Set(
+    performanceScore.items.map((item) => item.metricName)
+  );
+  const regressions = dodReport.regressions || [];
+  const regressionDetection = {
+    performance_regression: regressions.some((r) => performanceMetricNames.has(r.metric)),
+    code_quality_regression: regressions.some((r) => r.metric === 'complexity' || r.metric === 'duplication'),
+    behavioral_regression: regressions.some((r) => r.metric === 'behavioral_regression'),
+    summary: !baselineLoaded
+      ? 'No baseline available for comparison'
+      : regressions.length > 0
+        ? `${regressions.length} regression(s) detected vs baseline: ${regressions.map((r) => r.metric).join(', ')}`
+        : 'No regressions detected vs baseline',
+  };
+
   const resultsJson = {
     package: packageJson.name,
     version,
@@ -361,7 +382,8 @@ async function runBenchmarks() {
     },
     combined_score: dodReport.combinedScore,
     status: dodReport.passed ? 'pass' : 'fail',
-    regressions: dodReport.regressions || [],
+    regressions,
+    regression_detection: regressionDetection,
   };
 
   console.log('\n📄 Writing results to .benchmark/results.json...');

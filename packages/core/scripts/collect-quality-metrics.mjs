@@ -18,9 +18,17 @@ import { fileURLToPath } from 'node:url';
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const srcDir = join(packageRoot, 'src');
 
+// The benchmark harness itself (benchmark.ts) is test/measurement code, not
+// product code — including it in the product complexity/duplication scan
+// means the harness's own size trips DoDScorer's complexity.max <= 8 release
+// gate regardless of the actual product code's quality, making the package
+// structurally unable to ever pass its own benchmark.
+const EXCLUDED_FILES = new Set(['benchmark.ts']);
+
 function listSourceFiles(dir) {
   const files = [];
   for (const entry of readdirSync(dir)) {
+    if (EXCLUDED_FILES.has(entry)) continue;
     const full = join(dir, entry);
     const stat = statSync(full);
     if (stat.isDirectory()) {
