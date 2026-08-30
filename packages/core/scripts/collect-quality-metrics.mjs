@@ -147,9 +147,19 @@ function measureComplexity(files) {
 // this a real (if still simple, line-based rather than block-based) signal.
 const MIN_DUPLICATE_LINE_LENGTH = 20;
 
+// Single-line frequency counting flags common one-line idioms (e.g. a lone
+// `timestamp: new Date().toISOString(),`) as "duplication" even when they
+// appear in otherwise unrelated code, which is not what copy-paste
+// duplication means and can inflate the percentage past DoDScorer's 15%
+// gate on code with no real duplication at all. Requiring a run of several
+// consecutive matching lines (a "block") is a much stronger, still
+// line-based (not AST-based) signal that the same code was actually copied.
+const DUPLICATE_BLOCK_SIZE = 6;
+
 function measureDuplication(files) {
-  const lineCounts = new Map();
-  let totalLines = 0;
+  const blockCounts = new Map();
+  let totalEligibleLines = 0;
+  const fileBlocks = [];
   for (const file of files) {
     const lines = readFileSync(file, 'utf8')
       .split('\n')
@@ -157,16 +167,25 @@ function measureDuplication(files) {
       .filter(
         (l) => l.length >= MIN_DUPLICATE_LINE_LENGTH && !l.startsWith('//') && !l.startsWith('*')
       );
-    for (const line of lines) {
-      totalLines++;
-      lineCounts.set(line, (lineCounts.get(line) || 0) + 1);
+    totalEligibleLines += lines.length;
+    // Non-overlapping chunks: each eligible line contributes to exactly one
+    // block, so summing "duplicate block size" across matched blocks can't
+    // double-count the same line via overlapping windows.
+    const blocks = [];
+    for (let i = 0; i + DUPLICATE_BLOCK_SIZE <= lines.length; i += DUPLICATE_BLOCK_SIZE) {
+      const block = lines.slice(i, i + DUPLICATE_BLOCK_SIZE).join('\n');
+      blocks.push(block);
+      blockCounts.set(block, (blockCounts.get(block) || 0) + 1);
     }
+    fileBlocks.push(blocks);
   }
   let duplicateLines = 0;
-  for (const count of lineCounts.values()) {
-    if (count > 1) duplicateLines += count - 1;
+  for (const blocks of fileBlocks) {
+    for (const block of blocks) {
+      if (blockCounts.get(block) > 1) duplicateLines += DUPLICATE_BLOCK_SIZE;
+    }
   }
-  return totalLines > 0 ? (duplicateLines / totalLines) * 100 : 0;
+  return totalEligibleLines > 0 ? (duplicateLines / totalEligibleLines) * 100 : 0;
 }
 
 function approximateMaintainability(complexityMean, duplicationPercent, coveragePercent) {
