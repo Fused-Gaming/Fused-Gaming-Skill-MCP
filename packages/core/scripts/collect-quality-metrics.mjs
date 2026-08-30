@@ -36,14 +36,26 @@ function measureCoverage() {
   try {
     execFileSync(
       'npx',
-      ['jest', '--coverage', '--coverageReporters=json-summary', '--silent'],
+      [
+        'jest',
+        '--coverage',
+        '--coverageReporters=json-summary',
+        // jest.config.js sets an aspirational 85% global coverageThreshold
+        // for direct/manual `jest --coverage` runs. That threshold has
+        // nothing to do with whether this *collection* run succeeded, and
+        // must not be conflated with an actual failing test: overriding it
+        // to empty here means a non-zero exit can only mean a genuine test
+        // failure, which we want to propagate, not swallow.
+        '--coverageThreshold={}',
+        '--silent',
+      ],
       { cwd: packageRoot, stdio: 'inherit' }
     );
-  } catch {
-    // jest exits non-zero when the configured coverage threshold isn't met,
-    // or when a suite fails — the coverage-summary.json is still written in
-    // either case. Only the missing-file case below is fatal; a failing
-    // threshold just means we honestly report the lower measured number.
+  } catch (err) {
+    throw new Error(
+      `jest failed while collecting coverage (a real test failure, not a threshold miss — ` +
+        `coverageThreshold is disabled for this run): ${err.message}`
+    );
   }
   const summary = JSON.parse(
     readFileSync(join(packageRoot, 'coverage', 'coverage-summary.json'), 'utf8')

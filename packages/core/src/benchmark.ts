@@ -74,6 +74,21 @@ async function runBenchmarks() {
         }
       },
     },
+    // Independent registration round-trips across many distinct skill names —
+    // the Wilson-interval CI gate DoDScorer applies to CORE needs a real
+    // sample size (tens of trials), not a handful of cases, to produce a
+    // defensible confidence bound.
+    ...Array.from({ length: 50 }, (_, i) => ({
+      name: `registerSkill + getSkill round-trip for skill #${i}`,
+      fn: () => {
+        const registry = new SkillRegistry(() => {});
+        const skill = makeSkill(`core-batch-${i}`, { version: `1.${i}.0` });
+        registry.registerSkill(skill);
+        const retrieved = registry.getSkill(`core-batch-${i}`);
+        if (retrieved !== skill) throw new Error(`getSkill did not return skill #${i}`);
+        if (retrieved.version !== `1.${i}.0`) throw new Error(`skill #${i} lost its version metadata`);
+      },
+    })),
   ];
   const coreResult = await tester.runTestSuite('CORE', coreTests);
   console.log(`✅ CORE: ${coreResult.passCount}/${coreResult.totalCount} (${coreResult.passRate.toFixed(1)}%)\n`);
@@ -131,6 +146,28 @@ async function runBenchmarks() {
         if (loaded.logging.level !== 'debug') throw new Error('round-trip did not preserve override');
       },
     },
+    // Independent round-trips across every logging level — real, distinct
+    // trials rather than a single case, so FUNCTIONALITY's CI gate has a
+    // meaningful sample size.
+    ...(['debug', 'info', 'warn', 'error'] as const).flatMap((level) =>
+      Array.from({ length: 3 }, (_, i) => ({
+        name: `saveConfig + loadConfig preserves logging level '${level}' (#${i})`,
+        fn: async () => {
+          const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'mcp-core-benchmark-'));
+          const configPath = path.join(dir, '.fused-gaming-mcp.json');
+          const config = getDefaultConfig();
+          config.logging.level = level;
+          config.skills.enabled = [...config.skills.enabled, `functionality-fixture-${i}`];
+          saveConfig(config, configPath);
+          const loaded = loadConfig(configPath);
+          await fs.rm(dir, { recursive: true, force: true });
+          if (loaded.logging.level !== level) throw new Error(`round-trip lost logging level '${level}'`);
+          if (!loaded.skills.enabled.includes(`functionality-fixture-${i}`)) {
+            throw new Error('round-trip lost an enabled skill entry');
+          }
+        },
+      }))
+    ),
   ];
   const functionalityResult = await tester.runTestSuite('FUNCTIONALITY', functionalityTests);
   console.log(`✅ FUNCTIONALITY: ${functionalityResult.passCount}/${functionalityResult.totalCount} (${functionalityResult.passRate.toFixed(1)}%)\n`);
@@ -157,6 +194,41 @@ async function runBenchmarks() {
         if (result !== null) throw new Error('loadSkill did not return null for a missing package');
       },
     },
+    // Independent trials across a range of malformed payloads and missing
+    // packages — real, distinct edge cases rather than one example each, so
+    // ERROR's CI gate has a meaningful sample size.
+    ...[
+      '{ not valid json',
+      '',
+      '{"unterminated": ',
+      '[1, 2,]',
+      'null,',
+      'undefined',
+      '{"a": }',
+      '{"nested": {"broken":}}',
+      '"just a string"',
+      '{"trailing": "comma",}',
+    ].map((payload, i) => ({
+      name: `loadConfig handles malformed payload variant #${i}`,
+      fn: async () => {
+        const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'mcp-core-benchmark-'));
+        const configPath = path.join(dir, `malformed-${i}.json`);
+        await fs.writeFile(configPath, payload);
+        const config = loadConfig(configPath);
+        await fs.rm(dir, { recursive: true, force: true });
+        if (config.server.name !== getDefaultConfig().server.name) {
+          throw new Error(`malformed payload #${i} was not handled gracefully`);
+        }
+      },
+    })),
+    ...Array.from({ length: 10 }, (_, i) => ({
+      name: `loadSkill returns null for missing package variant #${i}`,
+      fn: async () => {
+        const registry = new SkillRegistry(() => {});
+        const result = await registry.loadSkill(`does-not-exist-benchmark-${i}`);
+        if (result !== null) throw new Error(`loadSkill did not return null for missing package #${i}`);
+      },
+    })),
   ];
   const errorResult = await tester.runTestSuite('ERROR', errorTests);
   console.log(`✅ ERROR: ${errorResult.passCount}/${errorResult.totalCount} (${errorResult.passRate.toFixed(1)}%)\n`);
@@ -202,9 +274,11 @@ async function runBenchmarks() {
       const before = process.memoryUsage();
       const registry = new SkillRegistry(() => {});
       for (let i = 0; i < 50; i++) registry.registerSkill(makeSkill(`mem-${i}`));
+      // Sample while the registry still holds all 50 skills — the lifecycle's
+      // actual peak — before unloadAll() releases them.
+      const atPeak = process.memoryUsage();
       await registry.unloadAll();
-      const after = process.memoryUsage();
-      return Math.max(before.heapUsed, after.heapUsed) / 1024 / 1024;
+      return Math.max(before.heapUsed, atPeak.heapUsed) / 1024 / 1024;
     },
     50,
     'MB'
@@ -245,10 +319,17 @@ async function runBenchmarks() {
 
   const codeQualityScore = scorer.calculateCodeQualityScore(codeQualityMetrics);
 
+  // Baseline lives under the repo-root benchmarks/ tree, not this package's
+  // own directory: create-release-issue.yml only stages and commits changes
+  // beneath the repo-root benchmarks/ directory, so a baseline written
+  // anywhere else is discarded with the runner and every release would look
+  // like a first release (no regression detection).
+  const repoRoot = path.join(process.cwd(), '..', '..');
+  const baselineDir = path.join(repoRoot, 'benchmarks', 'packages', packageJson.name);
+  const baselineFile = path.join(baselineDir, 'baseline.json');
+
   // Try to load baseline for regression detection
   try {
-    const baselineDir = path.join(process.cwd(), 'docs', 'benchmarks');
-    const baselineFile = path.join(baselineDir, 'mcp-core-baseline.json');
     try {
       const baselineData = await fs.readFile(baselineFile, 'utf8');
       const baseline: DoDScore = JSON.parse(baselineData);
@@ -321,7 +402,6 @@ async function runBenchmarks() {
 
   console.log('\n📄 Writing results to .benchmark/results.json...');
   const resultsDir = path.join(process.cwd(), '.benchmark');
-  const baselineDir = path.join(process.cwd(), 'docs', 'benchmarks');
 
   try {
     await fs.mkdir(resultsDir, { recursive: true });
@@ -330,16 +410,18 @@ async function runBenchmarks() {
 
     if (dodReport.passed) {
       await fs.mkdir(baselineDir, { recursive: true });
-      await fs.writeFile(
-        path.join(baselineDir, 'mcp-core-baseline.json'),
-        JSON.stringify(dodReport, null, 2)
-      );
-      console.log(`✅ Baseline updated to ${baselineDir}/mcp-core-baseline.json (persisted across CI runs)`);
+      await fs.writeFile(baselineFile, JSON.stringify(dodReport, null, 2));
+      console.log(`✅ Baseline updated to ${baselineFile} (persisted across CI runs)`);
     } else {
       console.log('⚠️  Baseline not updated (run did not pass DoD threshold)');
     }
   } catch (err) {
-    console.error('⚠️ Failed to write results:', err);
+    // A silent failure here would let the CI workflows fall back to a
+    // fabricated "not_measured" result even though this run genuinely
+    // measured something — exactly the fabrication this harness exists to
+    // prevent. Fail loudly instead.
+    console.error('❌ FAILURE: Could not persist benchmark results:', err);
+    process.exit(1);
   }
 
   console.log('\n' + JSON.stringify(resultsJson, null, 2));

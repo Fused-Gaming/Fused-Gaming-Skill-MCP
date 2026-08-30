@@ -273,11 +273,17 @@ async function runBenchmarks() {
 
   const codeQualityScore = scorer.calculateCodeQualityScore(codeQualityMetrics);
 
+  // Baseline lives under the repo-root benchmarks/ tree, not this package's
+  // own directory: create-release-issue.yml only stages and commits changes
+  // beneath the repo-root benchmarks/ directory, so a baseline written
+  // anywhere else is discarded with the runner and every release would look
+  // like a first release (no regression detection).
+  const repoRoot = path.join(process.cwd(), '..', '..', '..');
+  const baselineDir = path.join(repoRoot, 'benchmarks', 'packages', packageJson.name);
+  const baselineFile = path.join(baselineDir, 'baseline.json');
+
   // Try to load baseline for regression detection
-  // Store baseline in tracked directory (docs/benchmarks) to persist across CI runs
   try {
-    const baselineDir = path.join(process.cwd(), 'docs', 'benchmarks');
-    const baselineFile = path.join(baselineDir, 'svg-generator-baseline.json');
     try {
       const baselineData = await fs.readFile(baselineFile, 'utf8');
       const baseline: DoDScore = JSON.parse(baselineData);
@@ -360,7 +366,6 @@ async function runBenchmarks() {
 
   console.log('\n📄 Writing results to .benchmark/results.json...');
   const resultsDir = path.join(process.cwd(), '.benchmark');
-  const baselineDir = path.join(process.cwd(), 'docs', 'benchmarks');
 
   try {
     // Write ephemeral results to .benchmark/ (excluded from git)
@@ -371,19 +376,21 @@ async function runBenchmarks() {
     );
     console.log(`✅ Results written to ${resultsDir}/results.json`);
 
-    // Write persistent baseline to docs/benchmarks/ (tracked in git) if this run passed DoD
+    // Write persistent baseline (tracked in git) if this run passed DoD
     if (dodReport.passed) {
       await fs.mkdir(baselineDir, { recursive: true });
-      await fs.writeFile(
-        path.join(baselineDir, 'svg-generator-baseline.json'),
-        JSON.stringify(dodReport, null, 2)
-      );
-      console.log(`✅ Baseline updated to ${baselineDir}/svg-generator-baseline.json (persisted across CI runs)`);
+      await fs.writeFile(baselineFile, JSON.stringify(dodReport, null, 2));
+      console.log(`✅ Baseline updated to ${baselineFile} (persisted across CI runs)`);
     } else {
       console.log(`⚠️  Baseline not updated (run did not pass DoD threshold)`);
     }
   } catch (err) {
-    console.error('⚠️ Failed to write results:', err);
+    // A silent failure here would let the CI workflows fall back to a
+    // fabricated "not_measured" result even though this run genuinely
+    // measured something — exactly the fabrication this harness exists to
+    // prevent. Fail loudly instead.
+    console.error('❌ FAILURE: Could not persist benchmark results:', err);
+    process.exit(1);
   }
 
   // Output results to stdout in JSON format for workflow consumption
