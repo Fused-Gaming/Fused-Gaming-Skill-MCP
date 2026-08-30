@@ -274,7 +274,7 @@ async function runBenchmarks() {
       'undefined',
       '{"a": }',
       '{"nested": {"broken":}}',
-      '"just a string"',
+      '{unquoted: "key"}',
       '{"trailing": "comma",}',
     ].map((payload, i) => ({
       name: `loadConfig handles malformed payload variant #${i}`,
