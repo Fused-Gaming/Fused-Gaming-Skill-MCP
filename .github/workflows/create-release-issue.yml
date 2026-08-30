@@ -162,6 +162,11 @@ jobs:
           # "fail", not a broken script. So the npm exit code alone cannot decide whether
           # real data exists: always attempt to read <workspace>/.benchmark/results.json,
           # and only treat this as a hard failure below when that file is also missing.
+          # Remove any leftover results file before running so a crash that
+          # happens before this run writes its own file can never be masked
+          # by a stale file from an earlier invocation in the same job.
+          rm -f "$WORKSPACE_ROOT/.benchmark/results.json"
+
           BENCHMARK_EXIT=0
           npm run benchmark --workspace=${{ steps.package-info.outputs.package }} > benchmark-output.log 2>&1 || BENCHMARK_EXIT=$?
           BENCHMARK_SUCCESS=true
@@ -482,9 +487,34 @@ jobs:
               )
             } |
             if (.versions | map(select(.id == $pkgver)) | length) > 0 then
+              # Refresh benchmark_results/regression_detection too, not just
+              # status/published_date — this workflow can run more than once
+              # for the same version (e.g. a manually pushed tag triggers it
+              # directly, then again via workflow_run once publish.yml
+              # completes), and the later run's real measured data must not
+              # be discarded in favor of whatever an earlier run recorded.
               .versions |= map(if .id == $pkgver then . + {
                 "status": $status,
-                "published_date": $date
+                "published_date": $date,
+                "benchmark_results": (
+                  if $benchmarks != {} then
+                    {
+                      "behavioral_score": ($benchmarks.behavioral.behavioral_score // 0),
+                      "performance_score": ($benchmarks.performance.performance_score // 0),
+                      "code_quality_score": ($benchmarks.code_quality.quality_score // 0),
+                      "combined_score": ($benchmarks.combined_score // 0),
+                      "status": ($benchmarks.status // "pending"),
+                      "details_url": null
+                    }
+                  else .benchmark_results
+                  end
+                ),
+                "regression_detection": (
+                  if $benchmarks.regression_detection then
+                    $benchmarks.regression_detection
+                  else .regression_detection
+                  end
+                )
               } else . end)
             else
               .versions = (.versions + [{

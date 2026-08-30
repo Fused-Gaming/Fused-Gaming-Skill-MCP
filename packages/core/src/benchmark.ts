@@ -335,15 +335,21 @@ async function runBenchmarks() {
     `  Registration latency: ${registrationPerOpMs.toFixed(4)}ms/op ± ${registrationPerOpStdDev.toFixed(4)}ms/op (batch of ${REGISTRATION_BATCH_SIZE}, CV: ${registrationResult.coefficientOfVariation.toFixed(1)}%)`
   );
 
+  // Same noise-floor problem as registration latency above: listing a
+  // 10-entry array 100 times completes in a few microseconds on a fast
+  // runner, so the measured rate is dominated by timer/JIT/GC noise rather
+  // than real throughput. A much larger call count per sample keeps the
+  // measured window comfortably above that noise floor.
+  const LIST_CALLS_PER_SAMPLE = 200_000;
   const listThroughputResult = await perfBench.benchmark(
     'listSkills throughput',
     () => {
       const registry = new SkillRegistry(() => {});
       for (let i = 0; i < 10; i++) registry.registerSkill(makeSkill(`throughput-${i}`));
       const start = performance.now();
-      for (let i = 0; i < 100; i++) registry.listSkills();
+      for (let i = 0; i < LIST_CALLS_PER_SAMPLE; i++) registry.listSkills();
       const elapsedMs = performance.now() - start;
-      return 100 / (elapsedMs / 1000);
+      return LIST_CALLS_PER_SAMPLE / (elapsedMs / 1000);
     },
     50,
     'ops/sec'
@@ -415,22 +421,27 @@ async function runBenchmarks() {
   const baselineDir = path.join(repoRoot, 'benchmarks', 'packages', packageJson.name);
   const baselineFile = path.join(baselineDir, 'baseline.json');
 
-  // Try to load baseline for regression detection
+  // Try to load baseline for regression detection. Only a missing file
+  // (ENOENT) legitimately means "first release" — a corrupt, truncated, or
+  // unreadable baseline must not be silently treated the same way, or a
+  // damaged file quietly resets regression history and then gets overwritten
+  // by this run (permanently losing the last valid comparison point).
   let baselineLoaded = false;
   try {
-    try {
-      const baselineData = await fs.readFile(baselineFile, 'utf8');
-      const baseline: DoDScore = JSON.parse(baselineData);
-      if (baseline.combinedScore !== undefined) {
-        scorer.setBaseline(baseline.version || 'unknown', baseline);
-        baselineLoaded = true;
-        console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
-      }
-    } catch {
-      console.log('ℹ️  No baseline available - first release, establishing baseline\n');
+    const baselineData = await fs.readFile(baselineFile, 'utf8');
+    const baseline: DoDScore = JSON.parse(baselineData);
+    if (baseline.combinedScore !== undefined) {
+      scorer.setBaseline(baseline.version || 'unknown', baseline);
+      baselineLoaded = true;
+      console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
     }
   } catch (err) {
-    console.warn('⚠️  Could not load baseline for regression detection:', err);
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+      console.log('ℹ️  No baseline available - first release, establishing baseline\n');
+    } else {
+      console.error('❌ FAILURE: Baseline file exists but could not be read/parsed:', err);
+      process.exit(1);
+    }
   }
 
   const dodReport = scorer.generateDoDReport(

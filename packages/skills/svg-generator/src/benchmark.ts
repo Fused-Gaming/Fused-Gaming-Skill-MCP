@@ -282,23 +282,27 @@ async function runBenchmarks() {
   const baselineDir = path.join(repoRoot, 'benchmarks', 'packages', packageJson.name);
   const baselineFile = path.join(baselineDir, 'baseline.json');
 
-  // Try to load baseline for regression detection
+  // Try to load baseline for regression detection. Only a missing file
+  // (ENOENT) legitimately means "first release" — a corrupt, truncated, or
+  // unreadable baseline must not be silently treated the same way, or a
+  // damaged file quietly resets regression history and then gets overwritten
+  // by this run (permanently losing the last valid comparison point).
   let baselineLoaded = false;
   try {
-    try {
-      const baselineData = await fs.readFile(baselineFile, 'utf8');
-      const baseline: DoDScore = JSON.parse(baselineData);
-      if (baseline.combinedScore !== undefined) {
-        scorer.setBaseline(baseline.version || 'unknown', baseline);
-        baselineLoaded = true;
-        console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
-      }
-    } catch {
-      // Baseline doesn't exist yet - this is the first release
-      console.log('ℹ️  No baseline available - first release, establishing baseline\n');
+    const baselineData = await fs.readFile(baselineFile, 'utf8');
+    const baseline: DoDScore = JSON.parse(baselineData);
+    if (baseline.combinedScore !== undefined) {
+      scorer.setBaseline(baseline.version || 'unknown', baseline);
+      baselineLoaded = true;
+      console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
     }
   } catch (err) {
-    console.warn('⚠️  Could not load baseline for regression detection:', err);
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+      console.log('ℹ️  No baseline available - first release, establishing baseline\n');
+    } else {
+      console.error('❌ FAILURE: Baseline file exists but could not be read/parsed:', err);
+      process.exit(1);
+    }
   }
 
   const dodReport = scorer.generateDoDReport(

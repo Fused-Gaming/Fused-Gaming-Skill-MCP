@@ -156,6 +156,11 @@ jobs:
             # whether real data exists: always check for <workspace>/.benchmark/results.json
             # first, and only fall back to a "the script itself is broken" result when that
             # file is missing/invalid AND the script also exited non-zero.
+            # Remove any leftover results file before running so a crash that
+            # happens before this run writes its own file can never be masked
+            # by a stale file from an earlier invocation in the same job.
+            rm -f "$WORKSPACE_ROOT/.benchmark/results.json"
+
             BENCHMARK_EXIT=0
             npm run benchmark --workspace=$PACKAGE > benchmark-output.log 2>&1 || BENCHMARK_EXIT=$?
 

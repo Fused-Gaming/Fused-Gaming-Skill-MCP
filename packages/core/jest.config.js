@@ -37,6 +37,10 @@ export default {
     'src/**/*.ts',
     '!src/**/*.d.ts',
     '!src/**/index.ts',
+    // Test/measurement code, not product code — including it in coverage
+    // depresses the product coverage signal with a file no unit test is
+    // meant to exercise.
+    '!src/benchmark.ts',
   ],
 
   coverageThreshold: {

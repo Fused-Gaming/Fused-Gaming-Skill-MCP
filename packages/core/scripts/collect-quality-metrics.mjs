@@ -76,15 +76,68 @@ function measureCoverage() {
 // branches, and including it produced wildly inflated false-positive counts.
 const DECISION_POINT_PATTERN = /\b(if|for|while|case|catch)\b|&&|\|\|/g;
 
+// Matches the start of a function-like block: function declarations, class/
+// object methods, and arrow functions assigned to a name. Deliberately
+// excludes control-flow keywords (if/for/while/switch/catch) from the
+// "identifier(...) {" method-shorthand branch so those blocks aren't
+// mistaken for function bodies.
+const FUNCTION_START_PATTERN =
+  /(?:\b(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s*\*?\s*[A-Za-z0-9_$]*\s*\([^)]*\)\s*(?::\s*[^{;]+)?\{)|(?:\b(?:public\s+|private\s+|protected\s+|static\s+|async\s+|get\s+|set\s+)*(?!if\b|for\b|while\b|switch\b|catch\b|function\b)[A-Za-z_$][A-Za-z0-9_$]*\s*\([^)]*\)\s*(?::\s*[^{;=]+)?\{)|(?:\b(?:export\s+)?(?:const|let|var)\s+[A-Za-z_$][A-Za-z0-9_$]*\s*(?::[^=]+)?=\s*(?:async\s*)?\([^)]*\)\s*(?::\s*[^{=]+)?=>\s*\{)/g;
+
+// Strips string/template literals and comments so brace-matching and
+// decision-point counting don't get confused by braces or keywords that
+// merely appear inside text, not code.
+function stripNonCode(source) {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/\/\/[^\n]*/g, ' ')
+    .replace(/`(?:\\.|[^`\\])*`/g, '""')
+    .replace(/"(?:\\.|[^"\\])*"/g, '""')
+    .replace(/'(?:\\.|[^'\\])*'/g, "''");
+}
+
+// Extracts each function-like block's body (regex-detected start, brace-depth
+// matched end) and returns a cyclomatic-complexity estimate per function,
+// rather than one score for the entire file. A hard per-function complexity
+// gate is meaningless applied to a whole file: a 500-line file of ten simple
+// 5-branch functions is fine, but scored as a single unit it reads as a
+// 50-branch monster.
+function extractFunctionComplexities(source) {
+  const code = stripNonCode(source);
+  const complexities = [];
+  let match;
+  FUNCTION_START_PATTERN.lastIndex = 0;
+  while ((match = FUNCTION_START_PATTERN.exec(code)) !== null) {
+    const bodyStart = match.index + match[0].length; // just after the opening '{'
+    let depth = 1;
+    let i = bodyStart;
+    while (i < code.length && depth > 0) {
+      if (code[i] === '{') depth++;
+      else if (code[i] === '}') depth--;
+      i++;
+    }
+    const body = code.slice(bodyStart, i - 1);
+    const decisionPoints = body.match(DECISION_POINT_PATTERN) || [];
+    complexities.push(1 + decisionPoints.length);
+    // Resume scanning after this function's own opening brace so nested
+    // functions are still found independently, but avoid rescanning the
+    // same opening match.
+    FUNCTION_START_PATTERN.lastIndex = bodyStart;
+  }
+  return complexities;
+}
+
 function measureComplexity(files) {
-  const perFile = files.map((file) => {
+  const allFunctionComplexities = [];
+  for (const file of files) {
     const source = readFileSync(file, 'utf8');
-    const matches = source.match(DECISION_POINT_PATTERN) || [];
-    // Cyclomatic complexity approximation: one path plus one per decision point.
-    return 1 + matches.length;
-  });
-  const mean = perFile.reduce((a, b) => a + b, 0) / perFile.length;
-  const max = Math.max(...perFile);
+    const perFunction = extractFunctionComplexities(source);
+    // A file with no detected functions (e.g. a pure type-definitions file)
+    // contributes a baseline complexity of 1 rather than being skipped.
+    allFunctionComplexities.push(...(perFunction.length > 0 ? perFunction : [1]));
+  }
+  const mean = allFunctionComplexities.reduce((a, b) => a + b, 0) / allFunctionComplexities.length;
+  const max = Math.max(...allFunctionComplexities);
   return { mean, max };
 }
 
