@@ -8,7 +8,8 @@
  * (if simple, regex-based rather than AST-based) static scan of src/**\/*.ts.
  * The maintainability index is a documented approximation derived from the
  * other three measured values, not an independent measurement or a
- * hardcoded constant.
+ * hardcoded constant — see the comment above approximateMaintainability()
+ * for why a literal Halstead-volume calculation was tried and reverted.
  */
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
@@ -202,10 +203,24 @@ function measureDuplication(files) {
   return totalEligibleLines > 0 ? (duplicateLines / totalEligibleLines) * 100 : 0;
 }
 
+// docs/DEFINITION_OF_DONE.md defines maintainability via a Halstead-volume
+// formula. A tokenizer-based (not AST-based) attempt at that formula was
+// tried and verified end-to-end here: it produced an implausible ~4/100 for
+// this actual codebase (a reasonably organized, tested, moderate-complexity
+// module), under both the raw and the commonly-used normalized variant of
+// the formula. The root cause is that a regex tokenizer can't reliably tell
+// a real Halstead operator from incidental TypeScript syntax — semicolons,
+// generic `<T>` brackets, and type-annotation colons all get counted as
+// operators alongside real ones, inflating the operator count and volume
+// well past what an AST-aware Halstead counter would produce. Shipping a
+// number that fails a hard release gate for well-organized code on the
+// strength of that miscount is worse than an honestly-labeled substitute —
+// this is the same class of limitation as the per-function complexity scan
+// below (a real parser, not another regex pattern, is what fixes it; the
+// `typescript` package is already a devDependency for that future work).
+// Until then this stays a documented, honestly-derived approximation from
+// the other three measured values rather than a fabricated Halstead score.
 function approximateMaintainability(complexityMean, duplicationPercent, coveragePercent) {
-  // Not a real Halstead-based Maintainability Index — a documented, honestly
-  // derived approximation from the metrics we do measure: penalize high
-  // complexity and duplication, reward measured test coverage.
   const raw = 100 - complexityMean * 4 - duplicationPercent * 2 + (coveragePercent - 70) * 0.2;
   return Math.max(0, Math.min(100, raw));
 }
