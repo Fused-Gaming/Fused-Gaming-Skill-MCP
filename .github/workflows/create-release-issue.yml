@@ -156,16 +156,27 @@ jobs:
           # npm ls -p outputs repo root first, then workspace paths - we want the last line
           WORKSPACE_ROOT=$(npm ls -p --workspace=${{ steps.package-info.outputs.package }} 2>/dev/null | tail -1)
 
-          BENCHMARK_SUCCESS=false
+          # A benchmark harness (BehavioralTester/PerformanceBenchmarker/DoDScorer from
+          # @h4shed/benchmark-utils) legitimately exits non-zero when it successfully
+          # measures a package and the DoD gate fails on that real data — that is a scored
+          # "fail", not a broken script. So the npm exit code alone cannot decide whether
+          # real data exists: always attempt to read <workspace>/.benchmark/results.json,
+          # and only treat this as a hard failure below when that file is also missing.
+          # Remove any leftover results file before running so a crash that
+          # happens before this run writes its own file can never be masked
+          # by a stale file from an earlier invocation in the same job.
+          rm -f "$WORKSPACE_ROOT/.benchmark/results.json"
 
-          if npm run benchmark --workspace=${{ steps.package-info.outputs.package }} > benchmark-output.log 2>&1; then
-            BENCHMARK_SUCCESS=true
+          BENCHMARK_EXIT=0
+          npm run benchmark --workspace=${{ steps.package-info.outputs.package }} > benchmark-output.log 2>&1 || BENCHMARK_EXIT=$?
+          BENCHMARK_SUCCESS=true
+          if [ "$BENCHMARK_EXIT" -ne 0 ] && [ ! -f "$WORKSPACE_ROOT/.benchmark/results.json" ]; then
+            BENCHMARK_SUCCESS=false
           fi
 
           # Only use results from the current benchmark run, never cached results
           if [ "$BENCHMARK_SUCCESS" = true ]; then
-            # Prefer the DoD report a real benchmark harness (BehavioralTester /
-            # PerformanceBenchmarker / DoDScorer from @h4shed/benchmark-utils) writes to
+            # Prefer the DoD report a real benchmark harness writes to
             # <workspace>/.benchmark/results.json — reading that file is reliable, unlike
             # scraping the JSON a script happens to print to stdout (multi-line pretty JSON
             # containing nested "}" lines cannot be reliably located with a regex). Only fall
@@ -190,11 +201,14 @@ jobs:
 
               let results;
               if (measured) {
+                // measured's own package/version/timestamp (from the harness's local
+                // package.json) must not clobber the release's package/version — spread
+                // first, then override.
                 results = {
+                  ...measured,
                   package: '${{ steps.package-info.outputs.package }}',
                   version: '${{ steps.package-info.outputs.version }}',
                   timestamp: new Date().toISOString(),
-                  ...measured,
                   status: measured.status || (measured.combined_score >= 90 ? 'pass' : 'fail'),
                 };
               } else {
@@ -473,9 +487,44 @@ jobs:
               )
             } |
             if (.versions | map(select(.id == $pkgver)) | length) > 0 then
+              # Refresh benchmark_results/regression_detection too, not just
+              # status/published_date — this workflow can run more than once
+              # for the same version (e.g. a manually pushed tag triggers it
+              # directly, then again via workflow_run once publish.yml
+              # completes), and the later run's real measured data must not
+              # be discarded in favor of whatever an earlier run recorded.
               .versions |= map(if .id == $pkgver then . + {
                 "status": $status,
-                "published_date": $date
+                "published_date": $date,
+                "benchmark_results": (
+                  # A rerun that hits a genuine infrastructure failure (not a
+                  # scored DoD fail) writes the hardcoded all-zero fallback
+                  # object — that is not "measured data" and must not
+                  # overwrite a real result an earlier run for this same
+                  # version already recorded.
+                  if ($benchmarks != {}) and (
+                    (($benchmarks.combined_score // 0) > 0) or
+                    (($benchmarks.behavioral.core_total // 0) > 0) or
+                    (($benchmarks.performance.performance_score // 0) > 0) or
+                    (($benchmarks.code_quality.quality_score // 0) > 0)
+                  ) then
+                    {
+                      "behavioral_score": ($benchmarks.behavioral.behavioral_score // 0),
+                      "performance_score": ($benchmarks.performance.performance_score // 0),
+                      "code_quality_score": ($benchmarks.code_quality.quality_score // 0),
+                      "combined_score": ($benchmarks.combined_score // 0),
+                      "status": ($benchmarks.status // "pending"),
+                      "details_url": null
+                    }
+                  else .benchmark_results
+                  end
+                ),
+                "regression_detection": (
+                  if $benchmarks.regression_detection then
+                    $benchmarks.regression_detection
+                  else .regression_detection
+                  end
+                )
               } else . end)
             else
               .versions = (.versions + [{

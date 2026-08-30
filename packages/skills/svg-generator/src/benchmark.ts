@@ -273,24 +273,36 @@ async function runBenchmarks() {
 
   const codeQualityScore = scorer.calculateCodeQualityScore(codeQualityMetrics);
 
-  // Try to load baseline for regression detection
-  // Store baseline in tracked directory (docs/benchmarks) to persist across CI runs
+  // Baseline lives under the repo-root benchmarks/ tree, not this package's
+  // own directory: create-release-issue.yml only stages and commits changes
+  // beneath the repo-root benchmarks/ directory, so a baseline written
+  // anywhere else is discarded with the runner and every release would look
+  // like a first release (no regression detection).
+  const repoRoot = path.join(process.cwd(), '..', '..', '..');
+  const baselineDir = path.join(repoRoot, 'benchmarks', 'packages', packageJson.name);
+  const baselineFile = path.join(baselineDir, 'baseline.json');
+
+  // Try to load baseline for regression detection. Only a missing file
+  // (ENOENT) legitimately means "first release" — a corrupt, truncated, or
+  // unreadable baseline must not be silently treated the same way, or a
+  // damaged file quietly resets regression history and then gets overwritten
+  // by this run (permanently losing the last valid comparison point).
+  let baselineLoaded = false;
   try {
-    const baselineDir = path.join(process.cwd(), 'docs', 'benchmarks');
-    const baselineFile = path.join(baselineDir, 'svg-generator-baseline.json');
-    try {
-      const baselineData = await fs.readFile(baselineFile, 'utf8');
-      const baseline: DoDScore = JSON.parse(baselineData);
-      if (baseline.combinedScore !== undefined) {
-        scorer.setBaseline(baseline.version || 'unknown', baseline);
-        console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
-      }
-    } catch {
-      // Baseline doesn't exist yet - this is the first release
-      console.log('ℹ️  No baseline available - first release, establishing baseline\n');
+    const baselineData = await fs.readFile(baselineFile, 'utf8');
+    const baseline: DoDScore = JSON.parse(baselineData);
+    if (baseline.combinedScore !== undefined) {
+      scorer.setBaseline(baseline.version || 'unknown', baseline);
+      baselineLoaded = true;
+      console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
     }
   } catch (err) {
-    console.warn('⚠️  Could not load baseline for regression detection:', err);
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+      console.log('ℹ️  No baseline available - first release, establishing baseline\n');
+    } else {
+      console.error('❌ FAILURE: Baseline file exists but could not be read/parsed:', err);
+      process.exit(1);
+    }
   }
 
   const dodReport = scorer.generateDoDReport(
@@ -320,6 +332,25 @@ async function runBenchmarks() {
   // different, nested shape and must not be handed to the CI reporting path
   // directly, or field lookups like `behavioral.core_pass_rate` come back
   // undefined.
+  // create-release-issue.yml's registry-update step reads `regression_detection`
+  // (a summary object), not the raw `regressions` array DoDScorer produces —
+  // translate one into the other so a completed comparison isn't silently
+  // discarded in favor of the workflow's "Pending baseline comparison" fallback.
+  const performanceMetricNames = new Set(
+    performanceScore.items.map((item) => item.metricName)
+  );
+  const regressions = dodReport.regressions || [];
+  const regressionDetection = {
+    performance_regression: regressions.some((r) => performanceMetricNames.has(r.metric)),
+    code_quality_regression: regressions.some((r) => r.metric === 'complexity' || r.metric === 'duplication'),
+    behavioral_regression: regressions.some((r) => r.metric === 'behavioral_regression'),
+    summary: !baselineLoaded
+      ? 'No baseline available for comparison'
+      : regressions.length > 0
+        ? `${regressions.length} regression(s) detected vs baseline: ${regressions.map((r) => r.metric).join(', ')}`
+        : 'No regressions detected vs baseline',
+  };
+
   const resultsJson = {
     package: packageJson.name,
     version,
@@ -355,12 +386,12 @@ async function runBenchmarks() {
     },
     combined_score: dodReport.combinedScore,
     status: dodReport.passed ? 'pass' : 'fail',
-    regressions: dodReport.regressions || [],
+    regressions,
+    regression_detection: regressionDetection,
   };
 
   console.log('\n📄 Writing results to .benchmark/results.json...');
   const resultsDir = path.join(process.cwd(), '.benchmark');
-  const baselineDir = path.join(process.cwd(), 'docs', 'benchmarks');
 
   try {
     // Write ephemeral results to .benchmark/ (excluded from git)
@@ -371,19 +402,21 @@ async function runBenchmarks() {
     );
     console.log(`✅ Results written to ${resultsDir}/results.json`);
 
-    // Write persistent baseline to docs/benchmarks/ (tracked in git) if this run passed DoD
+    // Write persistent baseline (tracked in git) if this run passed DoD
     if (dodReport.passed) {
       await fs.mkdir(baselineDir, { recursive: true });
-      await fs.writeFile(
-        path.join(baselineDir, 'svg-generator-baseline.json'),
-        JSON.stringify(dodReport, null, 2)
-      );
-      console.log(`✅ Baseline updated to ${baselineDir}/svg-generator-baseline.json (persisted across CI runs)`);
+      await fs.writeFile(baselineFile, JSON.stringify(dodReport, null, 2));
+      console.log(`✅ Baseline updated to ${baselineFile} (persisted across CI runs)`);
     } else {
       console.log(`⚠️  Baseline not updated (run did not pass DoD threshold)`);
     }
   } catch (err) {
-    console.error('⚠️ Failed to write results:', err);
+    // A silent failure here would let the CI workflows fall back to a
+    // fabricated "not_measured" result even though this run genuinely
+    // measured something — exactly the fabrication this harness exists to
+    // prevent. Fail loudly instead.
+    console.error('❌ FAILURE: Could not persist benchmark results:', err);
+    process.exit(1);
   }
 
   // Output results to stdout in JSON format for workflow consumption

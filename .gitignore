@@ -245,3 +245,4 @@ packages/web/.claude-flow/data/
 # Benchmark Results
 **/.benchmark/
 **/tsconfig.benchmark.json
+**/.quality-metrics.json
