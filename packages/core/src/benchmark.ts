@@ -379,13 +379,36 @@ async function runBenchmarks() {
   // === CALCULATE SCORES ===
   console.log('\n📊 Computing Definition of Done Score...\n');
 
+  const MEMORY_PEAK_LIMIT_MB = 128;
   const performanceScore = perfBench.calculatePerformanceScore([
     // maxMean is in batch-scale (matches the batch-of-REGISTRATION_BATCH_SIZE
     // samples recorded above), equivalent to a 5ms/op ceiling.
     { metricName: 'skill registration latency', unit: 'ms', maxMean: 5 * REGISTRATION_BATCH_SIZE },
     { metricName: 'listSkills throughput', unit: 'ops/sec', minMean: 1000 },
-    { metricName: 'registry lifecycle memory', unit: 'MB', maxMean: 128 },
+    { metricName: 'registry lifecycle memory', unit: 'MB', maxMean: MEMORY_PEAK_LIMIT_MB },
   ]);
+
+  // calculatePerformanceScore gates 'registry lifecycle memory' on the
+  // *mean* of the 50 samples (maxMean is a mean-based target by design in
+  // PerformanceTarget). But the report below publishes memoryResult.max as
+  // memory_mb_peak, so a run where most samples are small and a few spike
+  // above the limit could pass the mean-based gate while genuinely exceeding
+  // the advertised budget on the exact number the report surfaces. Enforce
+  // the same limit against the peak explicitly, since the shared library has
+  // no way to know we're reporting max rather than mean for this metric.
+  const memoryScoreItem = performanceScore.items.find(
+    (item) => item.metricName === 'registry lifecycle memory'
+  );
+  if (memoryScoreItem && memoryResult.max > MEMORY_PEAK_LIMIT_MB) {
+    memoryScoreItem.passedAbsoluteTarget = false;
+    memoryScoreItem.score = memoryScoreItem.passedVarianceTarget ? 50 : 0;
+    const weightSum = performanceScore.items.length;
+    performanceScore.aggregateScore = Math.round(
+      performanceScore.items.reduce((sum, item) => sum + item.score, 0) / weightSum
+    );
+    performanceScore.passed =
+      performanceScore.items.every((item) => item.score >= 75) && performanceScore.aggregateScore >= 90;
+  }
 
   // Code quality metrics must be measured, not fabricated. `npm run benchmark`
   // runs scripts/collect-quality-metrics.mjs before this script, which writes
