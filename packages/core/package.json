@@ -14,7 +14,7 @@
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
     "test": "jest",
-    "benchmark": "node scripts/collect-quality-metrics.mjs && tsc --project tsconfig.json && node dist/packages/core/src/benchmark.js"
+    "benchmark": "node scripts/collect-quality-metrics.mjs && tsc --project tsconfig.json && node --expose-gc dist/packages/core/src/benchmark.js"
   },
   "dependencies": {
     "@h4shed/benchmark-utils": "^2.0.0",

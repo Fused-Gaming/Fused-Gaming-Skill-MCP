@@ -68,7 +68,10 @@ function measureCoverage() {
   const summary = JSON.parse(
     readFileSync(join(packageRoot, 'coverage', 'coverage-summary.json'), 'utf8')
   );
-  return summary.total.statements.pct;
+  // The DoD spec defines coverage as executed lines / total lines, not
+  // Istanbul's statement percentage — the two can diverge on multi-line
+  // statements or multiple statements per line.
+  return summary.total.lines.pct;
 }
 
 // Deliberately excludes bare `?` — in TypeScript it's overwhelmingly optional
@@ -157,34 +160,45 @@ const MIN_DUPLICATE_LINE_LENGTH = 20;
 const DUPLICATE_BLOCK_SIZE = 6;
 
 function measureDuplication(files) {
-  const blockCounts = new Map();
-  let totalEligibleLines = 0;
-  const fileBlocks = [];
-  for (const file of files) {
-    const lines = readFileSync(file, 'utf8')
+  // Sliding (not chunked) windows: a copied block shifted by even one
+  // eligible line relative to another copy would land on different chunk
+  // boundaries and be missed entirely by fixed, non-overlapping chunking.
+  // Every possible start offset is checked instead, and matched positions
+  // are recorded (not just counted) so overlapping windows over the same
+  // duplicated lines aren't double-counted in the final percentage.
+  const blockOccurrences = new Map(); // block text -> [[fileIndex, startIndex], ...]
+  const fileLines = files.map((file) =>
+    readFileSync(file, 'utf8')
       .split('\n')
       .map((l) => l.trim())
       .filter(
         (l) => l.length >= MIN_DUPLICATE_LINE_LENGTH && !l.startsWith('//') && !l.startsWith('*')
-      );
-    totalEligibleLines += lines.length;
-    // Non-overlapping chunks: each eligible line contributes to exactly one
-    // block, so summing "duplicate block size" across matched blocks can't
-    // double-count the same line via overlapping windows.
-    const blocks = [];
-    for (let i = 0; i + DUPLICATE_BLOCK_SIZE <= lines.length; i += DUPLICATE_BLOCK_SIZE) {
+      )
+  );
+  const totalEligibleLines = fileLines.reduce((sum, lines) => sum + lines.length, 0);
+
+  fileLines.forEach((lines, fileIndex) => {
+    for (let i = 0; i + DUPLICATE_BLOCK_SIZE <= lines.length; i++) {
       const block = lines.slice(i, i + DUPLICATE_BLOCK_SIZE).join('\n');
-      blocks.push(block);
-      blockCounts.set(block, (blockCounts.get(block) || 0) + 1);
+      const occurrences = blockOccurrences.get(block) || [];
+      occurrences.push([fileIndex, i]);
+      blockOccurrences.set(block, occurrences);
     }
-    fileBlocks.push(blocks);
-  }
-  let duplicateLines = 0;
-  for (const blocks of fileBlocks) {
-    for (const block of blocks) {
-      if (blockCounts.get(block) > 1) duplicateLines += DUPLICATE_BLOCK_SIZE;
+  });
+
+  const duplicateMarks = fileLines.map((lines) => new Array(lines.length).fill(false));
+  for (const occurrences of blockOccurrences.values()) {
+    if (occurrences.length < 2) continue;
+    for (const [fileIndex, start] of occurrences) {
+      for (let offset = 0; offset < DUPLICATE_BLOCK_SIZE; offset++) {
+        duplicateMarks[fileIndex][start + offset] = true;
+      }
     }
   }
+  const duplicateLines = duplicateMarks.reduce(
+    (sum, marks) => sum + marks.filter(Boolean).length,
+    0
+  );
   return totalEligibleLines > 0 ? (duplicateLines / totalEligibleLines) * 100 : 0;
 }
 

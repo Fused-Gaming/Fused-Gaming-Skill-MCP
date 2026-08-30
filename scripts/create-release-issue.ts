@@ -24,12 +24,16 @@ interface BenchmarkResults {
   behavioral: {
     core_pass_rate: number;
     core_total: number;
+    core_ci_lower_bound?: number;
     regression_pass_rate: number;
     regression_total: number;
+    regression_ci_lower_bound?: number;
     functionality_pass_rate: number;
     functionality_total: number;
+    functionality_ci_lower_bound?: number;
     error_pass_rate: number;
     error_total: number;
+    error_ci_lower_bound?: number;
     behavioral_score: number;
   };
   performance: {
@@ -277,9 +281,25 @@ review is required before considering it approved.
   // Always use calculated value for gate enforcement - no tolerance
   const validatedCombinedScore = calculatedCombined;
 
-  // Enforce mandatory gates per Definition of Done
-  const coreCI = calculateCI(behavioral.core_pass_rate, behavioral.core_total);
-  const corePassesCI = !isNaN(coreCI[0]) && coreCI[0] >= 93;
+  // Enforce mandatory gates per Definition of Done.
+  //
+  // DoDScorer gates each category on a Wilson score interval lower bound,
+  // not a Wald approximation from rate+count. The two diverge sharply at
+  // the edges: a 100%-pass rate gives a Wald interval of exactly
+  // [100, 100] regardless of sample size, which would silently defeat this
+  // gate's entire purpose (requiring *enough* samples, not just all-passing
+  // ones). Prefer the actual measured bound the harness reports; fall back
+  // to the Wald approximation only for older results files that predate it.
+  const coreCILowerBound =
+    behavioral.core_ci_lower_bound ??
+    calculateCI(behavioral.core_pass_rate, behavioral.core_total)[0];
+  const corePassesCI = !isNaN(coreCILowerBound) && coreCILowerBound >= 93;
+  const functionalityCILowerBound =
+    behavioral.functionality_ci_lower_bound ??
+    calculateCI(behavioral.functionality_pass_rate, behavioral.functionality_total)[0];
+  const errorCILowerBound =
+    behavioral.error_ci_lower_bound ??
+    calculateCI(behavioral.error_pass_rate, behavioral.error_total)[0];
 
   // Require minimum test sample size for statistical validity
   const hasMinimumCoreSamples = behavioral.core_total >= 30;
@@ -326,7 +346,7 @@ review is required before considering it approved.
 - [${corePassesCI && behavioral.core_pass_rate >= 95 && hasMinimumCoreSamples ? "x" : " "}] **CORE Tests Pass** (≥95% pass rate, ≥93% CI lower bound, min 30 samples)
   - Test Count: \`${behavioral.core_total}\` (Minimum Required: 30)
   - Pass Rate: \`${behavioral.core_pass_rate.toFixed(2)}%\`
-  - Confidence Interval (95% CI): \`${behavioral.core_total > 0 ? `[${coreCI[0].toFixed(2)}%, ${coreCI[1].toFixed(2)}%]` : "N/A"}\`
+  - Lower Confidence Bound (95%${behavioral.core_ci_lower_bound !== undefined ? " Wilson" : " Wald approx."}): \`${behavioral.core_total > 0 ? `${coreCILowerBound.toFixed(2)}%` : "N/A"}\`
   - Minimum Samples Met: ${hasMinimumCoreSamples ? "✅" : "❌"}
   - Status: ${corePassesCI && behavioral.core_pass_rate >= 95 && hasMinimumCoreSamples ? "✅" : "❌"}
 
@@ -339,14 +359,14 @@ review is required before considering it approved.
 - [${behavioral.functionality_pass_rate >= 80 && behavioral.functionality_total > 0 ? "x" : " "}] **FUNCTIONALITY Tests** (≥80% threshold)
   - Test Count: \`${behavioral.functionality_total}\`
   - Pass Rate: \`${behavioral.functionality_pass_rate.toFixed(2)}%\`
-  - Confidence Interval (95% CI): \`${behavioral.functionality_total > 0 ? `[${calculateCI(behavioral.functionality_pass_rate, behavioral.functionality_total)[0].toFixed(2)}%, ${calculateCI(behavioral.functionality_pass_rate, behavioral.functionality_total)[1].toFixed(2)}%]` : "N/A"}\`
-  - Status: ${behavioral.functionality_pass_rate >= 80 && behavioral.functionality_total > 0 && calculateCI(behavioral.functionality_pass_rate, behavioral.functionality_total)[0] >= 75 ? "✅" : "⚠️"}
+  - Lower Confidence Bound (95%${behavioral.functionality_ci_lower_bound !== undefined ? " Wilson" : " Wald approx."}): \`${behavioral.functionality_total > 0 ? `${functionalityCILowerBound.toFixed(2)}%` : "N/A"}\`
+  - Status: ${behavioral.functionality_pass_rate >= 80 && behavioral.functionality_total > 0 && functionalityCILowerBound >= 75 ? "✅" : "⚠️"}
 
 - [${behavioral.error_pass_rate >= 90 && behavioral.error_total > 0 ? "x" : " "}] **ERROR Handling Tests** (≥90% threshold)
   - Test Count: \`${behavioral.error_total}\`
   - Pass Rate: \`${behavioral.error_pass_rate.toFixed(2)}%\`
-  - Confidence Interval (95% CI): \`${behavioral.error_total > 0 ? `[${calculateCI(behavioral.error_pass_rate, behavioral.error_total)[0].toFixed(2)}%, ${calculateCI(behavioral.error_pass_rate, behavioral.error_total)[1].toFixed(2)}%]` : "N/A"}\`
-  - Status: ${behavioral.error_pass_rate >= 90 && behavioral.error_total > 0 && calculateCI(behavioral.error_pass_rate, behavioral.error_total)[0] >= 85 ? "✅" : "⚠️"}
+  - Lower Confidence Bound (95%${behavioral.error_ci_lower_bound !== undefined ? " Wilson" : " Wald approx."}): \`${behavioral.error_total > 0 ? `${errorCILowerBound.toFixed(2)}%` : "N/A"}\`
+  - Status: ${behavioral.error_pass_rate >= 90 && behavioral.error_total > 0 && errorCILowerBound >= 85 ? "✅" : "⚠️"}
 
 **Behavioral Score:** \`${behavioral.behavioral_score.toFixed(2)}%\`
 **Behavioral Status:** ${behavioral.behavioral_score >= 90 ? "✅ Approved" : behavioral.behavioral_score >= 80 ? "⚠️ Review Required" : "❌ Blocked"}

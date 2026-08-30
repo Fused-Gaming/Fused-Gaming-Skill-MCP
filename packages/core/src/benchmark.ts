@@ -453,11 +453,22 @@ async function runBenchmarks() {
   try {
     const baselineData = await fs.readFile(baselineFile, 'utf8');
     const baseline: DoDScore = JSON.parse(baselineData);
-    if (baseline.combinedScore !== undefined) {
-      scorer.setBaseline(baseline.version || 'unknown', baseline);
-      baselineLoaded = true;
-      console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
+    // Valid JSON that isn't actually a DoDScore (e.g. `{}`, or a stray copy
+    // of the flat results.json schema) must fail the same way a corrupt
+    // file does — silently treating it as "no baseline" would disable
+    // regression detection without saying so, and then a passing run
+    // overwrites the file, permanently losing whatever was there before.
+    if (
+      typeof baseline.combinedScore !== 'number' ||
+      !Array.isArray(baseline.behavioral?.scores) ||
+      !Array.isArray(baseline.performance?.items) ||
+      typeof baseline.codeQuality?.complexity?.mean !== 'number'
+    ) {
+      throw new Error(`baseline.json does not match the expected DoDScore schema`);
     }
+    scorer.setBaseline(baseline.version || 'unknown', baseline);
+    baselineLoaded = true;
+    console.log(`✅ Loaded baseline from previous release (v${baseline.version})\n`);
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
       console.log('ℹ️  No baseline available - first release, establishing baseline\n');
@@ -502,6 +513,19 @@ async function runBenchmarks() {
         : 'No regressions detected vs baseline',
   };
 
+  // DoDScorer computes each category's pass rate gate against a Wilson
+  // score interval lower bound (ciLowerBound), not the pass-rate/count pair
+  // alone. Consumers that only receive rate+count (like the flat schema
+  // below) can't reconstruct that same bound — a naive Wald approximation
+  // from rate+count diverges sharply at the edges (e.g. a 100%-pass rate
+  // gives a Wald interval of exactly [100, 100] regardless of sample size,
+  // silently defeating the whole point of a confidence-interval gate).
+  // Serialize the actual measured bound so downstream reporting shows the
+  // same number the scorer gated on.
+  const ciLowerBoundByCategory = new Map(
+    dodReport.behavioral.scores.map((s) => [s.category, s.ciLowerBound])
+  );
+
   // Flat schema expected by scripts/create-release-issue.ts and the
   // publish/create-release-issue workflows.
   const resultsJson = {
@@ -511,12 +535,16 @@ async function runBenchmarks() {
     behavioral: {
       core_pass_rate: coreResult.passRate,
       core_total: coreResult.totalCount,
+      core_ci_lower_bound: ciLowerBoundByCategory.get('CORE'),
       regression_pass_rate: regressionResult.passRate,
       regression_total: regressionResult.totalCount,
+      regression_ci_lower_bound: ciLowerBoundByCategory.get('REGRESSION'),
       functionality_pass_rate: functionalityResult.passRate,
       functionality_total: functionalityResult.totalCount,
+      functionality_ci_lower_bound: ciLowerBoundByCategory.get('FUNCTIONALITY'),
       error_pass_rate: errorResult.passRate,
       error_total: errorResult.totalCount,
+      error_ci_lower_bound: ciLowerBoundByCategory.get('ERROR'),
       behavioral_score: dodReport.behavioral.aggregateScore,
     },
     performance: {
