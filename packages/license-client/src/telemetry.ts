@@ -75,12 +75,24 @@ function ensureDir(): void {
   }
 }
 
+// randomUUID() is what this module ever writes as an installId — anything
+// else (a manually edited file, an older/foreign client's config, or plain
+// corruption that still happens to parse as valid JSON) is not something
+// this module ever intended to transmit. Validating on *read* means a
+// bad/oversized value can never reach the network payload, no matter how
+// it ended up on disk.
+const INSTALL_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 function readConfig(product: string): TelemetryConfig | null {
   try {
     const raw = fs.readFileSync(configPath(product), 'utf-8');
     const parsed = JSON.parse(raw);
     if (typeof parsed.enabled === 'boolean') {
-      return { enabled: parsed.enabled, installId: parsed.installId };
+      const installId =
+        typeof parsed.installId === 'string' && INSTALL_ID_PATTERN.test(parsed.installId)
+          ? parsed.installId
+          : undefined;
+      return { enabled: parsed.enabled, installId };
     }
     return null;
   } catch {
@@ -120,32 +132,54 @@ function isPidAlive(pid: number): boolean {
 }
 
 /**
+ * Deletes a lock file only if its content is still exactly what was
+ * inspected when the decision to reclaim it was made — a compare-then-
+ * delete, not a blind unlink. Without this re-check, a process could read
+ * a dead owner's token, be preempted, and unlink a *different* process's
+ * lock that was created in the meantime (whether a legitimate new owner's,
+ * or another reclaimer's), letting two processes believe they both hold
+ * the lock. This narrows that window to the gap between this re-read and
+ * the unlink rather than eliminating it outright (a single filesystem
+ * doesn't offer an atomic "delete iff content == X" primitive for regular
+ * files), which is an acceptable residual for a local advisory lock.
+ */
+function deleteLockIfUnchanged(path_: string, expectedContent: string): void {
+  try {
+    if (fs.readFileSync(path_, 'utf-8') === expectedContent) {
+      fs.unlinkSync(path_);
+    }
+  } catch {
+    // Already gone (released, or reclaimed by someone else) — fine either way.
+  }
+}
+
+/**
  * Reclaims a lock only if its recorded owner process is confirmed dead
  * (not merely old) — a live-but-paused owner is never reclaimed regardless
  * of age. Falls back to the age-based check only if the lock's content
  * can't be read/parsed at all (e.g. a lock from a version of this module
  * that didn't write ownership info). Best-effort throughout: a race to
- * reclaim the same lock is harmless (a second unlink of an already-gone
- * file just throws ENOENT, which is swallowed).
+ * reclaim the same lock is harmless (deleteLockIfUnchanged no-ops if the
+ * content has already changed underneath it).
  */
 function reclaimStaleLock(path_: string): void {
   try {
     const content = fs.readFileSync(path_, 'utf-8');
     const pid = Number(content.split(':')[0]);
     if (Number.isFinite(pid)) {
-      if (!isPidAlive(pid)) fs.unlinkSync(path_);
+      if (!isPidAlive(pid)) deleteLockIfUnchanged(path_, content);
       return;
     }
-  } catch {
-    // Unreadable, or the lock vanished on its own — fall through.
-  }
-  try {
-    const stat = fs.statSync(path_);
-    if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
-      fs.unlinkSync(path_);
+    try {
+      const stat = fs.statSync(path_);
+      if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
+        deleteLockIfUnchanged(path_, content);
+      }
+    } catch {
+      // Lock vanished on its own — fine.
     }
   } catch {
-    // Lock vanished on its own (released, or already reclaimed) — fine.
+    // Unreadable, or the lock vanished on its own — nothing to reclaim.
   }
 }
 
