@@ -44,7 +44,17 @@ const LOCK_STALE_MS = 5000; // a lock older than this is assumed abandoned by a 
 const LOCK_ABSOLUTE_MAX_MS = 60000;
 
 export interface TelemetryConfig {
-  enabled: boolean;
+  // Optional, not defaulted: absence means "no explicit consent decision
+  // has ever been persisted for this product" — distinct from `false`,
+  // which means disableTelemetry() was actually called. Callers that just
+  // need a definite yes/no (e.g. "should I send this event") normalize
+  // with `config?.enabled ?? false`; callers that need to distinguish an
+  // explicit opt-out from "never decided" (e.g. "does a persisted opt-out
+  // exist that should override the environment opt-in") check
+  // `config?.enabled === false` specifically. See getOrCreateInstallId,
+  // which must be able to persist an installId without ever fabricating
+  // an explicit `false` the caller never asked for.
+  enabled?: boolean;
   installId?: string;
 }
 
@@ -123,7 +133,11 @@ const INSTALL_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]
 function parseConfig(raw: string): TelemetryConfig | null {
   try {
     const parsed = JSON.parse(raw);
-    if (typeof parsed.enabled === 'boolean') {
+    // `enabled` absent (undefined) is valid — a config written purely to
+    // persist an installId (see getOrCreateInstallId) with no explicit
+    // consent decision yet. Anything present but not a boolean is still
+    // treated as corrupt, same as before.
+    if (typeof parsed.enabled === 'boolean' || parsed.enabled === undefined) {
       const installId =
         typeof parsed.installId === 'string' && INSTALL_ID_PATTERN.test(parsed.installId)
           ? parsed.installId
@@ -238,11 +252,25 @@ function isPidAlive(pid: number): boolean {
  *
  * If the captured file's content doesn't match what we decided was stale,
  * we didn't grab our stale lock; we grabbed a live one that replaced it in
- * the meantime. Rather than deleting somebody else's active lock, put it
- * back — via `linkSync`, not `renameSync`, so restoring it can never
- * clobber an even-newer lock a legitimate owner has since recreated at
- * `path_` (`linkSync` fails with EEXIST instead of silently overwriting
- * it).
+ * the meantime — but it's left orphaned at `tempPath` rather than restored
+ * to `path_`. An earlier version of this function tried to restore it (via
+ * `linkSync`, to avoid clobbering an even-newer lock recreated at `path_`
+ * in the meantime), reasoning that its displaced owner still needs it back.
+ * It doesn't: that owner is protected purely by `lockStillOwned()` checking
+ * its own token against whatever is *currently* at `path_` immediately
+ * before every write — if that check fails, the owner correctly aborts, no
+ * matter whether `path_` was left vacant, restored, or holds something
+ * else entirely. Restoring is actively worse: the restore can itself land
+ * arbitrarily late, potentially *after* the displaced owner's lock has
+ * already been legitimately reclaimed for real, used by a full intervening
+ * critical section, and released — at which point restoring the displaced
+ * owner's old token would hand it ownership again, well after the fact,
+ * letting it resume and pass its own `lockStillOwned()` check against
+ * state that's actually newer than what it read. Leaving `path_` vacant
+ * has no such failure mode: at worst, a lock legitimately in use gets
+ * dropped early (its owner aborts via `lockStillOwned()`, and whoever was
+ * genuinely waiting can now acquire sooner) — a liveness cost, not a
+ * correctness one.
  */
 function atomicallyRemoveLockIfContent(path_: string, expectedContent: string): void {
   const tempPath = `${path_}.reclaimed.${process.pid}.${randomUUID()}`;
@@ -258,16 +286,10 @@ function atomicallyRemoveLockIfContent(path_: string, expectedContent: string): 
     return; // Vanished immediately after our own rename — nothing more to do.
   }
   if (capturedContent !== expectedContent) {
-    try {
-      fs.linkSync(tempPath, path_);
-      fs.unlinkSync(tempPath); // Restored under its original name; drop our extra link to it.
-    } catch {
-      // Couldn't restore (something else is already at path_ again) — leave
-      // the captured file at tempPath rather than risk destroying whatever
-      // that is. A small orphaned file, not a correctness problem: nothing
-      // else ever reads tempPath, and its original owner's own
-      // lockStillOwned() check protects it from a lock it no longer holds.
-    }
+    // We grabbed a live lock instead of our stale target. Leave it at
+    // tempPath — see the doc comment above for why this is safe and
+    // restoring it would not be. Nothing else ever reads tempPath; it's a
+    // small orphaned file, not a correctness problem.
     return;
   }
   try {
@@ -497,6 +519,7 @@ export function enableTelemetry(product: string): void {
     }
     writeConfig(product, { enabled: true, installId: existing?.installId });
     consentCache.set(product, true);
+    consentGeneration.set(product, (consentGeneration.get(product) ?? 0) + 1);
   } finally {
     releaseLock(path_, token);
   }
@@ -528,6 +551,7 @@ export function disableTelemetry(product: string): void {
     }
     writeConfig(product, { enabled: false, installId: existing?.installId });
     consentCache.set(product, false);
+    consentGeneration.set(product, (consentGeneration.get(product) ?? 0) + 1);
   } finally {
     releaseLock(path_, token);
   }
@@ -593,7 +617,17 @@ async function getOrCreateInstallId(product: string): Promise<string> {
         if (latest?.installId) return latest.installId; // minted by whoever we waited on
         if (!lockStillOwned(path_, token)) return randomUUID(); // lost the lock mid-call — ephemeral fallback
         const installId = randomUUID();
-        writeConfig(product, { enabled: latest?.enabled ?? existing?.enabled ?? false, installId });
+        // Deliberately no `?? false` fallback: a product enabled *only*
+        // via its environment variable (never called enableTelemetry(),
+        // so no config file exists yet) reaches this exact path on its
+        // first event. Writing `enabled: false` here — even though no one
+        // ever explicitly disabled anything — would persist what every
+        // later isTelemetryEnabled()/recordEvent() call treats as an
+        // explicit opt-out that outranks the environment opt-in, silently
+        // disabling that product after exactly one event. Omitting the
+        // field (when neither `latest` nor `existing` had one) instead
+        // persists "no decision yet", which is what's actually true.
+        writeConfig(product, { enabled: latest?.enabled ?? existing?.enabled, installId });
         return installId;
       } finally {
         releaseLock(path_, token);
@@ -636,19 +670,35 @@ function isValidPayload(event: unknown, product: unknown, productVersion: unknow
 
 // In-memory cache of this process's own view of persisted per-product
 // consent, updated synchronously by enableTelemetry()/disableTelemetry()
-// right after each successful write. recordEvent() snapshots this at
-// invocation time (see recordEvent below) instead of relying solely on
-// its deferred disk read. Without this, calling recordEvent() and then
-// immediately (synchronously) enableTelemetry() for the same product in
-// the same process could have the *later* enableTelemetry() write already
-// on disk by the time recordEvent()'s own async config read executes,
-// retroactively sending an event that predates consent — a direct
-// violation of "nothing is sent before opt-in". This closes that race for
-// what a single process can actually observe about its own calls; it
-// can't and doesn't close the equivalent race across separate processes,
-// which is an inherent limit of file-based IPC latency, not something
-// in-memory state can fix.
+// right after each successful write, and self-healed by recordEvent()'s
+// own disk reads (see recordEvent below) so a stale value can never be
+// trusted indefinitely.
 const consentCache = new Map<string, boolean>();
+
+// Bumped synchronously, once, by enableTelemetry()/disableTelemetry() each
+// time either actually completes — a count of how many in-process consent
+// changes have happened for a product so far, not a boolean. Paired with
+// consentCache to answer a question neither alone can: recordEvent()
+// captures both at invocation; later, once its disk read resolves, if the
+// generation is *still* what it captured, no in-process enable/disable call
+// completed in between, so the disk read genuinely reflects state that
+// existed at-or-before invocation (whether from an earlier process's write,
+// or nothing having changed at all) and can be trusted. Only if the
+// generation *changed* in between is there real ambiguity — some in-process
+// write landed on disk sometime during the wait, and there's no way to tell
+// whether the read beat it or not — and only then does recordEvent fall
+// back to trusting nothing but a `true` this exact event's own invocation
+// already knew about.
+//
+// This is what actually reconciles two guarantees that a plain boolean
+// cache can't hold at once: a fresh process must still honor consent
+// persisted by an *earlier* process (the common case — nothing in this
+// process ever changes generation, so the disk read is always trusted),
+// while a recordEvent() immediately followed by an in-process
+// enableTelemetry() call for the same product must still never
+// retroactively count that specific event as consented (generation changes
+// before the read resolves, so the fallback applies).
+const consentGeneration = new Map<string, number>();
 
 /**
  * Sends the event as a detached, unref'd HTTP(S) request. Using the raw
@@ -743,13 +793,11 @@ export async function recordEvent(
   // - timestamp: otherwise two events fired back-to-back could have their
   //   recorded order reversed by whichever one's lock/config wait happens
   //   to resolve first, corrupting event ordering for time-based analysis.
-  // - cachedConsent: see consentCache above — without this, an
-  //   enableTelemetry() call issued right after this one (same process)
-  //   could land on disk before the async config read below executes,
-  //   making this call retroactively "consented" even though it happened
-  //   before opt-in.
+  // - cachedConsent / generationAtInvocation: see consentCache and
+  //   consentGeneration above.
   const timestamp = new Date().toISOString();
   const cachedConsent = consentCache.get(product);
+  const generationAtInvocation = consentGeneration.get(product) ?? 0;
 
   // Detached: intentionally not awaited so delivery can never block or
   // slow down the caller. Errors are caught inside so this can never
@@ -760,38 +808,32 @@ export async function recordEvent(
       // cached `true` must never be trusted indefinitely, or a *later*
       // disableTelemetry() call — from this process or another one — would
       // be silently ignored by every subsequent recordEvent() call for as
-      // long as the process runs, still short-circuiting past the read via
-      // the cache instead of ever observing the opt-out (this was the
-      // actual bug: `cachedConsent ?? diskRead` never evaluates diskRead
-      // once cachedConsent holds any value, including a stale `true`).
-      // Self-heals the cache with what this read observes, so at most one
-      // event can lag behind a fresh external change before the cache
-      // catches up for everything after it — not "indefinitely", which is
-      // what made the stale-cache version a real compliance problem.
+      // long as the process runs. Self-heals the cache with what this read
+      // observes, so at most one event can lag behind a fresh external
+      // change before the cache catches up for everything after it.
       const config = await readConfigAsync(product);
       const diskEnabled = config?.enabled ?? false;
       consentCache.set(product, diskEnabled); // Self-heal for every event after this one.
       if (config?.enabled === false) return; // Explicit opt-out always wins, even over env var opt-in.
-      // Only a `true` cached at *this event's own invocation* (captured
-      // above, before this read even started) counts as consent for this
-      // specific event — never this read's own `diskEnabled`, and never an
-      // absent (undefined) cache entry either. Falling through to
-      // `diskEnabled` here for the undefined case would reopen the exact
-      // pre-consent-event race this snapshot exists to close: on a fresh
-      // process's very first recordEvent() for a product, with no prior
-      // in-process enableTelemetry() call, cachedConsent is undefined —
-      // and a concurrent enableTelemetry() call could still win the race
-      // and land on disk before this read runs, making diskEnabled `true`
-      // for an event that was actually recorded before consent existed.
-      // The accepted tradeoff: a fresh process's first-ever event for a
-      // product it was *already* opted into from an earlier run is also
-      // conservatively dropped (cachedConsent is undefined then too, for
-      // the same reason — this process just doesn't know that yet). Every
-      // event after it sends correctly, once the self-heal above has
-      // populated the cache. "Never send before proven consent" is the
-      // guarantee this module actually makes; losing one event during
-      // that bootstrap window is the accepted cost of keeping it absolute.
-      const persistedEnabled = cachedConsent === true;
+      // The read above just resolved — has any in-process enable/disable
+      // call *completed* since this event's own invocation? If not
+      // (generation unchanged), nothing in this process could have raced
+      // ahead of this read, so diskEnabled genuinely reflects state that
+      // existed at-or-before invocation — whether that's a persisted
+      // opt-in from an *earlier* process/run (the common case for a
+      // process-per-command CLI, which must still work) or simply nothing
+      // having changed — and can be trusted directly. Only when the
+      // generation *did* change is there real ambiguity (some in-process
+      // write landed on disk sometime during this wait, with no way to
+      // tell whether the read beat it), and only then does this fall back
+      // to trusting nothing but a `true` this exact event's own invocation
+      // already knew about — closing the original pre-consent-event race
+      // (recordEvent() immediately followed by an in-process
+      // enableTelemetry() call for the same product) without also
+      // silently discarding every event from a fresh, otherwise-idle
+      // process that inherits consent persisted by a previous run.
+      const generationUnchanged = (consentGeneration.get(product) ?? 0) === generationAtInvocation;
+      const persistedEnabled = generationUnchanged ? diskEnabled : cachedConsent === true;
       if (!envOptedIn && !persistedEnabled) return;
       const installId = await getOrCreateInstallId(product);
       const payload: TelemetryEvent = {
