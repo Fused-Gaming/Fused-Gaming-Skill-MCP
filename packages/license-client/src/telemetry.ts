@@ -23,6 +23,7 @@
  * that happens to share the same OS user account.
  */
 import * as fs from 'fs';
+import * as fsp from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
 import * as http from 'http';
@@ -83,9 +84,8 @@ function ensureDir(): void {
 // it ended up on disk.
 const INSTALL_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function readConfig(product: string): TelemetryConfig | null {
+function parseConfig(raw: string): TelemetryConfig | null {
   try {
-    const raw = fs.readFileSync(configPath(product), 'utf-8');
     const parsed = JSON.parse(raw);
     if (typeof parsed.enabled === 'boolean') {
       const installId =
@@ -95,6 +95,34 @@ function readConfig(product: string): TelemetryConfig | null {
       return { enabled: parsed.enabled, installId };
     }
     return null;
+  } catch {
+    return null;
+  }
+}
+
+// Synchronous: used only by the public sync API (enableTelemetry(),
+// disableTelemetry(), isTelemetryEnabled()'s persisted-config fallback),
+// where blocking briefly on local disk I/O is an accepted, documented
+// part of calling a synchronous function. Never called from recordEvent()'s
+// own execution path — see readConfigAsync for that.
+function readConfig(product: string): TelemetryConfig | null {
+  try {
+    return parseConfig(fs.readFileSync(configPath(product), 'utf-8'));
+  } catch {
+    return null;
+  }
+}
+
+// Async counterpart used exclusively from recordEvent()'s detached path
+// (directly, and via getOrCreateInstallId()) so that even a slow or
+// unresponsive filesystem (e.g. a home directory on network storage) can
+// never stall recordEvent()'s own synchronous execution before it returns
+// to the caller — its documented "resolves immediately" guarantee would
+// otherwise be violated by the disk read backing the persisted `enabled`
+// check and the first-time install-ID lookup.
+async function readConfigAsync(product: string): Promise<TelemetryConfig | null> {
+  try {
+    return parseConfig(await fsp.readFile(configPath(product), 'utf-8'));
   } catch {
     return null;
   }
@@ -132,24 +160,29 @@ function isPidAlive(pid: number): boolean {
 }
 
 /**
- * Deletes a lock file only if its content is still exactly what was
- * inspected when the decision to reclaim it was made — a compare-then-
- * delete, not a blind unlink. Without this re-check, a process could read
- * a dead owner's token, be preempted, and unlink a *different* process's
- * lock that was created in the meantime (whether a legitimate new owner's,
- * or another reclaimer's), letting two processes believe they both hold
- * the lock. This narrows that window to the gap between this re-read and
- * the unlink rather than eliminating it outright (a single filesystem
- * doesn't offer an atomic "delete iff content == X" primitive for regular
- * files), which is an acceptable residual for a local advisory lock.
+ * Atomically removes whatever is currently at `path_`, without the
+ * read-then-unlink race a content comparison would have: `rename()` on the
+ * *current* directory entry at `path_` is exclusive — if two processes
+ * race to reclaim the same lock, only one rename call can succeed, because
+ * the other's source path is already gone by the time it runs (ENOENT,
+ * swallowed below). Whichever process wins takes exclusive ownership of
+ * the file that was actually removed, under a name only it knows, before
+ * deleting its own private copy — so a legitimate new owner's lock,
+ * created at `path_` *after* the rename already vacated it, is a
+ * completely separate directory entry that this can never touch, however
+ * long the loser was preempted for.
  */
-function deleteLockIfUnchanged(path_: string, expectedContent: string): void {
+function atomicallyRemoveLock(path_: string): void {
+  const tempPath = `${path_}.reclaimed.${process.pid}.${randomUUID()}`;
   try {
-    if (fs.readFileSync(path_, 'utf-8') === expectedContent) {
-      fs.unlinkSync(path_);
-    }
+    fs.renameSync(path_, tempPath);
   } catch {
-    // Already gone (released, or reclaimed by someone else) — fine either way.
+    return; // Lost the race, or the lock was already gone — not ours to remove.
+  }
+  try {
+    fs.unlinkSync(tempPath);
+  } catch {
+    // Already gone somehow — fine, we still safely vacated path_.
   }
 }
 
@@ -158,9 +191,8 @@ function deleteLockIfUnchanged(path_: string, expectedContent: string): void {
  * (not merely old) — a live-but-paused owner is never reclaimed regardless
  * of age. Falls back to the age-based check only if the lock's content
  * can't be read/parsed at all (e.g. a lock from a version of this module
- * that didn't write ownership info). Best-effort throughout: a race to
- * reclaim the same lock is harmless (deleteLockIfUnchanged no-ops if the
- * content has already changed underneath it).
+ * that didn't write ownership info). The actual removal is atomic (see
+ * atomicallyRemoveLock) rather than a racy read-then-delete.
  */
 function reclaimStaleLock(path_: string): void {
   try {
@@ -174,13 +206,13 @@ function reclaimStaleLock(path_: string): void {
     // jamming that product's lock forever. Anything that isn't a real PID
     // falls through to the age-based fallback below instead.
     if (Number.isInteger(pid) && pid > 0) {
-      if (!isPidAlive(pid)) deleteLockIfUnchanged(path_, content);
+      if (!isPidAlive(pid)) atomicallyRemoveLock(path_);
       return;
     }
     try {
       const stat = fs.statSync(path_);
       if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
-        deleteLockIfUnchanged(path_, content);
+        atomicallyRemoveLock(path_);
       }
     } catch {
       // Lock vanished on its own — fine.
@@ -362,7 +394,7 @@ export function isTelemetryEnabled(product: string): boolean {
  */
 async function getOrCreateInstallId(product: string): Promise<string> {
   try {
-    const existing = readConfig(product);
+    const existing = await readConfigAsync(product);
     if (existing?.installId) return existing.installId;
 
     const path_ = lockPath(product);
@@ -371,7 +403,7 @@ async function getOrCreateInstallId(product: string): Promise<string> {
       const token = await acquireLockAsync(path_);
       if (!token) return randomUUID(); // couldn't get the lock in time — ephemeral fallback
       try {
-        const latest = readConfig(product);
+        const latest = await readConfigAsync(product);
         if (latest?.installId) return latest.installId; // minted by whoever we waited on
         const installId = randomUUID();
         writeConfig(product, { enabled: latest?.enabled ?? existing?.enabled ?? false, installId });
@@ -396,10 +428,21 @@ const EVENT_NAME_PATTERN = /^[A-Za-z0-9_.:-]{1,64}$/;
 const PRODUCT_NAME_PATTERN = /^(@[A-Za-z0-9_.-]{1,100}\/)?[A-Za-z0-9_.-]{1,100}$/;
 const VERSION_PATTERN = /^[A-Za-z0-9_.+-]{1,32}$/;
 
-function isValidPayload(event: string, product: string, productVersion: string): boolean {
+function isValidPayload(event: unknown, product: unknown, productVersion: unknown): boolean {
+  // typeof checks first, deliberately: RegExp.test() coerces its argument
+  // via toString() before matching, so a non-string object with a
+  // toString() crafted to return e.g. "valid_event" would pass the pattern
+  // test below while its actual enumerable properties — not the coerced
+  // string — are what JSON.stringify() later serializes into the payload.
+  // A caller bypassing the TypeScript signature (plain JS, or an `any`)
+  // could use exactly that to smuggle arbitrary data back in despite the
+  // fixed-schema guarantee.
   return (
+    typeof event === 'string' &&
     EVENT_NAME_PATTERN.test(event) &&
+    typeof product === 'string' &&
     PRODUCT_NAME_PATTERN.test(product) &&
+    typeof productVersion === 'string' &&
     VERSION_PATTERN.test(productVersion)
   );
 }
@@ -462,7 +505,17 @@ export async function recordEvent(
   productVersion: string
 ): Promise<void> {
   if (!isValidPayload(event, product, productVersion)) return;
-  if (!isTelemetryEnabled(product)) return;
+
+  // Only checks that require no I/O run synchronously here. Whether
+  // telemetry is enabled can also be decided by the *persisted* config —
+  // reading it is a disk access that, on a slow or unresponsive filesystem
+  // (e.g. a home directory on network storage), could stall for an
+  // unbounded time. That check is deferred into the detached block below
+  // so recordEvent() can genuinely always return immediately, matching its
+  // documented guarantee, rather than only when the env var opt-in path is
+  // used and the persisted-config path happens to be fast.
+  if (process.env.SYNCPULSE_TELEMETRY === '0') return;
+  const envOptedIn = process.env[envOptInKey(product)] === '1';
 
   const endpoint = process.env.SYNCPULSE_TELEMETRY_ENDPOINT;
   if (!endpoint) return; // No configured receiver — nothing to send.
@@ -472,6 +525,7 @@ export async function recordEvent(
   // surface as an unhandled rejection.
   void (async () => {
     try {
+      if (!envOptedIn && !((await readConfigAsync(product))?.enabled ?? false)) return;
       const installId = await getOrCreateInstallId(product);
       const payload: TelemetryEvent = {
         event,
