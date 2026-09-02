@@ -32,6 +32,16 @@ import { randomUUID, createHash } from 'crypto';
 
 const TELEMETRY_DIR = path.join(os.homedir(), '.syncpulse', 'telemetry');
 const LOCK_STALE_MS = 5000; // a lock older than this is assumed abandoned by a dead process
+// A lock older than this is reclaimed unconditionally, even if isPidAlive()
+// says its recorded owner is alive: PIDs are reused by the OS, and a lock
+// file with no way to record the owner's process-start time (there is no
+// portable one in Node) can't distinguish "the original owner is still
+// running" from "an unrelated later process happens to have the same PID".
+// Without this cap, that coincidence would jam a product's lock forever.
+// Kept far above LOCK_STALE_MS so it never fires against a merely-paused
+// legitimate owner in practice — a real owner holding this lock for a full
+// minute indicates a bug of its own, not something this cap should protect.
+const LOCK_ABSOLUTE_MAX_MS = 60000;
 
 export interface TelemetryConfig {
   enabled: boolean;
@@ -206,11 +216,13 @@ function atomicallyRemoveLockIfInode(path_: string, expectedIno: number): void {
 }
 
 /**
- * Reclaims a lock only if its recorded owner process is confirmed dead
- * (not merely old) — a live-but-paused owner is never reclaimed regardless
- * of age. Falls back to the age-based check only if the lock's content
- * can't be read/parsed at all (e.g. a lock from a version of this module
- * that didn't write ownership info).
+ * Reclaims a lock if its recorded owner process is confirmed dead, or if
+ * the lock is old enough (LOCK_ABSOLUTE_MAX_MS) that an apparently-alive
+ * PID is more likely a reused PID than the original owner still holding it
+ * — a live-but-paused owner is never reclaimed *before* that point,
+ * regardless of ordinary age. Falls back to the shorter age-based check
+ * only if the lock's content can't be read/parsed at all (e.g. a lock from
+ * a version of this module that didn't write ownership info).
  *
  * Reads through a single open file descriptor (rather than separate
  * `readFileSync(path)` / `statSync(path)` calls) so the content and the
@@ -238,7 +250,16 @@ function reclaimStaleLock(path_: string): void {
     // jamming that product's lock forever. Anything that isn't a real PID
     // falls through to the age-based fallback below instead.
     if (Number.isInteger(pid) && pid > 0) {
-      if (!isPidAlive(pid)) atomicallyRemoveLockIfInode(path_, stat.ino);
+      if (!isPidAlive(pid)) {
+        atomicallyRemoveLockIfInode(path_, stat.ino);
+      } else if (Date.now() - stat.mtimeMs > LOCK_ABSOLUTE_MAX_MS) {
+        // The recorded PID looks alive, but the lock is far older than any
+        // legitimate holder should need — most likely explanation is PID
+        // reuse (the original owner died and the OS handed its PID to an
+        // unrelated later process), not a 60-second-long critical section.
+        // Reclaim unconditionally rather than staying jammed forever.
+        atomicallyRemoveLockIfInode(path_, stat.ino);
+      }
       return;
     }
     if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
