@@ -7,6 +7,14 @@ export * from './types.js';
 export { LicenseValidator } from './validator.js';
 export { LicenseStorage } from './storage.js';
 export { LicenseGenerator } from './generator.js';
+export {
+  enableTelemetry,
+  disableTelemetry,
+  isTelemetryEnabled,
+  recordEvent,
+  getTelemetryStoragePath,
+} from './telemetry.js';
+export type { TelemetryConfig, TelemetryEvent } from './telemetry.js';
 
 // Export convenience functions
 import { LicenseValidator } from './validator.js';

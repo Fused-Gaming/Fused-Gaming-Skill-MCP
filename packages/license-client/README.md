@@ -447,9 +447,37 @@ export async function checkLicense() {
 - `hasLicense()`: Check if license file exists
 - `getLicenseModificationTime()`: Get file modification time
 
+## Telemetry (opt-in)
+
+This package can optionally report anonymous usage events. **It is disabled
+by default and stays disabled until a user explicitly opts in** — nothing is
+collected or transmitted otherwise.
+
+What it collects when enabled: an event name, product name/version, Node
+version, OS platform/arch, and a random installation ID generated locally
+(not derived from any hardware identifier). It never collects hardware IDs,
+IP-derived geolocation, file paths, or anything else that could identify a
+specific person or machine.
+
+```typescript
+import { enableTelemetry, disableTelemetry, isTelemetryEnabled, recordEvent } from '@h4shed/license-client';
+
+enableTelemetry();               // explicit opt-in, persisted to ~/.syncpulse/telemetry.json
+isTelemetryEnabled();            // false until enableTelemetry() runs or SYNCPULSE_TELEMETRY=1
+await recordEvent('cli_start', 'my-product', '1.0.0');
+disableTelemetry();              // explicit opt-out, persisted
+```
+
+Environment variables always take precedence over the persisted config:
+
+- `SYNCPULSE_TELEMETRY=0` — unconditionally disables telemetry, even if a config file says otherwise.
+- `SYNCPULSE_TELEMETRY=1` — opts in without needing to touch the config file (useful for CI/scripted installs).
+- `SYNCPULSE_TELEMETRY_ENDPOINT` — overrides where events are sent (default `https://queen.vln.gg/telemetry`).
+
 ## License
 
-Apache-2.0
+Fused Gaming Non-Commercial License with Opt-In Telemetry v1.0 — see
+[`LICENSE-NONCOMMERCIAL.md`](./LICENSE-NONCOMMERCIAL.md). Not Apache-2.0.
 
 ## Support
 
