@@ -457,22 +457,30 @@ What it collects when enabled: an event name, product name/version, Node
 version, OS platform/arch, and a random installation ID generated locally
 (not derived from any hardware identifier). It never collects hardware IDs,
 IP-derived geolocation, file paths, or anything else that could identify a
-specific person or machine.
+specific person or machine. There's no free-form "extra data" field on
+`recordEvent` — the fixed schema above is the entire disclosed payload, so
+a caller can't smuggle additional data through it even by accident.
+
+Consent and installation IDs are **scoped per product** (the `product`
+argument on every function below, stored under
+`~/.syncpulse/telemetry/<product>.json`). Opting in for one product
+embedding this client never enables telemetry for a different product that
+happens to run under the same OS account.
 
 ```typescript
 import { enableTelemetry, disableTelemetry, isTelemetryEnabled, recordEvent } from '@h4shed/license-client';
 
-enableTelemetry();               // explicit opt-in, persisted to ~/.syncpulse/telemetry.json
-isTelemetryEnabled();            // false until enableTelemetry() runs or SYNCPULSE_TELEMETRY=1
-await recordEvent('cli_start', 'my-product', '1.0.0');
-disableTelemetry();              // explicit opt-out, persisted
+enableTelemetry('my-product');               // explicit opt-in for this product only
+isTelemetryEnabled('my-product');            // false until enableTelemetry() runs or SYNCPULSE_TELEMETRY=1
+await recordEvent('cli_start', 'my-product', '1.0.0'); // resolves immediately; delivery is fire-and-forget
+disableTelemetry('my-product');              // explicit opt-out, persisted
 ```
 
 Environment variables always take precedence over the persisted config:
 
 - `SYNCPULSE_TELEMETRY=0` — unconditionally disables telemetry, even if a config file says otherwise.
 - `SYNCPULSE_TELEMETRY=1` — opts in without needing to touch the config file (useful for CI/scripted installs).
-- `SYNCPULSE_TELEMETRY_ENDPOINT` — overrides where events are sent (default `https://queen.vln.gg/telemetry`).
+- `SYNCPULSE_TELEMETRY_ENDPOINT` — **required** for events to actually be sent anywhere; there is no default. This client intentionally does not ship a hardcoded receiver: the internal Queen `/api/v1/ingest/usage` endpoint requires a long-lived Bearer API key, and embedding that key in a publicly-published package would leak it to anyone who installs it. Set this to a receiver appropriate for anonymous public telemetry (unauthenticated or rate-limited, not the internal agent-fleet endpoint) once one exists. Until then, calling `recordEvent()` with telemetry enabled is a safe no-op.
 
 ## License
 
