@@ -458,28 +458,33 @@ version, OS platform/arch, and a random installation ID generated locally
 (not derived from any hardware identifier). It never collects hardware IDs,
 IP-derived geolocation, file paths, or anything else that could identify a
 specific person or machine. There's no free-form "extra data" field on
-`recordEvent` — the fixed schema above is the entire disclosed payload, so
-a caller can't smuggle additional data through it even by accident.
+`recordEvent`, and `event`/`product`/`productVersion` are all checked
+against strict formats before anything is sent (silently no-op'd if any
+fails) — the fixed schema above is the entire disclosed payload, so a
+caller can't smuggle additional data through it even by accident.
 
 Consent and installation IDs are **scoped per product** (the `product`
 argument on every function below, stored under
-`~/.syncpulse/telemetry/<product>.json`). Opting in for one product
-embedding this client never enables telemetry for a different product that
-happens to run under the same OS account.
+`~/.syncpulse/telemetry/<sanitized-product-hash>.json`). Opting in for one
+product embedding this client never enables telemetry for a different
+product that happens to run under the same OS account, and consent
+changes and install-ID creation are serialized through the same per-product
+lock so a concurrent opt-out can't be silently clobbered by an in-flight
+event's ID creation.
 
 ```typescript
 import { enableTelemetry, disableTelemetry, isTelemetryEnabled, recordEvent } from '@h4shed/license-client';
 
 enableTelemetry('my-product');               // explicit opt-in for this product only
-isTelemetryEnabled('my-product');            // false until enableTelemetry() runs or SYNCPULSE_TELEMETRY=1
+isTelemetryEnabled('my-product');            // false until enableTelemetry() runs or SYNCPULSE_TELEMETRY_MY_PRODUCT=1
 await recordEvent('cli_start', 'my-product', '1.0.0'); // resolves immediately; delivery is fire-and-forget
 disableTelemetry('my-product');              // explicit opt-out, persisted
 ```
 
 Environment variables always take precedence over the persisted config:
 
-- `SYNCPULSE_TELEMETRY=0` — unconditionally disables telemetry, even if a config file says otherwise.
-- `SYNCPULSE_TELEMETRY=1` — opts in without needing to touch the config file (useful for CI/scripted installs).
+- `SYNCPULSE_TELEMETRY=0` — unconditionally disables telemetry for every product, even if a config file says otherwise.
+- `SYNCPULSE_TELEMETRY_<PRODUCT>=1` — opts in one specific product without touching the config file (useful for CI/scripted installs), where `<PRODUCT>` is the product name uppercased with non-alphanumeric characters replaced by `_` (e.g. `my-product` → `SYNCPULSE_TELEMETRY_MY_PRODUCT`). There is deliberately no unscoped `SYNCPULSE_TELEMETRY=1`: a global "on" switch could silently enable telemetry for an unrelated product that happens to inherit the same environment.
 - `SYNCPULSE_TELEMETRY_ENDPOINT` — **required** for events to actually be sent anywhere; there is no default. This client intentionally does not ship a hardcoded receiver: the internal Queen `/api/v1/ingest/usage` endpoint requires a long-lived Bearer API key, and embedding that key in a publicly-published package would leak it to anyone who installs it. Set this to a receiver appropriate for anonymous public telemetry (unauthenticated or rate-limited, not the internal agent-fleet endpoint) once one exists. Until then, calling `recordEvent()` with telemetry enabled is a safe no-op.
 
 ## License

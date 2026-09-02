@@ -3,17 +3,19 @@
  *
  * Disabled by default. Nothing is collected or sent unless a user (or a
  * downstream package embedding this client) explicitly enables it via
- * enableTelemetry() or the SYNCPULSE_TELEMETRY=1 environment variable.
+ * enableTelemetry() or the per-product SYNCPULSE_TELEMETRY_<PRODUCT>=1
+ * environment variable.
  *
  * Deliberately does NOT collect: hardware identifiers (MAC address, disk
  * serials, etc.), IP-derived geolocation, file paths, environment variables,
  * or any other data that could identify a specific person or machine beyond
  * a random installation ID generated locally and never derived from
- * hardware. The fixed event schema below (no free-form property bag) is
- * the entire disclosed payload — there is no field a caller could use to
- * smuggle additional data through. SYNCPULSE_TELEMETRY=0 always disables
- * telemetry, even if a config file says otherwise, so it can never become
- * silently mandatory.
+ * hardware. The fixed event schema below (no free-form property bag, and
+ * every field format-validated before transmission) is the entire disclosed
+ * payload — there is no way for a caller, even a careless one, to smuggle
+ * arbitrary data through it. SYNCPULSE_TELEMETRY=0 always disables
+ * telemetry for every product, even if a config file says otherwise, so it
+ * can never become silently mandatory.
  *
  * Consent and installation IDs are scoped per product (see `product` on
  * every function below): opting in for one product embedding this client
@@ -23,9 +25,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { randomUUID } from 'crypto';
+import { randomUUID, createHash } from 'crypto';
 
 const TELEMETRY_DIR = path.join(os.homedir(), '.syncpulse', 'telemetry');
+const LOCK_STALE_MS = 5000; // a lock older than this is assumed abandoned by a dead process
 
 export interface TelemetryConfig {
   enabled: boolean;
@@ -43,14 +46,31 @@ export interface TelemetryEvent {
   arch: string;
 }
 
+// Filesystem-safe, and collision-resistant: two products differing only in
+// characters outside the allowlist (e.g. "foo/bar" vs "foo:bar") must not
+// collapse onto the same consent/install-ID file, or opting in for one
+// would silently opt in the other. Appending a short hash of the original,
+// un-sanitized name makes the mapping effectively injective while keeping
+// the filename readable.
 function sanitizeProductName(product: string): string {
-  const sanitized = product.replace(/[^a-zA-Z0-9._-]/g, '_');
-  if (!sanitized) throw new Error('recordEvent/enableTelemetry/disableTelemetry: product name is required');
-  return sanitized;
+  if (!product) throw new Error('product name is required');
+  const base = product.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60);
+  const hash = createHash('sha256').update(product).digest('hex').slice(0, 8);
+  return `${base}-${hash}`;
 }
 
 function configPath(product: string): string {
   return path.join(TELEMETRY_DIR, `${sanitizeProductName(product)}.json`);
+}
+
+function lockPath(product: string): string {
+  return `${configPath(product)}.lock`;
+}
+
+function ensureDir(): void {
+  if (!fs.existsSync(TELEMETRY_DIR)) {
+    fs.mkdirSync(TELEMETRY_DIR, { recursive: true, mode: 0o700 });
+  }
 }
 
 function readConfig(product: string): TelemetryConfig | null {
@@ -67,16 +87,94 @@ function readConfig(product: string): TelemetryConfig | null {
 }
 
 function writeConfig(product: string, config: TelemetryConfig): void {
-  if (!fs.existsSync(TELEMETRY_DIR)) {
-    fs.mkdirSync(TELEMETRY_DIR, { recursive: true, mode: 0o700 });
-  }
+  ensureDir();
   fs.writeFileSync(configPath(product), JSON.stringify(config, null, 2), { mode: 0o600 });
 }
 
-/** Explicit user opt-in for a specific product. Does not mint an install ID. */
+/**
+ * If a lock is older than LOCK_STALE_MS, assume the process that created it
+ * died before releasing it and reclaim it. Best-effort: a race to reclaim
+ * the same stale lock is harmless (unlink of an already-gone file just
+ * throws ENOENT, which is swallowed).
+ */
+function reclaimStaleLock(path_: string): void {
+  try {
+    const stat = fs.statSync(path_);
+    if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
+      fs.unlinkSync(path_);
+    }
+  } catch {
+    // Lock vanished on its own (released, or already reclaimed) — fine.
+  }
+}
+
+/**
+ * Synchronous lock acquisition for enableTelemetry()/disableTelemetry(),
+ * which are part of this module's public synchronous API. Blocks the
+ * event loop only briefly (Atomics.wait, not a CPU-spinning busy loop) and
+ * only under real contention; gives up after `timeoutMs` rather than
+ * hanging forever on a lock that can't be reclaimed.
+ */
+function acquireLockSync(path_: string, timeoutMs = 2000): boolean {
+  ensureDir();
+  const deadline = Date.now() + timeoutMs;
+  for (;;) {
+    try {
+      fs.closeSync(fs.openSync(path_, 'wx'));
+      return true;
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') return false;
+      reclaimStaleLock(path_);
+      if (Date.now() >= deadline) return false;
+      try {
+        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10);
+      } catch {
+        // Atomics.wait can be unavailable on the main thread in some
+        // embedders; fall through and retry immediately rather than hang.
+      }
+    }
+  }
+}
+
+async function acquireLockAsync(path_: string, timeoutMs = 2000): Promise<boolean> {
+  ensureDir();
+  const deadline = Date.now() + timeoutMs;
+  for (;;) {
+    try {
+      fs.closeSync(fs.openSync(path_, 'wx'));
+      return true;
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') return false;
+      reclaimStaleLock(path_);
+      if (Date.now() >= deadline) return false;
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+  }
+}
+
+function releaseLock(path_: string): void {
+  try {
+    fs.unlinkSync(path_);
+  } catch {
+    // Already gone (released concurrently, or reclaimed as stale) — fine.
+  }
+}
+
+/**
+ * Explicit user opt-in for a specific product. Does not mint an install ID.
+ * Takes the same per-product lock recordEvent()'s install-ID creation uses,
+ * so a consent change can never be silently lost to (or silently lose) a
+ * concurrent ID-creation write for the same product.
+ */
 export function enableTelemetry(product: string): void {
-  const existing = readConfig(product);
-  writeConfig(product, { enabled: true, installId: existing?.installId });
+  const path_ = lockPath(product);
+  const locked = acquireLockSync(path_);
+  try {
+    const existing = readConfig(product);
+    writeConfig(product, { enabled: true, installId: existing?.installId });
+  } finally {
+    if (locked) releaseLock(path_);
+  }
 }
 
 /**
@@ -86,97 +184,106 @@ export function enableTelemetry(product: string): void {
  * just because they explicitly (or by default) opted out.
  */
 export function disableTelemetry(product: string): void {
-  const existing = readConfig(product);
-  writeConfig(product, { enabled: false, installId: existing?.installId });
+  const path_ = lockPath(product);
+  const locked = acquireLockSync(path_);
+  try {
+    const existing = readConfig(product);
+    writeConfig(product, { enabled: false, installId: existing?.installId });
+  } finally {
+    if (locked) releaseLock(path_);
+  }
+}
+
+function envOptInKey(product: string): string {
+  return `SYNCPULSE_TELEMETRY_${product.toUpperCase().replace(/[^A-Z0-9_]/g, '_')}`;
 }
 
 /**
  * Whether telemetry is currently active for a specific product.
- * SYNCPULSE_TELEMETRY=0 is an unconditional kill switch; SYNCPULSE_TELEMETRY=1
- * opts in without needing to touch the config file (useful for CI or
- * scripted installs) — but only for a caller that explicitly names its
- * product, so it can't cross-enable an unrelated product's telemetry.
+ * SYNCPULSE_TELEMETRY=0 is an unconditional kill switch for every product
+ * (a global "off" can only ever reduce collection, so it's always safe to
+ * honor). There is no global "on" switch: SYNCPULSE_TELEMETRY_<PRODUCT>=1
+ * opts in one specific, named product only — useful for CI or scripted
+ * installs — so setting it for one product embedding this client can never
+ * cross-enable an unrelated product that happens to inherit the same
+ * environment.
  */
 export function isTelemetryEnabled(product: string): boolean {
   if (process.env.SYNCPULSE_TELEMETRY === '0') return false;
-  if (process.env.SYNCPULSE_TELEMETRY === '1') return true;
+  if (process.env[envOptInKey(product)] === '1') return true;
   return readConfig(product)?.enabled ?? false;
 }
 
 /**
- * Returns the persisted install ID for a product, creating one atomically
- * if none exists yet — whether the config file is entirely new or already
- * exists with `enabled` set but no ID (the common case: enableTelemetry()
- * runs before the first recordEvent() call). A dedicated lock file (created
- * with exclusive 'wx') ensures only one process mints the ID; a process
- * that loses the race waits briefly for the winner and adopts its value
- * instead of minting a second, conflicting one that would split a single
- * installation across two analytics identities. Never throws: on any
- * filesystem failure (unwritable home directory, a stuck lock, etc.) it
- * falls back to an ephemeral, non-persisted ID for just this call.
+ * Returns the persisted install ID for a product, creating one under the
+ * same per-product lock enableTelemetry()/disableTelemetry() use — so a
+ * concurrent consent change can't be silently overwritten by a stale
+ * `enabled` value read before the lock was acquired, and two processes
+ * racing to create the first ID for a product can't each mint a different
+ * one. A lock abandoned by a crashed process is reclaimed automatically
+ * after LOCK_STALE_MS rather than blocking every future call forever.
+ * Never throws: on any filesystem failure it falls back to an ephemeral,
+ * non-persisted ID for just this call.
  */
 async function getOrCreateInstallId(product: string): Promise<string> {
   try {
     const existing = readConfig(product);
     if (existing?.installId) return existing.installId;
 
-    if (!fs.existsSync(TELEMETRY_DIR)) {
-      fs.mkdirSync(TELEMETRY_DIR, { recursive: true, mode: 0o700 });
-    }
-
-    const lockPath = `${configPath(product)}.lock`;
+    const path_ = lockPath(product);
+    const locked = await acquireLockAsync(path_);
+    if (!locked) return randomUUID(); // couldn't get the lock in time — ephemeral fallback
     try {
-      fs.closeSync(fs.openSync(lockPath, 'wx'));
-    } catch (err) {
-      if ((err as NodeJS.ErrnoException).code === 'EEXIST') {
-        // Another process is minting the ID right now — wait briefly for
-        // it to finish rather than racing to write a second, different ID.
-        for (let attempt = 0; attempt < 20; attempt++) {
-          await new Promise((resolve) => setTimeout(resolve, 10));
-          const winner = readConfig(product);
-          if (winner?.installId) return winner.installId;
-        }
-        return randomUUID(); // gave up waiting — ephemeral fallback for just this call
-      }
-      throw err;
-    }
-
-    try {
-      const installId = randomUUID();
-      // Re-read: enabled state may have changed while we were creating the lock.
       const latest = readConfig(product);
+      if (latest?.installId) return latest.installId; // minted by whoever we waited on
+      const installId = randomUUID();
       writeConfig(product, { enabled: latest?.enabled ?? existing?.enabled ?? false, installId });
       return installId;
     } finally {
-      try {
-        fs.unlinkSync(lockPath);
-      } catch {
-        // Best-effort cleanup; a stale lock only delays the next call's
-        // race resolution, it doesn't corrupt anything.
-      }
+      releaseLock(path_);
     }
   } catch {
     return randomUUID();
   }
 }
 
+// Deliberately strict: these are the only formats recordEvent will ever
+// transmit, so a caller can't smuggle a file path, command output, or other
+// identifying text through an argument that's nominally just "the event
+// name" or "the product name". `product` allows npm's own naming grammar
+// (scoped packages like "@h4shed/mcp-core").
+const EVENT_NAME_PATTERN = /^[A-Za-z0-9_.:-]{1,64}$/;
+const PRODUCT_NAME_PATTERN = /^(@[A-Za-z0-9_.-]+\/)?[A-Za-z0-9_.-]{1,100}$/;
+const VERSION_PATTERN = /^[A-Za-z0-9_.+-]{1,32}$/;
+
+function isValidPayload(event: string, product: string, productVersion: string): boolean {
+  return (
+    EVENT_NAME_PATTERN.test(event) &&
+    PRODUCT_NAME_PATTERN.test(product) &&
+    VERSION_PATTERN.test(productVersion)
+  );
+}
+
 /**
  * Records one telemetry event if (and only if) telemetry is enabled for
- * this product. Fire-and-forget: the returned promise resolves immediately
- * without waiting on network delivery, so a slow or unreachable endpoint
- * can never add latency to the caller's own work. Delivery failures
- * (network, filesystem, or otherwise) are swallowed internally and can
- * never throw or produce an unhandled rejection.
+ * this product and every field matches its documented format. Fire-and-
+ * forget: the returned promise resolves immediately without waiting on
+ * network delivery, so a slow or unreachable endpoint can never add
+ * latency to the caller's own work. Delivery failures (network,
+ * filesystem, or otherwise) are swallowed internally and can never throw
+ * or produce an unhandled rejection.
  *
- * There is no free-form "extra data" parameter by design — the fixed
- * fields below are the entire disclosed payload described in this
- * package's README and license.
+ * There is no free-form "extra data" parameter by design, and the three
+ * string arguments are validated against strict formats before anything
+ * is sent — the fixed fields below are the entire disclosed payload
+ * described in this package's README and license.
  */
 export async function recordEvent(
   event: string,
   product: string,
   productVersion: string
 ): Promise<void> {
+  if (!isValidPayload(event, product, productVersion)) return;
   if (!isTelemetryEnabled(product)) return;
 
   const endpoint = process.env.SYNCPULSE_TELEMETRY_ENDPOINT;
