@@ -476,15 +476,20 @@ event's ID creation.
 import { enableTelemetry, disableTelemetry, isTelemetryEnabled, recordEvent } from '@h4shed/license-client';
 
 enableTelemetry('my-product');               // explicit opt-in for this product only
-isTelemetryEnabled('my-product');            // false until enableTelemetry() runs or SYNCPULSE_TELEMETRY_MY_PRODUCT=1
-await recordEvent('cli_start', 'my-product', '1.0.0'); // resolves immediately; delivery is fire-and-forget
+isTelemetryEnabled('my-product');            // false until enableTelemetry() runs or the env var below is set
+await recordEvent('cli_start', 'my-product', '1.0.0'); // resolves immediately; delivery is fire-and-forget and never blocks process exit, even against a hanging endpoint
 disableTelemetry('my-product');              // explicit opt-out, persisted
 ```
+
+`enableTelemetry()`/`disableTelemetry()` throw if they can't acquire the
+per-product consent lock within 2 seconds (e.g. heavy concurrent access) —
+they never silently proceed without it, since that could let a concurrent
+write clobber the consent change you just asked for.
 
 Environment variables always take precedence over the persisted config:
 
 - `SYNCPULSE_TELEMETRY=0` — unconditionally disables telemetry for every product, even if a config file says otherwise.
-- `SYNCPULSE_TELEMETRY_<PRODUCT>=1` — opts in one specific product without touching the config file (useful for CI/scripted installs), where `<PRODUCT>` is the product name uppercased with non-alphanumeric characters replaced by `_` (e.g. `my-product` → `SYNCPULSE_TELEMETRY_MY_PRODUCT`). There is deliberately no unscoped `SYNCPULSE_TELEMETRY=1`: a global "on" switch could silently enable telemetry for an unrelated product that happens to inherit the same environment.
+- `SYNCPULSE_TELEMETRY_<PRODUCT>_<HASH>=1` — opts in one specific product without touching the config file (useful for CI/scripted installs), where `<PRODUCT>` is the product name uppercased with non-alphanumeric characters replaced by `_`, and `<HASH>` is the first 8 hex characters of `sha256(product name)` uppercased. The hash suffix is deterministic (not random), so an integrator computes and documents this once per product; it exists so two products differing only in punctuation (e.g. `my-product` and `my_product`) can't collide onto the same env var and cross-enable each other. There is deliberately no unscoped `SYNCPULSE_TELEMETRY=1`: a global "on" switch could silently enable telemetry for an unrelated product that happens to inherit the same environment.
 - `SYNCPULSE_TELEMETRY_ENDPOINT` — **required** for events to actually be sent anywhere; there is no default. This client intentionally does not ship a hardcoded receiver: the internal Queen `/api/v1/ingest/usage` endpoint requires a long-lived Bearer API key, and embedding that key in a publicly-published package would leak it to anyone who installs it. Set this to a receiver appropriate for anonymous public telemetry (unauthenticated or rate-limited, not the internal agent-fleet endpoint) once one exists. Until then, calling `recordEvent()` with telemetry enabled is a safe no-op.
 
 ## License

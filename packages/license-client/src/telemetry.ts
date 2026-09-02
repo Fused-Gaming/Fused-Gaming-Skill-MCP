@@ -25,6 +25,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import * as http from 'http';
+import * as https from 'https';
 import { randomUUID, createHash } from 'crypto';
 
 const TELEMETRY_DIR = path.join(os.homedir(), '.syncpulse', 'telemetry');
@@ -169,11 +171,17 @@ function releaseLock(path_: string): void {
 export function enableTelemetry(product: string): void {
   const path_ = lockPath(product);
   const locked = acquireLockSync(path_);
+  if (!locked) {
+    throw new Error(
+      `enableTelemetry('${product}'): timed out waiting for the telemetry config lock — ` +
+        `the opt-in was not recorded, retry`
+    );
+  }
   try {
     const existing = readConfig(product);
     writeConfig(product, { enabled: true, installId: existing?.installId });
   } finally {
-    if (locked) releaseLock(path_);
+    releaseLock(path_);
   }
 }
 
@@ -186,16 +194,30 @@ export function enableTelemetry(product: string): void {
 export function disableTelemetry(product: string): void {
   const path_ = lockPath(product);
   const locked = acquireLockSync(path_);
+  if (!locked) {
+    throw new Error(
+      `disableTelemetry('${product}'): timed out waiting for the telemetry config lock — ` +
+        `the opt-out was not recorded, retry`
+    );
+  }
   try {
     const existing = readConfig(product);
     writeConfig(product, { enabled: false, installId: existing?.installId });
   } finally {
-    if (locked) releaseLock(path_);
+    releaseLock(path_);
   }
 }
 
+// Same collision concern as sanitizeProductName: "foo-bar" and "foo_bar"
+// both normalize to FOO_BAR under a naive uppercase-and-replace scheme, so
+// opting in via one product's documented env var would silently opt in an
+// unrelated product too. The hash suffix is deterministic (derived from the
+// product name, not random), so an integrator can still compute and
+// document a fixed env var name for their product once.
 function envOptInKey(product: string): string {
-  return `SYNCPULSE_TELEMETRY_${product.toUpperCase().replace(/[^A-Z0-9_]/g, '_')}`;
+  const base = product.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+  const hash = createHash('sha256').update(product).digest('hex').slice(0, 8).toUpperCase();
+  return `SYNCPULSE_TELEMETRY_${base}_${hash}`;
 }
 
 /**
@@ -265,6 +287,44 @@ function isValidPayload(event: string, product: string, productVersion: string):
 }
 
 /**
+ * Sends the event as a detached, unref'd HTTP(S) request. Using the raw
+ * http/https modules (rather than fetch, which offers no handle to unref)
+ * is deliberate: unref-ing the socket as soon as it's available means a
+ * pending telemetry request can never keep Node's event loop alive past a
+ * short-lived CLI command's own natural exit. The request still completes
+ * normally if the process happens to stay alive for other reasons — unref
+ * only stops it from being a reason to stay alive on its own.
+ */
+function sendBeacon(endpoint: string, payload: TelemetryEvent): void {
+  let url: URL;
+  try {
+    url = new URL(endpoint);
+  } catch {
+    return; // Malformed endpoint — nothing to send.
+  }
+  const client = url.protocol === 'http:' ? http : https;
+  const body = Buffer.from(JSON.stringify(payload), 'utf-8');
+
+  const req = client.request(
+    url,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': body.length },
+      timeout: 3000,
+    },
+    (res) => {
+      res.resume(); // Discard the response body; we don't need it.
+    }
+  );
+  req.on('socket', (socket) => socket.unref());
+  req.on('timeout', () => req.destroy());
+  req.on('error', () => {
+    // Best-effort only — never let telemetry delivery affect the caller.
+  });
+  req.end(body);
+}
+
+/**
  * Records one telemetry event if (and only if) telemetry is enabled for
  * this product and every field matches its documented format. Fire-and-
  * forget: the returned promise resolves immediately without waiting on
@@ -305,12 +365,7 @@ export async function recordEvent(
         platform: os.platform(),
         arch: os.arch(),
       };
-      await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(3000),
-      });
+      sendBeacon(endpoint, payload);
     } catch {
       // Best-effort only — never let telemetry delivery affect the caller.
     }
