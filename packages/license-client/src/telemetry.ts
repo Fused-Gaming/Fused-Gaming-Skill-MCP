@@ -120,6 +120,19 @@ function readConfig(product: string): TelemetryConfig | null {
 // to the caller — its documented "resolves immediately" guarantee would
 // otherwise be violated by the disk read backing the persisted `enabled`
 // check and the first-time install-ID lookup.
+//
+// Known limitation, not fixed here: unlike the network path (sendBeacon
+// unrefs its socket), a pending fs/promises operation has no public unref()
+// equivalent in Node — there is no supported way to mark it "don't count
+// this against process exit." In practice this is a non-issue for local
+// disk I/O, which resolves in microseconds and was never the process-exit
+// hazard sendBeacon's unref exists for; it only matters on a genuinely
+// hung filesystem (e.g. an unresponsive network home directory), where a
+// short-lived CLI process could stay alive until that read either
+// completes or the OS itself times it out. Working around this would mean
+// moving the read onto a worker thread purely to get an unref-able handle
+// — disproportionate machinery for an edge case this rare, so this module
+// accepts the limitation and documents it here instead.
 async function readConfigAsync(product: string): Promise<TelemetryConfig | null> {
   try {
     return parseConfig(await fsp.readFile(configPath(product), 'utf-8'));
@@ -160,19 +173,25 @@ function isPidAlive(pid: number): boolean {
 }
 
 /**
- * Atomically removes whatever is currently at `path_`, without the
- * read-then-unlink race a content comparison would have: `rename()` on the
- * *current* directory entry at `path_` is exclusive — if two processes
- * race to reclaim the same lock, only one rename call can succeed, because
- * the other's source path is already gone by the time it runs (ENOENT,
- * swallowed below). Whichever process wins takes exclusive ownership of
- * the file that was actually removed, under a name only it knows, before
- * deleting its own private copy — so a legitimate new owner's lock,
- * created at `path_` *after* the rename already vacated it, is a
- * completely separate directory entry that this can never touch, however
- * long the loser was preempted for.
+ * Atomically removes `path_`, but only if it still refers to the same file
+ * (`expectedIno`) that was inspected to decide it should be reclaimed. A
+ * plain `renameSync(path_, ...)` operates on whatever directory entry is
+ * *currently* at `path_` when it runs — not what was there when the caller
+ * read it and decided the owner was dead. If this process is preempted
+ * between that read and the rename, and in that window a genuinely live
+ * process fully reclaims `path_` and writes a brand-new lock into it, an
+ * unguarded rename would capture and delete that new, live lock by pure
+ * bad timing. Re-checking the inode immediately beforehand closes all of
+ * that window except the syscalls between the stat and the rename
+ * themselves — the smallest gap achievable without a native flock()
+ * binding, which Node's stdlib does not expose.
  */
-function atomicallyRemoveLock(path_: string): void {
+function atomicallyRemoveLockIfInode(path_: string, expectedIno: number): void {
+  try {
+    if (fs.statSync(path_).ino !== expectedIno) return; // Already replaced by a new, live lock.
+  } catch {
+    return; // Vanished on its own — nothing to reclaim.
+  }
   const tempPath = `${path_}.reclaimed.${process.pid}.${randomUUID()}`;
   try {
     fs.renameSync(path_, tempPath);
@@ -191,12 +210,25 @@ function atomicallyRemoveLock(path_: string): void {
  * (not merely old) — a live-but-paused owner is never reclaimed regardless
  * of age. Falls back to the age-based check only if the lock's content
  * can't be read/parsed at all (e.g. a lock from a version of this module
- * that didn't write ownership info). The actual removal is atomic (see
- * atomicallyRemoveLock) rather than a racy read-then-delete.
+ * that didn't write ownership info).
+ *
+ * Reads through a single open file descriptor (rather than separate
+ * `readFileSync(path)` / `statSync(path)` calls) so the content and the
+ * inode/mtime used to decide "stale" are guaranteed to describe the exact
+ * same file, even if the path is replaced between two path-based calls.
+ * The actual removal re-checks that inode immediately before renaming (see
+ * atomicallyRemoveLockIfInode) rather than trusting it still applies.
  */
 function reclaimStaleLock(path_: string): void {
+  let fd: number;
   try {
-    const content = fs.readFileSync(path_, 'utf-8');
+    fd = fs.openSync(path_, 'r');
+  } catch {
+    return; // Already gone — nothing to reclaim.
+  }
+  try {
+    const stat = fs.fstatSync(fd);
+    const content = fs.readFileSync(fd, 'utf-8');
     const pid = Number(content.split(':')[0]);
     // A positive integer only: Number('') is 0 (Number.isFinite(0) is
     // true), and PID 0 always reads as "alive" via process.kill(0, 0)
@@ -206,19 +238,20 @@ function reclaimStaleLock(path_: string): void {
     // jamming that product's lock forever. Anything that isn't a real PID
     // falls through to the age-based fallback below instead.
     if (Number.isInteger(pid) && pid > 0) {
-      if (!isPidAlive(pid)) atomicallyRemoveLock(path_);
+      if (!isPidAlive(pid)) atomicallyRemoveLockIfInode(path_, stat.ino);
       return;
     }
-    try {
-      const stat = fs.statSync(path_);
-      if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
-        atomicallyRemoveLock(path_);
-      }
-    } catch {
-      // Lock vanished on its own — fine.
+    if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
+      atomicallyRemoveLockIfInode(path_, stat.ino);
     }
   } catch {
-    // Unreadable, or the lock vanished on its own — nothing to reclaim.
+    // Unreadable — nothing to reclaim.
+  } finally {
+    try {
+      fs.closeSync(fd);
+    } catch {
+      // Already closed somehow — fine.
+    }
   }
 }
 
@@ -234,7 +267,28 @@ function reclaimStaleLock(path_: string): void {
 // until the sync side gives up). Cross-process contention has no such
 // issue — a lock held by a different process doesn't block this process's
 // event loop — so this check is scoped to same-process, same-product only.
-const inProcessAsyncLockHolders = new Set<string>();
+//
+// A reference count, not a presence-only Set: recordEvent() can be called
+// concurrently for the same product (e.g. two events fired back-to-back
+// before either's detached block finishes), and each concurrent call adds
+// its own hold while racing to create the install ID. With a plain Set,
+// whichever call finishes first would delete the marker while the other is
+// still mid-acquisition — reopening the exact same-process deadlock this
+// tracking exists to prevent, just via a different interleaving.
+const inProcessAsyncLockHolders = new Map<string, number>();
+
+function addAsyncLockHolder(product: string): void {
+  inProcessAsyncLockHolders.set(product, (inProcessAsyncLockHolders.get(product) ?? 0) + 1);
+}
+
+function removeAsyncLockHolder(product: string): void {
+  const count = inProcessAsyncLockHolders.get(product) ?? 0;
+  if (count <= 1) {
+    inProcessAsyncLockHolders.delete(product);
+  } else {
+    inProcessAsyncLockHolders.set(product, count - 1);
+  }
+}
 
 /**
  * Synchronous lock acquisition for enableTelemetry()/disableTelemetry(),
@@ -398,7 +452,7 @@ async function getOrCreateInstallId(product: string): Promise<string> {
     if (existing?.installId) return existing.installId;
 
     const path_ = lockPath(product);
-    inProcessAsyncLockHolders.add(product);
+    addAsyncLockHolder(product);
     try {
       const token = await acquireLockAsync(path_);
       if (!token) return randomUUID(); // couldn't get the lock in time — ephemeral fallback
@@ -412,7 +466,7 @@ async function getOrCreateInstallId(product: string): Promise<string> {
         releaseLock(path_, token);
       }
     } finally {
-      inProcessAsyncLockHolders.delete(product);
+      removeAsyncLockHolder(product);
     }
   } catch {
     return randomUUID();
@@ -477,6 +531,19 @@ function sendBeacon(endpoint: string, payload: TelemetryEvent): void {
       res.resume(); // Discard the response body; we don't need it.
     }
   );
+  // `timeout` above is an *inactivity* timer — it resets on any socket
+  // activity, so a receiver that drips bytes just often enough (or a
+  // connection that establishes but then never sends a byte at all in a
+  // way that still counts as "activity" on some platforms) can hold the
+  // request open far longer than 3s. A separate, independently-scheduled
+  // absolute deadline guarantees delivery is abandoned within a bounded
+  // time no matter what the remote end does. Unref'd for the same reason
+  // the socket is: it must never be a reason for a short-lived CLI process
+  // to stay alive, and it's cleared as soon as the request is done so it
+  // can't fire spuriously after a normal, fast completion.
+  const absoluteDeadline = setTimeout(() => req.destroy(), 10000);
+  absoluteDeadline.unref();
+  req.on('close', () => clearTimeout(absoluteDeadline));
   req.on('socket', (socket) => socket.unref());
   req.on('timeout', () => req.destroy());
   req.on('error', () => {
