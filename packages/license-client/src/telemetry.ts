@@ -341,8 +341,13 @@ function acquireLockSync(product: string, path_: string, timeoutMs = 2000): stri
       try {
         Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10);
       } catch {
-        // Atomics.wait can be unavailable on the main thread in some
-        // embedders; fall through and retry immediately rather than hang.
+        // Atomics.wait/SharedArrayBuffer can be unavailable in some
+        // embedders. Retrying immediately here (rather than giving up)
+        // would turn into a CPU-spinning busy loop with no delay between
+        // attempts for the rest of `timeoutMs` — worse than just failing
+        // fast, since there is no synchronous way to sleep without it.
+        // Treat "can't sleep" the same as "can't get the lock in time".
+        return null;
       }
     }
   }
@@ -382,6 +387,28 @@ function releaseLock(path_: string, token: string): void {
   }
 }
 
+// A holder that was preempted (SIGSTOP, a debugger, scheduling, or a stalled
+// filesystem) for longer than LOCK_ABSOLUTE_MAX_MS can have its lock
+// reclaimed by someone else while process.kill(pid, 0) still correctly
+// reports it as alive — that cap exists specifically to bound the PID-reuse
+// case, and paying for it with an occasional false reclaim of a genuinely
+// live-but-paused owner is the accepted tradeoff (see reclaimStaleLock).
+// Without this check, that paused owner would resume with no idea it lost
+// the lock and blindly overwrite whatever a legitimate new owner wrote in
+// the meantime with the stale `existing` value it read before pausing —
+// turning a bounded reclaim into a silent, retroactive consent reversal.
+// Checked immediately before every write that happens under a lock, right
+// after the read it's protecting, so the window it can't close is only the
+// gap between this check and the write syscall itself — not the full
+// pause duration.
+function lockStillOwned(path_: string, token: string): boolean {
+  try {
+    return fs.readFileSync(path_, 'utf-8') === token;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Explicit user opt-in for a specific product. Does not mint an install ID.
  * Takes the same per-product lock recordEvent()'s install-ID creation uses,
@@ -399,7 +426,15 @@ export function enableTelemetry(product: string): void {
   }
   try {
     const existing = readConfig(product);
+    if (!lockStillOwned(path_, token)) {
+      throw new Error(
+        `enableTelemetry('${product}'): lost the telemetry config lock mid-call (likely ` +
+          `reclaimed after this call was paused past the reclaim threshold) — the opt-in ` +
+          `was not recorded, retry`
+      );
+    }
     writeConfig(product, { enabled: true, installId: existing?.installId });
+    consentCache.set(product, true);
   } finally {
     releaseLock(path_, token);
   }
@@ -422,7 +457,15 @@ export function disableTelemetry(product: string): void {
   }
   try {
     const existing = readConfig(product);
+    if (!lockStillOwned(path_, token)) {
+      throw new Error(
+        `disableTelemetry('${product}'): lost the telemetry config lock mid-call (likely ` +
+          `reclaimed after this call was paused past the reclaim threshold) — the opt-out ` +
+          `was not recorded, retry`
+      );
+    }
     writeConfig(product, { enabled: false, installId: existing?.installId });
+    consentCache.set(product, false);
   } finally {
     releaseLock(path_, token);
   }
@@ -480,6 +523,7 @@ async function getOrCreateInstallId(product: string): Promise<string> {
       try {
         const latest = await readConfigAsync(product);
         if (latest?.installId) return latest.installId; // minted by whoever we waited on
+        if (!lockStillOwned(path_, token)) return randomUUID(); // lost the lock mid-call — ephemeral fallback
         const installId = randomUUID();
         writeConfig(product, { enabled: latest?.enabled ?? existing?.enabled ?? false, installId });
         return installId;
@@ -521,6 +565,22 @@ function isValidPayload(event: unknown, product: unknown, productVersion: unknow
     VERSION_PATTERN.test(productVersion)
   );
 }
+
+// In-memory cache of this process's own view of persisted per-product
+// consent, updated synchronously by enableTelemetry()/disableTelemetry()
+// right after each successful write. recordEvent() snapshots this at
+// invocation time (see recordEvent below) instead of relying solely on
+// its deferred disk read. Without this, calling recordEvent() and then
+// immediately (synchronously) enableTelemetry() for the same product in
+// the same process could have the *later* enableTelemetry() write already
+// on disk by the time recordEvent()'s own async config read executes,
+// retroactively sending an event that predates consent — a direct
+// violation of "nothing is sent before opt-in". This closes that race for
+// what a single process can actually observe about its own calls; it
+// can't and doesn't close the equivalent race across separate processes,
+// which is an inherent limit of file-based IPC latency, not something
+// in-memory state can fix.
+const consentCache = new Map<string, boolean>();
 
 /**
  * Sends the event as a detached, unref'd HTTP(S) request. Using the raw
@@ -608,18 +668,34 @@ export async function recordEvent(
   const endpoint = process.env.SYNCPULSE_TELEMETRY_ENDPOINT;
   if (!endpoint) return; // No configured receiver — nothing to send.
 
+  // Captured synchronously, before any awaits: both reflect state exactly
+  // as of this call, not whichever state happens to still be current once
+  // the detached block below actually runs.
+  //
+  // - timestamp: otherwise two events fired back-to-back could have their
+  //   recorded order reversed by whichever one's lock/config wait happens
+  //   to resolve first, corrupting event ordering for time-based analysis.
+  // - cachedConsent: see consentCache above — without this, an
+  //   enableTelemetry() call issued right after this one (same process)
+  //   could land on disk before the async config read below executes,
+  //   making this call retroactively "consented" even though it happened
+  //   before opt-in.
+  const timestamp = new Date().toISOString();
+  const cachedConsent = consentCache.get(product);
+
   // Detached: intentionally not awaited so delivery can never block or
   // slow down the caller. Errors are caught inside so this can never
   // surface as an unhandled rejection.
   void (async () => {
     try {
-      if (!envOptedIn && !((await readConfigAsync(product))?.enabled ?? false)) return;
+      const persistedEnabled = cachedConsent ?? ((await readConfigAsync(product))?.enabled ?? false);
+      if (!envOptedIn && !persistedEnabled) return;
       const installId = await getOrCreateInstallId(product);
       const payload: TelemetryEvent = {
         event,
         product,
         productVersion,
-        timestamp: new Date().toISOString(),
+        timestamp,
         installId,
         nodeVersion: process.version,
         platform: os.platform(),
