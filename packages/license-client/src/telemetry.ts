@@ -93,13 +93,52 @@ function writeConfig(product: string, config: TelemetryConfig): void {
   fs.writeFileSync(configPath(product), JSON.stringify(config, null, 2), { mode: 0o600 });
 }
 
+// Lock files carry "<pid>:<random>" as their content — an ownership token,
+// not just a marker. Two things depend on it: reclaiming a lock checks
+// whether its recorded PID is still alive (not just whether it's old)
+// before deleting it, and releasing a lock checks its content still
+// matches the token we created it with before deleting it. Without this, a
+// process merely paused (SIGSTOP, a debugger, GC, scheduling) longer than
+// LOCK_STALE_MS looks identical to a dead one under an age-only check —
+// its lock gets reclaimed by someone else, and when it resumes it can
+// unlink the new owner's lock (thinking it's releasing its own) or
+// overwrite the config with the stale state it read before pausing.
+function currentLockToken(): string {
+  return `${process.pid}:${randomUUID()}`;
+}
+
+function isPidAlive(pid: number): boolean {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (err) {
+    // ESRCH: no such process — genuinely dead. Any other error (e.g.
+    // EPERM, meaning it exists but we lack permission to signal it) means
+    // it's still alive as far as we can tell.
+    return (err as NodeJS.ErrnoException).code !== 'ESRCH';
+  }
+}
+
 /**
- * If a lock is older than LOCK_STALE_MS, assume the process that created it
- * died before releasing it and reclaim it. Best-effort: a race to reclaim
- * the same stale lock is harmless (unlink of an already-gone file just
- * throws ENOENT, which is swallowed).
+ * Reclaims a lock only if its recorded owner process is confirmed dead
+ * (not merely old) — a live-but-paused owner is never reclaimed regardless
+ * of age. Falls back to the age-based check only if the lock's content
+ * can't be read/parsed at all (e.g. a lock from a version of this module
+ * that didn't write ownership info). Best-effort throughout: a race to
+ * reclaim the same lock is harmless (a second unlink of an already-gone
+ * file just throws ENOENT, which is swallowed).
  */
 function reclaimStaleLock(path_: string): void {
+  try {
+    const content = fs.readFileSync(path_, 'utf-8');
+    const pid = Number(content.split(':')[0]);
+    if (Number.isFinite(pid)) {
+      if (!isPidAlive(pid)) fs.unlinkSync(path_);
+      return;
+    }
+  } catch {
+    // Unreadable, or the lock vanished on its own — fall through.
+  }
   try {
     const stat = fs.statSync(path_);
     if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
@@ -115,19 +154,21 @@ function reclaimStaleLock(path_: string): void {
  * which are part of this module's public synchronous API. Blocks the
  * event loop only briefly (Atomics.wait, not a CPU-spinning busy loop) and
  * only under real contention; gives up after `timeoutMs` rather than
- * hanging forever on a lock that can't be reclaimed.
+ * hanging forever on a lock that can't be reclaimed. Returns the ownership
+ * token on success (pass it to releaseLock) or null on timeout/failure.
  */
-function acquireLockSync(path_: string, timeoutMs = 2000): boolean {
+function acquireLockSync(path_: string, timeoutMs = 2000): string | null {
   ensureDir();
   const deadline = Date.now() + timeoutMs;
+  const token = currentLockToken();
   for (;;) {
     try {
-      fs.closeSync(fs.openSync(path_, 'wx'));
-      return true;
+      fs.writeFileSync(path_, token, { flag: 'wx', mode: 0o600 });
+      return token;
     } catch (err) {
-      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') return false;
+      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') return null;
       reclaimStaleLock(path_);
-      if (Date.now() >= deadline) return false;
+      if (Date.now() >= deadline) return null;
       try {
         Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10);
       } catch {
@@ -138,25 +179,35 @@ function acquireLockSync(path_: string, timeoutMs = 2000): boolean {
   }
 }
 
-async function acquireLockAsync(path_: string, timeoutMs = 2000): Promise<boolean> {
+async function acquireLockAsync(path_: string, timeoutMs = 2000): Promise<string | null> {
   ensureDir();
   const deadline = Date.now() + timeoutMs;
+  const token = currentLockToken();
   for (;;) {
     try {
-      fs.closeSync(fs.openSync(path_, 'wx'));
-      return true;
+      fs.writeFileSync(path_, token, { flag: 'wx', mode: 0o600 });
+      return token;
     } catch (err) {
-      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') return false;
+      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') return null;
       reclaimStaleLock(path_);
-      if (Date.now() >= deadline) return false;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      if (Date.now() >= deadline) return null;
+      // Unref'd: a short-lived CLI process racing for a contended lock
+      // must still be able to exit on its own rather than being kept
+      // alive purely by this retry timer for up to `timeoutMs`.
+      await new Promise<void>((resolve) => {
+        const timer = setTimeout(resolve, 10);
+        timer.unref();
+      });
     }
   }
 }
 
-function releaseLock(path_: string): void {
+/** Only unlinks the lock if it still holds the token we created it with. */
+function releaseLock(path_: string, token: string): void {
   try {
-    fs.unlinkSync(path_);
+    if (fs.readFileSync(path_, 'utf-8') === token) {
+      fs.unlinkSync(path_);
+    }
   } catch {
     // Already gone (released concurrently, or reclaimed as stale) — fine.
   }
@@ -170,8 +221,8 @@ function releaseLock(path_: string): void {
  */
 export function enableTelemetry(product: string): void {
   const path_ = lockPath(product);
-  const locked = acquireLockSync(path_);
-  if (!locked) {
+  const token = acquireLockSync(path_);
+  if (!token) {
     throw new Error(
       `enableTelemetry('${product}'): timed out waiting for the telemetry config lock — ` +
         `the opt-in was not recorded, retry`
@@ -181,7 +232,7 @@ export function enableTelemetry(product: string): void {
     const existing = readConfig(product);
     writeConfig(product, { enabled: true, installId: existing?.installId });
   } finally {
-    releaseLock(path_);
+    releaseLock(path_, token);
   }
 }
 
@@ -193,8 +244,8 @@ export function enableTelemetry(product: string): void {
  */
 export function disableTelemetry(product: string): void {
   const path_ = lockPath(product);
-  const locked = acquireLockSync(path_);
-  if (!locked) {
+  const token = acquireLockSync(path_);
+  if (!token) {
     throw new Error(
       `disableTelemetry('${product}'): timed out waiting for the telemetry config lock — ` +
         `the opt-out was not recorded, retry`
@@ -204,7 +255,7 @@ export function disableTelemetry(product: string): void {
     const existing = readConfig(product);
     writeConfig(product, { enabled: false, installId: existing?.installId });
   } finally {
-    releaseLock(path_);
+    releaseLock(path_, token);
   }
 }
 
@@ -253,8 +304,8 @@ async function getOrCreateInstallId(product: string): Promise<string> {
     if (existing?.installId) return existing.installId;
 
     const path_ = lockPath(product);
-    const locked = await acquireLockAsync(path_);
-    if (!locked) return randomUUID(); // couldn't get the lock in time — ephemeral fallback
+    const token = await acquireLockAsync(path_);
+    if (!token) return randomUUID(); // couldn't get the lock in time — ephemeral fallback
     try {
       const latest = readConfig(product);
       if (latest?.installId) return latest.installId; // minted by whoever we waited on
@@ -262,7 +313,7 @@ async function getOrCreateInstallId(product: string): Promise<string> {
       writeConfig(product, { enabled: latest?.enabled ?? existing?.enabled ?? false, installId });
       return installId;
     } finally {
-      releaseLock(path_);
+      releaseLock(path_, token);
     }
   } catch {
     return randomUUID();
@@ -275,7 +326,7 @@ async function getOrCreateInstallId(product: string): Promise<string> {
 // name" or "the product name". `product` allows npm's own naming grammar
 // (scoped packages like "@h4shed/mcp-core").
 const EVENT_NAME_PATTERN = /^[A-Za-z0-9_.:-]{1,64}$/;
-const PRODUCT_NAME_PATTERN = /^(@[A-Za-z0-9_.-]+\/)?[A-Za-z0-9_.-]{1,100}$/;
+const PRODUCT_NAME_PATTERN = /^(@[A-Za-z0-9_.-]{1,100}\/)?[A-Za-z0-9_.-]{1,100}$/;
 const VERSION_PATTERN = /^[A-Za-z0-9_.+-]{1,32}$/;
 
 function isValidPayload(event: string, product: string, productVersion: string): boolean {
