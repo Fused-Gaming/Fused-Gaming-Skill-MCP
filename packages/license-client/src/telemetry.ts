@@ -166,7 +166,14 @@ function reclaimStaleLock(path_: string): void {
   try {
     const content = fs.readFileSync(path_, 'utf-8');
     const pid = Number(content.split(':')[0]);
-    if (Number.isFinite(pid)) {
+    // A positive integer only: Number('') is 0 (Number.isFinite(0) is
+    // true), and PID 0 always reads as "alive" via process.kill(0, 0)
+    // (POSIX targets the current process group), which would treat an
+    // empty/malformed token — e.g. a lock file created but not yet fully
+    // written when its owner died mid-write — as permanently alive,
+    // jamming that product's lock forever. Anything that isn't a real PID
+    // falls through to the age-based fallback below instead.
+    if (Number.isInteger(pid) && pid > 0) {
       if (!isPidAlive(pid)) deleteLockIfUnchanged(path_, content);
       return;
     }
@@ -183,15 +190,33 @@ function reclaimStaleLock(path_: string): void {
   }
 }
 
+// Products for which getOrCreateInstallId() currently holds (or is
+// attempting to acquire) the file lock via its async path, *in this same
+// process*. Node is single-threaded: acquireLockSync()'s Atomics.wait
+// blocks that thread synchronously, with no return to the event loop
+// between retries, so a same-process async holder's pending setTimeout can
+// never fire — and therefore can never finish and release the lock — while
+// a sync acquisition attempt for the *same product* is spinning. Without
+// this check that isn't just slow, it's a guaranteed full-timeout stall
+// every time it happens (the async side has no chance to make progress
+// until the sync side gives up). Cross-process contention has no such
+// issue — a lock held by a different process doesn't block this process's
+// event loop — so this check is scoped to same-process, same-product only.
+const inProcessAsyncLockHolders = new Set<string>();
+
 /**
  * Synchronous lock acquisition for enableTelemetry()/disableTelemetry(),
  * which are part of this module's public synchronous API. Blocks the
  * event loop only briefly (Atomics.wait, not a CPU-spinning busy loop) and
  * only under real contention; gives up after `timeoutMs` rather than
  * hanging forever on a lock that can't be reclaimed. Returns the ownership
- * token on success (pass it to releaseLock) or null on timeout/failure.
+ * token on success (pass it to releaseLock) or null on timeout/failure —
+ * including immediately, without ever calling Atomics.wait, if this same
+ * process's own async install-ID creation currently holds this product's
+ * lock (see inProcessAsyncLockHolders above).
  */
-function acquireLockSync(path_: string, timeoutMs = 2000): string | null {
+function acquireLockSync(product: string, path_: string, timeoutMs = 2000): string | null {
+  if (inProcessAsyncLockHolders.has(product)) return null;
   ensureDir();
   const deadline = Date.now() + timeoutMs;
   const token = currentLockToken();
@@ -201,6 +226,9 @@ function acquireLockSync(path_: string, timeoutMs = 2000): string | null {
       return token;
     } catch (err) {
       if ((err as NodeJS.ErrnoException).code !== 'EEXIST') return null;
+      // Re-checked every iteration, not just on entry: a same-process
+      // async holder could start after we began waiting.
+      if (inProcessAsyncLockHolders.has(product)) return null;
       reclaimStaleLock(path_);
       if (Date.now() >= deadline) return null;
       try {
@@ -255,7 +283,7 @@ function releaseLock(path_: string, token: string): void {
  */
 export function enableTelemetry(product: string): void {
   const path_ = lockPath(product);
-  const token = acquireLockSync(path_);
+  const token = acquireLockSync(product, path_);
   if (!token) {
     throw new Error(
       `enableTelemetry('${product}'): timed out waiting for the telemetry config lock — ` +
@@ -278,7 +306,7 @@ export function enableTelemetry(product: string): void {
  */
 export function disableTelemetry(product: string): void {
   const path_ = lockPath(product);
-  const token = acquireLockSync(path_);
+  const token = acquireLockSync(product, path_);
   if (!token) {
     throw new Error(
       `disableTelemetry('${product}'): timed out waiting for the telemetry config lock — ` +
@@ -338,16 +366,21 @@ async function getOrCreateInstallId(product: string): Promise<string> {
     if (existing?.installId) return existing.installId;
 
     const path_ = lockPath(product);
-    const token = await acquireLockAsync(path_);
-    if (!token) return randomUUID(); // couldn't get the lock in time — ephemeral fallback
+    inProcessAsyncLockHolders.add(product);
     try {
-      const latest = readConfig(product);
-      if (latest?.installId) return latest.installId; // minted by whoever we waited on
-      const installId = randomUUID();
-      writeConfig(product, { enabled: latest?.enabled ?? existing?.enabled ?? false, installId });
-      return installId;
+      const token = await acquireLockAsync(path_);
+      if (!token) return randomUUID(); // couldn't get the lock in time — ephemeral fallback
+      try {
+        const latest = readConfig(product);
+        if (latest?.installId) return latest.installId; // minted by whoever we waited on
+        const installId = randomUUID();
+        writeConfig(product, { enabled: latest?.enabled ?? existing?.enabled ?? false, installId });
+        return installId;
+      } finally {
+        releaseLock(path_, token);
+      }
     } finally {
-      releaseLock(path_, token);
+      inProcessAsyncLockHolders.delete(product);
     }
   } catch {
     return randomUUID();
