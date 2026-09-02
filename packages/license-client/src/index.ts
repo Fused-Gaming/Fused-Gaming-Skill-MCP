@@ -14,7 +14,7 @@ export {
   recordEvent,
   getTelemetryStoragePath,
 } from './telemetry.js';
-export type { TelemetryConfig, TelemetryEvent } from './telemetry.js';
+export type { TelemetryConfig, TelemetryEvent, TelemetryPlatform } from './telemetry.js';
 
 // Export convenience functions
 import { LicenseValidator } from './validator.js';

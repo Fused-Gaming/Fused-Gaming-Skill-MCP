@@ -48,6 +48,24 @@ export interface TelemetryConfig {
   installId?: string;
 }
 
+// Mirrors the string union os.platform() actually returns (equivalent to
+// NodeJS.Platform), but self-contained: this module's package.json lists
+// @types/node only as a devDependency, so a consumer without it installed
+// would otherwise fail to resolve TelemetryEvent (a publicly re-exported
+// type) with "Cannot find namespace 'NodeJS'" the moment they import it.
+export type TelemetryPlatform =
+  | 'aix'
+  | 'android'
+  | 'darwin'
+  | 'freebsd'
+  | 'haiku'
+  | 'linux'
+  | 'openbsd'
+  | 'sunos'
+  | 'win32'
+  | 'cygwin'
+  | 'netbsd';
+
 export interface TelemetryEvent {
   event: string;
   product: string;
@@ -55,7 +73,7 @@ export interface TelemetryEvent {
   timestamp: string;
   installId: string;
   nodeVersion: string;
-  platform: NodeJS.Platform;
+  platform: TelemetryPlatform;
   arch: string;
 }
 
@@ -92,7 +110,15 @@ function ensureDir(): void {
 // this module ever intended to transmit. Validating on *read* means a
 // bad/oversized value can never reach the network payload, no matter how
 // it ended up on disk.
-const INSTALL_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+//
+// Specifically UUIDv4, not any RFC 4122 UUID shape: the version nibble
+// (`4` in the third group) and variant bits (`8`/`9`/`a`/`b` leading the
+// fourth group) are checked, not just hex group lengths. A generic
+// hex-shape pattern would also accept a UUIDv1 from an older or foreign
+// config — UUIDv1 embeds the generating machine's MAC address and a
+// timestamp, which is exactly the kind of hardware-derived identifier this
+// module promises never to collect or transmit.
+const INSTALL_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function parseConfig(raw: string): TelemetryConfig | null {
   try {
@@ -744,14 +770,28 @@ export async function recordEvent(
       // what made the stale-cache version a real compliance problem.
       const config = await readConfigAsync(product);
       const diskEnabled = config?.enabled ?? false;
-      consentCache.set(product, diskEnabled);
+      consentCache.set(product, diskEnabled); // Self-heal for every event after this one.
       if (config?.enabled === false) return; // Explicit opt-out always wins, even over env var opt-in.
-      // A `true` cached at *this event's own invocation* (captured above,
-      // before this read started) still wins over a disk read that hasn't
-      // caught up yet with a concurrent enableTelemetry() call — this is
-      // what actually protects the pre-consent-event race; the self-heal
-      // above only prevents that protection from becoming permanent.
-      const persistedEnabled = cachedConsent === true ? true : diskEnabled;
+      // Only a `true` cached at *this event's own invocation* (captured
+      // above, before this read even started) counts as consent for this
+      // specific event — never this read's own `diskEnabled`, and never an
+      // absent (undefined) cache entry either. Falling through to
+      // `diskEnabled` here for the undefined case would reopen the exact
+      // pre-consent-event race this snapshot exists to close: on a fresh
+      // process's very first recordEvent() for a product, with no prior
+      // in-process enableTelemetry() call, cachedConsent is undefined —
+      // and a concurrent enableTelemetry() call could still win the race
+      // and land on disk before this read runs, making diskEnabled `true`
+      // for an event that was actually recorded before consent existed.
+      // The accepted tradeoff: a fresh process's first-ever event for a
+      // product it was *already* opted into from an earlier run is also
+      // conservatively dropped (cachedConsent is undefined then too, for
+      // the same reason — this process just doesn't know that yet). Every
+      // event after it sends correctly, once the self-heal above has
+      // populated the cache. "Never send before proven consent" is the
+      // guarantee this module actually makes; losing one event during
+      // that bootstrap window is the accepted cost of keeping it absolute.
+      const persistedEnabled = cachedConsent === true;
       if (!envOptedIn && !persistedEnabled) return;
       const installId = await getOrCreateInstallId(product);
       const payload: TelemetryEvent = {
