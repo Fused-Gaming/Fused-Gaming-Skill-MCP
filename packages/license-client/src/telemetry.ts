@@ -183,30 +183,66 @@ function isPidAlive(pid: number): boolean {
 }
 
 /**
- * Atomically removes `path_`, but only if it still refers to the same file
- * (`expectedIno`) that was inspected to decide it should be reclaimed. A
- * plain `renameSync(path_, ...)` operates on whatever directory entry is
+ * Atomically removes `path_`, but only if it still holds the same content
+ * (`expectedContent`) that was inspected to decide it should be reclaimed.
+ * A plain `renameSync(path_, ...)` operates on whatever directory entry is
  * *currently* at `path_` when it runs — not what was there when the caller
  * read it and decided the owner was dead. If this process is preempted
  * between that read and the rename, and in that window a genuinely live
  * process fully reclaims `path_` and writes a brand-new lock into it, an
  * unguarded rename would capture and delete that new, live lock by pure
- * bad timing. Re-checking the inode immediately beforehand closes all of
- * that window except the syscalls between the stat and the rename
- * themselves — the smallest gap achievable without a native flock()
- * binding, which Node's stdlib does not expose.
+ * bad timing.
+ *
+ * A check *before* the rename (an earlier version of this function did
+ * `statSync(path_)` then `renameSync`) still leaves that exact gap: the two
+ * are separate syscalls, so a replacement between them defeats the check.
+ * Checking identity *after* the rename instead closes it, because
+ * `renameSync` already exclusively captured whatever was actually at
+ * `path_` by the time this runs — there's nothing left to race.
+ *
+ * Compares file *content*, not inode number: an earlier version of this
+ * function compared inodes, but a freed inode can be reused by the
+ * filesystem for an unrelated new file created shortly after — exactly
+ * the pattern this module itself produces (releaseLock unlinks a lock,
+ * then a completely different process creates a fresh one at the same
+ * path) — which would let two genuinely different locks share an inode
+ * number and defeat that check. The lock's content is its ownership token
+ * (`<pid>:<random>`), which embeds a fresh random UUID per lock and so
+ * can't collide with an unrelated lock's content in practice.
+ *
+ * If the captured file's content doesn't match what we decided was stale,
+ * we didn't grab our stale lock; we grabbed a live one that replaced it in
+ * the meantime. Rather than deleting somebody else's active lock, put it
+ * back — via `linkSync`, not `renameSync`, so restoring it can never
+ * clobber an even-newer lock a legitimate owner has since recreated at
+ * `path_` (`linkSync` fails with EEXIST instead of silently overwriting
+ * it).
  */
-function atomicallyRemoveLockIfInode(path_: string, expectedIno: number): void {
-  try {
-    if (fs.statSync(path_).ino !== expectedIno) return; // Already replaced by a new, live lock.
-  } catch {
-    return; // Vanished on its own — nothing to reclaim.
-  }
+function atomicallyRemoveLockIfContent(path_: string, expectedContent: string): void {
   const tempPath = `${path_}.reclaimed.${process.pid}.${randomUUID()}`;
   try {
     fs.renameSync(path_, tempPath);
   } catch {
     return; // Lost the race, or the lock was already gone — not ours to remove.
+  }
+  let capturedContent: string;
+  try {
+    capturedContent = fs.readFileSync(tempPath, 'utf-8');
+  } catch {
+    return; // Vanished immediately after our own rename — nothing more to do.
+  }
+  if (capturedContent !== expectedContent) {
+    try {
+      fs.linkSync(tempPath, path_);
+      fs.unlinkSync(tempPath); // Restored under its original name; drop our extra link to it.
+    } catch {
+      // Couldn't restore (something else is already at path_ again) — leave
+      // the captured file at tempPath rather than risk destroying whatever
+      // that is. A small orphaned file, not a correctness problem: nothing
+      // else ever reads tempPath, and its original owner's own
+      // lockStillOwned() check protects it from a lock it no longer holds.
+    }
+    return;
   }
   try {
     fs.unlinkSync(tempPath);
@@ -226,10 +262,10 @@ function atomicallyRemoveLockIfInode(path_: string, expectedIno: number): void {
  *
  * Reads through a single open file descriptor (rather than separate
  * `readFileSync(path)` / `statSync(path)` calls) so the content and the
- * inode/mtime used to decide "stale" are guaranteed to describe the exact
- * same file, even if the path is replaced between two path-based calls.
- * The actual removal re-checks that inode immediately before renaming (see
- * atomicallyRemoveLockIfInode) rather than trusting it still applies.
+ * mtime used to decide "stale" are guaranteed to describe the exact same
+ * file, even if the path is replaced between two path-based calls. The
+ * actual removal re-checks that content immediately before renaming (see
+ * atomicallyRemoveLockIfContent) rather than trusting it still applies.
  */
 function reclaimStaleLock(path_: string): void {
   let fd: number;
@@ -251,19 +287,19 @@ function reclaimStaleLock(path_: string): void {
     // falls through to the age-based fallback below instead.
     if (Number.isInteger(pid) && pid > 0) {
       if (!isPidAlive(pid)) {
-        atomicallyRemoveLockIfInode(path_, stat.ino);
+        atomicallyRemoveLockIfContent(path_, content);
       } else if (Date.now() - stat.mtimeMs > LOCK_ABSOLUTE_MAX_MS) {
         // The recorded PID looks alive, but the lock is far older than any
         // legitimate holder should need — most likely explanation is PID
         // reuse (the original owner died and the OS handed its PID to an
         // unrelated later process), not a 60-second-long critical section.
         // Reclaim unconditionally rather than staying jammed forever.
-        atomicallyRemoveLockIfInode(path_, stat.ino);
+        atomicallyRemoveLockIfContent(path_, content);
       }
       return;
     }
     if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
-      atomicallyRemoveLockIfInode(path_, stat.ino);
+      atomicallyRemoveLockIfContent(path_, content);
     }
   } catch {
     // Unreadable — nothing to reclaim.
@@ -487,16 +523,22 @@ function envOptInKey(product: string): string {
  * Whether telemetry is currently active for a specific product.
  * SYNCPULSE_TELEMETRY=0 is an unconditional kill switch for every product
  * (a global "off" can only ever reduce collection, so it's always safe to
- * honor). There is no global "on" switch: SYNCPULSE_TELEMETRY_<PRODUCT>=1
- * opts in one specific, named product only — useful for CI or scripted
- * installs — so setting it for one product embedding this client can never
- * cross-enable an unrelated product that happens to inherit the same
- * environment.
+ * honor). An explicit persisted opt-out — i.e. disableTelemetry(product)
+ * was called and its result is still on disk — always wins next, even over
+ * the environment opt-in below: disableTelemetry()'s own contract promises
+ * it's "honored regardless of environment variables", so a scripted/CI
+ * SYNCPULSE_TELEMETRY_<PRODUCT>=1 must never silently override a user's
+ * explicit local opt-out. Only after that does SYNCPULSE_TELEMETRY_<PRODUCT>=1
+ * apply — it opts in one specific, named product only, useful for CI or
+ * scripted installs, and setting it for one product can never cross-enable
+ * an unrelated product that happens to inherit the same environment.
  */
 export function isTelemetryEnabled(product: string): boolean {
   if (process.env.SYNCPULSE_TELEMETRY === '0') return false;
+  const config = readConfig(product);
+  if (config?.enabled === false) return false;
   if (process.env[envOptInKey(product)] === '1') return true;
-  return readConfig(product)?.enabled ?? false;
+  return config?.enabled ?? false;
 }
 
 /**
@@ -688,7 +730,28 @@ export async function recordEvent(
   // surface as an unhandled rejection.
   void (async () => {
     try {
-      const persistedEnabled = cachedConsent ?? ((await readConfigAsync(product))?.enabled ?? false);
+      // Always re-read disk, even when a cached value already exists: a
+      // cached `true` must never be trusted indefinitely, or a *later*
+      // disableTelemetry() call — from this process or another one — would
+      // be silently ignored by every subsequent recordEvent() call for as
+      // long as the process runs, still short-circuiting past the read via
+      // the cache instead of ever observing the opt-out (this was the
+      // actual bug: `cachedConsent ?? diskRead` never evaluates diskRead
+      // once cachedConsent holds any value, including a stale `true`).
+      // Self-heals the cache with what this read observes, so at most one
+      // event can lag behind a fresh external change before the cache
+      // catches up for everything after it — not "indefinitely", which is
+      // what made the stale-cache version a real compliance problem.
+      const config = await readConfigAsync(product);
+      const diskEnabled = config?.enabled ?? false;
+      consentCache.set(product, diskEnabled);
+      if (config?.enabled === false) return; // Explicit opt-out always wins, even over env var opt-in.
+      // A `true` cached at *this event's own invocation* (captured above,
+      // before this read started) still wins over a disk read that hasn't
+      // caught up yet with a concurrent enableTelemetry() call — this is
+      // what actually protects the pre-consent-event race; the self-heal
+      // above only prevents that protection from becoming permanent.
+      const persistedEnabled = cachedConsent === true ? true : diskEnabled;
       if (!envOptedIn && !persistedEnabled) return;
       const installId = await getOrCreateInstallId(product);
       const payload: TelemetryEvent = {
