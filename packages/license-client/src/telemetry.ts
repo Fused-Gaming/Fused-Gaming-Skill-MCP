@@ -460,15 +460,36 @@ async function acquireLockAsync(path_: string, timeoutMs = 2000): Promise<string
   }
 }
 
-/** Only unlinks the lock if it still holds the token we created it with. */
 function releaseLock(path_: string, token: string): void {
+  // Cheap fast path: if the lock plainly isn't (or is no longer) ours,
+  // there's nothing to do and nothing worth touching — this is the common
+  // case whenever a caller already detected it lost the lock (e.g.
+  // lockStillOwned() just failed) and is releasing from a `finally` block
+  // regardless. Skipping straight past this on a mismatch, without ever
+  // renaming path_ away, matters: the atomic path below still safely
+  // leaves a mismatched capture orphaned rather than deleting it, but
+  // "orphaned" means gone from path_ either way — pointlessly vacating a
+  // lock that's already known to belong to someone else, on essentially
+  // every lost-the-lock cleanup call, would be its own regression.
   try {
-    if (fs.readFileSync(path_, 'utf-8') === token) {
-      fs.unlinkSync(path_);
-    }
+    if (fs.readFileSync(path_, 'utf-8') !== token) return;
   } catch {
-    // Already gone (released concurrently, or reclaimed as stale) — fine.
+    return; // Already gone — fine.
   }
+  // Reaching here means the lock looked like ours a moment ago — but a
+  // separate readFileSync-then-unlinkSync (what this function used to do)
+  // still has the exact TOCTOU gap atomicallyRemoveLockIfContent exists to
+  // close: if this process is preempted between that check and an
+  // unlinkSync(), its lock can cross LOCK_ABSOLUTE_MAX_MS, get reclaimed,
+  // and be replaced by a new owner before the paused process resumes and
+  // deletes what it thinks is still its own lock — actually deleting that
+  // new owner's live one. Delegating to the same atomic capture-then-
+  // verify primitive reclaim uses closes that window here too: it removes
+  // the lock only if what it atomically captures still matches our token,
+  // and safely leaves anything else alone (protected by its own owner's
+  // lockStillOwned() check, not by whether the path still exists) rather
+  // than risk deleting a live lock.
+  atomicallyRemoveLockIfContent(path_, token);
 }
 
 // A holder that was preempted (SIGSTOP, a debugger, scheduling, or a stalled
