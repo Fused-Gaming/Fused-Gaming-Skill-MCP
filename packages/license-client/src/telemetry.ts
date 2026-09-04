@@ -12,10 +12,17 @@
  * a random installation ID generated locally and never derived from
  * hardware. The fixed event schema below (no free-form property bag, and
  * every field format-validated before transmission) is the entire disclosed
- * payload — there is no way for a caller, even a careless one, to smuggle
- * arbitrary data through it. SYNCPULSE_TELEMETRY=0 always disables
- * telemetry for every product, even if a config file says otherwise, so it
- * can never become silently mandatory.
+ * payload — there is no hidden field, and no way for a caller, even a
+ * careless one, to smuggle extra *structured* data through it via a type
+ * trick. That guarantee is about shape, not content: `event`, `product`,
+ * and `productVersion` are opaque strings the *integrating package's own
+ * code* chooses the values for, the same trust boundary every logging or
+ * analytics library has with its caller — this module can validate that a
+ * value looks like a well-formed event name, not that whoever wrote the
+ * calling code didn't choose to name an event something identifying.
+ * SYNCPULSE_TELEMETRY=0 always disables telemetry for every product, even
+ * if a config file says otherwise, so it can never become silently
+ * mandatory.
  *
  * Consent and installation IDs are scoped per product (see `product` on
  * every function below): opting in for one product embedding this client
@@ -759,6 +766,21 @@ const consentCache = new Map<string, boolean>();
 // enableTelemetry() call for the same product must still never
 // retroactively count that specific event as consented (generation changes
 // before the read resolves, so the fallback applies).
+//
+// Known limitation, not fixed here: this generation counter is process-
+// local. If a *different* process calls enableTelemetry() while this
+// process's recordEvent() disk read is in flight, that other process's
+// write can still land before the read resolves, and this process has no
+// way to know — its own generation is untouched, so the read is trusted
+// as "unchanged", and the event sends even though it was invoked before
+// that cross-process opt-in existed. Closing this would require either a
+// synchronous disk read at recordEvent()'s own invocation (which round 8
+// deliberately ruled out, so recordEvent() can never block on a slow or
+// unresponsive filesystem) or a shared, monotonically-ordered consent
+// version both processes agree on without synchronous coordination —
+// effectively building real cross-process consensus for anonymous opt-in
+// telemetry. Accepted as an inherent limit of file-based IPC latency, the
+// same category as the fs/promises-unref limitation documented above.
 const consentGeneration = new Map<string, number>();
 
 /**
@@ -769,6 +791,19 @@ const consentGeneration = new Map<string, number>();
  * short-lived CLI command's own natural exit. The request still completes
  * normally if the process happens to stay alive for other reasons — unref
  * only stops it from being a reason to stay alive on its own.
+ *
+ * Known limitation, not fixed here: unref-ing the socket doesn't cover DNS
+ * resolution. http.request() resolves a hostname via dns.lookup(), which
+ * runs on Node's libuv threadpool — the same kind of pending, referenced
+ * work as an fs/promises call (see readConfigAsync above), with no public
+ * unref() equivalent either. A stalled resolver can hold the process open
+ * independent of the socket's own unref() and of the absolute-deadline
+ * timer below (itself unref'd, and unable to force early cancellation of
+ * threadpool work already dispatched). Accepted for the same reason as
+ * the fs/promises limitation: a real fix means bypassing http.request()'s
+ * built-in resolution with a custom, cancelable/unref-able DNS strategy,
+ * disproportionate for delivery to a small, operator-configured set of
+ * telemetry endpoints rather than arbitrary hostnames.
  */
 function sendBeacon(endpoint: string, payload: TelemetryEvent): void {
   let url: URL;

@@ -460,8 +460,14 @@ IP-derived geolocation, file paths, or anything else that could identify a
 specific person or machine. There's no free-form "extra data" field on
 `recordEvent`, and `event`/`product`/`productVersion` are all checked
 against strict formats before anything is sent (silently no-op'd if any
-fails) — the fixed schema above is the entire disclosed payload, so a
-caller can't smuggle additional data through it even by accident.
+fails) — the fixed schema above is the entire disclosed payload, and there's
+no hidden field a caller could smuggle extra *structured* data through via a
+type trick. That's a guarantee about shape, not content: `event`, `product`,
+and `productVersion` are opaque strings the *integrating package's own code*
+supplies the values for — the same trust boundary any logging or analytics
+library has with its caller. This module validates that a value looks like
+a well-formed event name; it can't validate that whoever wrote the calling
+code didn't choose to name an event something identifying.
 
 Consent and installation IDs are **scoped per product** (the `product`
 argument on every function below, stored under
