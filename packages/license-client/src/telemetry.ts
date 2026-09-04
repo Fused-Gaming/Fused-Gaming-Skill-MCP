@@ -95,15 +95,27 @@ export interface TelemetryEvent {
 }
 
 // Filesystem-safe, and collision-resistant: two products differing only in
-// characters outside the allowlist (e.g. "foo/bar" vs "foo:bar") must not
+// characters outside the allowlist (e.g. "foo/bar" vs "foo:bar"), or that
+// happen to share the same first 60 sanitized characters, must not
 // collapse onto the same consent/install-ID file, or opting in for one
-// would silently opt in the other. Appending a short hash of the original,
+// would silently opt in the other. Appending a hash of the original,
 // un-sanitized name makes the mapping effectively injective while keeping
 // the filename readable.
+//
+// The full 64-character hex digest, not a truncated prefix: an earlier
+// version used only the first 8 hex characters (32 bits), which keeps
+// *accidental* collisions vanishingly unlikely but doesn't resist a
+// deliberately constructed one — a 32-bit space is small enough that two
+// product names hashing to the same 8-hex-char suffix are realistically
+// findable by brute force. Since names sharing the same truncated `base`
+// (the >60-char case this hash exists to disambiguate) are exactly the
+// case where that matters, and the full digest costs nothing extra to
+// compute (already being hashed regardless of how much of it is kept),
+// there's no reason to truncate it here.
 function sanitizeProductName(product: string): string {
   if (!product) throw new Error('product name is required');
   const base = product.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60);
-  const hash = createHash('sha256').update(product).digest('hex').slice(0, 8);
+  const hash = createHash('sha256').update(product).digest('hex');
   return `${base}-${hash}`;
 }
 
@@ -904,31 +916,34 @@ export async function recordEvent(
       // cached `true` must never be trusted indefinitely, or a *later*
       // disableTelemetry() call — from this process or another one — would
       // be silently ignored by every subsequent recordEvent() call for as
-      // long as the process runs. Self-heals the cache with what this read
-      // observes, so at most one event can lag behind a fresh external
-      // change before the cache catches up for everything after it.
+      // long as the process runs.
       const config = await readConfigAsync(product);
       const diskEnabled = config?.enabled ?? false;
-      consentCache.set(product, diskEnabled); // Self-heal for every event after this one.
-      if (config?.enabled === false) return; // Explicit opt-out always wins, even over env var opt-in.
-      // The read above just resolved — has any in-process enable/disable
-      // call *completed* since this event's own invocation? If not
-      // (generation unchanged), nothing in this process could have raced
-      // ahead of this read, so diskEnabled genuinely reflects state that
-      // existed at-or-before invocation — whether that's a persisted
-      // opt-in from an *earlier* process/run (the common case for a
-      // process-per-command CLI, which must still work) or simply nothing
-      // having changed — and can be trusted directly. Only when the
-      // generation *did* change is there real ambiguity (some in-process
-      // write landed on disk sometime during this wait, with no way to
-      // tell whether the read beat it), and only then does this fall back
-      // to trusting nothing but a `true` this exact event's own invocation
-      // already knew about — closing the original pre-consent-event race
-      // (recordEvent() immediately followed by an in-process
-      // enableTelemetry() call for the same product) without also
-      // silently discarding every event from a fresh, otherwise-idle
-      // process that inherits consent persisted by a previous run.
+      // Has any in-process enable/disable call *completed* since this
+      // event's own invocation? If not (generation unchanged), nothing in
+      // this process could have raced ahead of this read, so diskEnabled
+      // genuinely reflects state that existed at-or-before invocation —
+      // whether that's a persisted opt-in from an *earlier* process/run
+      // (the common case for a process-per-command CLI, which must still
+      // work) or simply nothing having changed — and can be trusted
+      // directly, including to self-heal the cache for every event after
+      // this one. Only when the generation *did* change is there real
+      // ambiguity: some in-process write landed on disk sometime during
+      // this wait, with no way to tell whether this read started before
+      // or resolved after it — e.g. this exact read could have opened the
+      // file while `enabled: true`, then disableTelemetry() completed
+      // (bumping the generation and writing `enabled: false`) before this
+      // read's promise actually resolved. In that ambiguous case, this
+      // read's result is stale and must not be trusted for anything —
+      // not the send decision (falls back to trusting nothing but a
+      // `true` this exact event's own invocation already knew about,
+      // closing the original pre-consent-event race) and not the cache
+      // self-heal either (skipped entirely, leaving whatever the newer
+      // synchronous enable/disable call itself already wrote there,
+      // rather than clobbering it with this stale read's answer).
       const generationUnchanged = (consentGeneration.get(product) ?? 0) === generationAtInvocation;
+      if (generationUnchanged) consentCache.set(product, diskEnabled);
+      if (config?.enabled === false) return; // Explicit opt-out always wins, even over env var opt-in.
       const persistedEnabled = generationUnchanged ? diskEnabled : cachedConsent === true;
       if (!envOptedIn && !persistedEnabled) return;
       const installId = await getOrCreateInstallId(product);
