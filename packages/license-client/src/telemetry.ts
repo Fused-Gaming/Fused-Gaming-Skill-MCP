@@ -151,17 +151,30 @@ const INSTALL_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]
 
 function parseConfig(raw: string): TelemetryConfig | null {
   try {
-    const parsed = JSON.parse(raw);
+    const parsed: unknown = JSON.parse(raw);
+    // Must actually be a plain object first — not null, not an array, not
+    // a bare primitive. Property access on any of those (`(false).enabled`,
+    // `[].enabled`, `"x".enabled`) also yields `undefined` in JS, which
+    // would otherwise satisfy the "absent enabled is valid" check below
+    // and let syntactically-valid-but-structurally-bogus JSON (the file
+    // contains literal `false`, `0`, `"x"`, or `[]`) be silently accepted
+    // as "no decision yet" instead of being treated as corrupt — reopening
+    // exactly the fail-open gap the unreadable-config fix closed, just via
+    // malformed content instead of a read error.
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return null;
+    }
+    const record = parsed as Record<string, unknown>;
     // `enabled` absent (undefined) is valid — a config written purely to
     // persist an installId (see getOrCreateInstallId) with no explicit
     // consent decision yet. Anything present but not a boolean is still
     // treated as corrupt, same as before.
-    if (typeof parsed.enabled === 'boolean' || parsed.enabled === undefined) {
+    if (typeof record.enabled === 'boolean' || record.enabled === undefined) {
       const installId =
-        typeof parsed.installId === 'string' && INSTALL_ID_PATTERN.test(parsed.installId)
-          ? parsed.installId
+        typeof record.installId === 'string' && INSTALL_ID_PATTERN.test(record.installId)
+          ? record.installId
           : undefined;
-      return { enabled: parsed.enabled, installId };
+      return { enabled: record.enabled as boolean | undefined, installId };
     }
     return null;
   } catch {
@@ -643,9 +656,14 @@ export function disableTelemetry(product: string): void {
 // unrelated product too. The hash suffix is deterministic (derived from the
 // product name, not random), so an integrator can still compute and
 // document a fixed env var name for their product once.
+//
+// Full digest, not a truncated prefix — same reasoning as
+// sanitizeProductName: an 8-hex-char (32-bit) suffix is small enough that
+// two distinct, validly-named products colliding onto the same env var key
+// is realistically constructible, not just theoretically possible.
 function envOptInKey(product: string): string {
   const base = product.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
-  const hash = createHash('sha256').update(product).digest('hex').slice(0, 8).toUpperCase();
+  const hash = createHash('sha256').update(product).digest('hex').toUpperCase();
   return `SYNCPULSE_TELEMETRY_${base}_${hash}`;
 }
 
@@ -947,6 +965,22 @@ export async function recordEvent(
       const persistedEnabled = generationUnchanged ? diskEnabled : cachedConsent === true;
       if (!envOptedIn && !persistedEnabled) return;
       const installId = await getOrCreateInstallId(product);
+      // Recheck for an explicit opt-out one more time, right before
+      // sending: getOrCreateInstallId() just awaited its own lock and disk
+      // I/O, which is another window where a disableTelemetry() call
+      // (this process or another one) could complete — and, since that
+      // function itself reads and can rewrite this product's config, it
+      // may even have already durably persisted `enabled: false` before
+      // this continuation resumes. Without this recheck, that completed
+      // opt-out wouldn't stop the event this call already decided (a
+      // moment ago) to send. This narrows the window rather than closing
+      // it — the same cross-process-timing limitation documented above
+      // still applies to the gap between this check and sendBeacon()
+      // itself — but it's cheap (readConfigAsync is already this
+      // function's own established pattern) and covers the concrete,
+      // non-theoretical case of getOrCreateInstallId's own I/O being the
+      // thing that observes the opt-out.
+      if ((await readConfigAsync(product))?.enabled === false) return;
       const payload: TelemetryEvent = {
         event,
         product,
