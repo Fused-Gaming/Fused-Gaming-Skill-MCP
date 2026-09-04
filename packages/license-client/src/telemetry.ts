@@ -150,17 +150,40 @@ function parseConfig(raw: string): TelemetryConfig | null {
   }
 }
 
+// A sentinel distinct from both a real persisted config and `null`
+// ("genuinely no config exists yet"). readConfig()/readConfigAsync() return
+// this when the config file exists but couldn't be read for some reason
+// other than "it's not there" (permissions, a stalled network mount, I/O
+// error, ...): treating that the same as "no config" (which every caller
+// used to do, via a blanket catch) would let the environment opt-in
+// silently override an opt-out that's actually sitting on disk, just
+// unreadable right now — the opposite of "a persisted opt-out always
+// wins". Every caller that reads `.enabled` normalizes this to `false`
+// exactly like an explicit disableTelemetry()-written config, since
+// refusing to send when we can't confirm consent is the safe default.
+const UNREADABLE_CONFIG: TelemetryConfig = { enabled: false };
+
+function classifyReadError(err: unknown): TelemetryConfig | null {
+  // ENOENT: the file genuinely doesn't exist — a real "no decision yet".
+  // Anything else (EACCES, EIO, a stalled network mount timing out, ...):
+  // the file might well exist and hold an explicit opt-out we simply
+  // couldn't read — fail closed rather than silently treating it as absent.
+  return (err as NodeJS.ErrnoException)?.code === 'ENOENT' ? null : UNREADABLE_CONFIG;
+}
+
 // Synchronous: used only by the public sync API (enableTelemetry(),
 // disableTelemetry(), isTelemetryEnabled()'s persisted-config fallback),
 // where blocking briefly on local disk I/O is an accepted, documented
 // part of calling a synchronous function. Never called from recordEvent()'s
 // own execution path — see readConfigAsync for that.
 function readConfig(product: string): TelemetryConfig | null {
+  let raw: string;
   try {
-    return parseConfig(fs.readFileSync(configPath(product), 'utf-8'));
-  } catch {
-    return null;
+    raw = fs.readFileSync(configPath(product), 'utf-8');
+  } catch (err) {
+    return classifyReadError(err);
   }
+  return parseConfig(raw) ?? UNREADABLE_CONFIG; // Exists but didn't parse — same fail-closed treatment as unreadable.
 }
 
 // Async counterpart used exclusively from recordEvent()'s detached path
@@ -184,16 +207,33 @@ function readConfig(product: string): TelemetryConfig | null {
 // — disproportionate machinery for an edge case this rare, so this module
 // accepts the limitation and documents it here instead.
 async function readConfigAsync(product: string): Promise<TelemetryConfig | null> {
+  let raw: string;
   try {
-    return parseConfig(await fsp.readFile(configPath(product), 'utf-8'));
-  } catch {
-    return null;
+    raw = await fsp.readFile(configPath(product), 'utf-8');
+  } catch (err) {
+    return classifyReadError(err);
   }
+  return parseConfig(raw) ?? UNREADABLE_CONFIG;
 }
 
+// Writes to a temp file and renames it into place, rather than writing
+// `configPath(product)` directly. A direct write opens with the default
+// mode 'w', which truncates the existing file *before* writing the new
+// content — if the process crashes, the disk fills, or writeFileSync
+// otherwise fails partway through, the previously persisted config (which
+// could hold an explicit opt-out) is left destroyed, not merely
+// unmodified. Reads would then see a missing/corrupt file and treat it as
+// "no decision yet" — silently discarding a real opt-out. Renaming a
+// fully-written temp file into place is atomic on the same filesystem
+// (see LICENSE-touching comments elsewhere in this file for the general
+// rename-atomicity property this relies on), so a reader can only ever see
+// the old complete config or the new complete one, never a partial write.
 function writeConfig(product: string, config: TelemetryConfig): void {
   ensureDir();
-  fs.writeFileSync(configPath(product), JSON.stringify(config, null, 2), { mode: 0o600 });
+  const finalPath = configPath(product);
+  const tempPath = `${finalPath}.tmp.${process.pid}.${randomUUID()}`;
+  fs.writeFileSync(tempPath, JSON.stringify(config, null, 2), { mode: 0o600 });
+  fs.renameSync(tempPath, finalPath);
 }
 
 // Lock files carry "<pid>:<random>" as their content — an ownership token,
