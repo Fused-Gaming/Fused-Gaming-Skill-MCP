@@ -2,6 +2,7 @@
   "name": "@h4shed/license-client",
   "version": "1.0.0",
   "description": "License validation & management library for SyncPulse CLI",
+  "license": "SEE LICENSE IN LICENSE-NONCOMMERCIAL.md",
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
@@ -9,7 +10,8 @@
     "./types": "./dist/types.js",
     "./validator": "./dist/validator.js",
     "./storage": "./dist/storage.js",
-    "./generator": "./dist/generator.js"
+    "./generator": "./dist/generator.js",
+    "./telemetry": "./dist/telemetry.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
@@ -37,5 +39,8 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

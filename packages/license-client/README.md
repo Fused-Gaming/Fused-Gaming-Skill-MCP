@@ -447,9 +447,64 @@ export async function checkLicense() {
 - `hasLicense()`: Check if license file exists
 - `getLicenseModificationTime()`: Get file modification time
 
+## Telemetry (opt-in)
+
+This package can optionally report anonymous usage events. **It is disabled
+by default and stays disabled until a user explicitly opts in** — nothing is
+collected or transmitted otherwise.
+
+What it collects when enabled: an event name, product name/version, Node
+version, OS platform/arch, and a random installation ID generated locally
+(not derived from any hardware identifier). It never collects hardware IDs,
+IP-derived geolocation, file paths, or anything else that could identify a
+specific person or machine. There's no free-form "extra data" field on
+`recordEvent`, and `event`/`product`/`productVersion` are all checked
+against strict formats before anything is sent (silently no-op'd if any
+fails) — the fixed schema above is the entire disclosed payload, and there's
+no hidden field a caller could smuggle extra *structured* data through via a
+type trick. That's a guarantee about shape, not content: `event`, `product`,
+and `productVersion` are opaque strings the *integrating package's own code*
+supplies the values for — the same trust boundary any logging or analytics
+library has with its caller. This module validates that a value looks like
+a well-formed event name; it can't validate that whoever wrote the calling
+code didn't choose to name an event something identifying.
+
+Consent and installation IDs are **scoped per product** (the `product`
+argument on every function below, stored under
+`~/.syncpulse/telemetry/<sanitized-product-hash>.json`). Opting in for one
+product embedding this client never enables telemetry for a different
+product that happens to run under the same OS account, and consent
+changes and install-ID creation are serialized through the same per-product
+lock so a concurrent opt-out can't be silently clobbered by an in-flight
+event's ID creation.
+
+```typescript
+import { enableTelemetry, disableTelemetry, isTelemetryEnabled, recordEvent } from '@h4shed/license-client';
+
+enableTelemetry('my-product');               // explicit opt-in for this product only
+isTelemetryEnabled('my-product');            // false until enableTelemetry() runs or the env var below is set
+await recordEvent('cli_start', 'my-product', '1.0.0'); // resolves immediately; delivery is fire-and-forget and never blocks process exit, even against a hanging endpoint
+disableTelemetry('my-product');              // explicit opt-out, persisted
+```
+
+`enableTelemetry()`/`disableTelemetry()` throw if they can't acquire the
+per-product consent lock within 2 seconds (e.g. heavy concurrent access) —
+they never silently proceed without it, since that could let a concurrent
+write clobber the consent change you just asked for.
+
+Precedence, highest to lowest:
+
+1. `SYNCPULSE_TELEMETRY=0` — unconditionally disables telemetry for every product, even if a config file or the product-specific environment variable below says otherwise.
+2. A persisted opt-out (`disableTelemetry(product)` was called and its result is still on disk) — always honored, even over the product-specific environment opt-in below. This is deliberate: `disableTelemetry()` is an explicit, user-facing action, and a scripted/CI environment variable must never be able to silently override it.
+3. `SYNCPULSE_TELEMETRY_<PRODUCT>_<HASH>=1` — opts in one specific product without touching the config file (useful for CI/scripted installs), where `<PRODUCT>` is the product name uppercased with non-alphanumeric characters replaced by `_`, and `<HASH>` is the full 64-character `sha256(product name)` hex digest, uppercased. The hash suffix is deterministic (not random), so an integrator computes and documents this once per product; it exists so two products differing only in punctuation (e.g. `my-product` and `my_product`) can't collide onto the same env var and cross-enable each other. There is deliberately no unscoped `SYNCPULSE_TELEMETRY=1`: a global "on" switch could silently enable telemetry for an unrelated product that happens to inherit the same environment.
+4. The persisted config's `enabled` value (set by `enableTelemetry(product)`/`disableTelemetry(product)`), defaulting to disabled if no config exists yet.
+
+`SYNCPULSE_TELEMETRY_ENDPOINT` — **required** for events to actually be sent anywhere; there is no default. This client intentionally does not ship a hardcoded receiver: the internal Queen `/api/v1/ingest/usage` endpoint requires a long-lived Bearer API key, and embedding that key in a publicly-published package would leak it to anyone who installs it. Set this to a receiver appropriate for anonymous public telemetry (unauthenticated or rate-limited, not the internal agent-fleet endpoint) once one exists. Until then, calling `recordEvent()` with telemetry enabled is a safe no-op.
+
 ## License
 
-Apache-2.0
+Fused Gaming Non-Commercial License with Opt-In Telemetry v1.0 — see
+[`LICENSE-NONCOMMERCIAL.md`](./LICENSE-NONCOMMERCIAL.md). Not Apache-2.0.
 
 ## Support
 
