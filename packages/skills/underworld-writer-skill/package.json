@@ -1,7 +1,7 @@
 {
   "name": "@h4shed/skill-underworld-writer",
-  "version": "1.0.24",
-  "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories",
+  "version": "1.0.25",
+  "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories with PACER API integration for fact-checking editorial phases",
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
@@ -26,7 +26,9 @@
     "underworld",
     "character",
     "narrative",
-    "creative-writing"
+    "creative-writing",
+    "pacer",
+    "fact-checking"
   ],
   "author": "Fused Gaming",
   "license": "Apache-2.0"

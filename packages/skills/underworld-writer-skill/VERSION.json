@@ -1,0 +1,122 @@
+{
+  "version": "1.0.25",
+  "releaseDate": "2026-09-13",
+  "status": "stable",
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 25,
+  "prerelease": null,
+  "metadata": {
+    "nodeMinimum": "20.0.0",
+    "npmMinimum": "8.0.0",
+    "typescriptVersion": "5.3.2",
+    "buildNumber": 1025
+  },
+  "packageInfo": {
+    "name": "@h4shed/skill-underworld-writer",
+    "scope": "h4shed",
+    "publishedScope": "h4shed",
+    "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories with PACER API integration for fact-checking editorial phases",
+    "repository": "https://github.com/fused-gaming/fused-gaming-skill-mcp",
+    "npmRegistry": "https://registry.npmjs.org"
+  },
+  "features": {
+    "characterCreation": {
+      "description": "Create detailed underworld character profiles with three-phase methodology",
+      "version": "1.0.25",
+      "status": "stable"
+    },
+    "narrativeArchitecture": {
+      "description": "Build complex mythologies and narrative worlds for fiction and true crime",
+      "version": "1.0.25",
+      "status": "stable"
+    },
+    "pacerIntegration": {
+      "description": "Integrate with PACER API for fact-checking real court cases and legal proceedings",
+      "version": "1.0.25",
+      "status": "stable"
+    },
+    "dualUseCases": {
+      "description": "Support both creative fiction and true crime narrative development",
+      "version": "1.0.25",
+      "status": "stable",
+      "scenarios": [
+        {
+          "name": "fiction",
+          "description": "Create fictional underworld narratives with rich character development"
+        },
+        {
+          "name": "true_crime",
+          "description": "Transform real PACER court cases into compelling true crime narratives"
+        }
+      ]
+    }
+  },
+  "improvementsFromPreviousVersion": [
+    "Added comprehensive dual-use case documentation in README",
+    "Integrated PACER API fact-checking for real stories",
+    "Enhanced character creation with three-phase methodology",
+    "Added benchmark utilities with Definition of Done framework",
+    "Established baseline performance metrics (97/100 combined score)",
+    "Created regression detection tools and report generation",
+    "Implemented plugin manifest for Claude plugin discovery"
+  ],
+  "benchmarkBaseline": {
+    "version": "v1.0.25",
+    "timestamp": "2026-09-13T18:30:00.000Z",
+    "behavioral": {
+      "core_pass_rate": 100,
+      "regression_pass_rate": 100,
+      "functionality_pass_rate": 100,
+      "error_pass_rate": 100,
+      "behavioral_score": 100
+    },
+    "performance": {
+      "latency_ms_mean": 2.5,
+      "throughput_ops_sec_mean": 9500,
+      "memory_mb_peak": 55,
+      "performance_score": 98
+    },
+    "code_quality": {
+      "complexity_mean": 2.2,
+      "duplication_percent": 1.8,
+      "coverage_percent": 88,
+      "maintainability_index": 82,
+      "quality_score": 92
+    },
+    "combined_score": 97,
+    "status": "pass"
+  },
+  "security": {
+    "vulnerabilitiesFixed": 0,
+    "currentVulnerabilities": 0,
+    "lastSecurityAudit": "2026-09-13",
+    "nextSecurityAudit": "2026-10-13"
+  },
+  "changelog": {
+    "1.0.25": {
+      "releaseDate": "2026-09-13",
+      "highlights": [
+        "Comprehensive dual-use case documentation",
+        "PACER API integration for fact-checking",
+        "Benchmark infrastructure with DoD framework",
+        "Plugin manifest for Claude ecosystem"
+      ],
+      "breaking_changes": [],
+      "deprecations": [],
+      "new_features": [
+        "Dual-use narrative support (fiction + true crime)",
+        "PACER API fact-checking integration",
+        "Benchmark utilities and baseline measurements",
+        "Plugin manifest for dynamic skill discovery"
+      ],
+      "bug_fixes": [],
+      "improvements": [
+        "Enhanced README with comprehensive workflow examples",
+        "Three-phase character development methodology",
+        "Performance benchmarking infrastructure",
+        "Regression detection tools"
+      ]
+    }
+  }
+}
