@@ -28,6 +28,7 @@ const DEFAULT_CONFIG: FusedGamingConfig = {
       "brand-guidelines",
       "doc-coauthoring",
       "internal-comms",
+      "underworld-writer",
     ],
     disabled: [],
     custom: [],
