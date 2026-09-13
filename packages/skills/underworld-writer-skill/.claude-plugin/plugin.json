@@ -1,0 +1,27 @@
+{
+  "name": "underworld-writer",
+  "version": "1.0.25",
+  "description": "Dual-purpose skill for creative fiction and true crime narratives with PACER API fact-checking integration",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/underworld-writer",
+  "keywords": ["underworld", "character", "narrative", "fiction", "true-crime", "pacer", "fact-checking"],
+  "bin": {
+    "underworld-writer": "./dist/cli.js"
+  },
+  "capabilities": {
+    "character-creation": true,
+    "narrative-development": true,
+    "fact-checking": true,
+    "pacer-integration": true,
+    "markdown-export": true
+  },
+  "tools": {
+    "underworld_create_character": "Create character profiles with three-phase methodology",
+    "underworld_validate_character": "Validate character completeness and consistency",
+    "underworld_export_character": "Export character as markdown documentation",
+    "underworld_validate_relationships": "Check relationship consistency between characters"
+  }
+}
