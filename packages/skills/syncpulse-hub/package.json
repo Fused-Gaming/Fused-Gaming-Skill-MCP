@@ -5,6 +5,10 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "syncpulse-hub": "./dist/index.js",
+    "syncpulse": "./dist/index.js"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./orchestration": "./dist/orchestration/OrchestrationEngine.js",

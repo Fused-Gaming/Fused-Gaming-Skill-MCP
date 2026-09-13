@@ -1,0 +1,20 @@
+{
+  "name": "mcp-cli",
+  "version": "1.0.24",
+  "description": "Command-line interface for managing MCP skills, tools, and server configuration",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": ["mcp", "cli", "command-line", "skills", "tools"],
+  "bin": {
+    "fused-gaming-mcp": "./dist/cli.js",
+    "mcp": "./dist/cli.js"
+  },
+  "capabilities": {
+    "skill-management": true,
+    "configuration": true,
+    "server-control": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "mcp-core",
+  "version": "1.0.24",
+  "description": "Core MCP server and skill registry for Fused Gaming with dynamic skill loading and registration",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": ["mcp", "core", "skill", "registry", "orchestration"],
+  "capabilities": {
+    "skills": "50+",
+    "tools": "dynamic",
+    "mcp-version": "1.29.0"
+  }
+}

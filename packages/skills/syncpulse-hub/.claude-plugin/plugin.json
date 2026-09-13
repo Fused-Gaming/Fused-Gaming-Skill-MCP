@@ -1,0 +1,19 @@
+{
+  "name": "syncpulse-hub",
+  "version": "1.0.25",
+  "description": "SyncPulse MCP skill hub with workflow orchestration, deployment validation, and monitoring integration",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": ["syncpulse", "hub", "mcp", "skill", "orchestration", "deployment"],
+  "bin": {
+    "syncpulse-hub": "./dist/cli.js"
+  },
+  "capabilities": {
+    "deployment-validation": true,
+    "workflow-orchestration": true,
+    "monitoring": true
+  }
+}
