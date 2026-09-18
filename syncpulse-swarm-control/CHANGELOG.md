@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Moved the plugin marketplace registration (`.claude-plugin/marketplace.json`) to `Fused-Gaming/syncpulse`. This plugin's source is now published from `plugins/syncpulse-swarm-control` in that repository; install via `claude plugin marketplace add Fused-Gaming/syncpulse`.
+
 ## 0.5.0
 
 - Added `references/hive-architecture-v2.md`: adopted a set of 20 architectural improvements from an internal review, marked per-item as **Implemented** (working code, tested) or **Specified** (documented, not yet running). Adopted thesis: make the coordination substrate more deterministic than the agents operating on it.
