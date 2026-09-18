@@ -1,0 +1,202 @@
+{
+  "name": "fused-gaming-skills-marketplace",
+  "owner": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "metadata": {
+    "description": "Umbrella marketplace for the Fused Gaming / SyncPulse skill ecosystem. Packages are being split out of Fused-Gaming-Skill-MCP into individual single-purpose repositories; each entry below tracks a package's current location and will be repointed to its own repo as extraction completes. Only entries with a real, non-scaffold implementation are listed.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "syncpulse-hub",
+      "description": "Centralized SyncPulse Hub - orchestration and installation of @h4shed skill packages",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/syncpulse-hub"
+      }
+    },
+    {
+      "name": "skill-syncpulse",
+      "description": "SyncPulse - intelligent project state caching, multi-agent coordination, and secure email automation",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/syncpulse"
+      }
+    },
+    {
+      "name": "skill-agentic-flow-devkit",
+      "description": "Design and visualize agentic orchestration flows with trailer A/B-roll planning support",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/agentic-flow-devkit"
+      }
+    },
+    {
+      "name": "skill-algorithmic-art",
+      "description": "Generative art using p5.js with seeded randomness, flow fields, and particle systems",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/algorithmic-art"
+      }
+    },
+    {
+      "name": "skill-ascii-mockup",
+      "description": "Mobile-first ASCII wireframe mockup generator for rapid UI prototyping",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/ascii-mockup"
+      }
+    },
+    {
+      "name": "skill-canvas-design",
+      "description": "Visual design generation for web with SVG and canvas rendering",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/canvas-design"
+      }
+    },
+    {
+      "name": "skill-daily-review",
+      "description": "Productivity tracking and daily review skill for session aggregation and metrics analysis",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/daily-review-skill"
+      }
+    },
+    {
+      "name": "skill-frontend-design",
+      "description": "Frontend component design and HTML/CSS generation for modern web applications",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/frontend-design"
+      }
+    },
+    {
+      "name": "skill-linkedin-master-journalist",
+      "description": "Draft polished LinkedIn release and thought-leadership posts",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/linkedin-master-journalist"
+      }
+    },
+    {
+      "name": "skill-mcp-builder",
+      "description": "Build and scaffold MCP servers and skills with best practices",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/mcp-builder"
+      }
+    },
+    {
+      "name": "skill-mermaid-terminal",
+      "description": "Generate terminal-friendly Mermaid diagrams and flowcharts",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/mermaid-terminal"
+      }
+    },
+    {
+      "name": "skill-multi-account-session-tracking",
+      "description": "Extended framework for tracking Claude sessions across multiple accounts with unified metrics",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/multi-account-session-tracking-skill"
+      }
+    },
+    {
+      "name": "skill-pre-deploy-validator",
+      "description": "Pre-deployment validation and quality checks for production readiness",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/pre-deploy-validator"
+      }
+    },
+    {
+      "name": "skill-project-manager",
+      "description": "Plan projects with milestones, dependencies, and delivery phases",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/project-manager"
+      }
+    },
+    {
+      "name": "skill-project-manager-skill",
+      "description": "Task and project management skill for tracking work items and team collaboration",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/project-manager-skill"
+      }
+    },
+    {
+      "name": "skill-project-status-tool",
+      "description": "Summarize current project status, risks, and next actions",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/project-status-tool"
+      }
+    },
+    {
+      "name": "skill-creator",
+      "description": "Create custom skills and tools for the Fused Gaming MCP ecosystem",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/skill-creator"
+      }
+    },
+    {
+      "name": "skill-svg-generator",
+      "description": "Generate SVG assets and icon concepts from structured prompts",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/svg-generator"
+      }
+    },
+    {
+      "name": "skill-theme-factory",
+      "description": "Design system and theme generation for consistent UI/UX across applications",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/theme-factory"
+      }
+    },
+    {
+      "name": "skill-underworld-writer",
+      "description": "Create detailed character profiles, mythologies, and narrative worlds for underworld-themed stories",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/underworld-writer-skill"
+      }
+    },
+    {
+      "name": "skill-ux-journeymapper",
+      "description": "Create UX journey maps with pain points, touchpoints, and opportunities",
+      "source": {
+        "source": "github",
+        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
+        "path": "packages/skills/ux-journeymapper"
+      }
+    }
+  ]
+}

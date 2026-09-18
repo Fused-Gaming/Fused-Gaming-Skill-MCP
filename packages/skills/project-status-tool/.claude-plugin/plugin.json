@@ -1,0 +1,15 @@
+{
+  "name": "skill-project-status-tool",
+  "version": "1.0.23",
+  "description": "Summarize current project status, risks, and next actions.",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}

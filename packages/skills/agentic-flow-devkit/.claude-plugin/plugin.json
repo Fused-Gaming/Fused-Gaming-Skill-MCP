@@ -1,0 +1,15 @@
+{
+  "name": "skill-agentic-flow-devkit",
+  "version": "1.0.21",
+  "description": "Design and visualize agentic orchestration flows with trailer A/B-roll planning support.",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}

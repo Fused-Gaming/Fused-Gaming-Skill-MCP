@@ -1,0 +1,15 @@
+{
+  "name": "skill-multi-account-session-tracking",
+  "version": "1.0.23",
+  "description": "Extended framework for tracking Claude sessions across multiple accounts with unified metrics",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}

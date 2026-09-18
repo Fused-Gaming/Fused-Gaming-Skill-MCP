@@ -1,0 +1,15 @@
+{
+  "name": "skill-frontend-design",
+  "version": "1.0.24",
+  "description": "Frontend component design and HTML/CSS generation for modern web applications",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}
