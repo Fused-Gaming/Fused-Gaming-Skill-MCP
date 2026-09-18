@@ -97,10 +97,10 @@ claude plugin validate ./syncpulse-swarm-control
 
 ## One-command install (self-hosted marketplace)
 
-This repo is its own marketplace via `.claude-plugin/marketplace.json`, so once it's pushed to a Git host:
+> **Moved:** the SyncPulse plugin marketplace now lives in [`Fused-Gaming/syncpulse`](https://github.com/Fused-Gaming/syncpulse). This plugin's source has been copied to `plugins/syncpulse-swarm-control` there and is installed from that marketplace going forward.
 
 ```bash
-claude plugin marketplace add Fused-Gaming/syncpulse-swarm-control
+claude plugin marketplace add Fused-Gaming/syncpulse
 claude plugin install syncpulse-swarm-control@syncpulse-marketplace
 ```
 
