@@ -1,17 +1,17 @@
 {
-  "name": "syncpulse-marketplace",
+  "name": "fused-gaming-skills-marketplace",
   "owner": {
     "name": "Fused Gaming",
     "url": "https://github.com/Fused-Gaming"
   },
   "metadata": {
-    "description": "Umbrella marketplace for the Fused Gaming / SyncPulse skill ecosystem. Packages are being split out of Fused-Gaming-Skill-MCP into individual single-purpose repositories; each entry below tracks a package's current location and will be repointed to its own repo as extraction completes.",
+    "description": "Umbrella marketplace for the Fused Gaming / SyncPulse skill ecosystem. Packages are being split out of Fused-Gaming-Skill-MCP into individual single-purpose repositories; each entry below tracks a package's current location and will be repointed to its own repo as extraction completes. Only entries with a real, non-scaffold implementation are listed.",
     "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "syncpulse-hub",
-      "description": "Centralized SyncPulse Hub - unified orchestration and installation of all @h4shed packages",
+      "description": "Centralized SyncPulse Hub - orchestration and installation of @h4shed skill packages",
       "source": {
         "source": "github",
         "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
@@ -118,24 +118,6 @@
       }
     },
     {
-      "name": "skill-nft-generative-art",
-      "description": "NFT artwork generation, metadata creation, and blockchain-ready asset creation",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/nft-generative-art"
-      }
-    },
-    {
-      "name": "skill-playwright-test-automation",
-      "description": "End-to-end testing automation framework for web applications with cross-browser support",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/playwright-test-automation"
-      }
-    },
-    {
       "name": "skill-pre-deploy-validator",
       "description": "Pre-deployment validation and quality checks for production readiness",
       "source": {
@@ -181,33 +163,6 @@
       }
     },
     {
-      "name": "skill-smart-contract-tools",
-      "description": "Smart contract development tools for Hardhat, Truffle, and Foundry ecosystems",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/smart-contract-tools"
-      }
-    },
-    {
-      "name": "skill-storybook-component-library",
-      "description": "Component library documentation and visual testing with Storybook integration",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/storybook-component-library"
-      }
-    },
-    {
-      "name": "skill-style-dictionary-system",
-      "description": "Design tokens and style dictionary generation for cross-platform design system management",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/style-dictionary-system"
-      }
-    },
-    {
       "name": "skill-svg-generator",
       "description": "Generate SVG assets and icon concepts from structured prompts",
       "source": {
@@ -217,30 +172,12 @@
       }
     },
     {
-      "name": "skill-tailwindcss-style-builder",
-      "description": "Tailwind CSS utility-first styling and design system builder for rapid UI development",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/tailwindcss-style-builder"
-      }
-    },
-    {
       "name": "skill-theme-factory",
       "description": "Design system and theme generation for consistent UI/UX across applications",
       "source": {
         "source": "github",
         "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
         "path": "packages/skills/theme-factory"
-      }
-    },
-    {
-      "name": "skill-typescript-toolchain",
-      "description": "Advanced TypeScript configuration, type generation, and static analysis tooling",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/typescript-toolchain"
       }
     },
     {
@@ -259,24 +196,6 @@
         "source": "github",
         "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
         "path": "packages/skills/ux-journeymapper"
-      }
-    },
-    {
-      "name": "skill-vercel-nextjs-deployment",
-      "description": "Vercel deployment optimization and Next.js framework integration for serverless applications",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/vercel-nextjs-deployment"
-      }
-    },
-    {
-      "name": "skill-vite-module-bundler",
-      "description": "Next-generation JavaScript module bundler for lightning-fast development and optimized production builds",
-      "source": {
-        "source": "github",
-        "repo": "Fused-Gaming/Fused-Gaming-Skill-MCP",
-        "path": "packages/skills/vite-module-bundler"
       }
     }
   ]

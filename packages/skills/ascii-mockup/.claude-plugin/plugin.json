@@ -1,0 +1,15 @@
+{
+  "name": "skill-ascii-mockup",
+  "version": "1.0.24",
+  "description": "Mobile-first ASCII wireframe mockup generator for rapid UI prototyping",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}

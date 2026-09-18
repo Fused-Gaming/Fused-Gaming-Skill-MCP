@@ -1,0 +1,15 @@
+{
+  "name": "skill-algorithmic-art",
+  "version": "1.0.24",
+  "description": "Generative art using p5.js with seeded randomness, flow fields, and particle systems",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}

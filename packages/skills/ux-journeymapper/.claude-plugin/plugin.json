@@ -1,0 +1,15 @@
+{
+  "name": "skill-ux-journeymapper",
+  "version": "1.0.23",
+  "description": "Create UX journey maps with pain points, touchpoints, and opportunities.",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}

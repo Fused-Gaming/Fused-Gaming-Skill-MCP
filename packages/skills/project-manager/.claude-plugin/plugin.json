@@ -1,0 +1,15 @@
+{
+  "name": "skill-project-manager",
+  "version": "1.0.23",
+  "description": "Plan projects with milestones, dependencies, and delivery phases.",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}

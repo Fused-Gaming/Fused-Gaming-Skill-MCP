@@ -1,0 +1,15 @@
+{
+  "name": "skill-pre-deploy-validator",
+  "version": "1.0.24",
+  "description": "Pre-deployment validation and quality checks for production readiness",
+  "author": {
+    "name": "Fused Gaming",
+    "url": "https://github.com/Fused-Gaming"
+  },
+  "homepage": "https://github.com/Fused-Gaming/Fused-Gaming-Skill-MCP",
+  "keywords": [
+    "fused-gaming",
+    "h4shed",
+    "skill"
+  ]
+}
