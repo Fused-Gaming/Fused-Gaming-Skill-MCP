@@ -4,7 +4,13 @@
     "types": [
       "node"
     ],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@h4shed/mcp-core": [
+        "../core/dist/index.d.ts"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts"

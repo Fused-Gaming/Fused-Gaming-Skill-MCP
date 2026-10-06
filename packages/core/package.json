@@ -14,7 +14,8 @@
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
     "test": "echo \"No tests yet\"",
-    "benchmark": "echo 'Benchmarks: OK'"
+    "benchmark": "echo 'Benchmarks: OK'",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
@@ -28,5 +29,9 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }

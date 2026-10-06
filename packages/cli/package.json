@@ -11,7 +11,8 @@
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
     "test": "echo \"No tests yet\"",
-    "benchmark": "echo 'Benchmarks: OK'"
+    "benchmark": "echo 'Benchmarks: OK'",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@h4shed/mcp-core": "^1.0.24",
@@ -34,5 +35,9 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }
