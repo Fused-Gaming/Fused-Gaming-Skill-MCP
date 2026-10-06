@@ -43,10 +43,22 @@ const sha = sh("git rev-parse HEAD");
 const nodeMajor = parseInt(process.versions.node.split(".")[0], 10);
 const evidenceFile = (major) => path.join(".local-verification", `${sha}-node${major}.json`);
 
+// Applies to EVERY mode, including --check-matrix: this script itself is contributor-controlled for a PR under review.
+// The checked-out head controls every command below (npm lifecycle hooks, build/lint/test scripts),
+// so for untrusted PRs this must run in a disposable container/VM without host credentials.
+const sensitive = Object.keys(process.env).filter((k) => /(^|_)(TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|PRIVATE_?KEY|CREDENTIALS?)($|_)/i.test(k) || k === "SSH_AUTH_SOCK");
+if (process.env.LOCAL_VERIFY_SANDBOX !== "1") {
+  console.error("Refusing to run: set LOCAL_VERIFY_SANDBOX=1 to confirm this is a disposable container/VM with no host credentials (see docs/LOCAL_VERIFICATION_POLICY.md).");
+  process.exit(1);
+}
+if (sensitive.length) {
+  console.error(`Refusing to run: credential-looking environment variables are set (${sensitive.join(", ")}). Unset them (env -u NAME ...) or use a clean sandbox.`);
+  process.exit(1);
+}
 // Refresh origin/main (a failed refresh is fatal: never validate against a stale base) and return its SHA.
 function refreshBase() {
   try {
-    sh("git fetch origin main --quiet");
+    sh("git fetch --quiet origin +refs/heads/main:refs/remotes/origin/main"); // explicit destination: a bare `fetch origin main` may only update FETCH_HEAD
     const base = sh("git rev-parse --verify --quiet origin/main");
     sh("git merge-base origin/main HEAD");
     return base;
@@ -79,17 +91,6 @@ if (!SUPPORTED_NODE.includes(nodeMajor)) {
 // Precondition: the branch validator diffs against origin/main and silently
 // reports success when that ref is missing or stale, so make that fatal here.
 const base = refreshBase();
-// The checked-out head controls every command below (npm lifecycle hooks, build/lint/test scripts),
-// so for untrusted PRs this must run in a disposable container/VM without host credentials.
-const sensitive = Object.keys(process.env).filter((k) => /(^|_)(TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|PRIVATE_?KEY|CREDENTIALS?)($|_)/i.test(k) || k === "SSH_AUTH_SOCK");
-if (process.env.LOCAL_VERIFY_SANDBOX !== "1") {
-  console.error("Refusing to run: set LOCAL_VERIFY_SANDBOX=1 to confirm this is a disposable container/VM with no host credentials (see docs/LOCAL_VERIFICATION_POLICY.md).");
-  process.exit(1);
-}
-if (sensitive.length) {
-  console.error(`Refusing to run: credential-looking environment variables are set (${sensitive.join(", ")}). Unset them (env -u NAME ...) or use a clean sandbox.`);
-  process.exit(1);
-}
 const dirtyBefore = sh("git status --porcelain").length > 0;
 if (dirtyBefore) {
   // Steps regenerate files (e.g. registry/) and reset them, so never start on a dirty tree.

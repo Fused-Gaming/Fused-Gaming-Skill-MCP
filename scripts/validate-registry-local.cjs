@@ -46,7 +46,10 @@ registry.skills.forEach((s, i) => {
 let errors = 0;
 for (const s of registry.skills) {
   const dirs = [s.name, "skill-" + s.name, s.name + "-skill"].map((d) => path.join("packages/skills", d, "package.json"));
-  if (!dirs.some((p) => fs.existsSync(p))) { console.error(`❌ Skill not found on disk: ${s.name}`); errors++; }
+  const manifest = dirs.find((p) => fs.existsSync(p));
+  if (!manifest) { console.error(`❌ Skill not found on disk: ${s.name}`); errors++; continue; }
+  const actual = JSON.parse(fs.readFileSync(manifest, "utf8")).name;
+  if (actual !== s.package) { console.error(`❌ Registry entry "${s.name}" lists package ${s.package} but ${manifest} is ${actual}`); errors++; }
 }
 const registered = new Set(registry.skills.map((s) => s.package));
 for (const d of fs.readdirSync("packages/skills")) {
