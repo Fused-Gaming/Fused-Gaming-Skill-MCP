@@ -8,6 +8,8 @@ Skills, agents and tools live in separate repositories with independent versioni
 
 ## 2. Measured baseline (published 1.0.41 tarballs, clean install)
 
+Reproduce with pinned versions, never `latest`: `npm i @h4shed/mcp-core@1.0.41 @h4shed/mcp-cli@1.0.41 --ignore-scripts --no-audit --no-fund` in an empty directory (Node v22.22.0, npm as bundled, no lockfile; transitive ranges float, so commit the generated `package-lock.json` and re-measure from it for any later comparison). The benchmark script (test plan item 1) must record Node/npm versions and the lockfile hash with each result.
+
 | Metric | Value |
 | --- | --- |
 | `npm i @h4shed/mcp-core @h4shed/mcp-cli` | 149 packages, ~71 MB `node_modules`, ~5.5 s |
@@ -44,7 +46,7 @@ Consequences for the design:
 4. **Agents need a decision**: ship as `@h4shed/agent-*` npm packages with the same module manifest, or keep as prompt files referenced by a manifest entry (`kind: agent`, `entry: <path or package>`). Either way they get the same lazy-loading contract.
 5. **Independent npm repos** should adopt the module manifest (`package.json#h4shed`) so they register into MCP and into the skills/tools/agents catalogs without bespoke wiring.
 
-Revised recommendation: keep core/cli/syncpulse in `Fused-Gaming-Skill-MCP`; make `skills`, `tools`, `agents` pure generated catalogs fed by manifests; have every independent package publish a manifest and pass the shared contract tests; one script (`registry:build`) produces the canonical index from npm (`maintainer:h4shed`) plus manifests and CI-fails on count/scope/version drift.
+Revised recommendation: keep core/cli/syncpulse in `Fused-Gaming-Skill-MCP`; make `skills`, `tools`, `agents` pure generated catalogs fed by manifests; have every independent package publish a manifest and pass the shared contract tests; one script (`registry:build`) produces the canonical index from npm plus manifests (discovery: `GET /-/v1/search?text=@h4shed&size=250` paginated with `from=`, then confirm each package's `maintainers` field via its packument; note that `text=maintainer:h4shed` currently returns 0 results, whereas `author:h4shed` and the `@h4shed` scope query return 64 and 68, so the maintainer qualifier must not be relied on) and CI-fails on count/scope/version drift.
 
 ## 3. Target architecture
 
@@ -63,14 +65,14 @@ npx @h4shed/mcp-cli  ──►  thin launcher (no UI deps, <1 MB)
 
 ### 3.1 Kernel (mcp-core)
 - Only: transport, `ModuleRegistry` (generalised from `SkillRegistry`), capability manifest schema, lifecycle hooks.
-- Move `skill-repository-server` / `sync-coordinator-server` (and `express`) to optional packages: `@h4shed/mcp-server-repository`, `@h4shed/mcp-server-sync`.
+- Move `skill-repository-server` / `sync-coordinator-server` (and `express`) to optional packages: `@h4shed/mcp-server-repository`, `@h4shed/mcp-server-sync`. The extraction must also migrate every consumer of the old paths: root scripts `server:sync` / `server:skills` / `server:both`, and `Dockerfile.sync` / `Dockerfile.skills`, which import `packages/core/dist/servers/*.js` and build only the core workspace. Keep deprecation re-exports at the old paths for one minor and add a container-startup smoke test (build each image, start it, hit its health endpoint) to the phase exit criteria.
 - Target: install < 15 MB and < 40 packages for `npx @h4shed/mcp-cli init`.
 
 ### 3.2 Module contract (new, one for all kinds)
 `kind: skill | agent | tool`, `name`, `version`, `engines.mcp-core`, `capabilities[]`, `cost` (cold-start ms, size), `permissions[]` (network/fs/exec), `entry`. Declared in `package.json#h4shed` so the brain can plan **without importing** the module. Resolution order: workspace → local cache → npm (integrity-checked) → refuse.
 
 ### 3.3 CLI as launcher
-- Split `@h4shed/mcp-cli` into a tiny launcher and an optional `@h4shed/mcp-cli-ui` (figlet/inquirer/gradient). `--help`, `add`, `list`, `remove` stay dependency-light; the panel is loaded on first use.
+- Split `@h4shed/mcp-cli` into a tiny launcher and an optional `@h4shed/mcp-cli-ui` (figlet/inquirer/gradient). `--help`, `add`, `list`, `remove` stay dependency-light. `@h4shed/mcp-cli-ui` must NOT be a `dependency` or `optionalDependency` (npm installs both by default), and an undeclared package cannot be dynamically imported. Define one explicit path: on first `panel` use the launcher prints the install command and, with consent, runs a project-local `npm i @h4shed/mcp-cli-ui@<pinned>` into the module cache, then imports it from there; otherwise it exits with the command to run. Spike B must measure the clean-install footprint (launcher only) and a first panel launch through this path.
 
 ### 3.4 Brain (management)
 - Stage 1 (deterministic): capability-match router over module manifests; chooses minimal module set per task, emits an install/load plan, enforces budgets and permission gates. This extends the existing router/`syncpulse-swarm-control` coordinator rather than replacing it.
@@ -92,7 +94,7 @@ npx @h4shed/mcp-cli  ──►  thin launcher (no UI deps, <1 MB)
 | Independent versioning | `publish:prepare` auto-bump script, collisions/merge-order bugs (see CLAUDE.md notes) | Native per repo | Split **skills/tools/agents**; keep core+cli+syncpulse together |
 | Cross-cutting change | One PR | N coordinated PRs, version skew | Keep kernel in one repo with a contract-test suite published as `@h4shed/module-contract-tests` |
 | CI cost / blast radius | One slow matrix | Small, fast | Win for split |
-| Discoverability | Single tree | Needs registry | Generate `registry/index.json` from npm search (`maintainer:h4shed`) + manifest |
+| Discoverability | Single tree | Needs registry | Generate `registry/index.json` from paginated registry search (scope query) verified against each package's `maintainers`, plus manifest |
 | Release hotfix risk | Layout leak (#332) | Same risk ×N | Enforce a shared `prepublishOnly` + `npm pack --dry-run` tarball check in a reusable workflow |
 
 Decision: **hybrid** — kernel trio (core, cli, syncpulse) stays in this repo; skills, agents, tools are independent repos publishing against the module contract.
@@ -101,11 +103,11 @@ Decision: **hybrid** — kernel trio (core, cli, syncpulse) stays in this repo; 
 
 | Risk | Mitigation |
 | --- | --- |
-| Supply chain: on-demand install of code at runtime | Allowlist `@h4shed/*`, verify maintainer + npm integrity, lockfile for module cache, no lifecycle scripts, permission manifest, explicit consent for network/exec |
+| Supply chain: on-demand install of code at runtime | Allowlist `@h4shed/*`, verify maintainer + npm integrity, lockfile for module cache, no lifecycle scripts, explicit consent for network/exec. **Manifest permissions are declarations, not enforcement:** today `SkillRegistry.loadSkill` does an in-process `import()` (`packages/core/src/skill-registry.ts`), so a compromised module can use `fs`, `child_process` or the network on import regardless of its manifest. Enforcement requires isolation: run non-builtin modules in a separate process (Node `--permission` flags on a worker/child process, or a container) with the granted permissions as its policy, communicating over MCP/stdio. Until that exists, the architecture must not claim that permissions are gated; only first-party, reviewed modules may load in-process |
 | Cold-start latency from lazy loading | Prefetch from learning engine; cache; measure p95 |
 | Learning drift / feedback loops | Advisory-only, bounded, resettable, human-override logged and weighted highest |
 | Swarm overhead on trivial tasks | Single-step inline bypass; budget caps |
-| Version skew across repos | `engines.mcp-core` range + contract tests in CI of every module repo |
+| Version skew across repos | `ModuleRegistry` must itself check the module's declared `mcp-core` range against the running core version with semver and refuse to import on mismatch (npm's `engines` check only evaluates `node`/`npm`, so it does not do this); a negative contract test (module requiring an excluded core range is rejected, cached or fresh) is mandatory, plus contract tests in CI of every module repo |
 | Existing consumers of `@h4shed/mcp` entry points | Keep deprecation shims for one minor |
 
 ## 6. Test plan for this branch (gates before any split)
@@ -116,7 +118,10 @@ Decision: **hybrid** — kernel trio (core, cli, syncpulse) stays in this repo; 
 4. **Spike B — CLI split**: launcher without UI deps; `--help` must not import `figlet`/`inquirer`.
 5. **Spike C — brain stage 1**: manifest-based router selecting modules for 5 canned tasks; compare to the existing routing matrix.
 6. **Spike D — outcome log**: record outcomes; replay to show ranking changes without altering permissions.
-7. **Tarball gate**: `npm pack --dry-run` assertion that every published package exposes `dist/index.js` and no `packages/*/src` path (prevents a repeat of #332).
+7. **Isolation spike**: load one untrusted-style module in a permission-restricted child process and prove that `fs`/network/exec calls outside its grant fail; load the same module in-process to document the difference.
+8. **Compatibility spike**: negative test that `ModuleRegistry` rejects a module whose `mcp-core` range excludes the running version.
+9. **Container gate**: build and start both server images after extraction.
+10. **Tarball gate**: `npm pack --dry-run` assertion that every published package exposes `dist/index.js` and no `packages/*/src` path (prevents a repeat of #332).
 
 ## 7. Suggested phasing
 
