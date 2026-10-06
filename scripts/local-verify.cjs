@@ -18,6 +18,7 @@
 const { spawnSync, execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
 const args = process.argv.slice(2);
 const skipInstall = args.includes("--skip-install");
@@ -103,6 +104,32 @@ if (dirtyBefore) {
   process.exit(1);
 }
 
+// Remove ignored build outputs: `git status` ignores dist/build/etc., and tsc never deletes outputs of removed
+// sources, so stale compiled files could make tests pass that a fresh Actions checkout would fail.
+// Only known generated-output locations are removed (never .env files or other ignored local config);
+// node_modules is recreated by `npm ci`.
+const GENERATED = /(^|\/)(dist|build|out|coverage|\.next|\.benchmark)\/?$|\.tsbuildinfo$/;
+for (const line of sh("git clean -ndX").split("\n")) {
+  const rel = (line.match(/^Would remove (.+)$/) || [])[1];
+  if (rel && !rel.startsWith("node_modules") && !rel.includes("/node_modules/") && GENERATED.test(rel)) {
+    fs.rmSync(rel, { recursive: true, force: true });
+  }
+}
+
+// Children run with an explicit allowlisted environment and a throwaway HOME, never the inherited environment,
+// so contributor-controlled lifecycle/build/test scripts cannot read credentials from env vars or ~/.npmrc, ~/.ssh, etc.
+// Proxy settings are passed only when they carry no embedded credentials.
+const safeHome = fs.mkdtempSync(path.join(os.tmpdir(), "verify-home-"));
+const childEnv = { HOME: safeHome, CI: "true" };
+for (const k of ["PATH", "LANG", "LC_ALL", "TERM", "TMPDIR", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "CURL_CA_BUNDLE", "NO_PROXY", "no_proxy"]) {
+  if (process.env[k]) childEnv[k] = process.env[k];
+}
+for (const k of ["HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"]) {
+  const v = process.env[k];
+  if (v && !/^[a-z]+:\/\/[^/]*@/i.test(v)) childEnv[k] = v;
+  else if (v) console.warn(`Not passing ${k}: it embeds credentials.`);
+}
+
 const results = [];
 for (const step of steps) {
   if (step.skip || (only && !only.includes(step.id))) {
@@ -111,7 +138,7 @@ for (const step of steps) {
   }
   console.log(`\n▶ ${step.id}: ${step.cmd}`);
   const t0 = Date.now();
-  const r = spawnSync(step.cmd, { shell: true, stdio: "inherit" });
+  const r = spawnSync(step.cmd, { shell: true, stdio: "inherit", env: childEnv });
   results.push({
     id: step.id,
     status: r.status === 0 ? "passed" : "failed",
@@ -119,6 +146,7 @@ for (const step of steps) {
   });
 }
 
+fs.rmSync(safeHome, { recursive: true, force: true });
 const dirtyAfter = sh("git status --porcelain").length > 0; // steps may rewrite tracked files
 const ran = results.filter((r) => r.status !== "skipped");
 const complete = results.every((r) => r.status !== "skipped");

@@ -44,6 +44,13 @@ registry.skills.forEach((s, i) => {
 });
 
 let errors = 0;
+for (const key of ["name", "id", "package"]) {
+  const seen = new Set();
+  for (const s of registry.skills) {
+    if (seen.has(s[key])) { console.error(`❌ Duplicate registry ${key}: ${s[key]}`); errors++; }
+    seen.add(s[key]);
+  }
+}
 for (const s of registry.skills) {
   const dirs = [s.name, "skill-" + s.name, s.name + "-skill"].map((d) => path.join("packages/skills", d, "package.json"));
   const manifest = dirs.find((p) => fs.existsSync(p));
