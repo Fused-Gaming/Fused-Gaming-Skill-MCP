@@ -43,13 +43,27 @@ const sha = sh("git rev-parse HEAD");
 const nodeMajor = parseInt(process.versions.node.split(".")[0], 10);
 const evidenceFile = (major) => path.join(".local-verification", `${sha}-node${major}.json`);
 
+// Refresh origin/main (a failed refresh is fatal: never validate against a stale base) and return its SHA.
+function refreshBase() {
+  try {
+    sh("git fetch origin main --quiet");
+    const base = sh("git rev-parse --verify --quiet origin/main");
+    sh("git merge-base origin/main HEAD");
+    return base;
+  } catch (e) {
+    console.error("Could not refresh origin/main, or it shares no history with HEAD (needs a merge-base). Check network/auth, then `git fetch --unshallow origin main` or `git fetch --depth=1000 origin main`.");
+    process.exit(1);
+  }
+}
+
 if (args.includes("--check-matrix")) {
+  const currentBase = refreshBase();
   let allOk = true;
   for (const major of SUPPORTED_NODE) {
     let status = "missing";
     try {
       const r = JSON.parse(fs.readFileSync(evidenceFile(major), "utf8"));
-      status = r.passed && r.complete && !r.dirtyBefore && !r.dirtyAfter ? "passed" : "failed";
+      status = r.passed && r.complete && !r.dirtyBefore && !r.dirtyAfter ? (r.base === currentBase ? "passed" : "stale-base") : "failed";
     } catch {}
     console.log(`Node ${major} @ ${sha.slice(0, 7)}: ${status}`);
     if (status !== "passed") allOk = false;
@@ -62,16 +76,9 @@ if (!SUPPORTED_NODE.includes(nodeMajor)) {
   process.exit(1);
 }
 
-// Preconditions: the branch validator diffs against origin/main and silently
-// reports success when that ref is missing, so make that fatal here.
-try {
-  sh("git fetch origin main --quiet"); // a failed refresh is fatal: never validate against a stale origin/main
-  sh("git rev-parse --verify --quiet origin/main");
-  sh("git merge-base origin/main HEAD");
-} catch (e) {
-  console.error("Could not refresh origin/main, or it shares no history with HEAD (needs a merge-base). Check network/auth, then `git fetch --unshallow origin main` or `git fetch --depth=1000 origin main`.");
-  process.exit(1);
-}
+// Precondition: the branch validator diffs against origin/main and silently
+// reports success when that ref is missing or stale, so make that fatal here.
+const base = refreshBase();
 // The checked-out head controls every command below (npm lifecycle hooks, build/lint/test scripts),
 // so for untrusted PRs this must run in a disposable container/VM without host credentials.
 const sensitive = Object.keys(process.env).filter((k) => /(^|_)(TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|PRIVATE_?KEY|CREDENTIALS?)($|_)/i.test(k) || k === "SSH_AUTH_SOCK");
@@ -108,6 +115,7 @@ const ok = complete && ran.every((r) => r.status === "passed");
 const dirty = dirtyBefore || dirtyAfter;
 const report = {
   commit: sha,
+  base, // origin/main SHA the branch validator compared against
   branch: sh("git rev-parse --abbrev-ref HEAD"),
   dirtyBefore,
   dirtyAfter,

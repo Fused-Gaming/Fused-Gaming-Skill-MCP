@@ -9,6 +9,13 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
+// The only lines that legitimately change on every generation (all other diffs mean a stale registry).
+const GENERATION_TIME_LINES = [
+  /^[+-]\s*"timestamp": "\d{4}-\d{2}-\d{2}T[\d:.]+Z",?$/,                   // skills.json / .ts / .cjs
+  /^[+-]\*\*Generated:\*\* \d+\/\d+\/\d{4}, [\d:]+ [AP]M$/,                   // REGISTRY.md
+  /^[+-]\s*<p>Generated on \d+\/\d+\/\d{4}, [\d:]+ [AP]M \| Fused Gaming MCP v[\d.]+<\/p>$/, // registry.html
+];
+
 const sh = (c) => execSync(c, { encoding: "utf8" });
 const fail = (m) => { console.error(`❌ ${m}`); process.exit(1); };
 
@@ -44,7 +51,7 @@ if (errors) fail(`${errors} registry inconsistencies. Run: npm run registry:gene
 
 // Staleness: any registry diff other than timestamp lines means the committed files are out of date.
 const changed = sh("git diff -U0 -- registry").split("\n")
-  .filter((l) => /^[+-][^+-]/.test(l) && !/timestamp|generated/i.test(l)); // generation-time lines only
+  .filter((l) => /^[+-][^+-]/.test(l) && !GENERATION_TIME_LINES.some((re) => re.test(l)));
 if (changed.length) {
   console.error(changed.slice(0, 10).join("\n"));
   fail("Committed registry/ is stale vs. generator output: commit the regenerated files.");
