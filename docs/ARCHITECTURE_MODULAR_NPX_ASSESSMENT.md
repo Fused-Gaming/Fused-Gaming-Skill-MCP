@@ -24,6 +24,28 @@ Observations that shape the design:
 3. **Single naming convention.** Registry only resolves `@h4shed/skill-*`; agents and tools have no equivalent loader contract.
 4. **Hygiene debt that blocks modularity.** 52 compiled artifacts (`.js`, `.d.ts`, `.map`) are tracked under `packages/{core,cli}/src`, and the hotfix (#332) existed because tarball layout (`dist/packages/core/src/...`) leaked the monorepo structure. A split-repo model multiplies this class of bug.
 
+## 2a. Current multi-repo state (inspected, read-only)
+
+The split has already started, but the new repos are **catalogs**, not independent packages:
+
+| Repo | What it actually contains | Observations |
+| --- | --- | --- |
+| `Fused-Gaming/skills` | `marketplace-registry.json`, docs, and a **copy of `mcp-core`** (`@h4shed/mcp-core` 1.0.40) | Core `src/*.ts` is byte-identical to `packages/core` here, but one patch behind (1.0.40 vs published 1.0.41). Registry declares `totalSkills: 30` but lists 53 entries; `VERSION.json` says 53 skills / 60 tools. Entries point at four different source repos (`Fused-Gaming-Skill-MCP`, `case-canon`, `syncpulse`, `underworld-writer`). |
+| `Fused-Gaming/tools` | `marketplace-registry.json`, docs, `validate-tools.sh` | 36 registry entries vs "28 tools" in README vs 38 in `VERSION.json`. Entries point back at `Fused-Gaming-Skill-MCP` or `skills` as their source; the tool code does not live here. |
+| `Fused-Gaming/agents` | ~100 agent prompt markdown files under `agent-prompts/` plus marketplace generator scripts | Agents are **prompt files, not npm packages**. Package name is `@fused-gaming/agents`, a different scope from `@h4shed/*` (see the scope warning in CLAUDE.md). |
+| `Fused-Gaming/Fused-Gaming-Skill-MCP` | Core, CLI, SyncPulse, 30 skills, 29 tools (source of truth for code) | `registry/` here is a fourth, separate registry. |
+| Independent npm repos | Not inventoried | Need wiring to both MCP and their skill/agent/tool counterparts. |
+
+Consequences for the design:
+
+1. **There are at least four registries** (`registry/` here, `skills`, `tools`, `agents/docs/reference`) with drifting counts. The brain cannot route reliably until there is one canonical, generated index.
+2. **Core is duplicated.** Two copies of `mcp-core` will diverge (already one patch apart). The kernel must have exactly one home and be consumed from npm everywhere else.
+3. **Catalog repos should be thin and generated.** They should hold manifests and docs only; each registry entry should resolve to a real package or file with a pinned version and integrity hash.
+4. **Agents need a decision**: ship as `@h4shed/agent-*` npm packages with the same module manifest, or keep as prompt files referenced by a manifest entry (`kind: agent`, `entry: <path or package>`). Either way they get the same lazy-loading contract.
+5. **Independent npm repos** should adopt the module manifest (`package.json#h4shed`) so they register into MCP and into the skills/tools/agents catalogs without bespoke wiring.
+
+Revised recommendation: keep core/cli/syncpulse in `Fused-Gaming-Skill-MCP`; make `skills`, `tools`, `agents` pure generated catalogs fed by manifests; have every independent package publish a manifest and pass the shared contract tests; one script (`registry:build`) produces the canonical index from npm (`maintainer:h4shed`) plus manifests and CI-fails on count/scope/version drift.
+
 ## 3. Target architecture
 
 ```
@@ -100,12 +122,12 @@ Decision: **hybrid** — kernel trio (core, cli, syncpulse) stays in this repo; 
 
 | Phase | Deliverable | Exit criterion |
 | --- | --- | --- |
-| 0 | Remove tracked build artifacts from `src/`; tarball gate in CI | CI green, 0 tracked `.d.ts/.js` in `src` |
+| 0 | Remove tracked build artifacts from `src/`; tarball gate in CI; delete the duplicate `mcp-core` in `skills`; registry drift check | CI green, 0 tracked `.d.ts/.js` in `src`, one core, counts consistent |
 | 1 | Kernel slimming + CLI launcher split | Footprint targets met |
 | 2 | Module contract + `ModuleRegistry` | Skill and tool load via manifest |
 | 3 | Brain stage 1 + swarm planner with inline bypass | Beats current routing on canned tasks |
 | 4 | Outcome log + learning (advisory) | Measurable cold-start/selection gain, reset works |
-| 5 | Repo split for skills/tools/agents | Contract tests pass in each repo |
+| 5 | Convert `skills`/`tools`/`agents` to generated catalogs; onboard independent npm repos via manifest | Contract tests pass in each repo; one canonical index |
 
 ## 8. Open decisions
 
