@@ -8,4 +8,4 @@ export {
   loadConfig,
   saveConfig,
   getDefaultConfig,
-} from "./packages/core/dist/packages/core/src/index.js";
+} from "./packages/core/dist/index.js";
