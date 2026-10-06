@@ -11,14 +11,19 @@ const path = require("path");
 
 // The only lines that legitimately change on every generation (all other diffs mean a stale registry).
 const GENERATION_TIME_LINES = [
-  /^[+-]\s*"timestamp": "\d{4}-\d{2}-\d{2}T[\d:.]+Z",?$/,                   // skills.json / .ts / .cjs
-  /^[+-]\*\*Generated:\*\* \d+\/\d+\/\d{4}, [\d:]+ [AP]M$/,                   // REGISTRY.md
-  /^[+-]\s*<p>Generated on \d+\/\d+\/\d{4}, [\d:]+ [AP]M \| Fused Gaming MCP v[\d.]+<\/p>$/, // registry.html
+  // Match the field, never the date format: the generator uses toLocaleString(), which varies by locale.
+  /^[+-]\s*"timestamp": ".+",?$/,                                              // skills.json / .ts / .cjs
+  /^[+-]\*\*Generated:\*\* .+$/,                                                // REGISTRY.md
+  /^[+-]\s*<p>Generated on .+ \| Fused Gaming MCP v[\d.]+<\/p>$/,                 // registry.html
 ];
 
 const sh = (c) => execSync(c, { encoding: "utf8" });
 const fail = (m) => { console.error(`❌ ${m}`); process.exit(1); };
 
+// The generator overwrites registry/ and we restore it with git checkout, so uncommitted edits there would be destroyed.
+if (sh("git status --porcelain -- registry").trim()) {
+  fail("registry/ has uncommitted changes; commit or stash them first (this check regenerates and resets registry/).");
+}
 execSync("node scripts/generate-skill-registry.js", { stdio: "inherit" });
 
 for (const f of ["skills.json", "REGISTRY.md", "registry.html"]) {
@@ -30,6 +35,9 @@ if (!registry.timestamp) fail("Missing timestamp field");
 if (!Array.isArray(registry.skills)) fail("Missing skills array");
 if (typeof registry.totalSkills !== "number") fail("Missing totalSkills");
 if (typeof registry.totalTools !== "number") fail("Missing totalTools");
+if (!registry.categories || typeof registry.categories !== "object" || Array.isArray(registry.categories)) {
+  fail("Missing categories object"); // the hosted workflow reads Object.keys/entries(registry.categories)
+}
 registry.skills.forEach((s, i) => {
   for (const k of ["name", "id", "package", "category"]) if (!s[k]) fail(`Skill ${i} missing ${k}`);
   if (!Array.isArray(s.tools)) fail(`Skill ${i} missing tools array`);

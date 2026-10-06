@@ -91,6 +91,11 @@ if (sensitive.length) {
   process.exit(1);
 }
 const dirtyBefore = sh("git status --porcelain").length > 0;
+if (dirtyBefore) {
+  // Steps regenerate files (e.g. registry/) and reset them, so never start on a dirty tree.
+  console.error("Refusing to run: working tree has uncommitted changes. Commit or stash them first (evidence only counts for a clean tree, and some steps rewrite tracked files).");
+  process.exit(1);
+}
 
 const results = [];
 for (const step of steps) {
