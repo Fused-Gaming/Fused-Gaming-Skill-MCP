@@ -4,7 +4,7 @@ Status: **Draft for evaluation** · Branch: `feature/test-modular-npx-architectu
 
 ## 1. Proposal
 
-Skills, agents and tools live in separate repositories with independent versioning. Make the platform modular around three NPX-executable layers (MCP Core, CLI, SyncPulse), add a **management brain** and **learning engine** that improve routing over time, keep the default install extremely lightweight, load everything else on demand, and use a **swarm of micro-tasks by default**.
+Skills, agents and tools live in separate repositories with independent versioning. Make the platform modular around three layers (MCP Core, CLI, SyncPulse) reached through NPX executables (today only `@h4shed/mcp-cli` declares a `bin`; Core and SyncPulse are libraries, so either they get their own bins, e.g. `h4shed-core` / `h4shed-syncpulse`, with smoke tests in Phase 1, or they stay libraries fronted by CLI subcommands such as `panel`/`syncpulse`; this is open decision 4), add a **management brain** and **learning engine** that improve routing over time, keep the default install extremely lightweight, load everything else on demand, and use a **swarm of micro-tasks by default**.
 
 ## 2. Measured baseline (published 1.0.41 tarballs, clean install)
 
@@ -17,7 +17,7 @@ Reproduce with pinned versions, never `latest`: `npm i @h4shed/mcp-core@1.0.41 @
 | Core runtime deps | `@modelcontextprotocol/sdk` (~7.7 MB), `express` |
 | CLI runtime deps | `boxen`, `chalk`, `figlet`, `gradient-string`, `inquirer`, `ora`, `yargs`… (UI weight) |
 | Core source | ~1,080 lines, of which ~640 are two server entrypoints (`skill-repository-server`, `sync-coordinator-server`) that pull in `express` |
-| Workspace | 8 workspace groups; 30 skills, 29 tools under `packages/` |
+| Workspace | 8 workspace groups; 30 skills, 28 tools under `packages/` |
 
 Observations that shape the design:
 
@@ -35,7 +35,7 @@ The split has already started, but the new repos are **catalogs**, not independe
 | `Fused-Gaming/skills` | `marketplace-registry.json`, docs, and a **copy of `mcp-core`** (`@h4shed/mcp-core` 1.0.40) | Core `src/*.ts` is byte-identical to `packages/core` here, but one patch behind (1.0.40 vs published 1.0.41). Registry declares `totalSkills: 30` but lists 53 entries; `VERSION.json` says 53 skills / 60 tools. Entries point at four different source repos (`Fused-Gaming-Skill-MCP`, `case-canon`, `syncpulse`, `underworld-writer`). |
 | `Fused-Gaming/tools` | `marketplace-registry.json`, docs, `validate-tools.sh` | 36 registry entries vs "28 tools" in README vs 38 in `VERSION.json`. Entries point back at `Fused-Gaming-Skill-MCP` or `skills` as their source; the tool code does not live here. |
 | `Fused-Gaming/agents` | ~100 agent prompt markdown files under `agent-prompts/` plus marketplace generator scripts | Agents are **prompt files, not npm packages**. Package name is `@fused-gaming/agents`, a different scope from `@h4shed/*` (see the scope warning in CLAUDE.md). |
-| `Fused-Gaming/Fused-Gaming-Skill-MCP` | Core, CLI, SyncPulse, 30 skills, 29 tools (source of truth for code) | `registry/` here is a fourth, separate registry. |
+| `Fused-Gaming/Fused-Gaming-Skill-MCP` | Core, CLI, SyncPulse, 30 skills, 28 tools (source of truth for code) | `registry/` here is a fourth, separate registry. |
 | Independent npm repos | Not inventoried | Need wiring to both MCP and their skill/agent/tool counterparts. |
 
 Consequences for the design:
@@ -127,15 +127,17 @@ Decision: **hybrid** — kernel trio (core, cli, syncpulse) stays in this repo; 
 
 | Phase | Deliverable | Exit criterion |
 | --- | --- | --- |
-| 0 | Remove tracked build artifacts from `src/`; tarball gate in CI; delete the duplicate `mcp-core` in `skills`; registry drift check | CI green, 0 tracked `.d.ts/.js` in `src`, one core, counts consistent |
+| 0 | Remove tracked build artifacts from `src/`; tarball gate in CI; delete the duplicate `mcp-core` in `skills`; registry drift check | CI green, 0 tracked `.d.ts`/`.js`/`.map` files in `packages/{core,cli}/src` (52 today: 13 + 13 + 26), one core, counts consistent |
 | 1 | Kernel slimming + CLI launcher split | Footprint targets met |
 | 2 | Module contract + `ModuleRegistry` | Skill and tool load via manifest |
 | 3 | Brain stage 1 + swarm planner with inline bypass | Beats current routing on canned tasks |
 | 4 | Outcome log + learning (advisory) | Measurable cold-start/selection gain, reset works |
-| 5 | Convert `skills`/`tools`/`agents` to generated catalogs; onboard independent npm repos via manifest | Contract tests pass in each repo; one canonical index |
+| 5 | **Extract existing modules**: migrate the 30 skill and 28 tool implementations out of this monorepo into independent repos, publish each with a manifest, cut consumers (workspaces, `registry/`, Dockerfiles, docs) over to the published packages, then remove them from `packages/` | Each module builds, publishes and passes contract tests from its own repo; the monorepo builds with the modules removed |
+| 6 | Convert `skills`/`tools`/`agents` to generated catalogs; onboard independent npm repos via manifest | Contract tests pass in each repo; one canonical index |
 
 ## 8. Open decisions
 
 1. Agents as npm packages (`@h4shed/agent-*`) vs. prompt/config files loaded by the brain.
 2. Where the outcome log lives (local file, SyncPulse state, or opt-in remote) and its privacy defaults.
 3. Whether the launcher may auto-install modules or must prompt each time (recommended: prompt unless pre-approved per module in config).
+4. Whether Core and SyncPulse ship their own NPX `bin`s or stay libraries behind CLI subcommands.

@@ -5,12 +5,13 @@
 
 ## Rule
 
-While this policy is active, a change is **merge-ready** when `npm run verify:local` exits 0 on a **clean working tree** at the PR's head commit, and its summary table is posted on the PR.
+While this policy is active, a change is **merge-ready** when `npm run verify:local` exits 0 on a **clean working tree** at the PR's head commit on **both Node 20 and Node 22** (the hosted matrix), `node scripts/local-verify.cjs --check-matrix` exits 0, and the summary tables are posted on the PR. Run the second Node with `npx -y -p node@20 node scripts/local-verify.cjs`. Other Node majors are rejected.
 
 `verify:local` runs the same steps as CI, in the same order:
 
 | Step | Command | Mirrors |
 | --- | --- | --- |
+| lockfile-sync | `npm install --package-lock-only --ignore-scripts` | `test.yml` |
 | install | `npm ci` | `test.yml` |
 | build | `npm run build --if-present` | `test.yml` |
 | typecheck | `npm run typecheck --if-present` | `test.yml` |
@@ -19,9 +20,10 @@ While this policy is active, a change is **merge-ready** when `npm run verify:lo
 | branch-skill-match | `node scripts/validate-branch-skill-match.cjs` | `validate-branch-skill-match.yml` |
 
 ## What counts as evidence
-- Run on a clean tree at the exact head SHA (the script refuses to pass a dirty tree).
-- All steps ran (no `--skip-install` / `--only`). A partial run is labelled partial and is not merge evidence.
-- Paste the printed markdown table into the PR. The JSON copy is written to `.local-verification/<sha>.json` (git-ignored).
+- Run on a clean tree at the exact head SHA; cleanliness is checked before and after the steps, so a build or test that rewrites tracked files (or a changed `package-lock.json`) fails the run.
+- `origin/main` must exist and share a merge-base with HEAD (fetch deeper if needed); otherwise the run fails, because the branch validator would see no changed files and pass.
+- All steps ran. `--skip-install` / `--only` runs always exit non-zero and are labelled partial.
+- Paste the printed markdown table into the PR. The JSON copy is written to `.local-verification/<sha>-node<major>.json` (git-ignored).
 - Any push invalidates prior evidence: re-run.
 
 ## What this policy does NOT change
@@ -31,4 +33,4 @@ While this policy is active, a change is **merge-ready** when `npm run verify:lo
 - Publishing to npm still requires its own explicit authorization.
 
 ## Exit criteria
-Remove this policy once billing is paid and `Test` is green on `main`. Then re-run CI on any PR merged under this policy that touched code.
+Remove this policy only when **every** hosted check named above (`Test` on Node 20 and 22, `CodeQL`, `Validate Branch-Skill Match`, and the Vercel status) has run green on `main`. If only some are restored, narrow this policy to the ones that are still blocked instead of removing it. Then re-run CI on any PR merged under this policy that touched code.
