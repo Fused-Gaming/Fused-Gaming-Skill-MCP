@@ -3,12 +3,12 @@
   "version": "1.4.1",
   "description": "Modular MCP server with scalable Claude skills for Fused Gaming and VLN Security",
   "type": "module",
-  "main": "./packages/core/dist/packages/core/src/index.js",
+  "main": "./packages/core/dist/index.js",
   "exports": {
-    ".": "./packages/core/dist/packages/core/src/index.js",
-    "./types": "./packages/core/dist/packages/core/src/types.js",
-    "./registry": "./packages/core/dist/packages/core/src/skill-registry.js",
-    "./server": "./packages/core/dist/packages/core/src/server.js"
+    ".": "./packages/core/dist/index.js",
+    "./types": "./packages/core/dist/types.js",
+    "./registry": "./packages/core/dist/skill-registry.js",
+    "./server": "./packages/core/dist/server.js"
   },
   "license": "Apache-2.0",
   "author": "Fused Gaming <info@vln.gg>",
