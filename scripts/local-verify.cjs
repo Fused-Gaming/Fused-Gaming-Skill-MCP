@@ -75,7 +75,7 @@ if (args.includes("--check-matrix")) {
     let status = "missing";
     try {
       const r = JSON.parse(fs.readFileSync(evidenceFile(major), "utf8"));
-      status = r.passed && r.complete && !r.dirtyBefore && !r.dirtyAfter ? (r.base === currentBase ? "passed" : "stale-base") : "failed";
+      status = r.passed && r.complete && r.platform === "linux" && !r.dirtyBefore && !r.dirtyAfter ? (r.base === currentBase ? "passed" : "stale-base") : "failed";
     } catch {}
     console.log(`Node ${major} @ ${sha.slice(0, 7)}: ${status}`);
     if (status !== "passed") allOk = false;
@@ -83,6 +83,11 @@ if (args.includes("--check-matrix")) {
   process.exit(allOk ? 0 : 1);
 }
 
+// Hosted CI runs on ubuntu-latest: path casing, shell scripts and native/optional dependencies differ elsewhere.
+if (process.platform !== "linux") {
+  console.error(`Unsupported platform ${process.platform}: run in a Linux container matching ubuntu-latest (see docs/LOCAL_VERIFICATION_POLICY.md).`);
+  process.exit(1);
+}
 if (!SUPPORTED_NODE.includes(nodeMajor)) {
   console.error(`Unsupported Node ${process.version}; supported majors: ${SUPPORTED_NODE.join(", ")}.`);
   process.exit(1);
@@ -126,6 +131,9 @@ const report = {
   dirtyBefore,
   dirtyAfter,
   node: process.version,
+  platform: process.platform,
+  arch: process.arch,
+  os: (() => { try { return (fs.readFileSync("/etc/os-release", "utf8").match(/^PRETTY_NAME="?([^"\n]+)/m) || [])[1] || "unknown"; } catch { return "unknown"; } })(),
   generatedAt: new Date().toISOString(),
   complete,
   passed: ok,
