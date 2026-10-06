@@ -33,6 +33,7 @@ const steps = [
   { id: "typecheck", cmd: "npm run typecheck --if-present" },
   { id: "lint", cmd: "npm run lint --if-present" },
   { id: "test", cmd: "npm test --if-present --workspaces" },
+  { id: "registry", cmd: "node scripts/validate-registry-local.cjs" }, // mirrors validate-registry.yml
   { id: "branch-skill-match", cmd: "node scripts/validate-branch-skill-match.cjs" },
 ];
 
@@ -64,11 +65,22 @@ if (!SUPPORTED_NODE.includes(nodeMajor)) {
 // Preconditions: the branch validator diffs against origin/main and silently
 // reports success when that ref is missing, so make that fatal here.
 try {
-  try { sh("git fetch origin main --quiet"); } catch {}
+  sh("git fetch origin main --quiet"); // a failed refresh is fatal: never validate against a stale origin/main
   sh("git rev-parse --verify --quiet origin/main");
   sh("git merge-base origin/main HEAD");
 } catch (e) {
-  console.error("origin/main must exist and share history with HEAD (needs a merge-base): run `git fetch --unshallow origin main` or `git fetch --depth=1000 origin main`.");
+  console.error("Could not refresh origin/main, or it shares no history with HEAD (needs a merge-base). Check network/auth, then `git fetch --unshallow origin main` or `git fetch --depth=1000 origin main`.");
+  process.exit(1);
+}
+// The checked-out head controls every command below (npm lifecycle hooks, build/lint/test scripts),
+// so for untrusted PRs this must run in a disposable container/VM without host credentials.
+const sensitive = Object.keys(process.env).filter((k) => /(^|_)(TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|PRIVATE_?KEY|CREDENTIALS?)($|_)/i.test(k) || k === "SSH_AUTH_SOCK");
+if (process.env.LOCAL_VERIFY_SANDBOX !== "1") {
+  console.error("Refusing to run: set LOCAL_VERIFY_SANDBOX=1 to confirm this is a disposable container/VM with no host credentials (see docs/LOCAL_VERIFICATION_POLICY.md).");
+  process.exit(1);
+}
+if (sensitive.length) {
+  console.error(`Refusing to run: credential-looking environment variables are set (${sensitive.join(", ")}). Unset them (env -u NAME ...) or use a clean sandbox.`);
   process.exit(1);
 }
 const dirtyBefore = sh("git status --porcelain").length > 0;

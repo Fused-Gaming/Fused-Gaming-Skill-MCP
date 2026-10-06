@@ -17,11 +17,15 @@ While this policy is active, a change is **merge-ready** when `npm run verify:lo
 | typecheck | `npm run typecheck --if-present` | `test.yml` |
 | lint | `npm run lint --if-present` | `test.yml` |
 | test | `npm test --if-present --workspaces` | `test.yml` |
+| registry | `node scripts/validate-registry-local.cjs` | `validate-registry.yml` (regenerates the skill registry, validates structure/consistency/completeness, fails if committed `registry/` is stale) |
 | branch-skill-match | `node scripts/validate-branch-skill-match.cjs` | `validate-branch-skill-match.yml` |
+
+## Where to run it (security)
+`verify:local` executes code from the checked-out head: `npm ci` runs dependency lifecycle hooks and `build`/`lint`/`test` scripts can be replaced in `package.json`. Never run it for an untrusted PR on a workstation with credentials. Use a disposable container or VM with no host credentials, no SSH agent and no secrets, then set `LOCAL_VERIFY_SANDBOX=1`. The script refuses to run without that acknowledgement, and also refuses if credential-looking environment variables (`*TOKEN*`, `*SECRET*`, `SSH_AUTH_SOCK`, ...) are present. Trusted maintainers' own branches carry the same risk from compromised dependencies, so the rule applies to them too.
 
 ## What counts as evidence
 - Run on a clean tree at the exact head SHA; cleanliness is checked before and after the steps, so a build or test that rewrites tracked files (or a changed `package-lock.json`) fails the run.
-- `origin/main` must exist and share a merge-base with HEAD (fetch deeper if needed); otherwise the run fails, because the branch validator would see no changed files and pass.
+- `origin/main` is refreshed on every run (a failed fetch fails the run) and must share a merge-base with HEAD (fetch deeper if needed); otherwise the run fails, because the branch validator would see no changed files and pass.
 - All steps ran. `--skip-install` / `--only` runs always exit non-zero and are labelled partial.
 - Paste the printed markdown table into the PR. The JSON copy is written to `.local-verification/<sha>-node<major>.json` (git-ignored).
 - Any push invalidates prior evidence: re-run.
