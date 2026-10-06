@@ -98,6 +98,12 @@ grep -r '"name": "@' packages/*/package.json | head -5
 
 ---
 
+## Agent Notes (2026-10-06, Local Verification Policy)
+
+- Hosted Actions/Vercel fail on every branch (account/billing block, also red on `main`). Until restored, merge-readiness = `npm run verify:local` passing on a clean tree at the head SHA, summary posted on the PR. See `docs/LOCAL_VERIFICATION_POLICY.md`.
+- Do not skip/disable tests or edit workflows to get green; a failed local step blocks merge. Branch protection bypass is a repo-admin decision.
+- Remove the policy and note once billing is restored.
+
 ## Agent Notes (2026-05-26, NPM Publish Investigation + Auth Endpoint Protection)
 
 ### What Was Completed
