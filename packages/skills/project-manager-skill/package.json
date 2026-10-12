@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-project-manager-skill",
-  "version": "1.0.24",
+  "version": "1.0.41",
   "description": "Task and project management skill for tracking work items and team collaboration",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,9 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "benchmark": "node --expose-gc --loader ts-node/esm benchmarks/performance.benchmark.ts",
-    "benchmark:release": "node --expose-gc --max-old-space-size=4096 --loader ts-node/esm benchmarks/release-performance.benchmark.ts"
+    "benchmark:release": "node --expose-gc --max-old-space-size=4096 --loader ts-node/esm benchmarks/release-performance.benchmark.ts",
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@h4shed/mcp-core": "^1.0.24"
@@ -35,5 +37,12 @@
     "tracking"
   ],
   "author": "Fused Gaming",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "bin": {
+    "skill-project-manager": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }
