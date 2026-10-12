@@ -1,6 +1,6 @@
 module.exports = {
   "version": "1.0.0",
-  "timestamp": "2026-10-12T09:52:34.841Z",
+  "timestamp": "2026-10-12T10:23:11.796Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -563,19 +563,34 @@ module.exports = {
       "package": "@h4shed/skill-project-status-tool",
       "tools": [
         {
-          "name": "create_project",
-          "file": "create-project.ts",
-          "description": "create_project from project-status-tool"
+          "name": "create-project",
+          "file": "tool-definitions.ts",
+          "description": "create-project from project-status-tool"
         },
         {
-          "name": "dashboard",
-          "file": "dashboard.ts",
-          "description": "dashboard from project-status-tool"
+          "name": "update-project-progress",
+          "file": "tool-definitions.ts",
+          "description": "update-project-progress from project-status-tool"
         },
         {
-          "name": "summarize_project_status",
-          "file": "summarize-project-status.ts",
-          "description": "summarize_project_status from project-status-tool"
+          "name": "update-project-status",
+          "file": "tool-definitions.ts",
+          "description": "update-project-status from project-status-tool"
+        },
+        {
+          "name": "validate-project",
+          "file": "tool-definitions.ts",
+          "description": "validate-project from project-status-tool"
+        },
+        {
+          "name": "generate-dashboard",
+          "file": "tool-definitions.ts",
+          "description": "generate-dashboard from project-status-tool"
+        },
+        {
+          "name": "summarize-project-status",
+          "file": "tool-definitions.ts",
+          "description": "summarize-project-status from project-status-tool"
         }
       ],
       "enabled": true,
@@ -915,7 +930,7 @@ module.exports = {
     }
   ],
   "totalSkills": 30,
-  "totalTools": 55,
+  "totalTools": 58,
   "categories": {
     "design": 7,
     "generative-art": 3,

@@ -1,12 +1,12 @@
 # 🎮 Fused Gaming Skill Registry
 
-**Generated:** 10/12/2026, 9:52:34 AM
+**Generated:** 10/12/2026, 10:23:11 AM
 **Version:** 1.0.0
 
 ## 📊 Summary
 
 - **Total Skills:** 30
-- **Total Tools:** 55
+- **Total Tools:** 58
 - **Categories:** 11
 
 ## 📑 Skills by Category
@@ -202,7 +202,7 @@
 - **Package:** `@h4shed/skill-project-status-tool`
 - **Description:** Summarize current project status, risks, and next actions.
 - **Version:** 1.0.41
-- **Tools:** `create_project`, `dashboard`, `summarize_project_status`
+- **Tools:** `create-project`, `update-project-progress`, `update-project-status`, `validate-project`, `generate-dashboard`, `summarize-project-status`
 
 
 ### User Experience (1 skills)
@@ -260,9 +260,12 @@
 | `project-manager` | `plan_project.d` | `plan-project.d.ts` |
 | `project-manager` | `plan_project` | `plan-project.ts` |
 | `project-manager-skill` | `task_management` | `task-management.ts` |
-| `project-status-tool` | `create_project` | `create-project.ts` |
-| `project-status-tool` | `dashboard` | `dashboard.ts` |
-| `project-status-tool` | `summarize_project_status` | `summarize-project-status.ts` |
+| `project-status-tool` | `create-project` | `tool-definitions.ts` |
+| `project-status-tool` | `update-project-progress` | `tool-definitions.ts` |
+| `project-status-tool` | `update-project-status` | `tool-definitions.ts` |
+| `project-status-tool` | `validate-project` | `tool-definitions.ts` |
+| `project-status-tool` | `generate-dashboard` | `tool-definitions.ts` |
+| `project-status-tool` | `summarize-project-status` | `tool-definitions.ts` |
 | `svg-generator` | `generate_svg_asset` | `generate-svg-asset.ts` |
 | `syncpulse` | `email_tools.d` | `email-tools.d.ts` |
 | `syncpulse` | `email_tools` | `email-tools.ts` |

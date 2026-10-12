@@ -175,6 +175,19 @@ export function validateJourneyMap(value: unknown): ValidationResult<JourneyMapR
 
   if (value.success === false) {
     checkString(value.error, "error", issues, 1000);
+    if (value.issues !== undefined) {
+      const list = value.issues;
+      const wellFormed =
+        Array.isArray(list) &&
+        list.every(
+          (item: unknown) =>
+            typeof item === "object" &&
+            item !== null &&
+            typeof (item as ValidationIssue).path === "string" &&
+            typeof (item as ValidationIssue).message === "string"
+        );
+      if (!wellFormed) issues.push({ path: "issues", message: "must be an array of validation issues" });
+    }
     if (issues.length > 0) {
       return { ok: false, error: "journey map failure is malformed", issues };
     }

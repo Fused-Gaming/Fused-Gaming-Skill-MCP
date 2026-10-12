@@ -20,6 +20,7 @@ import { ASSET_TYPES, MAX_DIMENSION, MIN_DIMENSION, NAMED_COLORS, validateAssetT
 
 export interface SvgAssetSuccess extends Record<string, unknown> {
   ok: true;
+  success: true;
   assetType: string;
   svgCode: string;
   description: string;
@@ -31,6 +32,7 @@ export interface SvgAssetSuccess extends Record<string, unknown> {
 
 export interface SvgAssetFailure extends Record<string, unknown> {
   ok: false;
+  success: false;
   error: string;
   issues: ValidationIssue[];
 }
@@ -139,7 +141,8 @@ function createSvgPreview(svgCode: string): string {
 }
 
 function fail(error: string, issues: ValidationIssue[]): SvgAssetFailure {
-  return { ok: false, error, issues };
+  // `success` is the discriminator published in 1.1.0; keep it alongside `ok` for consumers.
+  return { ok: false, success: false, error, issues };
 }
 
 /** Validates the raw input and renders the asset. Never throws. */
@@ -205,6 +208,7 @@ export function generateSvgAsset(input: unknown): SvgAsset {
 
   return {
     ok: true,
+    success: true,
     assetType,
     svgCode,
     description: `Generated ${assetType} SVG asset: ${trimmedObjective}`,

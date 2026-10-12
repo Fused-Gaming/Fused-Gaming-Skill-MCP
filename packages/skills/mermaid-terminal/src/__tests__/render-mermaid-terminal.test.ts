@@ -121,3 +121,11 @@ describe("quoted labels", () => {
     });
   });
 });
+
+describe("asymmetric node shapes", () => {
+  it("accepts and renders an asymmetric id>label] node", () => {
+    const result = renderMermaidToText(["flowchart LR", "    A>Flag] --> B"].join("\n"));
+    expect(result).toMatchObject({ ok: true, diagramType: "flowchart" });
+    expect(result.ok && result.text).toContain("Flag --> B");
+  });
+});

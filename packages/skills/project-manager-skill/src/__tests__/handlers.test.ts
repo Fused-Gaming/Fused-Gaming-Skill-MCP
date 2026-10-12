@@ -238,3 +238,14 @@ describe('input validation regressions', () => {
     }
   });
 });
+
+describe('empty projectId filter', () => {
+  it('limits metrics to tasks with an empty project id when projectId is ""', () => {
+    const tasks = [
+      { ...task, id: 'a', projectId: '' },
+      { ...task, id: 'b', projectId: 'p1' },
+    ];
+    const result = runTool('get-metrics', { tasks, projectId: '' });
+    expect(result.ok && (result.data as { taskCount: number }).taskCount).toBe(1);
+  });
+});

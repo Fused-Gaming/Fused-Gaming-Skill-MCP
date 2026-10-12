@@ -312,6 +312,9 @@ const MAX_PERSONA_LABEL_LENGTH = 120;
 /** Matches the 300-character limit that validateJourneyMap enforces on the goal output. */
 const MAX_GOAL_LENGTH = 300;
 
+/** Matches the 1,000-character limit that validateJourneyMap enforces on the summary output. */
+const MAX_SUMMARY_LENGTH = 1000;
+
 /** Shortens text to a contract limit, ending with an ellipsis when it is cut. */
 function clip(text: string, max: number): string {
   return text.length <= max ? text : `${text.slice(0, max - 1)}…`;
@@ -406,7 +409,7 @@ export const MapUserJourneyTool: ToolDefinition = {
         persona,
         goal: clip(objective, MAX_GOAL_LENGTH),
         stages: journeyStages,
-        summary: `Journey map for: ${objective}. Identified ${journeyStages.length} key stages with ${totalTouchpoints} total touchpoints.`,
+        summary: clip(`Journey map for: ${objective}. Identified ${journeyStages.length} key stages with ${totalTouchpoints} total touchpoints.`, MAX_SUMMARY_LENGTH),
         keyInsights,
       };
       if (personaProfile) {

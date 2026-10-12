@@ -22,6 +22,20 @@ if (!fs.existsSync(registryDir)) {
 
 function extractToolsFromSkill(skillPath) {
   const tools = [];
+
+  // Packages that declare their tools (name: 'tool-name' in tool-definitions.ts) are
+  // listed by the names they expose, since source file names do not match tool names.
+  const definitionsFile = path.join(skillPath, 'src', 'tool-definitions.ts');
+  if (fs.existsSync(definitionsFile)) {
+    const source = fs.readFileSync(definitionsFile, 'utf8');
+    const names = [...source.matchAll(/name:\s*'([a-z0-9-]+)'/g)].map(match => match[1]);
+    return [...new Set(names)].map(name => ({
+      name,
+      file: 'tool-definitions.ts',
+      description: `${name} from ${path.basename(skillPath)}`
+    }));
+  }
+
   const toolsDir = path.join(skillPath, 'src', 'tools');
 
   if (fs.existsSync(toolsDir)) {

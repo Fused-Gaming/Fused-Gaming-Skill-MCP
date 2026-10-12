@@ -281,7 +281,7 @@ export function handleGetMetrics(input: unknown): ToolResult<GetMetricsOutput> {
   });
   if (issues.length > 0) return fail(issues);
 
-  const scoped = input.projectId ? tasks.filter((t) => t.projectId === input.projectId) : tasks;
+  const scoped = input.projectId !== undefined ? tasks.filter((t) => t.projectId === input.projectId) : tasks;
   return { ok: true, data: { metrics: calculateMetrics(scoped), taskCount: scoped.length } };
 }
 

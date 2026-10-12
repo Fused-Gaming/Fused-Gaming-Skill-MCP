@@ -31,6 +31,8 @@ export type RenderResult =
 
 const OPENERS: Record<string, string> = { "(": ")", "[": "]", "{": "}" };
 const CLOSERS = new Set([")", "]", "}"]);
+/** Closer expected for each opener, including the asymmetric `id>label]` shape. */
+const EXPECTED_CLOSER: Record<string, string> = { ...OPENERS, ">": "]" };
 
 function fail(error: string, issues: ValidationIssue[]): { ok: false; error: string; issues: ValidationIssue[] } {
   return { ok: false, error, issues };
@@ -38,7 +40,6 @@ function fail(error: string, issues: ValidationIssue[]): { ok: false; error: str
 
 /**
  * Quote-aware bracket check. Brackets inside "double quoted" labels are ignored.
- * Note: asymmetric shapes such as `A>text]` are not recognised.
  */
 function checkBrackets(lines: string[]): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
@@ -49,17 +50,26 @@ function checkBrackets(lines: string[]): ValidationIssue[] {
     if (raw.trim().startsWith("%%")) return;
 
     let inQuote = false;
-    for (const ch of raw) {
+    for (let i = 0; i < raw.length; i++) {
+      const ch = raw[i];
       if (ch === '"') {
         inQuote = !inQuote;
         continue;
       }
       if (inQuote) continue;
+      // A ">" opens an asymmetric shape only at top level, directly after a node id.
+      // Arrows ("-->", "==>") and markup such as "<br>" are not shapes, so they are skipped.
+      if (ch === ">") {
+        if (stack.length === 0 && /[A-Za-z0-9_]/.test(raw[i - 1] ?? "")) {
+          stack.push({ ch, line: lineNo });
+        }
+        continue;
+      }
       if (OPENERS[ch]) {
         stack.push({ ch, line: lineNo });
       } else if (CLOSERS.has(ch)) {
         const top = stack.pop();
-        if (!top || OPENERS[top.ch] !== ch) {
+        if (!top || EXPECTED_CLOSER[top.ch] !== ch) {
           issues.push({
             code: "UNBALANCED_BRACKETS",
             message: `Unexpected closing '${ch}' at line ${lineNo}`,

@@ -66,3 +66,21 @@ describe('free-text output limits', () => {
     expect(validateJourneyMap({ ...good, personaProfile: { name: 'x', role: 'y', goals: [] } }).ok).toBe(false);
   });
 });
+
+describe('failure issues and summary limits', () => {
+  it('rejects a failure result whose issues are not a validation-issue list', async () => {
+    const { validateJourneyMap } = await import('../index');
+    expect(validateJourneyMap({ success: false, error: 'x', issues: null }).ok).toBe(false);
+    expect(validateJourneyMap({ success: false, error: 'x', issues: [{ path: 'a' }] }).ok).toBe(false);
+    expect(validateJourneyMap({ success: false, error: 'x', issues: [{ path: 'a', message: 'b' }] }).ok).toBe(true);
+  });
+
+  it('keeps the summary within 1,000 characters for a very long objective', async () => {
+    const { MapUserJourneyTool: tool } = await import('../tools/map-user-journey');
+    const { validateJourneyMap } = await import('../index');
+    const result = (await tool.handler({ objective: 'Long '.repeat(400) })) as Record<string, unknown>;
+    expect(result.success).toBe(true);
+    expect(String(result.summary).length).toBeLessThanOrEqual(1000);
+    expect(validateJourneyMap(result).ok).toBe(true);
+  });
+});

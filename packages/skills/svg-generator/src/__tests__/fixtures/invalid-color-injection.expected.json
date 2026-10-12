@@ -1,5 +1,6 @@
 {
   "ok": false,
+  "success": false,
   "error": "Invalid input: color must be #RGB, #RRGGBB, #RRGGBBAA, or a named color (red, blue, green, yellow, orange, purple, pink, cyan, gray, black, white)",
   "issues": [
     {

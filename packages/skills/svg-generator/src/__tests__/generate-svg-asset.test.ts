@@ -230,3 +230,12 @@ describe("named colors match whole words", () => {
     expect(berry.svgCode).not.toContain("#333333");
   });
 });
+
+describe("published success discriminator", () => {
+  it("keeps success alongside ok on success and failure results", async () => {
+    const good = await run({ objective: "icon star", context: "" });
+    expect(good).toMatchObject({ ok: true, success: true });
+    const bad = await run({ objective: "icon", context: "", width: 0 });
+    expect(bad).toMatchObject({ ok: false, success: false });
+  });
+});
