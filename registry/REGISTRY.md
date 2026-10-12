@@ -1,12 +1,12 @@
 # 🎮 Fused Gaming Skill Registry
 
-**Generated:** 8/21/2026, 6:41:35 AM
+**Generated:** 10/12/2026, 9:33:29 AM
 **Version:** 1.0.0
 
 ## 📊 Summary
 
 - **Total Skills:** 30
-- **Total Tools:** 60
+- **Total Tools:** 55
 - **Categories:** 11
 
 ## 📑 Skills by Category
@@ -195,14 +195,14 @@
 #### 📦 project-manager-skill
 - **Package:** `@h4shed/skill-project-manager-skill`
 - **Description:** Task and project management skill for tracking work items and team collaboration
-- **Version:** 1.0.24
-- **Tools:** `task_management.d`, `task_management`
+- **Version:** 1.0.41
+- **Tools:** `task_management`
 
 #### 📦 project-status-tool
 - **Package:** `@h4shed/skill-project-status-tool`
 - **Description:** Summarize current project status, risks, and next actions.
-- **Version:** 1.0.23
-- **Tools:** `create_project.d`, `create_project`, `dashboard.d`, `dashboard`, `summarize_project_status.d`, `summarize_project_status`
+- **Version:** 1.0.41
+- **Tools:** `create_project`, `dashboard`, `summarize_project_status`
 
 
 ### User Experience (1 skills)
@@ -210,8 +210,8 @@
 #### 📦 ux-journeymapper
 - **Package:** `@h4shed/skill-ux-journeymapper`
 - **Description:** Create UX journey maps with pain points, touchpoints, and opportunities.
-- **Version:** 1.0.23
-- **Tools:** `map_user_journey.d`, `map_user_journey`
+- **Version:** 1.0.41
+- **Tools:** `map_user_journey`
 
 
 ## 🛠️ All Tools
@@ -258,13 +258,9 @@
 | `pre-deploy-validator` | `validate_deployment` | `validate-deployment.ts` |
 | `project-manager` | `plan_project.d` | `plan-project.d.ts` |
 | `project-manager` | `plan_project` | `plan-project.ts` |
-| `project-manager-skill` | `task_management.d` | `task-management.d.ts` |
 | `project-manager-skill` | `task_management` | `task-management.ts` |
-| `project-status-tool` | `create_project.d` | `create-project.d.ts` |
 | `project-status-tool` | `create_project` | `create-project.ts` |
-| `project-status-tool` | `dashboard.d` | `dashboard.d.ts` |
 | `project-status-tool` | `dashboard` | `dashboard.ts` |
-| `project-status-tool` | `summarize_project_status.d` | `summarize-project-status.d.ts` |
 | `project-status-tool` | `summarize_project_status` | `summarize-project-status.ts` |
 | `svg-generator` | `generate_svg_asset.d` | `generate-svg-asset.d.ts` |
 | `svg-generator` | `generate_svg_asset` | `generate-svg-asset.ts` |
@@ -276,5 +272,4 @@
 | `syncpulse` | `index` | `index.ts` |
 | `theme-factory` | `generate_theme.d` | `generate-theme.d.ts` |
 | `theme-factory` | `generate_theme` | `generate-theme.ts` |
-| `ux-journeymapper` | `map_user_journey.d` | `map-user-journey.d.ts` |
 | `ux-journeymapper` | `map_user_journey` | `map-user-journey.ts` |

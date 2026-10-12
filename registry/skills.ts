@@ -30,7 +30,7 @@ export interface SkillRegistry {
 
 export const registry: SkillRegistry = {
   "version": "1.0.0",
-  "timestamp": "2026-08-21T06:41:35.418Z",
+  "timestamp": "2026-10-12T09:33:29.482Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -558,14 +558,9 @@ export const registry: SkillRegistry = {
       "name": "project-manager-skill",
       "id": "project-manager-skill",
       "description": "Task and project management skill for tracking work items and team collaboration",
-      "version": "1.0.24",
+      "version": "1.0.41",
       "package": "@h4shed/skill-project-manager-skill",
       "tools": [
-        {
-          "name": "task_management.d",
-          "file": "task-management.d.ts",
-          "description": "task_management.d from project-manager-skill"
-        },
         {
           "name": "task_management",
           "file": "task-management.ts",
@@ -589,33 +584,18 @@ export const registry: SkillRegistry = {
       "name": "project-status-tool",
       "id": "project-status-tool",
       "description": "Summarize current project status, risks, and next actions.",
-      "version": "1.0.23",
+      "version": "1.0.41",
       "package": "@h4shed/skill-project-status-tool",
       "tools": [
-        {
-          "name": "create_project.d",
-          "file": "create-project.d.ts",
-          "description": "create_project.d from project-status-tool"
-        },
         {
           "name": "create_project",
           "file": "create-project.ts",
           "description": "create_project from project-status-tool"
         },
         {
-          "name": "dashboard.d",
-          "file": "dashboard.d.ts",
-          "description": "dashboard.d from project-status-tool"
-        },
-        {
           "name": "dashboard",
           "file": "dashboard.ts",
           "description": "dashboard from project-status-tool"
-        },
-        {
-          "name": "summarize_project_status.d",
-          "file": "summarize-project-status.d.ts",
-          "description": "summarize_project_status.d from project-status-tool"
         },
         {
           "name": "summarize_project_status",
@@ -900,14 +880,9 @@ export const registry: SkillRegistry = {
       "name": "ux-journeymapper",
       "id": "ux-journeymapper",
       "description": "Create UX journey maps with pain points, touchpoints, and opportunities.",
-      "version": "1.0.23",
+      "version": "1.0.41",
       "package": "@h4shed/skill-ux-journeymapper",
       "tools": [
-        {
-          "name": "map_user_journey.d",
-          "file": "map-user-journey.d.ts",
-          "description": "map_user_journey.d from ux-journeymapper"
-        },
         {
           "name": "map_user_journey",
           "file": "map-user-journey.ts",
@@ -970,7 +945,7 @@ export const registry: SkillRegistry = {
     }
   ],
   "totalSkills": 30,
-  "totalTools": 60,
+  "totalTools": 55,
   "categories": {
     "design": 7,
     "generative-art": 3,

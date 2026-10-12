@@ -1,4 +1,8 @@
 /**
+ * @jest-environment node
+ */
+
+/**
  * Tests for JWT Authentication Middleware
  *
  * Validates:
@@ -219,10 +223,10 @@ describe('Auth Middleware', () => {
   describe('Higher-Order Wrappers', () => {
     it('withAuth should protect endpoints', async () => {
       const handler = jest.fn(async () => new Response('OK'));
-      const protected = withAuth(handler);
+      const protectedHandler = withAuth(handler);
 
       const request = createMockRequest();
-      const response = await protected(request);
+      const response = await protectedHandler(request);
 
       expect(response.status).toBe(401);
       expect(handler).not.toHaveBeenCalled();
@@ -230,12 +234,12 @@ describe('Auth Middleware', () => {
 
     it('withAuth should call handler when authenticated', async () => {
       const handler = jest.fn(async (_req, _user) => new Response('OK'));
-      const protected = withAuth(handler);
+      const protectedHandler = withAuth(handler);
 
       const request = createMockRequest({
         authHeader: `Bearer ${validToken}`,
       });
-      const response = await protected(request);
+      const response = await protectedHandler(request);
 
       expect(response.status).toBe(200);
       expect(handler).toHaveBeenCalled();
