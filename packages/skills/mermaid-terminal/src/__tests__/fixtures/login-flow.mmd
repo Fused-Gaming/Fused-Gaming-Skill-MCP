@@ -1,0 +1,7 @@
+flowchart LR
+    Start([Start]) --> Login[Enter credentials]
+    Login --> Check{Valid?}
+    Check -->|yes| Dashboard[Open dashboard]
+    Check -->|no| Error[Show error]
+    Error --> Login
+    Dashboard --> Done([End])

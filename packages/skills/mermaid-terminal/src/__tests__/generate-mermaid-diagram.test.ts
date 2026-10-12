@@ -1,252 +1,120 @@
 /**
- * Mermaid Terminal Tool Tests
- * Validates diagram generation, type detection, and output formatting
+ * Tests for the generate-mermaid-diagram tool.
  */
 
-import { GenerateMermaidDiagramTool } from '../tools/generate-mermaid-diagram';
+import { describe, it, expect } from "@jest/globals";
+import { GenerateMermaidDiagramTool } from "../tools/generate-mermaid-diagram.js";
+import { validateMermaidDiagram } from "../lib/mermaid.js";
 
-interface DiagramResult extends Record<string, unknown> {
-  success: boolean;
-  diagramType?: string;
-  mermaidCode?: string;
-  textPreview?: string;
-  description?: string;
-  error?: string;
-}
+type Result = Record<string, unknown> & { success: boolean; error?: string };
 
-describe('GenerateMermaidDiagramTool', () => {
-  describe('Flowchart Generation', () => {
-    it('should generate valid flowchart from objective', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'User login process: enter credentials, validate, grant access',
-      })) as DiagramResult;
+const run = async (input: Record<string, unknown>): Promise<Result> =>
+  (await GenerateMermaidDiagramTool.handler(input)) as Result;
 
-      expect(result.success).toBe(true);
-      expect(result.mermaidCode).toBeDefined();
-      expect(result.mermaidCode).toContain('flowchart');
-    });
+describe("GenerateMermaidDiagramTool", () => {
+  it("exposes its name, description and required objective", () => {
+    expect(GenerateMermaidDiagramTool.name).toBe("generate-mermaid-diagram");
+    expect(GenerateMermaidDiagramTool.inputSchema.required).toContain("objective");
+  });
 
-    it('should include start and end nodes', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Simple process flow',
-      })) as DiagramResult;
+  describe("happy path", () => {
+    it("generates a flowchart by default with start and end nodes", async () => {
+      const result = await run({ objective: "Enter credentials, validate, grant access" });
 
       expect(result.success).toBe(true);
+      expect(result.diagramType).toBe("flowchart");
       const code = result.mermaidCode as string;
-      expect(code).toContain('Start');
-      expect(code).toContain('End');
+      expect(code.startsWith("flowchart TD\n")).toBe(true);
+      expect(code).toContain("Start([Start])");
+      expect(code).toContain("End([End])");
     });
 
-    it('should structure steps as connected nodes', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Step 1, Step 2, Step 3',
-      })) as DiagramResult;
+    it("returns all output fields on success", async () => {
+      const result = await run({ objective: "Simple workflow" });
 
       expect(result.success).toBe(true);
+      expect(typeof result.mermaidCode).toBe("string");
+      expect(typeof result.textPreview).toBe("string");
+      expect(result.textPreview as string).toContain("```mermaid");
+      expect(result.description as string).toContain("flowchart");
+    });
+
+    it("generates a sequence diagram when requested explicitly", async () => {
+      const result = await run({
+        objective: "Client sends request, server responds",
+        type: "sequenceDiagram",
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.diagramType).toBe("sequenceDiagram");
+      expect(result.mermaidCode as string).toContain("A->>+B: Client sends request");
+    });
+
+    it("generates a state diagram when requested explicitly", async () => {
+      const result = await run({ objective: "Initial, Processing, Complete", type: "stateDiagram" });
+
+      expect(result.success).toBe(true);
+      expect(result.mermaidCode as string).toContain("stateDiagram-v2");
+      expect(result.mermaidCode as string).toContain('State2 : "Processing"');
+    });
+
+    it("auto-detects sequence and state diagrams from keywords", async () => {
+      const seq = await run({ objective: "Sequence diagram of user interaction with API" });
+      const state = await run({ objective: "State machine with transitions" });
+
+      expect(seq.diagramType).toBe("sequenceDiagram");
+      expect(state.diagramType).toBe("stateDiagram");
+    });
+
+    it("falls back to flowchart for class-style objectives it does not render", async () => {
+      const result = await run({ objective: "Class diagram showing object relationships" });
+
+      expect(result.success).toBe(true);
+      expect(result.diagramType).toBe("flowchart");
+    });
+
+    it("sanitises double quotes so generated labels stay valid Mermaid", async () => {
+      const result = await run({ objective: 'Say "hi", then leave' });
       const code = result.mermaidCode as string;
-      expect(code).toMatch(/-->/);
-    });
-  });
 
-  describe('Diagram Type Detection', () => {
-    it('should detect sequence diagrams from keywords', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Sequence diagram showing user interaction with API',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      expect(['sequenceDiagram', 'flowchart']).toContain(result.diagramType);
+      expect(code).toContain("Step1[\"Say 'hi'\"]");
+      expect(validateMermaidDiagram(code).ok).toBe(true);
     });
 
-    it('should detect state diagrams from keywords', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'State machine with transitions',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      expect(['stateDiagram', 'flowchart']).toContain(result.diagramType);
-    });
-
-    it('should detect class diagrams from keywords', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Class diagram showing object relationships',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      expect(['classDiagram', 'flowchart']).toContain(result.diagramType);
-    });
-
-    it('should default to flowchart for ambiguous objectives', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Generic workflow',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      expect(result.diagramType).toBeDefined();
-    });
-  });
-
-  describe('Text Preview', () => {
-    it('should provide terminal-friendly text preview', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Simple workflow',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      expect(result.textPreview).toBeDefined();
-      expect(typeof result.textPreview).toBe('string');
-    });
-
-    it('should render preview without ANSI codes when not in terminal', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Process flow',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      const preview = result.textPreview as string;
-      expect(preview).not.toContain('\x1b[');
-    });
-  });
-
-  describe('Description Generation', () => {
-    it('should provide descriptive summary', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Authentication workflow with MFA',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      expect(result.description).toBeDefined();
-      expect(result.description?.length).toBeGreaterThan(0);
-    });
-
-    it('should describe diagram structure', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Multi-step process',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      const desc = result.description as string;
-      expect(desc.length).toBeGreaterThan(0);
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle empty objectives', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: '',
-      })) as DiagramResult;
-
-      expect(typeof result.success).toBe('boolean');
-    });
-
-    it('should handle very long objectives', async () => {
-      const longObjective = 'A'.repeat(1000);
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: longObjective,
-      })) as DiagramResult;
-
-      expect(typeof result.success).toBe('boolean');
-      if (!result.success) {
-        expect(result.error).toBeDefined();
-      }
-    });
-
-    it('should handle special characters in objectives', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Process with <special> & "characters" involved',
-      })) as DiagramResult;
-
-      expect(typeof result.success).toBe('boolean');
-      if (result.success) {
-        expect(result.mermaidCode).toBeDefined();
+    it("produces output that passes the validation tool", async () => {
+      for (const type of ["flowchart", "sequenceDiagram", "stateDiagram"]) {
+        const result = await run({ objective: "Alpha, Beta, Gamma", type });
+        expect(validateMermaidDiagram(result.mermaidCode).ok).toBe(true);
       }
     });
   });
 
-  describe('Mermaid Syntax Validation', () => {
-    it('should produce valid Mermaid syntax', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Login flow',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      const code = result.mermaidCode as string;
-      expect(code).toMatch(/^(flowchart|sequenceDiagram|stateDiagram|classDiagram|timeline)/);
+  describe("failure path", () => {
+    it("rejects an empty objective", async () => {
+      const result = await run({ objective: "" });
+      expect(result.success).toBe(false);
+      expect(result.error).toContain("must not be empty");
     });
 
-    it('should use proper node syntax', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Process steps',
-      })) as DiagramResult;
-
-      expect(result.success).toBe(true);
-      const code = result.mermaidCode as string;
-      expect(code).toMatch(/\[.*\]/);
+    it("rejects a whitespace-only objective", async () => {
+      const result = await run({ objective: "   " });
+      expect(result.success).toBe(false);
     });
 
-    it('should connect nodes with arrows', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Connected workflow',
-      })) as DiagramResult;
+    it("rejects a missing or non-string objective", async () => {
+      const missing = await run({});
+      const numeric = await run({ objective: 42 });
 
-      expect(result.success).toBe(true);
-      const code = result.mermaidCode as string;
-      expect(code).toMatch(/-->/);
-    });
-  });
-
-  describe('Performance', () => {
-    it('should generate diagram within reasonable time', async () => {
-      const startTime = performance.now();
-
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Performance test workflow',
-      })) as DiagramResult;
-
-      const elapsedTime = performance.now() - startTime;
-
-      expect(result.success).toBe(true);
-      expect(elapsedTime).toBeLessThan(5000);
+      expect(missing.success).toBe(false);
+      expect(numeric.success).toBe(false);
+      expect(numeric.error).toContain("must be a string");
     });
 
-    it('should handle multiple sequential generations', async () => {
-      const results = [];
+    it("rejects an unsupported diagram type with a clear message", async () => {
+      const result = await run({ objective: "Anything", type: "pie" });
 
-      for (let i = 0; i < 5; i++) {
-        const result = (await GenerateMermaidDiagramTool.handler({
-          objective: `Workflow ${i}`,
-        })) as DiagramResult;
-        results.push(result);
-      }
-
-      expect(results).toHaveLength(5);
-      expect(results.every(r => typeof r.success === 'boolean')).toBe(true);
-    });
-  });
-
-  describe('Output Structure', () => {
-    it('should provide consistent output fields', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: 'Test diagram',
-      })) as DiagramResult;
-
-      expect(result).toHaveProperty('success');
-      if (result.success) {
-        expect(result).toHaveProperty('diagramType');
-        expect(result).toHaveProperty('mermaidCode');
-        expect(result).toHaveProperty('textPreview');
-        expect(result).toHaveProperty('description');
-      }
-    });
-
-    it('should include error field when generation fails', async () => {
-      const result = (await GenerateMermaidDiagramTool.handler({
-        objective: '',
-      })) as DiagramResult;
-
-      if (!result.success) {
-        expect(result.error).toBeDefined();
-      }
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('"pie"');
     });
   });
 });
