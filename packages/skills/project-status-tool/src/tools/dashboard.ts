@@ -76,7 +76,8 @@ export function generateDashboard(input: GenerateDashboardInput): ProjectDashboa
 
   return {
     timestamp: Date.now(),
-    projects,
+    // Copy so the dashboard never aliases (and can't be mutated through) the caller's array.
+    projects: [...projects],
     totalProjects,
     completedProjects,
     inProgressProjects,

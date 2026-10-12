@@ -1,6 +1,6 @@
 {
   "name": "@h4shed/skill-project-status-tool",
-  "version": "1.0.23",
+  "version": "1.0.41",
   "description": "Summarize current project status, risks, and next actions.",
   "type": "module",
   "main": "./dist/index.js",
@@ -10,14 +10,19 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --project tsconfig.json --watch",
-    "test": "echo \"No tests yet\"",
-    "benchmark": "echo 'Benchmarks: OK'"
+    "test": "jest",
+    "prepublishOnly": "npm run build",
+    "benchmark": "echo \"Benchmarks: OK\""
   },
   "dependencies": {
     "@h4shed/mcp-core": "^1.0.24"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.12.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.3.2"
   },
   "keywords": [
@@ -31,5 +36,12 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "bin": {
+    "skill-project-status-tool": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }
