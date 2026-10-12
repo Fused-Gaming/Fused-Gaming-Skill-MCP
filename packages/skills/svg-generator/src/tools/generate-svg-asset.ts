@@ -1,280 +1,216 @@
 /**
  * SVG Generator Tool
  * Generate SVG assets and icon concepts from structured prompts.
+ *
+ * Inputs are validated strictly; invalid input yields { ok: false, error, issues }
+ * and never throws. Output is deterministic for identical inputs.
  */
 
 import type { ToolDefinition } from "@h4shed/mcp-core";
+import {
+  renderBarChart,
+  renderButton,
+  renderCircleIcon,
+  renderHeartIcon,
+  renderPattern,
+  renderStarIcon,
+  type Canvas,
+} from "../generators.js";
+import { ASSET_TYPES, MAX_DIMENSION, MIN_DIMENSION, NAMED_COLORS, validateAssetType, validateColor, validateDimension, validateLabel, validateText, type ValidationIssue, type ValidationResult } from "../validation.js";
 
-export interface SvgAsset extends Record<string, unknown> {
-  success: boolean;
-  assetType?: string;
-  svgCode?: string;
-  description?: string;
-  dimensions?: { width: number; height: number };
-  colorPalette?: string[];
-  complexity?: string;
-  previewText?: string;
-  error?: string;
+export interface SvgAssetSuccess extends Record<string, unknown> {
+  ok: true;
+  assetType: string;
+  svgCode: string;
+  description: string;
+  dimensions: { width: number; height: number };
+  colorPalette: string[];
+  complexity: string;
+  previewText: string;
 }
 
-/**
- * Detects the type of SVG asset from objective description
- */
-function detectAssetType(objective: string): string {
+export interface SvgAssetFailure extends Record<string, unknown> {
+  ok: false;
+  error: string;
+  issues: ValidationIssue[];
+}
+
+export type SvgAsset = SvgAssetSuccess | SvgAssetFailure;
+
+const DEFAULT_SIZE = 100;
+const DEFAULT_COMPONENT_HEIGHT_RATIO = 0.4;
+
+/** Detects the type of SVG asset from objective description. */
+export function detectAssetType(objective: string): string {
   const lowerObj = objective.toLowerCase();
 
-  if (
-    lowerObj.includes("icon") ||
-    lowerObj.includes("symbol") ||
-    lowerObj.includes("glyph")
-  ) {
+  if (lowerObj.includes("icon") || lowerObj.includes("symbol") || lowerObj.includes("glyph")) {
     return "icon";
   }
-
-  if (
-    lowerObj.includes("button") ||
-    lowerObj.includes("component") ||
-    lowerObj.includes("widget")
-  ) {
+  if (lowerObj.includes("button") || lowerObj.includes("component") || lowerObj.includes("widget")) {
     return "component";
   }
-
-  if (
-    lowerObj.includes("pattern") ||
-    lowerObj.includes("background") ||
-    lowerObj.includes("texture")
-  ) {
+  if (lowerObj.includes("pattern") || lowerObj.includes("background") || lowerObj.includes("texture")) {
     return "pattern";
   }
-
   if (lowerObj.includes("chart") || lowerObj.includes("graph")) {
     return "chart";
   }
-
   if (lowerObj.includes("illustration") || lowerObj.includes("drawing")) {
     return "illustration";
   }
-
   if (lowerObj.includes("logo") || lowerObj.includes("brand")) {
     return "logo";
   }
-
   return "generic-shape";
 }
 
 /**
- * Extracts custom dimensions from objective (e.g., "256x256", "512 by 512")
+ * Extracts "WxH" dimensions from free text (e.g. "256x256", "512 x 128").
+ * Returns null when no pattern is present; a validation failure when the match is out of range.
  */
-function extractDimensions(objective: string): { width: number; height: number } | null {
-  const lowerObj = objective.toLowerCase();
-
-  // Match patterns like "256x256", "256 x 256", "256x256 dimensions"
-  const match = lowerObj.match(/(\d+)\s*x\s*(\d+)/);
-  if (match) {
-    const width = parseInt(match[1], 10);
-    const height = parseInt(match[2], 10);
-    if (width > 0 && height > 0) {
-      return { width, height };
-    }
+function extractTextDimensions(text: string, path: string): ValidationResult<Canvas> | null {
+  const match = text.toLowerCase().match(/(\d+)\s*x\s*(\d+)/);
+  if (!match) {
+    return null;
   }
-
-  return null;
+  const width = validateDimension(Number(match[1]), `${path}.width`);
+  const height = validateDimension(Number(match[2]), `${path}.height`);
+  const issues = [...(width.ok ? [] : width.issues), ...(height.ok ? [] : height.issues)];
+  if (issues.length > 0) {
+    return { ok: false, issues };
+  }
+  return { ok: true, value: { width: Number(match[1]), height: Number(match[2]) } };
 }
 
-/**
- * Extracts color mentions from objective
- */
-function extractColors(objective: string): string[] {
-  const colorKeywords: Record<string, string> = {
-    red: "#FF4444",
-    blue: "#4444FF",
-    green: "#44FF44",
-    yellow: "#FFFF44",
-    orange: "#FF8844",
-    purple: "#FF44FF",
-    pink: "#FF44AA",
-    cyan: "#44FFFF",
-    gray: "#888888",
-    black: "#000000",
-    white: "#FFFFFF",
-  };
-
-  const colors: string[] = [];
-  const lowerObj = objective.toLowerCase();
-
-  Object.entries(colorKeywords).forEach(([keyword, hex]) => {
-    if (lowerObj.includes(keyword)) {
-      colors.push(hex);
-    }
-  });
-
+/** Extracts named colors mentioned in free text, in documented palette order. */
+export function extractColors(text: string): string[] {
+  const lowerText = text.toLowerCase();
+  const colors = Object.entries(NAMED_COLORS)
+    .filter(([keyword]) => lowerText.includes(keyword))
+    .map(([, hex]) => hex);
   return colors.length > 0 ? colors : ["#4444FF", "#44FF44"];
 }
 
-/**
- * Generates a simple circle icon
- */
-function generateCircleIcon(size: number, color: string): string {
-  const padding = size * 0.1;
-  const radius = (size - padding * 2) / 2;
-  const center = size / 2;
-
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <circle cx="${center}" cy="${center}" r="${radius}" fill="${color}" stroke="#333" stroke-width="2"/>
-</svg>`;
-}
-
-/**
- * Generates a star icon
- */
-function generateStarIcon(size: number, color: string): string {
-  const center = size / 2;
-  const outerRadius = size * 0.4;
-  const innerRadius = size * 0.15;
-
-  let path = `M${center},${size * 0.1}`;
-
-  for (let i = 0; i < 10; i++) {
-    const angle = (i * Math.PI) / 5 - Math.PI / 2;
-    const radius = i % 2 === 0 ? outerRadius : innerRadius;
-    const x = center + radius * Math.cos(angle);
-    const y = center + radius * Math.sin(angle);
-    path += ` L${x},${y}`;
+function defaultCanvas(assetType: string, width: number | undefined, height: number | undefined): Canvas {
+  const w = width ?? DEFAULT_SIZE;
+  if (height !== undefined) {
+    return { width: w, height };
   }
-
-  path += " Z";
-
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <path d="${path}" fill="${color}" stroke="#333" stroke-width="1"/>
-</svg>`;
+  if (assetType === "component") {
+    return { width: w, height: Math.round(w * DEFAULT_COMPONENT_HEIGHT_RATIO) };
+  }
+  return { width: w, height: width ?? DEFAULT_SIZE };
 }
 
-/**
- * Generates a heart icon
- */
-function generateHeartIcon(size: number, color: string): string {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100">
-  <path d="M50,85 C25,70 10,55 10,40 C10,25 20,15 30,15 C40,15 50,25 50,35 C50,25 60,15 70,15 C80,15 90,25 90,40 C90,55 75,70 50,85 Z"
-    fill="${color}" stroke="#333" stroke-width="1"/>
-</svg>`;
-}
-
-/**
- * Generates a simple button component
- */
-function generateButton(
-  size: number,
-  color: string,
-  label: string = "Button"
-): string {
-  const width = size;
-  const height = size * 0.4;
-  const textSize = height * 0.6;
-
-  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-  <rect x="2" y="2" width="${width - 4}" height="${height - 4}"
-    rx="4" fill="${color}" stroke="#333" stroke-width="1.5"/>
-  <text x="${width / 2}" y="${height / 2 + textSize / 3}"
-    text-anchor="middle" font-size="${textSize}" fill="white" font-weight="bold">
-    ${label}
-  </text>
-</svg>`;
-}
-
-/**
- * Generates a geometric pattern
- */
-function generatePattern(size: number, color: string): string {
-  const patternSize = size / 4;
-  let pattern = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <defs>
-    <pattern id="pattern" x="0" y="0" width="${patternSize}" height="${patternSize}" patternUnits="userSpaceOnUse">
-      <circle cx="${patternSize / 2}" cy="${patternSize / 2}" r="${patternSize / 4}" fill="${color}"/>
-    </pattern>
-  </defs>
-  <rect width="${size}" height="${size}" fill="url(#pattern)"/>
-</svg>`;
-
-  return pattern;
-}
-
-/**
- * Generates a simple bar chart
- */
-function generateChart(size: number, colors: string[]): string {
-  const bars = 4;
-  const barWidth = (size * 0.8) / bars;
-  const startX = size * 0.1;
-  const maxHeight = size * 0.7;
-
-  let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
-
-  const heights = [0.3, 0.6, 0.8, 0.5];
-
-  heights.forEach((heightPercent, index) => {
-    const barHeight = maxHeight * heightPercent;
-    const x = startX + index * (barWidth + 5);
-    const y = size - barHeight - 20;
-    const color = colors[index % colors.length];
-
-    svg += `\n  <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" fill="${color}" stroke="#333" stroke-width="1"/>`;
-  });
-
-  svg += `\n  <line x1="10" y1="${size - 20}" x2="${size - 10}" y2="${size - 20}" stroke="#333" stroke-width="1.5"/>
-</svg>`;
-
-  return svg;
-}
-
-/**
- * Routes to appropriate SVG generator based on asset type
- */
-function generateSvgAsset(
+function renderAsset(
   objective: string,
   assetType: string,
-  colors: string[],
-  customSize?: { width: number; height: number }
+  canvas: Canvas,
+  palette: readonly string[],
+  label: string
 ): string {
-  const size = customSize?.width || 100;
-  const primaryColor = colors[0] || "#4444FF";
+  const primary = palette[0];
+  const lower = objective.toLowerCase();
 
   switch (assetType) {
     case "icon":
-      if (objective.toLowerCase().includes("star"))
-        return generateStarIcon(size, primaryColor);
-      if (objective.toLowerCase().includes("heart"))
-        return generateHeartIcon(size, primaryColor);
-      return generateCircleIcon(size, primaryColor);
-
+      if (lower.includes("star")) return renderStarIcon(canvas, primary);
+      if (lower.includes("heart")) return renderHeartIcon(canvas, primary);
+      return renderCircleIcon(canvas, primary);
     case "component":
-      if (objective.toLowerCase().includes("button"))
-        return generateButton(size, primaryColor, "Click");
-      return generateButton(size, primaryColor);
-
+      return renderButton(canvas, primary, label);
     case "pattern":
-      return generatePattern(size, primaryColor);
-
+      return renderPattern(canvas, primary);
     case "chart":
-      return generateChart(size, colors);
-
+      return renderBarChart(canvas, palette);
     default:
-      return generateCircleIcon(size, primaryColor);
+      return renderCircleIcon(canvas, primary);
   }
 }
 
-/**
- * Creates a text preview of the SVG
- */
+/** Creates a short text preview of the SVG (first 8 lines). */
 function createSvgPreview(svgCode: string): string {
-  const lines = svgCode.split("\n").slice(0, 8);
-  return (
-    "```svg\n" +
-    lines.join("\n") +
-    (svgCode.split("\n").length > 8
-      ? "\n... (more SVG code)\n"
-      : "\n") +
-    "```"
+  const lines = svgCode.split("\n");
+  const head = lines.slice(0, 8).join("\n");
+  const suffix = lines.length > 8 ? "\n... (more SVG code)\n" : "\n";
+  return "```svg\n" + head + suffix + "```";
+}
+
+function fail(error: string, issues: ValidationIssue[]): SvgAssetFailure {
+  return { ok: false, error, issues };
+}
+
+/** Validates the raw input and renders the asset. Never throws. */
+export function generateSvgAsset(input: unknown): SvgAsset {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) {
+    return fail("Invalid input", [{ path: "input", message: "must be an object" }]);
+  }
+  const raw = input as Record<string, unknown>;
+  const issues: ValidationIssue[] = [];
+  const collect = <T>(result: ValidationResult<T>): T | undefined => {
+    if (result.ok) return result.value;
+    issues.push(...result.issues);
+    return undefined;
+  };
+
+  const objectiveRaw = raw.objective;
+  const objective = collect(validateText(objectiveRaw, "objective"));
+  if (objective !== undefined && objective.trim().length === 0) {
+    issues.push({ path: "objective", message: "must not be empty" });
+  }
+
+  const context = raw.context === undefined ? "" : collect(validateText(raw.context, "context"));
+
+  const assetTypeInput = raw.type === undefined ? "auto" : collect(validateAssetType(raw.type, "type"));
+
+  const width =
+    raw.width === undefined ? undefined : collect(validateDimension(raw.width, "width"));
+  const height =
+    raw.height === undefined ? undefined : collect(validateDimension(raw.height, "height"));
+  const color = raw.color === undefined ? undefined : collect(validateColor(raw.color, "color"));
+  const labelInput =
+    raw.label === undefined ? undefined : collect(validateLabel(raw.label, "label"));
+
+  if (issues.length > 0 || objective === undefined || context === undefined || assetTypeInput === undefined) {
+    if (issues.length === 0) {
+      issues.push({ path: "input", message: "invalid input" });
+    }
+    return fail("Invalid input: " + issues.map((i) => `${i.path} ${i.message}`).join("; "), issues);
+  }
+
+  const trimmedObjective = objective.trim();
+  const assetType = assetTypeInput === "auto" ? detectAssetType(trimmedObjective) : assetTypeInput;
+
+  const textDims = width === undefined && height === undefined
+    ? extractTextDimensions(`${trimmedObjective} ${context}`, "objective")
+    : null;
+  if (textDims !== null && !textDims.ok) {
+    return fail("Invalid input: " + textDims.issues.map((i) => `${i.path} ${i.message}`).join("; "), textDims.issues);
+  }
+  const explicitCanvas = textDims?.ok ? textDims.value : undefined;
+
+  const canvas = defaultCanvas(
+    assetType,
+    width ?? explicitCanvas?.width,
+    height ?? explicitCanvas?.height
   );
+
+  const palette = color !== undefined ? [color] : extractColors(`${trimmedObjective} ${context}`);
+  const label = labelInput ?? (trimmedObjective.toLowerCase().includes("button") ? "Click" : "Button");
+
+  const svgCode = renderAsset(trimmedObjective, assetType, canvas, palette, label);
+
+  return {
+    ok: true,
+    assetType,
+    svgCode,
+    description: `Generated ${assetType} SVG asset: ${trimmedObjective}`,
+    dimensions: { width: canvas.width, height: canvas.height },
+    colorPalette: [...palette],
+    complexity: "simple",
+    previewText: createSvgPreview(svgCode),
+  };
 }
 
 export const GenerateSvgAssetTool: ToolDefinition = {
@@ -291,73 +227,39 @@ export const GenerateSvgAssetTool: ToolDefinition = {
       },
       context: {
         type: "string",
-        description:
-          "Optional additional context like style preferences or color scheme",
+        description: "Optional additional context like style preferences or color scheme",
       },
       type: {
         type: "string",
-        enum: ["icon", "component", "pattern", "chart", "illustration", "logo", "auto"],
+        enum: [...ASSET_TYPES],
         description: "Type of SVG asset to generate. 'auto' detects from objective.",
+      },
+      width: {
+        type: "number",
+        description: `Canvas width in pixels (${MIN_DIMENSION}..${MAX_DIMENSION}). Overrides any WxH in the objective.`,
+      },
+      height: {
+        type: "number",
+        description: `Canvas height in pixels (${MIN_DIMENSION}..${MAX_DIMENSION}). Overrides any WxH in the objective.`,
+      },
+      color: {
+        type: "string",
+        description: "Primary color: #RGB, #RRGGBB, #RRGGBBAA, or a named color (red, blue, green, ...).",
+      },
+      label: {
+        type: "string",
+        description: "Button label text (max 64 characters, no control characters).",
       },
     },
     required: ["objective"],
   },
 
-  async handler(input: Record<string, unknown>): Promise<SvgAsset> {
+  async handler(input: Record<string, unknown>): Promise<Record<string, unknown>> {
     try {
-      const {
-        objective = "",
-        context = "",
-        type: specifiedType = "auto",
-      } = input as {
-        objective: string;
-        context?: string;
-        type?: string;
-      };
-
-      if (!objective || objective.trim().length === 0) {
-        return {
-          success: false,
-          error: "objective parameter is required and must not be empty",
-        };
-      }
-
-      // Detect asset type
-      const assetType =
-        specifiedType === "auto" ? detectAssetType(objective) : specifiedType;
-
-      // Extract colors from objective and context
-      const colors = extractColors(objective + " " + context);
-
-      // Extract custom dimensions if specified
-      const customDimensions = extractDimensions(objective + " " + context) || undefined;
-      const width = customDimensions?.width || 100;
-      const height = customDimensions?.height || 100;
-
-      // Generate SVG code
-      const svgCode = generateSvgAsset(objective, assetType, colors, customDimensions);
-
-      // Create preview
-      const previewText = createSvgPreview(svgCode);
-
-      const result: SvgAsset = {
-        success: true,
-        assetType,
-        svgCode,
-        description: `Generated ${assetType} SVG asset: ${objective}`,
-        dimensions: { width, height },
-        colorPalette: colors,
-        complexity: "simple",
-        previewText,
-      };
-
-      return result;
+      return generateSvgAsset(input);
     } catch (error) {
-      const err = error instanceof Error ? error.message : String(error);
-      return {
-        success: false,
-        error: `Failed to generate SVG asset: ${err}`,
-      };
+      const message = error instanceof Error ? error.message : String(error);
+      return fail(`Failed to generate SVG asset: ${message}`, [{ path: "", message }]);
     }
   },
 };

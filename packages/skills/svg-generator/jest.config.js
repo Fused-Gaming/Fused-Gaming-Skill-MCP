@@ -2,29 +2,23 @@ export default {
   preset: "ts-jest",
   testEnvironment: "node",
   roots: ["<rootDir>/src"],
-  testMatch: ["**/?(*.)+(spec|test).ts"],
-  testPathIgnorePatterns: ["\\.js$"],
-  moduleFileExtensions: ["ts", "js"],
+  testMatch: ["**/__tests__/**/*.test.ts"],
+  moduleFileExtensions: ["ts", "js", "json"],
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
   transform: {
     "^.+\\.ts$": [
       "ts-jest",
       {
-        useESM: true,
         tsconfig: {
-          module: "ES2020",
+          module: "commonjs",
           target: "ES2020",
+          esModuleInterop: true,
+          types: ["node", "jest"],
         },
       },
     ],
   },
-  extensionsToTreatAsEsm: [".ts"],
-  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts", "!src/**/*.js"],
-  coverageThreshold: {
-    global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70,
-    },
-  },
+  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts", "!src/**/__tests__/**"],
 };

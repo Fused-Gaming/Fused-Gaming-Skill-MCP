@@ -1,234 +1,195 @@
 /**
- * SVG Generator Tool Tests
- * Validates SVG asset generation, dimension handling, and benchmark integration
+ * Tests for the SVG generator: validation, deterministic serialization,
+ * and fixture-driven regression checks.
  */
 
-import { GenerateSvgAssetTool } from '../tools/generate-svg-asset';
-import type { SvgAsset } from '../tools/generate-svg-asset';
+import { describe, it, expect } from "@jest/globals";
+import fs from "node:fs";
+import path from "node:path";
+import { GenerateSvgAssetTool, generateSvgAsset } from "../tools/generate-svg-asset";
+import { validateColor, validateDimension, validateLabel } from "../validation";
+import { escapeXml, fmt } from "../serialize";
 
-describe('GenerateSvgAssetTool', () => {
-  describe('Basic SVG Generation', () => {
-    it('should generate a valid SVG for simple objectives', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Blue circle icon',
-      })) as SvgAsset;
+/** Loose view of a tool result, covering both the success and failure shapes. */
+interface Result {
+  ok?: boolean;
+  error?: string;
+  issues?: Array<{ path: string; message: string }>;
+  svgCode?: string;
+  [key: string]: unknown;
+}
 
-      expect(result.success).toBe(true);
-      expect(result.svgCode).toBeDefined();
-      expect(result.svgCode).toContain('<svg');
-      expect(result.svgCode).toContain('</svg>');
-    });
+/** Runs the tool handler and narrows its result for assertions. */
+async function run(input: Record<string, unknown>): Promise<Result> {
+  return (await GenerateSvgAssetTool.handler(input)) as Result;
+}
 
-    it('should generate SVG with proper structure', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Red square',
-      })) as SvgAsset;
+const FIXTURE_DIR = path.join(__dirname, "fixtures");
+const inputFixtures = fs
+  .readdirSync(FIXTURE_DIR)
+  .filter((name) => name.endsWith(".input.json"))
+  .map((name) => name.replace(".input.json", ""))
+  .sort();
 
-      expect(result.success).toBe(true);
-      const svg = result.svgCode as string;
-      expect(svg).toMatch(/<svg[^>]*>/);
-      expect(svg).toMatch(/<\/svg>/);
-    });
+describe("tool definition", () => {
+  it("has the expected name and a valid schema", () => {
+    expect(GenerateSvgAssetTool.name).toBe("generate-svg-asset");
+    expect(GenerateSvgAssetTool.description).toContain("SVG");
+    expect(GenerateSvgAssetTool.inputSchema.type).toBe("object");
+    expect(GenerateSvgAssetTool.inputSchema.required).toContain("objective");
+  });
+});
 
-    it('should provide asset description', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Yellow star icon',
-      })) as SvgAsset;
-
-      expect(result.success).toBe(true);
-      expect(result.description).toBeDefined();
-      expect(result.description?.length).toBeGreaterThan(0);
-    });
+describe("fixture regression", () => {
+  it("has success and failure fixtures for at least three asset types", () => {
+    const successes = inputFixtures.filter((n) => !n.startsWith("invalid-"));
+    const failures = inputFixtures.filter((n) => n.startsWith("invalid-"));
+    expect(successes.length).toBeGreaterThanOrEqual(3);
+    expect(failures.length).toBeGreaterThanOrEqual(3);
   });
 
-  describe('Dimension Handling', () => {
-    it('should respect custom width and height dimensions', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Square icon with 256x128 dimensions',
-      })) as SvgAsset;
+  it.each(inputFixtures.filter((n) => !n.startsWith("invalid-")))(
+    "%s matches its expected SVG byte-for-byte",
+    async (name) => {
+      const input = JSON.parse(fs.readFileSync(path.join(FIXTURE_DIR, `${name}.input.json`), "utf8"));
+      const expected = fs.readFileSync(path.join(FIXTURE_DIR, `${name}.expected.svg`), "utf8");
 
-      expect(result.success).toBe(true);
-      expect(result.dimensions).toBeDefined();
-      expect(result.dimensions?.width).toBe(256);
-      expect(result.dimensions?.height).toBe(128);
-    });
+      const result = await run(input);
 
-    it('should handle large custom dimensions', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Icon 512x512',
-      })) as SvgAsset;
+      expect(result.ok).toBe(true);
+      expect(result.svgCode).toBe(expected);
+    }
+  );
 
-      expect(result.success).toBe(true);
-      expect(result.dimensions?.width).toBe(512);
-      expect(result.dimensions?.height).toBe(512);
-    });
+  it.each(inputFixtures.filter((n) => n.startsWith("invalid-")))(
+    "%s returns the expected structured failure",
+    async (name) => {
+      const input = JSON.parse(fs.readFileSync(path.join(FIXTURE_DIR, `${name}.input.json`), "utf8"));
+      const expected = JSON.parse(fs.readFileSync(path.join(FIXTURE_DIR, `${name}.expected.json`), "utf8"));
 
-    it('should use default dimensions when not specified', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Generic icon',
-      })) as SvgAsset;
+      const result = await run(input);
 
-      expect(result.success).toBe(true);
-      expect(result.dimensions?.width).toBeGreaterThan(0);
-      expect(result.dimensions?.height).toBeGreaterThan(0);
-    });
+      expect(result).toEqual(expected);
+      expect(result.ok).toBe(false);
+      expect(result).not.toHaveProperty("svgCode");
+    }
+  );
+});
+
+describe("dimension validation", () => {
+  it.each([1, 100, 4096, 1.5, 2.25])("accepts %p", (value) => {
+    expect(validateDimension(value, "width").ok).toBe(true);
   });
 
-  describe('Asset Type Detection', () => {
-    it('should detect icon type', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Blue circle icon',
-      })) as SvgAsset;
+  it.each([0, 0.5, -1, 4097, Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, "100", null])(
+    "rejects %p",
+    (value) => {
+      expect(validateDimension(value, "width").ok).toBe(false);
+    }
+  );
 
-      expect(result.success).toBe(true);
-      expect(['icon', 'generic-shape']).toContain(result.assetType);
-    });
+  it("rejects out-of-range explicit dimensions without throwing", async () => {
+    const result = await run({ objective: "Icon", width: 0, height: 10 });
+    expect(result).toMatchObject({ ok: false });
+    expect(result.issues).toEqual([{ path: "width", message: "must be between 1 and 4096" }]);
+  });
+});
 
-    it('should detect component type', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Green button component',
-      })) as SvgAsset;
-
-      expect(result.success).toBe(true);
-      expect(['component', 'generic-shape']).toContain(result.assetType);
-    });
+describe("color validation", () => {
+  it.each([
+    ["#abc", "#AABBCC"],
+    ["#AABBCC", "#AABBCC"],
+    ["#aabbccdd", "#AABBCCDD"],
+    ["red", "#FF4444"],
+    ["  Blue ", "#4444FF"],
+  ])("accepts %p as %p", (input, normalized) => {
+    expect(validateColor(input, "color")).toEqual({ ok: true, value: normalized });
   });
 
-  describe('Color Handling', () => {
-    it('should extract and provide color palette', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Red and blue icon',
-      })) as SvgAsset;
-
-      expect(result.success).toBe(true);
-      expect(result.colorPalette).toBeDefined();
-      expect(Array.isArray(result.colorPalette)).toBe(true);
-    });
-
-    it('should provide default colors when not specified', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Simple shape',
-      })) as SvgAsset;
-
-      expect(result.success).toBe(true);
-      expect(result.colorPalette).toBeDefined();
-      expect(result.colorPalette?.length).toBeGreaterThan(0);
-    });
+  it.each([
+    'red" onload="x',
+    "#ABCD",
+    "#GGGGGG",
+    "rgb(1,2,3)",
+    "javascript:alert(1)",
+    "",
+    "#",
+    42,
+  ])("rejects %p", (input) => {
+    expect(validateColor(input, "color").ok).toBe(false);
   });
 
-  describe('Error Handling', () => {
-    it('should fail gracefully on empty objective', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: '',
-      })) as SvgAsset;
-
-      expect(result.success).toBe(false);
+  it("rejects an attribute-injection color through the tool", async () => {
+    const result = await run({
+      objective: "Red square",
+      color: 'red" onload="alert(1)',
     });
+    expect(result.ok).toBe(false);
+    expect(result).not.toHaveProperty("svgCode");
+  });
+});
 
-    it('should handle very long objectives without crashing', async () => {
-      const longObjective = 'A'.repeat(1000);
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: longObjective,
-      })) as SvgAsset;
-
-      if (result.success) {
-        expect(result.svgCode).toBeDefined();
-      }
-      expect(typeof result.success).toBe('boolean');
-    });
-
-    it('should provide error message when generation fails', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: '',
-      })) as SvgAsset;
-
-      if (!result.success) {
-        expect(result.error).toBeDefined();
-      }
-    });
+describe("label validation and escaping", () => {
+  it("rejects labels over 64 characters", () => {
+    expect(validateLabel("x".repeat(65), "label").ok).toBe(false);
+    expect(validateLabel("x".repeat(64), "label").ok).toBe(true);
   });
 
-  describe('SVG Content Validation', () => {
-    it('should include viewBox attribute', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Test SVG',
-      })) as SvgAsset;
-
-      expect(result.success).toBe(true);
-      const svg = result.svgCode as string;
-      expect(svg.toLowerCase()).toMatch(/viewbox/i);
-    });
-
-    it('should not include invalid geometry', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Valid SVG asset',
-      })) as SvgAsset;
-
-      expect(result.success).toBe(true);
-      const svg = result.svgCode as string;
-      expect(svg).toContain('<svg');
-      expect(svg).toContain('</svg>');
-      // Verify SVG is properly formed with matching tags
-      const openTags = (svg.match(/<[^/][^>]*>/g) || []).length;
-      const closeTags = (svg.match(/<\/[^>]*>/g) || []).length;
-      expect(openTags).toBeGreaterThan(0);
-      expect(closeTags).toBeGreaterThan(0);
-    });
+  it("rejects control characters", () => {
+    expect(validateLabel("a\u0007b", "label").ok).toBe(false);
   });
 
-  describe('Performance Characteristics', () => {
-    it('should generate SVG within reasonable time', async () => {
-      const startTime = performance.now();
-
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Performance test SVG',
-      })) as SvgAsset;
-
-      const elapsedTime = performance.now() - startTime;
-
-      expect(result.success).toBe(true);
-      expect(elapsedTime).toBeLessThan(5000); // Should complete within 5 seconds
-    });
-
-    it('should handle multiple sequential generations', async () => {
-      const results = [];
-
-      for (let i = 0; i < 5; i++) {
-        const result = (await GenerateSvgAssetTool.handler({
-          objective: `SVG ${i}`,
-        })) as SvgAsset;
-        results.push(result);
-      }
-
-      expect(results).toHaveLength(5);
-      expect(results.every(r => typeof r.success === 'boolean')).toBe(true);
-    });
+  it("escapes markup in button labels", () => {
+    const result = generateSvgAsset({ objective: "Red button", label: '<script>"&\'' });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.svgCode).toContain("&lt;script&gt;&quot;&amp;&apos;");
+    expect(result.svgCode).not.toContain("<script>");
   });
 
-  describe('Benchmark Integration', () => {
-    it('should work with benchmark framework', async () => {
-      const result = (await GenerateSvgAssetTool.handler({
-        objective: 'Benchmark test SVG',
-      })) as SvgAsset;
+  it("escapeXml escapes all five XML special characters", () => {
+    expect(escapeXml(`&<>"'`)).toBe("&amp;&lt;&gt;&quot;&apos;");
+  });
+});
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('svgCode');
-      expect(result).toHaveProperty('description');
-    });
+describe("deterministic serialization", () => {
+  it("formats numbers without float noise", () => {
+    expect(fmt(0.1 + 0.2)).toBe("0.3");
+    expect(fmt(40.00000000000001)).toBe("40");
+    expect(fmt(-0)).toBe("0");
+    expect(fmt(1234.5)).toBe("1234.5");
+  });
 
-    it('should provide consistent output structure', async () => {
-      const result1 = (await GenerateSvgAssetTool.handler({
-        objective: 'Test 1',
-      })) as SvgAsset;
+  it("throws only for non-finite numbers inside the serializer", () => {
+    expect(() => fmt(Number.NaN)).toThrow(RangeError);
+  });
 
-      const result2 = (await GenerateSvgAssetTool.handler({
-        objective: 'Test 2',
-      })) as SvgAsset;
+  it("produces byte-identical output for identical input", async () => {
+    const input = { objective: "Yellow star icon", width: 73, height: 73 };
+    const first = await run({ ...input });
+    const second = await run({ ...input });
+    expect(second.svgCode).toBe(first.svgCode);
+    expect(first.svgCode ?? "").not.toMatch(/NaN|Infinity|undefined/);
+  });
+});
 
-      const keys1 = Object.keys(result1).sort();
-      const keys2 = Object.keys(result2).sort();
+describe("input robustness", () => {
+  it.each([
+    [{}, "objective"],
+    [{ objective: "   " }, "objective"],
+    [{ objective: 42 }, "objective"],
+    [{ objective: "Icon", type: "video" }, "type"],
+    [{ objective: "Icon", context: 7 }, "context"],
+  ])("returns a structured failure for %p", async (input, field) => {
+    const result = await run(input as Record<string, unknown>);
+    expect(result.ok).toBe(false);
+    expect(typeof result.error).toBe("string");
+    expect((result.issues ?? []).map((i) => i.path)).toContain(field);
+  });
 
-      expect(keys1).toEqual(keys2);
-    });
+  it("never throws for non-object input", () => {
+    expect(generateSvgAsset(null)).toMatchObject({ ok: false });
+    expect(generateSvgAsset([])).toMatchObject({ ok: false });
+    expect(generateSvgAsset("icon")).toMatchObject({ ok: false });
   });
 });
