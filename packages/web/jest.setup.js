@@ -6,20 +6,23 @@
 // Add React Testing Library matchers
 require('@testing-library/jest-dom');
 
-// Mock window.matchMedia for responsive component testing
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+// Mock window.matchMedia for responsive component testing (jsdom only; node-environment suites skip it)
+if (typeof window !== 'undefined') {
+  // Mock window.matchMedia for responsive component testing
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
 
 // Mock IntersectionObserver for lazy-loading component testing
 global.IntersectionObserver = class IntersectionObserver {

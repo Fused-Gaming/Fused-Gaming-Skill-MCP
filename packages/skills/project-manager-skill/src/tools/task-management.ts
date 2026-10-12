@@ -16,7 +16,7 @@ export interface CreateTaskInput {
 }
 
 export function createTask(input: CreateTaskInput): Task {
-  const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const taskId = `task_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 
   const task: Task = {
     id: taskId,
@@ -37,7 +37,9 @@ export function createTask(input: CreateTaskInput): Task {
 }
 
 export function updateTaskStatus(task: Task, newStatus: TaskStatus): Task {
-  const updatedTask = { ...task, status: newStatus, updatedAt: Date.now() };
+  // Reopening a task must drop the completion timestamp from the earlier close.
+  const { completedAt: _previousCompletion, ...rest } = task;
+  const updatedTask: Task = { ...rest, status: newStatus, updatedAt: Date.now() };
 
   if (newStatus === 'done') {
     updatedTask.completedAt = Date.now();
@@ -55,14 +57,11 @@ export function assignTask(task: Task, assignee: string): Task {
 }
 
 export function addTaskLabel(task: Task, label: string): Task {
-  const labels = task.labels || [];
-  if (!labels.includes(label)) {
-    labels.push(label);
-  }
+  const labels = task.labels ?? [];
 
   return {
     ...task,
-    labels,
+    labels: labels.includes(label) ? [...labels] : [...labels, label],
     updatedAt: Date.now(),
   };
 }
@@ -76,14 +75,11 @@ export function setTaskDueDate(task: Task, dueDate: string): Task {
 }
 
 export function addTaskDependency(task: Task, dependsOn: string): Task {
-  const dependencies = task.dependencies || [];
-  if (!dependencies.includes(dependsOn)) {
-    dependencies.push(dependsOn);
-  }
+  const dependencies = task.dependencies ?? [];
 
   return {
     ...task,
-    dependencies,
+    dependencies: dependencies.includes(dependsOn) ? [...dependencies] : [...dependencies, dependsOn],
     updatedAt: Date.now(),
   };
 }
@@ -121,10 +117,15 @@ export function calculateMetrics(tasks: Task[]): TaskMetrics {
       ? tasks.reduce((sum, t) => sum + (priorityOrder[t.priority] || 2), 0) / tasks.length
       : 0;
 
+  // Thresholds map the mean priority weight back onto the priority names
+  // (low=1, medium=2, high=3, critical=4). An empty list reports 'medium'.
   let avgPriorityStr = 'medium';
-  if (avgPriority >= 3.5) avgPriorityStr = 'critical';
-  else if (avgPriority >= 2.5) avgPriorityStr = 'high';
-  else if (avgPriority >= 1.5) avgPriorityStr = 'low';
+  if (tasks.length > 0) {
+    if (avgPriority >= 3.5) avgPriorityStr = 'critical';
+    else if (avgPriority >= 2.5) avgPriorityStr = 'high';
+    else if (avgPriority >= 1.5) avgPriorityStr = 'medium';
+    else avgPriorityStr = 'low';
+  }
 
   return {
     totalTasks: tasks.length,

@@ -20,13 +20,39 @@ if (!fs.existsSync(registryDir)) {
   fs.mkdirSync(registryDir, { recursive: true });
 }
 
+function listSourceFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) return entry.name === '__tests__' ? [] : listSourceFiles(full);
+    return entry.name.endsWith('.ts') && !entry.name.endsWith('.d.ts') ? [full] : [];
+  });
+}
+
 function extractToolsFromSkill(skillPath) {
+  // Tool names come from the `name: 'tool-name'` literals the package declares, since
+  // source file names do not match tool names (e.g. task-management.ts declares none).
+  const declared = new Set();
+  for (const file of listSourceFiles(path.join(skillPath, 'src'))) {
+    const source = fs.readFileSync(file, 'utf8');
+    for (const match of source.matchAll(/name:\s*['"]([a-z][a-z0-9-]*)['"]/g)) {
+      // The skill's own name (e.g. `name: 'ux-journeymapper'` on the Skill object) is not a tool.
+      if (match[1] !== path.basename(skillPath)) declared.add(match[1]);
+    }
+  }
+  if (declared.size > 0) {
+    return [...declared].sort().map(name => ({
+      name,
+      file: 'src',
+      description: `${name} from ${path.basename(skillPath)}`
+    }));
+  }
+
+  // Fallback for packages that declare no tool names: use the tool source file names.
   const tools = [];
   const toolsDir = path.join(skillPath, 'src', 'tools');
-
   if (fs.existsSync(toolsDir)) {
-    const files = fs.readdirSync(toolsDir);
-    files.forEach(file => {
+    fs.readdirSync(toolsDir).forEach(file => {
       if (file.endsWith('.ts')) {
         const toolName = file.replace('.ts', '').replace(/-/g, '_');
         tools.push({
@@ -37,7 +63,6 @@ function extractToolsFromSkill(skillPath) {
       }
     });
   }
-
   return tools;
 }
 

@@ -1,340 +1,126 @@
-/**
- * UX Journeymapper Tool Tests
- * Validates journey map generation, stage detection, and persona mapping
- */
-
 import { MapUserJourneyTool } from '../tools/map-user-journey';
+import { validateJourneyMap } from '../validation';
+import type { JourneyMapResult } from '../types';
 
-interface JourneyStage {
-  stage: string;
-  description: string;
-  touchpoints: string[];
-  emotions: string[];
-  painPoints: string[];
-  opportunities: string[];
-}
+const FIXED_PERSONA = {
+  name: 'Maya',
+  role: 'Budget-conscious parent',
+  goals: ['Buy school supplies quickly', 'Avoid surprise fees'],
+  painPoints: ['Hidden shipping costs'],
+  techProficiency: 'intermediate',
+};
 
-interface JourneyMap extends Record<string, unknown> {
-  success: boolean;
-  persona?: string;
-  goal?: string;
-  stages?: JourneyStage[];
-  summary?: string;
-  keyInsights?: string[];
-  error?: string;
-}
+const run = (input: Record<string, unknown>) =>
+  MapUserJourneyTool.handler(input) as Promise<JourneyMapResult>;
 
 describe('MapUserJourneyTool', () => {
-  describe('Journey Map Generation', () => {
-    it('should generate complete journey map', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'E-commerce customer purchasing workflow',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.persona).toBeDefined();
-      expect(result.goal).toBeDefined();
-      expect(result.stages).toBeDefined();
-      expect(Array.isArray(result.stages)).toBe(true);
+  describe('happy path', () => {
+    it('returns a contract-valid journey map for a plain objective', async () => {
+      const result = await run({ objective: 'Product discovery journey' });
+      expect(validateJourneyMap(result).ok).toBe(true);
+      expect(result).toMatchObject({ success: true, persona: 'General User', goal: 'Product discovery journey' });
     });
 
-    it('should include minimum required journey stages', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'User onboarding journey',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.stages && result.stages.length).toBeGreaterThan(0);
+    it('uses the free-text context as the persona label', async () => {
+      const result = await run({ objective: 'Onboarding journey', context: 'Non-technical user' });
+      expect(result).toMatchObject({ success: true, persona: 'Non-technical user' });
     });
 
-    it('should provide stage details', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Product discovery journey',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      if (result.stages && result.stages.length > 0) {
-        const stage = result.stages[0];
-        expect(stage).toHaveProperty('stage');
-        expect(stage).toHaveProperty('description');
-        expect(stage).toHaveProperty('touchpoints');
-        expect(stage).toHaveProperty('emotions');
-        expect(stage).toHaveProperty('painPoints');
-        expect(stage).toHaveProperty('opportunities');
-      }
-    });
-  });
-
-  describe('Stage Detection', () => {
-    it('should detect awareness stage from keywords', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'User awareness and discovery phase',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      const stageNames = result.stages?.map(s => s.stage.toLowerCase()) || [];
-      expect(stageNames.length).toBeGreaterThan(0);
-    });
-
-    it('should detect consideration stage', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Customer evaluation and consideration',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.stages && result.stages.length).toBeGreaterThan(0);
-    });
-
-    it('should detect purchase stage', async () => {
-      const result = (await MapUserJourneyTool.handler({
+    it('uses a structured persona label and echoes the validated profile', async () => {
+      const result = await run({
         objective: 'Purchase and checkout process',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.stages && result.stages.length).toBeGreaterThan(0);
+        persona: FIXED_PERSONA,
+        context: 'ignored when persona is present',
+      });
+      expect(result).toMatchObject({
+        success: true,
+        persona: 'Maya (Budget-conscious parent)',
+        personaProfile: FIXED_PERSONA,
+      });
     });
 
-    it('should detect onboarding stage', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Onboarding and setup experience',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.stages && result.stages.length).toBeGreaterThan(0);
-    });
-  });
-
-  describe('Touchpoint Mapping', () => {
-    it('should identify relevant touchpoints per stage', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'SaaS product discovery to usage',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      if (result.stages && result.stages.length > 0) {
-        result.stages.forEach(stage => {
-          expect(Array.isArray(stage.touchpoints)).toBe(true);
-          expect(stage.touchpoints.length).toBeGreaterThan(0);
-        });
-      }
+    it('maps stage keywords to stages in the order they match', async () => {
+      const result = await run({
+        objective: 'Customer journey from awareness through purchase, onboarding and retention',
+      });
+      expect(result.success && result.stages.map((s) => s.stage)).toEqual([
+        'Awareness',
+        'Purchase',
+        'Onboarding',
+        'Retention',
+      ]);
     });
 
-    it('should include digital and physical touchpoints', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Omnichannel retail journey',
-      })) as JourneyMap;
+    it('falls back to the default five stages when no keyword matches', async () => {
+      const result = await run({ objective: 'Zzz' });
+      expect(result.success && result.stages.map((s) => s.stage)).toEqual([
+        'Awareness',
+        'Consideration',
+        'Decision',
+        'Onboarding',
+        'Usage',
+      ]);
+    });
 
-      expect(result.success).toBe(true);
-      if (result.stages && result.stages.length > 0) {
-        const touchpoints = result.stages.flatMap(s => s.touchpoints);
-        expect(touchpoints.length).toBeGreaterThan(0);
-      }
+    it('is deterministic for identical input', async () => {
+      const input = { objective: 'Support and retention journey', persona: FIXED_PERSONA };
+      expect(await run(input)).toEqual(await run(input));
     });
   });
 
-  describe('Emotion and Pain Points', () => {
-    it('should map emotions to stages', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Customer satisfaction journey',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      if (result.stages && result.stages.length > 0) {
-        result.stages.forEach(stage => {
-          expect(Array.isArray(stage.emotions)).toBe(true);
-          expect(stage.emotions.length).toBeGreaterThan(0);
-        });
-      }
+  describe('failure path', () => {
+    it('rejects an empty objective with structured issues', async () => {
+      const result = await run({ objective: '' });
+      expect(result).toEqual({
+        success: false,
+        error: 'objective parameter is required and must not be empty',
+        issues: [{ path: 'objective', message: 'must not be empty' }],
+      });
     });
 
-    it('should identify pain points', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Problem identification in customer journey',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      if (result.stages && result.stages.length > 0) {
-        const painPoints = result.stages.flatMap(s => s.painPoints);
-        expect(painPoints.length).toBeGreaterThan(0);
-      }
+    it('rejects a whitespace-only objective', async () => {
+      const result = await run({ objective: '   ' });
+      expect(result.success).toBe(false);
     });
 
-    it('should identify opportunities for improvement', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Optimization opportunities analysis',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      if (result.stages && result.stages.length > 0) {
-        const opportunities = result.stages.flatMap(s => s.opportunities);
-        expect(opportunities.length).toBeGreaterThan(0);
-      }
-    });
-  });
-
-  describe('Persona Extraction', () => {
-    it('should identify or create persona', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Tech-savvy millennial customer journey',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.persona).toBeDefined();
+    it('rejects a non-string objective without throwing', async () => {
+      const result = await run({ objective: 42 });
+      expect(result).toMatchObject({
+        success: false,
+        issues: [{ path: 'objective', message: 'must be a string' }],
+      });
     });
 
-    it('should extract persona from objective keywords', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Enterprise decision maker journey',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      if (result.persona) {
-        expect(result.persona.length).toBeGreaterThan(0);
-      }
-    });
-  });
-
-  describe('Key Insights', () => {
-    it('should generate key insights from journey', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'E-commerce customer analysis',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.keyInsights).toBeDefined();
-      expect(Array.isArray(result.keyInsights)).toBe(true);
-      if (result.keyInsights) {
-        expect(result.keyInsights.length).toBeGreaterThan(0);
-      }
-    });
-
-    it('should provide actionable insights', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'User retention strategy journey',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      if (result.keyInsights && result.keyInsights.length > 0) {
-        result.keyInsights.forEach(insight => {
-          expect(insight.length).toBeGreaterThan(0);
-        });
-      }
-    });
-  });
-
-  describe('Summary Generation', () => {
-    it('should provide journey summary', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Complete user journey mapping',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.summary).toBeDefined();
-      if (result.summary) {
-        expect(result.summary.length).toBeGreaterThan(0);
-      }
-    });
-
-    it('should capture goal statement', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Improve user experience across all touchpoints',
-      })) as JourneyMap;
-
-      expect(result.success).toBe(true);
-      expect(result.goal).toBeDefined();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle empty objectives gracefully', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: '',
-      })) as JourneyMap;
-
-      expect(typeof result.success).toBe('boolean');
+    it('rejects an invalid persona and returns the persona issues', async () => {
+      const result = await run({
+        objective: 'Onboarding journey',
+        persona: { name: 'Maya', role: 'Parent', goals: [] },
+      });
+      expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBeDefined();
+        expect(result.error).toBe('persona failed validation');
+        expect(result.issues).toContainEqual({ path: 'persona.goals', message: 'must contain at least 1 item(s)' });
       }
     });
 
-    it('should handle very long objectives', async () => {
-      const longObjective = 'A'.repeat(1000);
-      const result = (await MapUserJourneyTool.handler({
-        objective: longObjective,
-      })) as JourneyMap;
-
-      expect(typeof result.success).toBe('boolean');
+    it('rejects a persona that is not an object', async () => {
+      const result = await run({ objective: 'Onboarding journey', persona: 'Maya' });
+      expect(result).toMatchObject({ success: false, error: 'persona must be an object' });
     });
 
-    it('should handle special characters', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Journey with <special> & "characters" involved',
-      })) as JourneyMap;
-
-      expect(typeof result.success).toBe('boolean');
-      if (result.success) {
-        expect(result.stages).toBeDefined();
-      }
+    it('still returns a valid failure contract for every failure', async () => {
+      const result = await run({ objective: null });
+      expect(validateJourneyMap(result).ok).toBe(true);
     });
   });
 
-  describe('Performance', () => {
-    it('should generate journey map within reasonable time', async () => {
-      const startTime = performance.now();
-
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Performance test journey',
-      })) as JourneyMap;
-
-      const elapsedTime = performance.now() - startTime;
-
-      expect(result.success).toBe(true);
-      expect(elapsedTime).toBeLessThan(5000);
-    });
-
-    it('should handle multiple sequential journeys', async () => {
-      const results = [];
-
-      for (let i = 0; i < 5; i++) {
-        const result = (await MapUserJourneyTool.handler({
-          objective: `Journey ${i}`,
-        })) as JourneyMap;
-        results.push(result);
-      }
-
-      expect(results).toHaveLength(5);
-      expect(results.every(r => typeof r.success === 'boolean')).toBe(true);
-    });
-  });
-
-  describe('Output Consistency', () => {
-    it('should maintain consistent output structure', async () => {
-      const result1 = (await MapUserJourneyTool.handler({
-        objective: 'Test journey 1',
-      })) as JourneyMap;
-
-      const result2 = (await MapUserJourneyTool.handler({
-        objective: 'Test journey 2',
-      })) as JourneyMap;
-
-      const keys1 = Object.keys(result1).sort();
-      const keys2 = Object.keys(result2).sort();
-
-      expect(keys1).toEqual(keys2);
-    });
-
-    it('should provide all required fields on success', async () => {
-      const result = (await MapUserJourneyTool.handler({
-        objective: 'Complete journey mapping',
-      })) as JourneyMap;
-
-      if (result.success) {
-        expect(result.persona).toBeDefined();
-        expect(result.goal).toBeDefined();
-        expect(result.stages).toBeDefined();
-        expect(result.summary).toBeDefined();
-        expect(result.keyInsights).toBeDefined();
-      }
+  describe('snapshot', () => {
+    it('matches the default template output for a fixed persona', async () => {
+      const result = await run({
+        objective: 'Customer journey from awareness through purchase, onboarding and retention',
+        persona: FIXED_PERSONA,
+      });
+      expect(result).toMatchSnapshot();
     });
   });
 });

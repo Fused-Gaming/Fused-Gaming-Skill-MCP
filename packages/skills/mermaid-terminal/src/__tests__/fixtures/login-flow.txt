@@ -1,0 +1,7 @@
+Flowchart LR (6 nodes, 6 edges)
+Start --> Enter credentials
+Enter credentials --> Valid?
+Valid? --yes--> Open dashboard
+Valid? --no--> Show error
+Show error --> Enter credentials
+Open dashboard --> End

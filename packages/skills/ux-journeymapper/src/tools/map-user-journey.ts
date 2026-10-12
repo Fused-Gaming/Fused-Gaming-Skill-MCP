@@ -4,25 +4,8 @@
  */
 
 import type { ToolDefinition } from "@h4shed/mcp-core";
-
-interface JourneyStage {
-  stage: string;
-  description: string;
-  touchpoints: string[];
-  emotions: string[];
-  painPoints: string[];
-  opportunities: string[];
-}
-
-interface JourneyMap extends Record<string, unknown> {
-  success: boolean;
-  persona?: string;
-  goal?: string;
-  stages?: JourneyStage[];
-  summary?: string;
-  keyInsights?: string[];
-  error?: string;
-}
+import type { JourneyMapResult, JourneyStage, Persona } from "../types.js";
+import { validatePersona } from "../validation.js";
 
 /**
  * Extracts journey stages from the objective description
@@ -323,6 +306,24 @@ function generateKeyInsights(stages: JourneyStage[]): string[] {
   return insights.slice(0, 5);
 }
 
+/** Matches the 120-character limit that validateJourneyMap enforces on the persona output. */
+const MAX_PERSONA_LABEL_LENGTH = 120;
+
+/** Matches the 300-character limit that validateJourneyMap enforces on the goal output. */
+const MAX_GOAL_LENGTH = 300;
+
+/** Matches the 1,000-character limit that validateJourneyMap enforces on the summary output. */
+const MAX_SUMMARY_LENGTH = 1000;
+
+/** Shortens text to a contract limit, ending with an ellipsis when it is cut. */
+function clip(text: string, max: number): string {
+  return text.length <= max ? text : `${text.slice(0, max - 1)}…`;
+}
+
+function personaLabel(persona: Persona): string {
+  return clip(`${persona.name} (${persona.role})`, MAX_PERSONA_LABEL_LENGTH);
+}
+
 export const MapUserJourneyTool: ToolDefinition = {
   name: "map-user-journey",
   description:
@@ -338,24 +339,46 @@ export const MapUserJourneyTool: ToolDefinition = {
       context: {
         type: "string",
         description:
-          "Optional persona or additional context (e.g., 'Budget-conscious millennial')",
+          "Optional free-text persona label or additional context (e.g., 'Budget-conscious millennial'). Ignored when persona is supplied.",
+      },
+      persona: {
+        type: "object",
+        description:
+          "Optional structured persona: { name, role, goals[], painPoints?[], techProficiency? ('novice'|'intermediate'|'expert') }",
       },
     },
     required: ["objective"],
   },
 
-  async handler(input: Record<string, unknown>): Promise<JourneyMap> {
+  async handler(input: Record<string, unknown>): Promise<JourneyMapResult> {
     try {
-      const { objective = "", context = "" } = input as {
-        objective: string;
-        context?: string;
-      };
+      const objective = input.objective;
+      const context = typeof input.context === "string" ? input.context : "";
 
-      if (!objective || objective.trim().length === 0) {
+      if (typeof objective !== "string") {
+        return {
+          success: false,
+          error: "objective parameter must be a string",
+          issues: [{ path: "objective", message: "must be a string" }],
+        };
+      }
+      if (objective.trim().length === 0) {
         return {
           success: false,
           error: "objective parameter is required and must not be empty",
+          issues: [{ path: "objective", message: "must not be empty" }],
         };
+      }
+
+      let persona: string = clip(context || "General User", MAX_PERSONA_LABEL_LENGTH);
+      let personaProfile: Persona | undefined;
+      if (input.persona !== undefined) {
+        const validated = validatePersona(input.persona);
+        if (!validated.ok) {
+          return { success: false, error: validated.error, issues: validated.issues };
+        }
+        personaProfile = validated.value;
+        persona = personaLabel(validated.value);
       }
 
       // Extract stages from objective
@@ -378,18 +401,20 @@ export const MapUserJourneyTool: ToolDefinition = {
         };
       });
 
-      // Generate insights
       const keyInsights = generateKeyInsights(journeyStages);
+      const totalTouchpoints = journeyStages.reduce((acc, s) => acc + s.touchpoints.length, 0);
 
-      const result: JourneyMap = {
+      const result: JourneyMapResult = {
         success: true,
-        persona: context || "General User",
-        goal: objective,
+        persona,
+        goal: clip(objective, MAX_GOAL_LENGTH),
         stages: journeyStages,
-        summary: `Journey map for: ${objective}. Identified ${journeyStages.length} key stages with ${journeyStages.reduce((acc, s) => acc + s.touchpoints.length, 0)} total touchpoints.`,
+        summary: clip(`Journey map for: ${objective}. Identified ${journeyStages.length} key stages with ${totalTouchpoints} total touchpoints.`, MAX_SUMMARY_LENGTH),
         keyInsights,
       };
-
+      if (personaProfile) {
+        result.personaProfile = personaProfile;
+      }
       return result;
     } catch (error) {
       const err = error instanceof Error ? error.message : String(error);

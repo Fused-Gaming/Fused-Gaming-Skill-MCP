@@ -8,7 +8,7 @@ import { GenerateSvgAssetTool } from "./tools/generate-svg-asset.js";
 
 export const SvgGeneratorSkill: Skill = {
   name: "svg-generator",
-  version: "1.0.0",
+  version: "1.1.1",
   description: "Generate SVG assets and icon concepts from structured prompts.",
   tools: [GenerateSvgAssetTool],
 

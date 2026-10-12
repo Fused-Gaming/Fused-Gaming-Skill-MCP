@@ -88,12 +88,8 @@ describe('Button - Accessibility (WCAG 2.1 AAA)', () => {
       const { container } = render(
         <Button size="sm">Small</Button>
       );
-      const button = container.querySelector('button');
-      // Minimum touch target size is 44x44px per WCAG
-      if (button) {
-        const rect = button.getBoundingClientRect();
-        // Note: In tests, actual dimensions may not be calculable, but we verify no a11y violations
-      }
+      // Minimum touch target size is 44x44px per WCAG. Layout is not computed in jsdom,
+      // so this test verifies no a11y violations rather than measuring dimensions.
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });

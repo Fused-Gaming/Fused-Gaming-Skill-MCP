@@ -1,6 +1,6 @@
 # @h4shed/skill-svg-generator
 
-Generate SVG assets and icon concepts from structured prompts.
+Generate SVG assets (icons, buttons, patterns, bar charts) from structured prompts. Output is deterministic: identical input always yields byte-identical SVG.
 
 ## Installation
 
@@ -8,77 +8,49 @@ Generate SVG assets and icon concepts from structured prompts.
 npm install @h4shed/skill-svg-generator
 ```
 
-## Tools
+## Tool: `generate-svg-asset`
 
-### `generate-svg-asset`
+### Input
 
-Generate SVG assets and icon concepts from structured prompts.
+| Field       | Type   | Required | Notes |
+|-------------|--------|----------|-------|
+| `objective` | string | yes      | Non-empty, at most 500 characters. Drives asset type, shape, and colors. A `WxH` pattern (e.g. `256x128`) sets dimensions. |
+| `context`   | string | no       | Up to 500 characters. Scanned for colors and dimensions. |
+| `type`      | enum   | no       | `icon`, `component`, `pattern`, `chart`, `illustration`, `logo`, or `auto` (default). |
+| `width`     | number | no       | Finite, 1 to 4096. Overrides any `WxH` in the text. |
+| `height`    | number | no       | Finite, 1 to 4096. Overrides any `WxH` in the text. |
+| `color`     | string | no       | `#RGB`, `#RRGGBB`, `#RRGGBBAA`, or a named color. |
+| `label`     | string | no       | Button label. At most 64 characters, no control characters. |
 
-## Implementation Status
+### Validation rules
 
-- ✅ Package scaffolded
-- ✅ Tool schema and handler stub
-- ✅ Full production implementation complete
-- ✅ Comprehensive test suite added
-- ✅ Ready for release
+- Dimensions must be finite numbers between 1 and 4096. Text-derived `WxH` values are checked the same way.
+- Colors must match `#RGB`, `#RRGGBB`, or `#RRGGBBAA`, or be one of: red, blue, green, yellow, orange, purple, pink, cyan, gray, black, white. `#RGB` is expanded and output is uppercase.
+- Labels are XML-escaped (`&`, `<`, `>`, `"`, `'`). Colors are never interpolated unless validated.
+- Numbers are rounded to two decimals and serialized without float noise.
 
-## Features
+### Result
 
-- **Multiple asset types**: Icons, components, patterns, charts, illustrations, logos
-- **Smart type detection**: Automatically detects asset type from description
-- **Color extraction**: Identifies colors from natural language descriptions
-- **SVG generation**: Generates clean, valid SVG code
-- **Asset customization**: Support for various icon shapes (circle, star, heart)
-- **Component templates**: Pre-built button and UI component generation
-- **Pattern generation**: Creates repeating geometric patterns
-- **Chart visualization**: Generates simple data visualization charts
+Success:
 
-## Usage Examples
-
-```typescript
-// Generate a blue star icon
-{
-  objective: "Blue star icon",
-  type: "icon"
-}
-
-// Generate a green button component
-{
-  objective: "Green button component with click label",
-  type: "component"
-}
-
-// Generate a geometric pattern
-{
-  objective: "Red and yellow geometric pattern",
-  type: "pattern"
-}
-
-// Generate a bar chart
-{
-  objective: "Bar chart with four data points"
-}
-
-// Auto-detect asset type
-{
-  objective: "Heart icon in red and pink"
-}
+```json
+{ "ok": true, "assetType": "icon", "svgCode": "<svg ...>...</svg>", "dimensions": { "width": 64, "height": 64 }, "colorPalette": ["#FFFF44"], "description": "...", "complexity": "simple", "previewText": "..." }
 ```
 
-## Supported Asset Types
+Failure (never thrown):
 
-- **icon**: Simple icons like circles, stars, hearts
-- **component**: UI components like buttons
-- **pattern**: Repeating geometric patterns
-- **chart**: Data visualizations and charts
-- **illustration**: Custom illustrations
-- **logo**: Logo designs
-- **auto**: Automatic type detection (default)
-- ⏳ Full production implementation pending roadmap prioritization
+```json
+{ "ok": false, "error": "Invalid input: width must be between 1 and 4096", "issues": [{ "path": "width", "message": "must be between 1 and 4096" }] }
+```
 
-## Usage
+### Examples
 
-This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-core` via the workspace skill registry.
+```typescript
+{ objective: "Yellow star icon", width: 64, height: 64 }
+{ objective: "Green button component", color: "#2e7d32", label: "Save", width: 160, height: 48 }
+{ objective: "Blue and green bar chart", width: 200, height: 150 }
+{ objective: "Red and yellow geometric pattern", width: 128, height: 128 }
+```
 
 ## Development
 
@@ -87,6 +59,8 @@ This package exports an MCP skill definition that can be loaded by `@h4shed/mcp-
 npm run build --workspace=packages/skills/svg-generator
 npm run test --workspace=packages/skills/svg-generator
 ```
+
+Tests live in `src/__tests__/`. Fixtures in `src/__tests__/fixtures/` pair each `*.input.json` with an `*.expected.svg` (success) or `*.expected.json` (failure). To update a fixture after an intentional rendering change, regenerate it and review the diff.
 
 ## License
 

@@ -1,0 +1,11 @@
+{
+  "ok": false,
+  "success": false,
+  "error": "Invalid input: width must be between 1 and 4096",
+  "issues": [
+    {
+      "path": "width",
+      "message": "must be between 1 and 4096"
+    }
+  ]
+}

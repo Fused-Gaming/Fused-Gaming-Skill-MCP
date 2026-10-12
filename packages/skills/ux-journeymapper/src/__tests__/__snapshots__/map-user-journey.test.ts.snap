@@ -1,0 +1,147 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapUserJourneyTool snapshot matches the default template output for a fixed persona 1`] = `
+{
+  "goal": "Customer journey from awareness through purchase, onboarding and retention",
+  "keyInsights": [
+    "Key friction points identified: Not finding product online, Competitor visibility",
+    "Primary improvement areas: enhance messaging, provide guidance",
+    "Recommended: Conduct user research interviews",
+    "Recommended: Implement feedback collection mechanisms",
+    "Recommended: Track metrics across journey stages",
+  ],
+  "persona": "Maya (Budget-conscious parent)",
+  "personaProfile": {
+    "goals": [
+      "Buy school supplies quickly",
+      "Avoid surprise fees",
+    ],
+    "name": "Maya",
+    "painPoints": [
+      "Hidden shipping costs",
+    ],
+    "role": "Budget-conscious parent",
+    "techProficiency": "intermediate",
+  },
+  "stages": [
+    {
+      "description": "Awareness phase of the customer journey",
+      "emotions": [
+        "Curious",
+        "Interested",
+        "Skeptical",
+      ],
+      "opportunities": [
+        "Enhance messaging",
+        "Provide guidance",
+        "Gather user feedback",
+        "Monitor metrics",
+        "A/B test improvements",
+      ],
+      "painPoints": [
+        "Not finding product online",
+        "Competitor visibility",
+        "Information overload",
+        "Trust concerns",
+      ],
+      "stage": "Awareness",
+      "touchpoints": [
+        "Social media ads",
+        "Search engine",
+        "Word of mouth",
+        "Marketing campaign",
+        "Product review site",
+      ],
+    },
+    {
+      "description": "Purchase phase of the customer journey",
+      "emotions": [
+        "Confident",
+        "Satisfied",
+        "Eager",
+      ],
+      "opportunities": [
+        "Optimize performance",
+        "Reduce friction",
+        "Simplify user experience",
+        "Improve documentation",
+        "Gather user feedback",
+      ],
+      "painPoints": [
+        "Payment failure",
+        "Slow processing",
+        "Confirmation delays",
+        "Unclear next steps",
+      ],
+      "stage": "Purchase",
+      "touchpoints": [
+        "Payment gateway",
+        "Order confirmation",
+        "Invoice",
+        "Receipt email",
+        "Purchase confirmation",
+      ],
+    },
+    {
+      "description": "Onboarding phase of the customer journey",
+      "emotions": [
+        "Hopeful",
+        "Overwhelmed",
+        "Engaged",
+      ],
+      "opportunities": [
+        "Simplify user experience",
+        "Improve documentation",
+        "Gather user feedback",
+        "Monitor metrics",
+        "A/B test improvements",
+      ],
+      "painPoints": [
+        "Complex setup",
+        "Lack of guidance",
+        "Feature confusion",
+        "Initial friction",
+      ],
+      "stage": "Onboarding",
+      "touchpoints": [
+        "Welcome email",
+        "Onboarding tutorial",
+        "Setup wizard",
+        "Documentation",
+        "Support chat",
+      ],
+    },
+    {
+      "description": "Retention phase of the customer journey",
+      "emotions": [
+        "Loyal",
+        "Engaged",
+        "Valued",
+      ],
+      "opportunities": [
+        "Increase feature adoption",
+        "Create engagement hooks",
+        "Gather user feedback",
+        "Monitor metrics",
+        "A/B test improvements",
+      ],
+      "painPoints": [
+        "Feature stagnation",
+        "Poor user engagement",
+        "Competitive alternatives",
+        "Value erosion",
+      ],
+      "stage": "Retention",
+      "touchpoints": [
+        "Personalized recommendations",
+        "Loyalty program",
+        "Email campaigns",
+        "In-app notifications",
+        "Premium features",
+      ],
+    },
+  ],
+  "success": true,
+  "summary": "Journey map for: Customer journey from awareness through purchase, onboarding and retention. Identified 4 key stages with 20 total touchpoints.",
+}
+`;

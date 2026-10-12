@@ -1,190 +1,78 @@
-# Project Manager Skill
+# @h4shed/skill-project-manager-skill
 
-Task and project management skill for team collaboration in Fused Gaming MCP.
-
-## Overview
-
-The Project Manager Skill provides tools for creating tasks, managing team workload, tracking progress, and maintaining project organization.
-
-## Features
-
-- ✅ Task creation and management
-- ✅ Status tracking (todo, in-progress, review, done, blocked)
-- ✅ Priority-based task organization
-- ✅ Team member assignment
-- ✅ Time tracking and estimation
-- ✅ Task dependencies and blocking
-- ✅ Labels and categorization
-- ✅ Metrics and reporting
+Task and project management skill for team collaboration in the Fused Gaming MCP ecosystem.
 
 ## Installation
 
 ```bash
-npm install
-npm run build
+npm install @h4shed/skill-project-manager-skill
 ```
+
+Requires Node.js `>=20`.
+
+## Features
+
+- Create tasks with validated priority, due date (`YYYY-MM-DD`), estimate, and labels
+- Status workflow: `todo`, `in-progress`, `in-review`, `done`, `blocked` (reopening clears `completedAt`)
+- Assignment, time logging, labels, and dependencies
+- Metrics: completion rate, status counts, overdue tasks, estimated vs. actual hours, average priority
+- Structured results for every call: `{ ok: true, data }` or `{ ok: false, error, issues }`
+
+## Design
+
+The skill is stateless. Every tool receives the task it operates on and returns the
+updated task, so you own persistence. Tools never throw on bad input; they return a
+structured failure instead.
+
+## Tools
+
+| Tool | Input | Output `data` |
+| --- | --- | --- |
+| `create-task` | `title` (required), `description?`, `projectId?`, `priority?`, `assignee?`, `dueDate?`, `estimatedHours?`, `labels?` | `{ task }` |
+| `update-task-status` | `task`, `status` | `{ task }` |
+| `assign-task` | `task`, `assignee` | `{ task }` |
+| `log-task-time` | `task`, `hours` (positive) | `{ task }` |
+| `add-task-label` | `task`, `label` | `{ task }` |
+| `add-task-dependency` | `task`, `dependsOn` | `{ task }` |
+| `get-metrics` | `tasks`, `projectId?` | `{ metrics, taskCount }` |
+
+The `skillTools` export lists the JSON input schema for each tool.
 
 ## Usage
 
-### Create a Task
-
 ```typescript
-import { createTask } from '@fused-gaming/skill-project-manager-skill';
+import { runTool, type Task } from '@h4shed/skill-project-manager-skill';
 
-const task = createTask({
-  title: 'Implement Daily Review Skill',
-  description: 'Create session tracking and metrics aggregation',
-  projectId: 'proj_123',
-  priority: 'high',
-  assignee: 'Alice',
-  dueDate: '2026-04-15',
-  estimatedHours: 8,
-  labels: ['feature', 'backend']
-});
-```
-
-### Update Task Status
-
-```typescript
-import { updateTaskStatus } from '@fused-gaming/skill-project-manager-skill';
-
-const inProgress = updateTaskStatus(task, 'in-progress');
-const completed = updateTaskStatus(inProgress, 'done');
-```
-
-### Assign and Track Time
-
-```typescript
-import { assignTask, logTaskTime } from '@fused-gaming/skill-project-manager-skill';
-
-const assigned = assignTask(task, 'Bob');
-const timeLogged = logTaskTime(assigned, 3);  // 3 hours
-```
-
-### Get Metrics
-
-```typescript
-import { calculateMetrics } from '@fused-gaming/skill-project-manager-skill';
-
-const metrics = calculateMetrics(tasks);
-console.log(`Completion: ${metrics.completionPercentage}%`);
-console.log(`Overdue tasks: ${metrics.overdueTasks}`);
-console.log(`Time spent: ${metrics.totalActualHours} hours`);
-```
-
-## API
-
-### Types
-
-#### Task
-```typescript
-interface Task {
-  id: string;
-  title: string;
-  status: 'todo' | 'in-progress' | 'in-review' | 'done' | 'blocked';
-  priority: 'critical' | 'high' | 'medium' | 'low';
-  assignee?: string;
-  dueDate?: string;
-  estimatedHours?: number;
-  actualHours?: number;
-  labels?: string[];
-  dependencies?: string[];
-  blockedBy?: string[];
+const created = runTool('create-task', { title: 'Ship v1', priority: 'high', dueDate: '2026-10-30' });
+if (created.ok) {
+  const { task } = created.data as { task: Task };
+  const done = runTool('update-task-status', { task, status: 'done' });
 }
 ```
 
-#### TaskMetrics
-```typescript
-interface TaskMetrics {
-  totalTasks: number;
-  completedTasks: number;
-  completionPercentage: number;
-  overdueTasks: number;
-  totalEstimatedHours: number;
-  totalActualHours: number;
-}
+## CLI
+
+The package installs a `skill-project-manager` command. Pass JSON as the second
+argument or pipe it on stdin:
+
+```bash
+skill-project-manager create-task '{"title":"Write docs","priority":"low"}'
+echo '{"tasks":[]}' | skill-project-manager get-metrics
 ```
 
-### Functions
+Output is JSON on stdout with exit code `0` on success. Failures print JSON to
+stderr and exit with code `1`. Run `skill-project-manager --help` for the tool list.
 
-#### createTask(input): Task
-Creates a new task with specified properties.
+## Development
 
-#### updateTaskStatus(task, newStatus): Task
-Updates task status and auto-sets completedAt if marked done.
-
-#### assignTask(task, assignee): Task
-Assigns task to a team member.
-
-#### logTaskTime(task, hours): Task
-Logs time spent on a task.
-
-#### calculateMetrics(tasks): TaskMetrics
-Calculates aggregate metrics for a task list.
-
-#### validateTask(task): {valid, errors}
-Validates task data structure and content.
-
-## Task Statuses
-
-- **todo** - New, unstarted task
-- **in-progress** - Currently being worked on
-- **in-review** - Completed but awaiting review
-- **done** - Finished and approved
-- **blocked** - Cannot proceed due to dependency or issue
-
-## Priority Levels
-
-- **critical** - Must be done immediately
-- **high** - Important, address soon
-- **medium** - Standard priority
-- **low** - Can wait if necessary
-
-## Workload Management
-
-Track team capacity and utilization:
-
-```typescript
-const workload = calculateWorkload(tasks, team);
-workload.forEach(member => {
-  console.log(`${member.memberName}: ${member.completedCount}/${member.assignedCount}`);
-  console.log(`Utilization: ${member.utilization}%`);
-});
+```bash
+npm run build      # emits dist/ (index.js, cli.js, ...)
+npm test           # jest unit tests
+npm run typecheck
 ```
 
-## Integration with Other Skills
-
-### With Project Status Tool
-```typescript
-const dashboard = generateDashboard({
-  projects: projects.map(p => ({
-    ...p,
-    tasks: tasks.filter(t => t.projectId === p.id),
-    stats: calculateMetrics(tasks)
-  }))
-});
-```
-
-### With Daily Review Skill
-```typescript
-const review = generateDailyReview({
-  accomplishments: completedTasks.map(t => `Completed: ${t.title}`),
-  notes: `Completed ${metrics.completedTasks} tasks today`
-});
-```
-
-## Development Status
-
-- [x] Task creation and management
-- [x] Status tracking
-- [x] Assignee management
-- [x] Time tracking
-- [x] Metrics calculation
-- [ ] Sprint management
-- [ ] Burndown charts
-- [ ] Team workload visualization
-- [ ] Dependency resolution
-- [ ] Automated notifications
+`prepublishOnly` rebuilds `dist/` before every publish, and only `dist/` and this
+README are shipped in the tarball.
 
 ## License
 

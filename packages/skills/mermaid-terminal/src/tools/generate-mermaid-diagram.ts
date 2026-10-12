@@ -3,7 +3,7 @@
  * Generate terminal-friendly Mermaid diagrams and flowcharts.
  */
 
-import type { ToolDefinition } from "@h4shed/mcp-core";
+import type { ToolDefinition } from "../types.js";
 
 interface DiagramGenerationResult extends Record<string, unknown> {
   success: boolean;
@@ -12,6 +12,15 @@ interface DiagramGenerationResult extends Record<string, unknown> {
   textPreview?: string;
   description?: string;
   error?: string;
+}
+
+const SUPPORTED_GENERATE_TYPES = ["flowchart", "sequenceDiagram", "stateDiagram", "auto"];
+
+/**
+ * Makes free text safe for use inside a double-quoted Mermaid label.
+ */
+function sanitizeLabel(text: string): string {
+  return text.replace(/"/g, "'").replace(/\s+/g, " ").trim();
 }
 
 /**
@@ -43,11 +52,13 @@ function detectDiagramType(objective: string): string {
     lowerObj.includes("class") ||
     lowerObj.includes("object")
   ) {
-    return "classDiagram";
+    // Class diagrams are not generated; fall back to a flowchart.
+    return "flowchart";
   }
 
   if (lowerObj.includes("timeline") || lowerObj.includes("schedule")) {
-    return "timeline";
+    // Timelines are not generated; fall back to a flowchart.
+    return "flowchart";
   }
 
   // Default to flowchart for most objectives
@@ -67,7 +78,7 @@ function generateFlowchart(objective: string, _context: string): string {
   steps.forEach((step, index) => {
     const stepNum = index + 1;
     const nextStepNum = stepNum + 1;
-    const cleanedStep = step.trim().substring(0, 40); // Truncate for readability
+    const cleanedStep = sanitizeLabel(step).substring(0, 40); // Truncate for readability
 
     mermaid += `    Step${stepNum}["${cleanedStep}"]`;
 
@@ -103,7 +114,7 @@ function generateSequenceDiagram(objective: string, context: string): string {
 
   interactions.forEach((interaction, index) => {
     const arrow = index % 2 === 0 ? "->>+" : "-->>-";
-    const cleaned = interaction.trim().substring(0, 35);
+    const cleaned = sanitizeLabel(interaction).substring(0, 35);
     const from = index % 2 === 0 ? "A" : "B";
     const to = index % 2 === 0 ? "B" : "A";
     mermaid += `    ${from}${arrow}${to}: ${cleaned}\n`;
@@ -124,7 +135,7 @@ function generateStateDiagram(objective: string, _context: string): string {
   const states = objective
     .split(/[,;]/)
     .filter((s) => s.trim().length > 0)
-    .map((s) => s.trim().substring(0, 20))
+    .map((s) => sanitizeLabel(s).substring(0, 20))
     .slice(0, 4);
 
   let mermaid = "stateDiagram-v2\n";
@@ -226,10 +237,19 @@ export const GenerateMermaidDiagramTool: ToolDefinition = {
         type?: string;
       };
 
-      if (!objective || objective.trim().length === 0) {
+      if (typeof objective !== "string") {
+        return { success: false, error: "objective parameter must be a string" };
+      }
+      if (objective.trim().length === 0) {
         return {
           success: false,
           error: "objective parameter is required and must not be empty",
+        };
+      }
+      if (!SUPPORTED_GENERATE_TYPES.includes(specifiedType)) {
+        return {
+          success: false,
+          error: `Unsupported diagram type "${specifiedType}"; expected one of ${SUPPORTED_GENERATE_TYPES.join(", ")}`,
         };
       }
 

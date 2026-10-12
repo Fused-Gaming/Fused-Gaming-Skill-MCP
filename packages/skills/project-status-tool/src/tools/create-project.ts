@@ -2,7 +2,7 @@
  * Create Project Tool
  */
 
-import { Project, ProjectStatus } from '../types.js';
+import type { HealthStatus, Project, ProjectStatus } from '../types.js';
 
 export interface CreateProjectInput {
   name: string;
@@ -13,7 +13,7 @@ export interface CreateProjectInput {
 }
 
 export function createProject(input: CreateProjectInput): Project {
-  const projectId = `proj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const projectId = `proj_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 
   const project: Project = {
     id: projectId,
@@ -48,34 +48,43 @@ export function createProject(input: CreateProjectInput): Project {
 }
 
 /**
- * Update project status
+ * Update project status. Moving to "completed" stamps completionDate (kept if
+ * already set); any other status clears a stale completionDate.
  */
 export function updateProjectStatus(
   project: Project,
   newStatus: ProjectStatus,
   _notes?: string
 ): Project {
-  return {
-    ...project,
-    status: newStatus,
-    updatedAt: Date.now(),
-  };
+  const { completionDate: previous, ...rest } = project;
+  const next: Project = { ...rest, status: newStatus, updatedAt: Date.now() };
+  if (newStatus === 'completed') {
+    next.completionDate = previous ?? new Date().toISOString().split('T')[0];
+  }
+  return next;
 }
 
 /**
- * Update project progress
+ * Update project progress. Throws RangeError when the counts are inconsistent
+ * (negative, or more tasks completed than exist), since that would produce a
+ * progress value outside 0-100.
  */
 export function updateProjectProgress(
   project: Project,
   tasksCompleted: number,
   tasksTotal: number
 ): Project {
+  if (tasksCompleted < 0 || tasksTotal < 0 || tasksCompleted > tasksTotal) {
+    throw new RangeError('tasksCompleted must be between 0 and tasksTotal');
+  }
+
   const completionPercentage = tasksTotal > 0 ? Math.round((tasksCompleted / tasksTotal) * 100) : 0;
 
-  // Determine health based on progress and status
-  let health = 'good';
-  if (completionPercentage >= 90) health = 'excellent';
-  else if (completionPercentage < 30 && project.targetDate) {
+  // Determine health based on progress and proximity of the target date.
+  let health: HealthStatus = 'good';
+  if (completionPercentage >= 90) {
+    health = 'excellent';
+  } else if (completionPercentage < 30 && project.targetDate) {
     const now = new Date();
     const target = new Date(project.targetDate);
     const daysLeft = Math.floor((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
@@ -91,7 +100,7 @@ export function updateProjectProgress(
       tasksCompleted,
       tasksTotal,
     },
-    health: health as any,
+    health,
     updatedAt: Date.now(),
   };
 }

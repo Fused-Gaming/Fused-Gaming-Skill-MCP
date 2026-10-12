@@ -5,7 +5,10 @@
 
 import { BehavioralTester, PerformanceBenchmarker, DoDScorer, DoDScore } from '@h4shed/benchmark-utils';
 import { GenerateSvgAssetTool } from './tools/generate-svg-asset.js';
-import type { SvgAsset } from './tools/generate-svg-asset.js';
+import type { SvgAssetSuccess, SvgAssetFailure } from './tools/generate-svg-asset.js';
+
+// Loose view of a result so benchmarks can inspect either branch.
+type SvgAsset = Partial<SvgAssetSuccess> & Partial<SvgAssetFailure>;
 
 async function runBenchmarks() {
   console.log('🎯 SVG Generator Skill - Phase 2 Benchmarks\n');
@@ -32,7 +35,7 @@ async function runBenchmarks() {
         const result = (await GenerateSvgAssetTool.handler({
           objective: 'Blue circle icon',
         })) as SvgAsset;
-        if (!result.success || !result.svgCode) throw new Error('Failed to generate SVG');
+        if (!result.ok || !result.svgCode) throw new Error('Failed to generate SVG');
       },
     },
     {
@@ -41,7 +44,7 @@ async function runBenchmarks() {
         const result = (await GenerateSvgAssetTool.handler({
           objective: 'Yellow star icon',
         })) as SvgAsset;
-        if (!result.success) throw new Error('Star generation failed');
+        if (!result.ok) throw new Error('Star generation failed');
       },
     },
     {
@@ -50,7 +53,7 @@ async function runBenchmarks() {
         const result = (await GenerateSvgAssetTool.handler({
           objective: 'Green button component',
         })) as SvgAsset;
-        if (!result.success) throw new Error('Button generation failed');
+        if (!result.ok) throw new Error('Button generation failed');
       },
     },
     {
@@ -78,7 +81,7 @@ async function runBenchmarks() {
         const result = (await GenerateSvgAssetTool.handler({
           objective: 'Circle',
         })) as SvgAsset;
-        if (!result.success) throw new Error('Circle regression: generation failed');
+        if (!result.ok) throw new Error('Circle regression: generation failed');
         // Verify the SVG actually contains circle geometry, not just any valid SVG
         const svg = (result.svgCode || '').toLowerCase();
         if (!svg.includes('circle') && !svg.includes('cx') && !svg.includes('cy')) {
@@ -110,7 +113,7 @@ async function runBenchmarks() {
         const result = (await GenerateSvgAssetTool.handler({
           objective: 'Complex geometric pattern',
         })) as SvgAsset;
-        if (!result.success) throw new Error('Complex shape failed');
+        if (!result.ok) throw new Error('Complex shape failed');
       },
     },
     {
@@ -119,7 +122,7 @@ async function runBenchmarks() {
         const result = (await GenerateSvgAssetTool.handler({
           objective: 'Square icon with 256x256 dimensions',
         })) as SvgAsset;
-        if (!result.success) throw new Error('Dimensions not handled');
+        if (!result.ok) throw new Error('Dimensions not handled');
         // Verify the SVG respects the requested 256x256 dimensions
         const svg = (result.svgCode || '').toLowerCase();
         const hasViewBox = svg.includes('viewbox="0 0 256 256"') || svg.includes('viewbox=\'0 0 256 256\'');
@@ -143,9 +146,9 @@ async function runBenchmarks() {
         const result = (await GenerateSvgAssetTool.handler({
           objective: '',
         })) as SvgAsset;
-        // Per handler contract, empty objectives must return success: false
-        if (result.success !== false) {
-          throw new Error('Empty objective must return success: false');
+        // Per handler contract, empty objectives must return ok: false
+        if (result.ok !== false) {
+          throw new Error('Empty objective must return ok: false');
         }
       },
     },
@@ -157,8 +160,8 @@ async function runBenchmarks() {
           objective: longObjective,
         })) as SvgAsset;
         // Should handle without crashing
-        if (result.success && !result.svgCode) {
-          throw new Error('Invalid success state: success:true but no SVG code');
+        if (result.ok && !result.svgCode) {
+          throw new Error('Invalid success state: ok:true but no SVG code');
         }
       },
     },
@@ -175,7 +178,7 @@ async function runBenchmarks() {
     'SVG generation latency',
     async () => {
       const result = (await GenerateSvgAssetTool.handler({ objective: 'Performance test SVG' })) as SvgAsset;
-      if (!result.success) throw new Error('SVG generation failed in latency benchmark');
+      if (!result.ok) throw new Error('SVG generation failed in latency benchmark');
     },
     100,
     'ms'
@@ -193,7 +196,7 @@ async function runBenchmarks() {
       let successCount = 0;
       for (let i = 0; i < 10; i++) {
         const result = (await GenerateSvgAssetTool.handler({ objective: `SVG ${i}` })) as SvgAsset;
-        if (result.success) successCount++;
+        if (result.ok) successCount++;
       }
       const elapsedMs = performance.now() - startTime;
       // Fail if any generation failed (exclude failed attempts from throughput measurement)
@@ -215,7 +218,7 @@ async function runBenchmarks() {
       if (global.gc) global.gc();
       const before = process.memoryUsage();
       const result = (await GenerateSvgAssetTool.handler({ objective: 'Memory test SVG' })) as SvgAsset;
-      if (!result.success) throw new Error('SVG generation failed in memory benchmark');
+      if (!result.ok) throw new Error('SVG generation failed in memory benchmark');
       const after = process.memoryUsage();
 
       // Report actual peak heap usage (always positive, measured in MB)
