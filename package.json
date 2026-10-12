@@ -37,10 +37,10 @@
     "packages/design-tokens",
     "packages/docs",
     "packages/license-client",
+    "packages/benchmark-utils",
     "packages/skills/*",
     "packages/cli",
-    "packages/web",
-    "packages/benchmark-utils"
+    "packages/web"
   ],
   "scripts": {
     "build": "npm run build --workspaces",

@@ -107,6 +107,10 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
 /** True only for real calendar dates in YYYY-MM-DD form (rejects e.g. 2026-02-30). */
 export function isCalendarDate(value: string): boolean {
   if (!DATE_PATTERN.test(value)) return false;
@@ -139,6 +143,24 @@ export function parseTask(value: unknown, issues: string[], field = 'task'): Tas
   }
   if (typeof value.createdAt !== 'number') issues.push(`${field}.createdAt must be a number`);
   if (typeof value.updatedAt !== 'number') issues.push(`${field}.updatedAt must be a number`);
+
+  // Optional fields feed metrics and filters, so reject malformed values here
+  // rather than letting them corrupt downstream results.
+  for (const key of ['title', 'description', 'assignee', 'projectId'] as const) {
+    if (value[key] !== undefined && typeof value[key] !== 'string') issues.push(`${field}.${key} must be a string`);
+  }
+  for (const key of ['estimatedHours', 'actualHours'] as const) {
+    checkOptionalPositiveNumber(value[key], `${field}.${key}`, issues);
+  }
+  if (value.completedAt !== undefined && typeof value.completedAt !== 'number') {
+    issues.push(`${field}.completedAt must be a number`);
+  }
+  if (value.dueDate !== undefined && (typeof value.dueDate !== 'string' || !isCalendarDate(value.dueDate))) {
+    issues.push(`${field}.dueDate must be a valid calendar date in YYYY-MM-DD format`);
+  }
+  for (const key of ['labels', 'dependencies', 'blockedBy'] as const) {
+    if (value[key] !== undefined && !isStringArray(value[key])) issues.push(`${field}.${key} must be an array of strings`);
+  }
   if (issues.length > before) return undefined;
 
   return value as unknown as Task;
@@ -160,8 +182,11 @@ export function handleCreateTask(input: unknown): ToolResult<CreateTaskOutput> {
   if (input.dueDate !== undefined && (typeof input.dueDate !== 'string' || !isCalendarDate(input.dueDate))) {
     issues.push('dueDate must be a valid calendar date in YYYY-MM-DD format');
   }
-  if (input.labels !== undefined && (!Array.isArray(input.labels) || !input.labels.every((l) => typeof l === 'string'))) {
+  if (input.labels !== undefined && !isStringArray(input.labels)) {
     issues.push('labels must be an array of strings');
+  }
+  for (const key of ['description', 'projectId', 'assignee'] as const) {
+    if (input[key] !== undefined && typeof input[key] !== 'string') issues.push(`${key} must be a string`);
   }
   checkOptionalPositiveNumber(input.estimatedHours, 'estimatedHours', issues);
   if (issues.length > 0) return fail(issues);
@@ -227,12 +252,14 @@ export function handleAddTaskDependency(input: unknown): ToolResult<{ task: Task
   const issues: string[] = [];
   const task = parseTask(input.task, issues);
   if (!isNonEmptyString(input.dependsOn)) issues.push('dependsOn is required');
-  if (task && isNonEmptyString(input.dependsOn) && input.dependsOn === task.id) {
+  // Trim once so the self-dependency check and the stored value agree.
+  const dependsOn = isNonEmptyString(input.dependsOn) ? input.dependsOn.trim() : '';
+  if (task && dependsOn === task.id) {
     issues.push('a task cannot depend on itself');
   }
   if (issues.length > 0 || !task) return fail(issues);
 
-  return { ok: true, data: { task: addTaskDependency(task, (input.dependsOn as string).trim()) } };
+  return { ok: true, data: { task: addTaskDependency(task, dependsOn) } };
 }
 
 export function handleGetMetrics(input: unknown): ToolResult<GetMetricsOutput> {

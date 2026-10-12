@@ -30,7 +30,7 @@ export interface SkillRegistry {
 
 export const registry: SkillRegistry = {
   "version": "1.0.0",
-  "timestamp": "2026-10-12T09:33:29.482Z",
+  "timestamp": "2026-10-12T09:52:34.841Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -393,18 +393,23 @@ export const registry: SkillRegistry = {
       "name": "mermaid-terminal",
       "id": "mermaid-terminal",
       "description": "Generate terminal-friendly Mermaid diagrams and flowcharts.",
-      "version": "1.0.23",
+      "version": "1.0.41",
       "package": "@h4shed/skill-mermaid-terminal",
       "tools": [
-        {
-          "name": "generate_mermaid_diagram.d",
-          "file": "generate-mermaid-diagram.d.ts",
-          "description": "generate_mermaid_diagram.d from mermaid-terminal"
-        },
         {
           "name": "generate_mermaid_diagram",
           "file": "generate-mermaid-diagram.ts",
           "description": "generate_mermaid_diagram from mermaid-terminal"
+        },
+        {
+          "name": "render_mermaid_terminal",
+          "file": "render-mermaid-terminal.ts",
+          "description": "render_mermaid_terminal from mermaid-terminal"
+        },
+        {
+          "name": "validate_mermaid_diagram",
+          "file": "validate-mermaid-diagram.ts",
+          "description": "validate_mermaid_diagram from mermaid-terminal"
         }
       ],
       "enabled": true,
@@ -684,14 +689,9 @@ export const registry: SkillRegistry = {
       "name": "svg-generator",
       "id": "svg-generator",
       "description": "Generate SVG assets and icon concepts from structured prompts.",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "package": "@h4shed/skill-svg-generator",
       "tools": [
-        {
-          "name": "generate_svg_asset.d",
-          "file": "generate-svg-asset.d.ts",
-          "description": "generate_svg_asset.d from svg-generator"
-        },
         {
           "name": "generate_svg_asset",
           "file": "generate-svg-asset.ts",

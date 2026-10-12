@@ -1,6 +1,6 @@
 # 🎮 Fused Gaming Skill Registry
 
-**Generated:** 10/12/2026, 9:33:29 AM
+**Generated:** 10/12/2026, 9:52:34 AM
 **Version:** 1.0.0
 
 ## 📊 Summary
@@ -40,8 +40,8 @@
 #### 📦 svg-generator
 - **Package:** `@h4shed/skill-svg-generator`
 - **Description:** Generate SVG assets and icon concepts from structured prompts.
-- **Version:** 1.1.0
-- **Tools:** `generate_svg_asset.d`, `generate_svg_asset`
+- **Version:** 1.1.1
+- **Tools:** `generate_svg_asset`
 
 #### 📦 tailwindcss-style-builder
 - **Package:** `@h4shed/skill-tailwindcss-style-builder`
@@ -157,8 +157,8 @@
 #### 📦 mermaid-terminal
 - **Package:** `@h4shed/skill-mermaid-terminal`
 - **Description:** Generate terminal-friendly Mermaid diagrams and flowcharts.
-- **Version:** 1.0.23
-- **Tools:** `generate_mermaid_diagram.d`, `generate_mermaid_diagram`
+- **Version:** 1.0.41
+- **Tools:** `generate_mermaid_diagram`, `render_mermaid_terminal`, `validate_mermaid_diagram`
 
 
 ### Session Management (1 skills)
@@ -250,8 +250,9 @@
 | `linkedin-master-journalist` | `verify_hashtags` | `verify-hashtags.ts` |
 | `mcp-builder` | `scaffold_skill.d` | `scaffold-skill.d.ts` |
 | `mcp-builder` | `scaffold_skill` | `scaffold-skill.ts` |
-| `mermaid-terminal` | `generate_mermaid_diagram.d` | `generate-mermaid-diagram.d.ts` |
 | `mermaid-terminal` | `generate_mermaid_diagram` | `generate-mermaid-diagram.ts` |
+| `mermaid-terminal` | `render_mermaid_terminal` | `render-mermaid-terminal.ts` |
+| `mermaid-terminal` | `validate_mermaid_diagram` | `validate-mermaid-diagram.ts` |
 | `multi-account-session-tracking` | `session_aggregation.d` | `session-aggregation.d.ts` |
 | `multi-account-session-tracking` | `session_aggregation` | `session-aggregation.ts` |
 | `pre-deploy-validator` | `validate_deployment.d` | `validate-deployment.d.ts` |
@@ -262,7 +263,6 @@
 | `project-status-tool` | `create_project` | `create-project.ts` |
 | `project-status-tool` | `dashboard` | `dashboard.ts` |
 | `project-status-tool` | `summarize_project_status` | `summarize-project-status.ts` |
-| `svg-generator` | `generate_svg_asset.d` | `generate-svg-asset.d.ts` |
 | `svg-generator` | `generate_svg_asset` | `generate-svg-asset.ts` |
 | `syncpulse` | `email_tools.d` | `email-tools.d.ts` |
 | `syncpulse` | `email_tools` | `email-tools.ts` |

@@ -185,3 +185,46 @@ describe('runTool dispatch', () => {
     }
   });
 });
+
+describe('input validation regressions', () => {
+  it('rejects non-string optional create-task fields', () => {
+    const result = runTool('create-task', { title: 'x', projectId: 7, assignee: 3, description: {} });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.issues).toEqual([
+        'description must be a string',
+        'projectId must be a string',
+        'assignee must be a string',
+      ]);
+    }
+  });
+
+  it('rejects malformed metric-bearing fields on a task passed to get-metrics', () => {
+    const result = runTool('get-metrics', {
+      tasks: [{ ...task, actualHours: 'oops', estimatedHours: -1, dueDate: '2026-02-30' }],
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.issues).toEqual([
+        'tasks[0].estimatedHours must be a non-negative finite number',
+        'tasks[0].actualHours must be a non-negative finite number',
+        'tasks[0].dueDate must be a valid calendar date in YYYY-MM-DD format',
+      ]);
+    }
+  });
+
+  it('rejects optional label and dependency arrays that contain non-strings', () => {
+    const result = runTool('log-task-time', { task: { ...task, labels: ['ok', 1] }, hours: 1 });
+    expect(result).toMatchObject({ ok: false, issues: ['task.labels must be an array of strings'] });
+  });
+
+  it('treats a whitespace-padded self reference as a self-dependency', () => {
+    const result = runTool('add-task-dependency', { task, dependsOn: '  task_1  ' });
+    expect(result).toMatchObject({ ok: false, issues: ['a task cannot depend on itself'] });
+  });
+
+  it('stores the trimmed dependency id', () => {
+    const result = runTool('add-task-dependency', { task, dependsOn: '  task_9 ' });
+    expect(result.ok && (result.data as { task: Task }).task.dependencies).toEqual(['task_9']);
+  });
+});
