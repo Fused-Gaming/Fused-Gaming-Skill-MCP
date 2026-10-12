@@ -15,6 +15,7 @@ import type {
   UpdateProjectProgressInput,
   UpdateProjectStatusInput,
   ValidateProjectInput,
+  ValidateProjectOutput,
 } from './contracts.js';
 import { TOOL_NAMES } from './contracts.js';
 import { createProject, updateProjectProgress, updateProjectStatus, validateProject } from './tools/create-project.js';
@@ -50,6 +51,9 @@ function parseCreateProject(input: unknown): Parsed<CreateProjectInput> {
   const description = checkString(obj, 'description', issues, { optional: true });
   const targetDate = checkDate(obj, 'targetDate', issues, { optional: true });
   const teamMembers = checkStringArray(obj, 'teamMembers', issues, { optional: true });
+  if (teamMembers?.some((member) => member.trim() === '')) {
+    issues.push('teamMembers must not contain blank names');
+  }
   return finish(issues, { name: name!, owner: owner!, description, targetDate, teamMembers });
 }
 
@@ -80,8 +84,16 @@ function parseValidateInput(input: unknown): Parsed<ValidateProjectInput> {
   const issues: string[] = [];
   const obj = requireRecord(input, 'input', issues);
   if (!obj) return finish(issues, {} as ValidateProjectInput);
-  const project = parseProject(obj.project, 'project', issues);
-  return finish(issues, { project: project! });
+  // Shape problems are the thing being validated, so they are reported by the tool as
+  // valid: false rather than rejected here. The project is checked in run().
+  return finish([], { project: obj.project as ValidateProjectInput['project'] });
+}
+
+function runValidateProject(input: ValidateProjectInput): ValidateProjectOutput {
+  const issues: string[] = [];
+  const project = parseProject(input.project, 'project', issues);
+  if (!project) return { valid: false, errors: issues };
+  return validateProject(project);
 }
 
 function parseDashboardInput(input: unknown): Parsed<GenerateDashboardInput> {
@@ -136,7 +148,7 @@ export const HANDLERS: HandlerMap = {
   },
   'validate-project': {
     parse: parseValidateInput,
-    run: (input) => validateProject(input.project),
+    run: runValidateProject,
   },
   'generate-dashboard': {
     parse: parseDashboardInput,

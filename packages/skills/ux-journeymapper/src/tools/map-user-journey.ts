@@ -309,9 +309,16 @@ function generateKeyInsights(stages: JourneyStage[]): string[] {
 /** Matches the 120-character limit that validateJourneyMap enforces on the persona output. */
 const MAX_PERSONA_LABEL_LENGTH = 120;
 
+/** Matches the 300-character limit that validateJourneyMap enforces on the goal output. */
+const MAX_GOAL_LENGTH = 300;
+
+/** Shortens text to a contract limit, ending with an ellipsis when it is cut. */
+function clip(text: string, max: number): string {
+  return text.length <= max ? text : `${text.slice(0, max - 1)}…`;
+}
+
 function personaLabel(persona: Persona): string {
-  const label = `${persona.name} (${persona.role})`;
-  return label.length <= MAX_PERSONA_LABEL_LENGTH ? label : `${label.slice(0, MAX_PERSONA_LABEL_LENGTH - 1)}…`;
+  return clip(`${persona.name} (${persona.role})`, MAX_PERSONA_LABEL_LENGTH);
 }
 
 export const MapUserJourneyTool: ToolDefinition = {
@@ -360,7 +367,7 @@ export const MapUserJourneyTool: ToolDefinition = {
         };
       }
 
-      let persona: string = context || "General User";
+      let persona: string = clip(context || "General User", MAX_PERSONA_LABEL_LENGTH);
       let personaProfile: Persona | undefined;
       if (input.persona !== undefined) {
         const validated = validatePersona(input.persona);
@@ -397,7 +404,7 @@ export const MapUserJourneyTool: ToolDefinition = {
       const result: JourneyMapResult = {
         success: true,
         persona,
-        goal: objective,
+        goal: clip(objective, MAX_GOAL_LENGTH),
         stages: journeyStages,
         summary: `Journey map for: ${objective}. Identified ${journeyStages.length} key stages with ${totalTouchpoints} total touchpoints.`,
         keyInsights,

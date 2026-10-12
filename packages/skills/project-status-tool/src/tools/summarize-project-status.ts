@@ -10,14 +10,19 @@ import { generateDashboard } from './dashboard.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+
 /**
- * A project is overdue once the day after its targetDate has begun (a target
- * date is due for the whole of that day).
+ * A date-only targetDate is due for the whole of that day, so it is overdue once
+ * the following day has begun. A full timestamp is a deadline and is overdue as
+ * soon as it has passed.
  */
 function isOverdue(project: Project, now: number): boolean {
   if (!project.targetDate || project.status === 'completed') return false;
   const target = Date.parse(project.targetDate);
-  return !Number.isNaN(target) && target + DAY_MS <= now;
+  if (Number.isNaN(target)) return false;
+  const deadline = DATE_ONLY.test(project.targetDate) ? target + DAY_MS : target;
+  return deadline <= now;
 }
 
 export function summarizeProjectStatus(

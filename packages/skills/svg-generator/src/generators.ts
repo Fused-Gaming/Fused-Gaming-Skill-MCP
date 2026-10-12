@@ -136,14 +136,17 @@ export function renderBarChart(canvas: Canvas, palette: readonly string[]): stri
   const { width, height } = canvas;
   const heights = [0.3, 0.6, 0.8, 0.5];
   const bars = heights.length;
-  const barWidth = (width * 0.8) / bars;
+  // Gaps come out of the 80% allocation, so the last bar ends inside the canvas
+  // even when the canvas is narrow.
+  const gap = Math.min(5, width * 0.02);
+  const barWidth = (width * 0.8 - gap * (bars - 1)) / bars;
   const startX = width * 0.1;
   const maxHeight = height * 0.7;
   const baseline = height - Math.min(20, height * 0.2);
 
   const children: string[] = heights.map((share, index) => {
     const barHeight = maxHeight * share;
-    const x = startX + index * (barWidth + 5);
+    const x = startX + index * (barWidth + gap);
     const y = baseline - barHeight;
     const color = palette[index % palette.length];
     return element("rect", [

@@ -43,3 +43,26 @@ describe('persona label length', () => {
     expect(validateJourneyMap(result).ok).toBe(true);
   });
 });
+
+describe('free-text output limits', () => {
+  it('clips a long free-text context and objective within the contract', async () => {
+    const { MapUserJourneyTool: tool } = await import('../tools/map-user-journey');
+    const { validateJourneyMap } = await import('../index');
+    const result = (await tool.handler({
+      objective: 'O'.repeat(400),
+      context: 'C'.repeat(400),
+    })) as Record<string, unknown>;
+    expect(result.success).toBe(true);
+    expect(String(result.persona).length).toBeLessThanOrEqual(120);
+    expect(String(result.goal).length).toBeLessThanOrEqual(300);
+    expect(validateJourneyMap(result).ok).toBe(true);
+  });
+
+  it('rejects a success result whose personaProfile is malformed', async () => {
+    const { validateJourneyMap } = await import('../index');
+    const { MapUserJourneyTool: tool } = await import('../tools/map-user-journey');
+    const good = (await tool.handler({ objective: 'Checkout' })) as Record<string, unknown>;
+    expect(validateJourneyMap({ ...good, personaProfile: null }).ok).toBe(false);
+    expect(validateJourneyMap({ ...good, personaProfile: { name: 'x', role: 'y', goals: [] } }).ok).toBe(false);
+  });
+});

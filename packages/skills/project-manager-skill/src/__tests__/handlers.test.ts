@@ -227,4 +227,14 @@ describe('input validation regressions', () => {
     const result = runTool('add-task-dependency', { task, dependsOn: '  task_9 ' });
     expect(result.ok && (result.data as { task: Task }).task.dependencies).toEqual(['task_9']);
   });
+
+  it('rejects a blank task title in any task-taking handler', () => {
+    for (const name of ['update-task-status', 'assign-task', 'log-task-time'] as const) {
+      const input = name === 'update-task-status' ? { task: { ...task, title: '  ' }, status: 'done' }
+        : name === 'assign-task' ? { task: { ...task, title: '' }, assignee: 'Ana' }
+        : { task: { ...task, title: '' }, hours: 1 };
+      const result = runTool(name, input);
+      expect(result.ok).toBe(false);
+    }
+  });
 });

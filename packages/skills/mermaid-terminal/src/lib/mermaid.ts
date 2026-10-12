@@ -138,6 +138,15 @@ export function validateMermaidDiagram(input: unknown): ValidationResult {
 // ---------------------------------------------------------------------------
 
 const ARROW_PATTERN = /(-\.->|==>|-->|---)(?:\s*\|([^|]*)\|)?/g;
+
+/**
+ * Blanks the contents of double-quoted labels so an arrow written inside a label
+ * is not treated as an edge. The length is kept, so match offsets still index the
+ * original line.
+ */
+function maskQuotedLabels(line: string): string {
+  return line.replace(/"[^"]*"/g, (quoted) => " ".repeat(quoted.length));
+}
 const NON_NODE_KEYWORDS = new Set(["subgraph", "end", "classdef", "class", "style", "linkstyle", "click", "direction"]);
 
 function stripShape(rest: string): string {
@@ -190,13 +199,17 @@ function renderFlowchart(lines: string[], header: string): RenderResult {
 
     const parts: string[] = [];
     const edgeLabels: Array<string | undefined> = [];
+    const masked = maskQuotedLabels(line);
     ARROW_PATTERN.lastIndex = 0;
     let last = 0;
     let m: RegExpExecArray | null;
-    while ((m = ARROW_PATTERN.exec(line)) !== null) {
+    while ((m = ARROW_PATTERN.exec(masked)) !== null) {
+      const end = ARROW_PATTERN.lastIndex;
       parts.push(line.slice(last, m.index));
-      edgeLabels.push(m[2]?.trim() || undefined);
-      last = ARROW_PATTERN.lastIndex;
+      // Read the edge label from the original line so quoted label text is kept.
+      const pipeLabel = /\|([^|]*)\|/.exec(line.slice(m.index, end));
+      edgeLabels.push(pipeLabel?.[1].trim() || undefined);
+      last = end;
     }
     parts.push(line.slice(last));
 

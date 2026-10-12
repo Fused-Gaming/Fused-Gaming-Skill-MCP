@@ -87,7 +87,8 @@ function extractTextDimensions(text: string, path: string): ValidationResult<Can
 export function extractColors(text: string): string[] {
   const lowerText = text.toLowerCase();
   const colors = Object.entries(NAMED_COLORS)
-    .filter(([keyword]) => lowerText.includes(keyword))
+    // Whole words only, so "credit card" does not read as "red" and "blackberry" not as "black".
+    .filter(([keyword]) => new RegExp(`\\b${keyword}\\b`).test(lowerText))
     .map(([, hex]) => hex);
   return colors.length > 0 ? colors : ["#4444FF", "#44FF44"];
 }

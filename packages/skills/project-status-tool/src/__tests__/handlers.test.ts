@@ -93,9 +93,11 @@ describe('validate-project', () => {
     expect(result).toEqual({ ok: true, data: { valid: true, errors: [] } });
   });
 
-  it('rejects an empty project name at input validation', () => {
+  it('reports an empty project name as a validation error', () => {
     const result = runTool('validate-project', { project: makeProject({ name: '  ' }) });
-    expect(result.ok).toBe(false);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data).toMatchObject({ valid: false });
   });
 
   it('rejects non-object input', () => {
@@ -169,11 +171,32 @@ describe('dispatcher errors', () => {
 });
 
 describe('nested collection and date validation', () => {
-  it('rejects null entries in nested collections', () => {
+  it('reports null entries in nested collections as validation errors', () => {
     const result = runTool('validate-project', { project: { ...makeProject(), risks: [null] } });
-    expect(result.ok).toBe(false);
-    if (result.ok) return;
-    expect(JSON.stringify(result.error)).toContain('risks[0]');
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data).toMatchObject({ valid: false });
+    expect(JSON.stringify(result.data)).toContain('risks[0]');
+  });
+
+  it('rejects blank team member names at create time', () => {
+    const result = runTool('create-project', { name: 'Beta', owner: 'bob', teamMembers: ['  '] });
+    expect(result).toMatchObject({ ok: false });
+  });
+
+  it('treats a full timestamp as overdue at its exact deadline, but a date-only target as due all day', async () => {
+    const { summarizeProjectStatus } = await import('../tools/summarize-project-status.js');
+    const now = Date.parse('2026-10-11T18:00:00Z');
+    const timed = summarizeProjectStatus(
+      { objective: 'x', projects: [makeProject({ targetDate: '2026-10-11T18:00:00Z' })] } as never,
+      now,
+    );
+    expect(JSON.stringify(timed)).toContain('has passed');
+    const dateOnly = summarizeProjectStatus(
+      { objective: 'x', projects: [makeProject({ targetDate: '2026-10-11' })] } as never,
+      now,
+    );
+    expect(JSON.stringify(dateOnly)).not.toContain('has passed');
   });
 
   it('rejects malformed risk fields instead of letting them reach summaries', () => {
@@ -183,11 +206,11 @@ describe('nested collection and date validation', () => {
     expect(result.ok).toBe(false);
   });
 
-  it('rejects team entries without numeric task counts', () => {
+  it('reports team entries without numeric task counts as invalid', () => {
     const result = runTool('validate-project', {
       project: { ...makeProject(), team: [{ name: 'Ana', role: 'dev', tasksAssigned: 'many', tasksCompleted: 0, lastActivity: '2026-10-01' }] },
     });
-    expect(result.ok).toBe(false);
+    expect(result).toMatchObject({ ok: true, data: { valid: false } });
   });
 
   it('accepts a metric without a trend', () => {
@@ -197,9 +220,9 @@ describe('nested collection and date validation', () => {
     expect(result).toEqual({ ok: true, data: { valid: true, errors: [] } });
   });
 
-  it.each(['2026-02-30', '12/10/2026', '2026-1-5', 'Tuesday, 6 October 2026'])('rejects date %p', (startDate) => {
+  it.each(['2026-02-30', '12/10/2026', '2026-1-5', 'Tuesday, 6 October 2026'])('reports date %p as invalid', (startDate) => {
     const result = runTool('validate-project', { project: makeProject({ startDate }) });
-    expect(result.ok).toBe(false);
+    expect(result).toMatchObject({ ok: true, data: { valid: false } });
   });
 
   it('accepts a full ISO 8601 timestamp for a date field', () => {

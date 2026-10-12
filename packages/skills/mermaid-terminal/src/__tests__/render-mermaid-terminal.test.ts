@@ -109,3 +109,15 @@ describe("RenderMermaidTerminalTool", () => {
     );
   });
 });
+
+describe("quoted labels", () => {
+  it("does not split a node whose quoted label contains an arrow", () => {
+    const result = renderMermaidToText(['flowchart LR', '    A["wait --> retry"] --> B'].join("\n"));
+
+    expect(result).toEqual({
+      ok: true,
+      diagramType: "flowchart",
+      text: "Flowchart LR (2 nodes, 1 edges)\nwait --> retry --> B\n",
+    });
+  });
+});

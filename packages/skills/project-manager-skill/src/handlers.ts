@@ -134,7 +134,7 @@ export function parseTask(value: unknown, issues: string[], field = 'task'): Tas
 
   const before = issues.length;
   if (!isNonEmptyString(value.id)) issues.push(`${field}.id must be a non-empty string`);
-  if (typeof value.title !== 'string') issues.push(`${field}.title must be a string`);
+  if (!isNonEmptyString(value.title)) issues.push(`${field}.title must be a non-empty string`);
   if (!TASK_STATUSES.includes(value.status as TaskStatus)) {
     issues.push(`${field}.status must be one of: ${TASK_STATUSES.join(', ')}`);
   }

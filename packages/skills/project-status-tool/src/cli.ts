@@ -10,6 +10,8 @@ import { runTool } from './handlers.js';
 import { TOOL_SPECS } from './tool-definitions.js';
 
 function readStdin(): string {
+  // An interactive terminal never sends input; reading it would block until EOF.
+  if (process.stdin.isTTY) return '';
   try {
     return readFileSync(0, 'utf8');
   } catch {

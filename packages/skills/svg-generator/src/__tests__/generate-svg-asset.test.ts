@@ -209,3 +209,24 @@ describe("explicit axis override", () => {
     expect(result.svgCode).toContain('height="300"');
   });
 });
+
+describe("chart bars stay inside the canvas", () => {
+  it.each([100, 150, 256])("keeps every bar within a %i-pixel-wide chart", async (width) => {
+    const result = await run({ objective: "bar chart of sales", context: "", width, height: 120 });
+    expect(result.ok).toBe(true);
+    const rects = [...String(result.svgCode).matchAll(/<rect x="([\d.]+)" y="[\d.]+" width="([\d.]+)"/g)];
+    expect(rects.length).toBe(4);
+    for (const [, x, w] of rects) {
+      expect(Number(x) + Number(w)).toBeLessThanOrEqual(width);
+    }
+  });
+});
+
+describe("named colors match whole words", () => {
+  it("does not treat 'credit' as 'red' or 'blackberry' as 'black'", async () => {
+    const credit = await run({ assetType: "icon", objective: "credit card icon", context: "" });
+    expect(credit.svgCode).not.toContain("#FF4444");
+    const berry = await run({ assetType: "icon", objective: "blackberry logo", context: "" });
+    expect(berry.svgCode).not.toContain("#333333");
+  });
+});

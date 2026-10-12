@@ -186,6 +186,15 @@ export function validateJourneyMap(value: unknown): ValidationResult<JourneyMapR
   checkString(value.summary, "summary", issues, 1000);
   checkStringList(value.keyInsights, "keyInsights", issues, 1);
 
+  // personaProfile is optional, but when present it must satisfy the persona contract
+  // so consumers can rely on its fields after narrowing.
+  if (value.personaProfile !== undefined) {
+    const profile = validatePersona(value.personaProfile);
+    if (!profile.ok) {
+      issues.push(...profile.issues.map((issue) => ({ path: `personaProfile.${issue.path}`, message: issue.message })));
+    }
+  }
+
   if (!Array.isArray(value.stages) || value.stages.length === 0) {
     issues.push({ path: "stages", message: "must be a non-empty array" });
   } else {
