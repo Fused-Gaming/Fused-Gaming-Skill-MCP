@@ -193,3 +193,19 @@ describe("input robustness", () => {
     expect(generateSvgAsset("icon")).toMatchObject({ ok: false });
   });
 });
+
+describe("explicit axis override", () => {
+  it("keeps the text-derived height when only width is given", async () => {
+    const result = await run({ objective: "icon 256x128", context: "", width: 300 });
+    expect(result.ok).toBe(true);
+    expect(result.svgCode).toContain('width="300"');
+    expect(result.svgCode).toContain('height="128"');
+  });
+
+  it("keeps the text-derived width when only height is given", async () => {
+    const result = await run({ objective: "icon 256x128", context: "", height: 300 });
+    expect(result.ok).toBe(true);
+    expect(result.svgCode).toContain('width="256"');
+    expect(result.svgCode).toContain('height="300"');
+  });
+});

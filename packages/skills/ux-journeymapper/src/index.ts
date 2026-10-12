@@ -6,6 +6,9 @@
 import type { Skill, SkillConfig } from "@h4shed/mcp-core";
 import { MapUserJourneyTool } from "./tools/map-user-journey.js";
 
+export { validatePersona, validateJourneyMap, isJourneyMapResult } from "./validation.js";
+export * from "./types.js";
+
 export const UxJourneymapperSkill: Skill = {
   name: "ux-journeymapper",
   version: "1.0.0",

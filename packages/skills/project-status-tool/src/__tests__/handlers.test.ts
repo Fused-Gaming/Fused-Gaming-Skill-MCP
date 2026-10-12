@@ -167,3 +167,43 @@ describe('dispatcher errors', () => {
     expect(result.error.message).toContain('create-project');
   });
 });
+
+describe('nested collection and date validation', () => {
+  it('rejects null entries in nested collections', () => {
+    const result = runTool('validate-project', { project: { ...makeProject(), risks: [null] } });
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(JSON.stringify(result.error)).toContain('risks[0]');
+  });
+
+  it('rejects malformed risk fields instead of letting them reach summaries', () => {
+    const result = runTool('generate-dashboard', {
+      projects: [{ ...makeProject(), risks: [{ id: 'r1', title: 'x', description: 'y', probability: 'extreme', impact: 'high', status: 'open' }] }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('rejects team entries without numeric task counts', () => {
+    const result = runTool('validate-project', {
+      project: { ...makeProject(), team: [{ name: 'Ana', role: 'dev', tasksAssigned: 'many', tasksCompleted: 0, lastActivity: '2026-10-01' }] },
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('accepts a metric without a trend', () => {
+    const result = runTool('validate-project', {
+      project: { ...makeProject(), metrics: [{ name: 'velocity', value: 4 }] },
+    });
+    expect(result).toEqual({ ok: true, data: { valid: true, errors: [] } });
+  });
+
+  it.each(['2026-02-30', '12/10/2026', '2026-1-5', 'Tuesday, 6 October 2026'])('rejects date %p', (startDate) => {
+    const result = runTool('validate-project', { project: makeProject({ startDate }) });
+    expect(result.ok).toBe(false);
+  });
+
+  it('accepts a full ISO 8601 timestamp for a date field', () => {
+    const result = runTool('validate-project', { project: makeProject({ targetDate: '2026-10-30T12:00:00Z' }) });
+    expect(result).toEqual({ ok: true, data: { valid: true, errors: [] } });
+  });
+});

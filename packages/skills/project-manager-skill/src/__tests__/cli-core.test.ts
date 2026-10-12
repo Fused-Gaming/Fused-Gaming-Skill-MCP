@@ -42,4 +42,10 @@ describe('runCli', () => {
     expect(result.exitCode).toBe(1);
     expect(JSON.parse(result.output).ok).toBe(false);
   });
+
+  it('rejects extra arguments instead of ignoring them', () => {
+    const result = runCli(['create-task', '{"title":"x"}', 'unexpected']);
+    expect(result.exitCode).toBe(1);
+    expect(JSON.parse(result.output)).toMatchObject({ ok: false, error: 'Too many arguments' });
+  });
 });

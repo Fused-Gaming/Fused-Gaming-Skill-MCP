@@ -106,6 +106,22 @@ export function checkStringArray(
   return value as string[];
 }
 
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
+
+/**
+ * Accepts only YYYY-MM-DD or a full ISO 8601 timestamp. Date.parse alone is too
+ * lenient (it accepts impossible dates like 2026-02-30 and locale strings), so
+ * date-only values must also round-trip through their calendar components.
+ */
+export function isValidDate(value: string): boolean {
+  if (DATE_ONLY.test(value)) {
+    const parsed = new Date(`${value}T00:00:00Z`);
+    return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+  }
+  return ISO_DATETIME.test(value) && !Number.isNaN(Date.parse(value));
+}
+
 export function checkDate(
   obj: Dict,
   key: string,
@@ -113,16 +129,81 @@ export function checkDate(
   opts: { optional?: boolean } = {},
 ): string | undefined {
   const value = checkString(obj, key, issues, opts);
-  if (value !== undefined && Number.isNaN(Date.parse(value))) {
+  if (value !== undefined && !isValidDate(value)) {
     issues.push(`${key} must be a date (YYYY-MM-DD or ISO 8601)`);
     return undefined;
   }
   return value;
 }
 
+type EntryCheck = (entry: Dict, issues: string[]) => void;
+
 /**
- * Checks the top-level shape of a Project. Nested collections (team, risks,
- * blockers, metrics, dependencies) are checked only to be arrays.
+ * Validates each entry of an optional nested collection. A missing collection is
+ * fine; a present one must be an array whose entries pass the entry check.
+ */
+function checkCollection(obj: Dict, key: string, check: EntryCheck, issues: string[]): void {
+  const value = obj[key];
+  if (value === undefined) return;
+  if (!Array.isArray(value)) {
+    issues.push(`${key} must be an array when present`);
+    return;
+  }
+  value.forEach((entry, index) => {
+    const entryIssues: string[] = [];
+    const record = requireRecord(entry, `${key}[${index}]`, entryIssues);
+    if (record) check(record, entryIssues);
+    issues.push(...entryIssues.map((message) => `${key}[${index}] ${message}`));
+  });
+}
+
+const LEVELS = ['high', 'medium', 'low'] as const;
+
+const checkTeamMember: EntryCheck = (entry, issues) => {
+  checkString(entry, 'name', issues);
+  checkString(entry, 'role', issues);
+  checkNumber(entry, 'tasksAssigned', issues, { min: 0, integer: true });
+  checkNumber(entry, 'tasksCompleted', issues, { min: 0, integer: true });
+  checkString(entry, 'lastActivity', issues);
+};
+
+const checkMetric: EntryCheck = (entry, issues) => {
+  checkString(entry, 'name', issues);
+  checkNumber(entry, 'value', issues);
+  checkNumber(entry, 'target', issues, { optional: true });
+  checkString(entry, 'unit', issues, { optional: true });
+  if (entry.trend !== undefined) checkEnum(entry, 'trend', ['up', 'down', 'stable'] as const, issues);
+};
+
+const checkRisk: EntryCheck = (entry, issues) => {
+  checkString(entry, 'id', issues);
+  checkString(entry, 'title', issues);
+  checkString(entry, 'description', issues);
+  checkEnum(entry, 'probability', LEVELS, issues);
+  checkEnum(entry, 'impact', LEVELS, issues);
+  checkEnum(entry, 'status', ['open', 'mitigated', 'realized'] as const, issues);
+};
+
+const checkBlocker: EntryCheck = (entry, issues) => {
+  checkString(entry, 'id', issues);
+  checkString(entry, 'title', issues);
+  checkString(entry, 'description', issues);
+  checkEnum(entry, 'impact', LEVELS, issues);
+  checkString(entry, 'reportedBy', issues);
+  checkDate(entry, 'reportedAt', issues);
+  checkEnum(entry, 'status', ['open', 'in-progress', 'resolved'] as const, issues);
+};
+
+const checkDependency: EntryCheck = (entry, issues) => {
+  checkString(entry, 'projectId', issues);
+  checkString(entry, 'projectName', issues);
+  checkEnum(entry, 'status', ['required', 'blocks', 'related'] as const, issues);
+  checkEnum(entry, 'impact', LEVELS, issues);
+};
+
+/**
+ * Checks the shape of a Project, including every entry of its nested collections
+ * (team, metrics, risks, blockers, dependencies).
  */
 export function parseProject(value: unknown, label: string, issues: string[]): Project | undefined {
   const obj = requireRecord(value, label, issues);
@@ -149,9 +230,11 @@ export function parseProject(value: unknown, label: string, issues: string[]): P
     checkNumber(stats, 'completionPercentage', sub, { min: 0, max: 100 });
   }
 
-  for (const key of ['team', 'risks', 'blockers', 'metrics', 'dependencies']) {
-    if (obj[key] !== undefined && !Array.isArray(obj[key])) sub.push(`${key} must be an array when present`);
-  }
+  checkCollection(obj, 'team', checkTeamMember, sub);
+  checkCollection(obj, 'metrics', checkMetric, sub);
+  checkCollection(obj, 'risks', checkRisk, sub);
+  checkCollection(obj, 'blockers', checkBlocker, sub);
+  checkCollection(obj, 'dependencies', checkDependency, sub);
 
   issues.push(...sub.map((s) => `${label}.${s}`));
   return issues.length === before ? (obj as unknown as Project) : undefined;

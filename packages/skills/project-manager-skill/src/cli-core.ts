@@ -35,6 +35,9 @@ export function runCli(args: string[], stdin?: string): CliResult {
   if (!tool) {
     return failure('Missing tool name', [USAGE]);
   }
+  if (args.length > 2) {
+    return failure('Too many arguments', [`expected <tool> [json-input], received ${args.length} arguments`]);
+  }
 
   const raw = rawInput ?? stdin ?? '';
   if (raw.trim() === '') {

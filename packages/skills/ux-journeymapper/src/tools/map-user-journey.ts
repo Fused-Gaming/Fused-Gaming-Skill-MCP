@@ -306,8 +306,12 @@ function generateKeyInsights(stages: JourneyStage[]): string[] {
   return insights.slice(0, 5);
 }
 
+/** Matches the 120-character limit that validateJourneyMap enforces on the persona output. */
+const MAX_PERSONA_LABEL_LENGTH = 120;
+
 function personaLabel(persona: Persona): string {
-  return `${persona.name} (${persona.role})`;
+  const label = `${persona.name} (${persona.role})`;
+  return label.length <= MAX_PERSONA_LABEL_LENGTH ? label : `${label.slice(0, MAX_PERSONA_LABEL_LENGTH - 1)}…`;
 }
 
 export const MapUserJourneyTool: ToolDefinition = {

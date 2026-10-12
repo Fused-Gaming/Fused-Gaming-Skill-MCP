@@ -182,10 +182,11 @@ export function generateSvgAsset(input: unknown): SvgAsset {
   const trimmedObjective = objective.trim();
   const assetType = assetTypeInput === "auto" ? detectAssetType(trimmedObjective) : assetTypeInput;
 
-  const textDims = width === undefined && height === undefined
-    ? extractTextDimensions(`${trimmedObjective} ${context}`, "objective")
-    : null;
-  if (textDims !== null && !textDims.ok) {
+  // Text dimensions fill whichever axis is not given explicitly, so an explicit
+  // width or height must not discard the other text-derived axis.
+  const textDims = extractTextDimensions(`${trimmedObjective} ${context}`, "objective");
+  const bothAxesExplicit = width !== undefined && height !== undefined;
+  if (textDims !== null && !textDims.ok && !bothAxesExplicit) {
     return fail("Invalid input: " + textDims.issues.map((i) => `${i.path} ${i.message}`).join("; "), textDims.issues);
   }
   const explicitCanvas = textDims?.ok ? textDims.value : undefined;
