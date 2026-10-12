@@ -51,3 +51,10 @@ describe('parseCliArgs', () => {
     expect(result.kind === 'error' && result.error.code).toBe('INVALID_ARGUMENTS');
   });
 });
+
+describe('unknown tool names', () => {
+  it('rejects an unknown tool without reading stdin', () => {
+    const result = parseCliArgs(['typo'], noStdin);
+    expect(result).toMatchObject({ kind: 'error', error: { code: 'UNKNOWN_TOOL' } });
+  });
+});

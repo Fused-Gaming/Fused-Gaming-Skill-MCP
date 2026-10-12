@@ -41,7 +41,7 @@ function fail(error: string, issues: ValidationIssue[]): { ok: false; error: str
 /**
  * Quote-aware bracket check. Brackets inside "double quoted" labels are ignored.
  */
-function checkBrackets(lines: string[]): ValidationIssue[] {
+function checkBrackets(lines: string[], asymmetricShapes: boolean): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const stack: Array<{ ch: string; line: number }> = [];
 
@@ -60,7 +60,8 @@ function checkBrackets(lines: string[]): ValidationIssue[] {
       // A ">" opens an asymmetric shape only at top level, directly after a node id.
       // Arrows ("-->", "==>") and markup such as "<br>" are not shapes, so they are skipped.
       if (ch === ">") {
-        if (stack.length === 0 && /[A-Za-z0-9_]/.test(raw[i - 1] ?? "")) {
+        // Only flowchart node declarations use this shape; elsewhere ">" is ordinary text.
+        if (asymmetricShapes && stack.length === 0 && /[A-Za-z0-9_]/.test(raw[i - 1] ?? "")) {
           stack.push({ ch, line: lineNo });
         }
         continue;
@@ -135,7 +136,7 @@ export function validateMermaidDiagram(input: unknown): ValidationResult {
     });
   }
 
-  issues.push(...checkBrackets(lines));
+  issues.push(...checkBrackets(lines, keyword === "flowchart" || keyword === "graph"));
 
   if (issues.length > 0) {
     return fail(`Diagram failed validation with ${issues.length} issue(s)`, issues);

@@ -257,3 +257,11 @@ describe("chart axis and per-axis text dimensions", () => {
     expect(result.svgCode).toContain('height="128"');
   });
 });
+
+describe("derived component height", () => {
+  it("never derives a zero height for a 1-pixel-wide component", async () => {
+    const result = await run({ objective: "button", context: "", assetType: "component", width: 1 });
+    expect(result.ok).toBe(true);
+    expect(result.dimensions).toEqual({ width: 1, height: 1 });
+  });
+});

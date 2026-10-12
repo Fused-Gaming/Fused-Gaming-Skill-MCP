@@ -115,7 +115,8 @@ function defaultCanvas(assetType: string, width: number | undefined, height: num
     return { width: w, height };
   }
   if (assetType === "component") {
-    return { width: w, height: Math.round(w * DEFAULT_COMPONENT_HEIGHT_RATIO) };
+    // Clamp so a narrow component never derives a zero (invisible) height.
+    return { width: w, height: Math.max(MIN_DIMENSION, Math.round(w * DEFAULT_COMPONENT_HEIGHT_RATIO)) };
   }
   return { width: w, height: width ?? DEFAULT_SIZE };
 }

@@ -8,7 +8,7 @@
  *   skill-project-status-tool --list
  */
 
-import type { ToolError } from './contracts.js';
+import { TOOL_NAMES, type ToolError } from './contracts.js';
 
 export type CliParseResult =
   | { kind: 'help' }
@@ -32,6 +32,10 @@ export function parseCliArgs(args: readonly string[], readStdin: () => string): 
   if (first === '--help' || first === '-h') return { kind: 'help' };
   if (first === '--list') return { kind: 'list' };
   if (first.startsWith('-')) return argError(`Unknown option "${first}".\n${CLI_USAGE}`);
+  // Reject unknown names before reading stdin, so a typo fails at once instead of waiting for input.
+  if (!(TOOL_NAMES as readonly string[]).includes(first)) {
+    return { kind: 'error', error: { code: 'UNKNOWN_TOOL', message: `Unknown tool "${first}". Run --list for the tool names.` } };
+  }
   if (args.length > 2) {
     return argError('Too many arguments: quote the JSON input as a single argument.');
   }

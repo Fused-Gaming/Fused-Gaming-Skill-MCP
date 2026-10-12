@@ -140,3 +140,10 @@ describe("inline edge labels", () => {
     });
   });
 });
+
+describe("comparison text outside flowcharts", () => {
+  it("accepts a '>' in a sequence message without treating it as a node shape", () => {
+    const result = renderMermaidToText(["sequenceDiagram", "    A->>B: x>0"].join("\n"));
+    expect(result).toMatchObject({ ok: true, diagramType: "sequenceDiagram" });
+  });
+});
