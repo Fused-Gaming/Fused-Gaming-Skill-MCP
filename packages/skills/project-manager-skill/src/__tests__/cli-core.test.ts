@@ -49,3 +49,11 @@ describe('runCli', () => {
     expect(JSON.parse(result.output)).toMatchObject({ ok: false, error: 'Too many arguments' });
   });
 });
+
+describe('unknown tool names', () => {
+  it('reports an unknown tool instead of asking for JSON', () => {
+    const result = runCli(['typo']);
+    expect(result.exitCode).toBe(1);
+    expect(JSON.parse(result.output)).toMatchObject({ ok: false, error: 'Unknown tool' });
+  });
+});

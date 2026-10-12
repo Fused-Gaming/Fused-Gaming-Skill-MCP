@@ -162,9 +162,9 @@ export function renderBarChart(canvas: Canvas, palette: readonly string[]): stri
 
   children.push(
     element("line", [
-      ["x1", "10"],
+      ["x1", fmt(startX)],
       ["y1", fmt(baseline)],
-      ["x2", fmt(width - 10)],
+      ["x2", fmt(width - startX)],
       ["y2", fmt(baseline)],
       ["stroke", OUTLINE],
       ["stroke-width", "1.5"],

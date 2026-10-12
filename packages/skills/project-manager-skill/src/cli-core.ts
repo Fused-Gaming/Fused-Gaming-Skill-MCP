@@ -3,7 +3,7 @@
  * The executable entry point lives in cli.ts.
  */
 
-import { TOOL_NAMES, runTool } from './handlers.js';
+import { TOOL_NAMES, isToolName, runTool } from './handlers.js';
 
 export interface CliResult {
   exitCode: number;
@@ -34,6 +34,9 @@ export function runCli(args: string[], stdin?: string): CliResult {
   }
   if (!tool) {
     return failure('Missing tool name', [USAGE]);
+  }
+  if (!isToolName(tool)) {
+    return failure('Unknown tool', [`unknown tool "${tool}"`, `available: ${TOOL_NAMES.join(', ')}`]);
   }
   if (args.length > 2) {
     return failure('Too many arguments', [`expected <tool> [json-input], received ${args.length} arguments`]);

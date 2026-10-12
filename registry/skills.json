@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "timestamp": "2026-10-12T10:23:11.796Z",
+  "timestamp": "2026-10-12T10:34:37.166Z",
   "skills": [
     {
       "name": "agentic-flow-devkit",
@@ -10,24 +10,14 @@
       "package": "@h4shed/skill-agentic-flow-devkit",
       "tools": [
         {
-          "name": "plan_trailer_rolls.d",
-          "file": "plan-trailer-rolls.d.ts",
-          "description": "plan_trailer_rolls.d from agentic-flow-devkit"
+          "name": "plan-trailer-rolls",
+          "file": "src",
+          "description": "plan-trailer-rolls from agentic-flow-devkit"
         },
         {
-          "name": "plan_trailer_rolls",
-          "file": "plan-trailer-rolls.ts",
-          "description": "plan_trailer_rolls from agentic-flow-devkit"
-        },
-        {
-          "name": "visualize_agentic_flow.d",
-          "file": "visualize-agentic-flow.d.ts",
-          "description": "visualize_agentic_flow.d from agentic-flow-devkit"
-        },
-        {
-          "name": "visualize_agentic_flow",
-          "file": "visualize-agentic-flow.ts",
-          "description": "visualize_agentic_flow from agentic-flow-devkit"
+          "name": "visualize-agentic-flow",
+          "file": "src",
+          "description": "visualize-agentic-flow from agentic-flow-devkit"
         }
       ],
       "enabled": true,
@@ -51,24 +41,14 @@
       "package": "@h4shed/skill-algorithmic-art",
       "tools": [
         {
-          "name": "flow_field.d",
-          "file": "flow-field.d.ts",
-          "description": "flow_field.d from algorithmic-art"
+          "name": "create-flow-field",
+          "file": "src",
+          "description": "create-flow-field from algorithmic-art"
         },
         {
-          "name": "flow_field",
-          "file": "flow-field.ts",
-          "description": "flow_field from algorithmic-art"
-        },
-        {
-          "name": "generate_art.d",
-          "file": "generate-art.d.ts",
-          "description": "generate_art.d from algorithmic-art"
-        },
-        {
-          "name": "generate_art",
-          "file": "generate-art.ts",
-          "description": "generate_art from algorithmic-art"
+          "name": "generate-art",
+          "file": "src",
+          "description": "generate-art from algorithmic-art"
         }
       ],
       "enabled": true,
@@ -93,14 +73,9 @@
       "package": "@h4shed/skill-ascii-mockup",
       "tools": [
         {
-          "name": "generate_mockup.d",
-          "file": "generate-mockup.d.ts",
-          "description": "generate_mockup.d from ascii-mockup"
-        },
-        {
-          "name": "generate_mockup",
-          "file": "generate-mockup.ts",
-          "description": "generate_mockup from ascii-mockup"
+          "name": "generate-mockup",
+          "file": "src",
+          "description": "generate-mockup from ascii-mockup"
         }
       ],
       "enabled": true,
@@ -126,14 +101,9 @@
       "package": "@h4shed/skill-canvas-design",
       "tools": [
         {
-          "name": "generate_svg.d",
-          "file": "generate-svg.d.ts",
-          "description": "generate_svg.d from canvas-design"
-        },
-        {
-          "name": "generate_svg",
-          "file": "generate-svg.ts",
-          "description": "generate_svg from canvas-design"
+          "name": "generate-svg-design",
+          "file": "src",
+          "description": "generate-svg-design from canvas-design"
         }
       ],
       "enabled": true,
@@ -159,14 +129,9 @@
       "package": "@h4shed/skill-creator",
       "tools": [
         {
-          "name": "create_skill.d",
-          "file": "create-skill.d.ts",
-          "description": "create_skill.d from skill-creator"
-        },
-        {
-          "name": "create_skill",
-          "file": "create-skill.ts",
-          "description": "create_skill from skill-creator"
+          "name": "create-skill",
+          "file": "src",
+          "description": "create-skill from skill-creator"
         }
       ],
       "enabled": true,
@@ -190,34 +155,19 @@
       "package": "@h4shed/skill-daily-review",
       "tools": [
         {
-          "name": "analyze_weekly.d",
-          "file": "analyze-weekly.d.ts",
-          "description": "analyze_weekly.d from daily-review-skill"
+          "name": "analyze-weekly",
+          "file": "src",
+          "description": "analyze-weekly from daily-review-skill"
         },
         {
-          "name": "analyze_weekly",
-          "file": "analyze-weekly.ts",
-          "description": "analyze_weekly from daily-review-skill"
+          "name": "generate-daily-review",
+          "file": "src",
+          "description": "generate-daily-review from daily-review-skill"
         },
         {
-          "name": "generate_daily_review.d",
-          "file": "generate-daily-review.d.ts",
-          "description": "generate_daily_review.d from daily-review-skill"
-        },
-        {
-          "name": "generate_daily_review",
-          "file": "generate-daily-review.ts",
-          "description": "generate_daily_review from daily-review-skill"
-        },
-        {
-          "name": "log_session.d",
-          "file": "log-session.d.ts",
-          "description": "log_session.d from daily-review-skill"
-        },
-        {
-          "name": "log_session",
-          "file": "log-session.ts",
-          "description": "log_session from daily-review-skill"
+          "name": "log-session",
+          "file": "src",
+          "description": "log-session from daily-review-skill"
         }
       ],
       "enabled": true,
@@ -243,14 +193,9 @@
       "package": "@h4shed/skill-frontend-design",
       "tools": [
         {
-          "name": "generate_component.d",
-          "file": "generate-component.d.ts",
-          "description": "generate_component.d from frontend-design"
-        },
-        {
-          "name": "generate_component",
-          "file": "generate-component.ts",
-          "description": "generate_component from frontend-design"
+          "name": "generate-component",
+          "file": "src",
+          "description": "generate-component from frontend-design"
         }
       ],
       "enabled": true,
@@ -276,44 +221,24 @@
       "package": "@h4shed/skill-linkedin-master-journalist",
       "tools": [
         {
-          "name": "analyze_content_quality.d",
-          "file": "analyze-content-quality.d.ts",
-          "description": "analyze_content_quality.d from linkedin-master-journalist"
+          "name": "analyze-content-quality",
+          "file": "src",
+          "description": "analyze-content-quality from linkedin-master-journalist"
         },
         {
-          "name": "analyze_content_quality",
-          "file": "analyze-content-quality.ts",
-          "description": "analyze_content_quality from linkedin-master-journalist"
+          "name": "draft-linkedin-post",
+          "file": "src",
+          "description": "draft-linkedin-post from linkedin-master-journalist"
         },
         {
-          "name": "draft_linkedin_post.d",
-          "file": "draft-linkedin-post.d.ts",
-          "description": "draft_linkedin_post.d from linkedin-master-journalist"
+          "name": "track-content-performance",
+          "file": "src",
+          "description": "track-content-performance from linkedin-master-journalist"
         },
         {
-          "name": "draft_linkedin_post",
-          "file": "draft-linkedin-post.ts",
-          "description": "draft_linkedin_post from linkedin-master-journalist"
-        },
-        {
-          "name": "track_content_performance.d",
-          "file": "track-content-performance.d.ts",
-          "description": "track_content_performance.d from linkedin-master-journalist"
-        },
-        {
-          "name": "track_content_performance",
-          "file": "track-content-performance.ts",
-          "description": "track_content_performance from linkedin-master-journalist"
-        },
-        {
-          "name": "verify_hashtags.d",
-          "file": "verify-hashtags.d.ts",
-          "description": "verify_hashtags.d from linkedin-master-journalist"
-        },
-        {
-          "name": "verify_hashtags",
-          "file": "verify-hashtags.ts",
-          "description": "verify_hashtags from linkedin-master-journalist"
+          "name": "verify-hashtags",
+          "file": "src",
+          "description": "verify-hashtags from linkedin-master-journalist"
         }
       ],
       "enabled": true,
@@ -336,14 +261,9 @@
       "package": "@h4shed/skill-mcp-builder",
       "tools": [
         {
-          "name": "scaffold_skill.d",
-          "file": "scaffold-skill.d.ts",
-          "description": "scaffold_skill.d from mcp-builder"
-        },
-        {
-          "name": "scaffold_skill",
-          "file": "scaffold-skill.ts",
-          "description": "scaffold_skill from mcp-builder"
+          "name": "scaffold-skill",
+          "file": "src",
+          "description": "scaffold-skill from mcp-builder"
         }
       ],
       "enabled": true,
@@ -367,19 +287,19 @@
       "package": "@h4shed/skill-mermaid-terminal",
       "tools": [
         {
-          "name": "generate_mermaid_diagram",
-          "file": "generate-mermaid-diagram.ts",
-          "description": "generate_mermaid_diagram from mermaid-terminal"
+          "name": "generate-mermaid-diagram",
+          "file": "src",
+          "description": "generate-mermaid-diagram from mermaid-terminal"
         },
         {
-          "name": "render_mermaid_terminal",
-          "file": "render-mermaid-terminal.ts",
-          "description": "render_mermaid_terminal from mermaid-terminal"
+          "name": "render-mermaid-terminal",
+          "file": "src",
+          "description": "render-mermaid-terminal from mermaid-terminal"
         },
         {
-          "name": "validate_mermaid_diagram",
-          "file": "validate-mermaid-diagram.ts",
-          "description": "validate_mermaid_diagram from mermaid-terminal"
+          "name": "validate-mermaid-diagram",
+          "file": "src",
+          "description": "validate-mermaid-diagram from mermaid-terminal"
         }
       ],
       "enabled": true,
@@ -402,14 +322,29 @@
       "package": "@h4shed/skill-multi-account-session-tracking",
       "tools": [
         {
-          "name": "session_aggregation.d",
-          "file": "session-aggregation.d.ts",
-          "description": "session_aggregation.d from multi-account-session-tracking-skill"
+          "name": "aggregate-sessions",
+          "file": "src",
+          "description": "aggregate-sessions from multi-account-session-tracking-skill"
         },
         {
-          "name": "session_aggregation",
-          "file": "session-aggregation.ts",
-          "description": "session_aggregation from multi-account-session-tracking-skill"
+          "name": "analyze-specialization",
+          "file": "src",
+          "description": "analyze-specialization from multi-account-session-tracking-skill"
+        },
+        {
+          "name": "compare-accounts",
+          "file": "src",
+          "description": "compare-accounts from multi-account-session-tracking-skill"
+        },
+        {
+          "name": "generate-multi-account-report",
+          "file": "src",
+          "description": "generate-multi-account-report from multi-account-session-tracking-skill"
+        },
+        {
+          "name": "get-account-metrics",
+          "file": "src",
+          "description": "get-account-metrics from multi-account-session-tracking-skill"
         }
       ],
       "enabled": true,
@@ -475,14 +410,9 @@
       "package": "@h4shed/skill-pre-deploy-validator",
       "tools": [
         {
-          "name": "validate_deployment.d",
-          "file": "validate-deployment.d.ts",
-          "description": "validate_deployment.d from pre-deploy-validator"
-        },
-        {
-          "name": "validate_deployment",
-          "file": "validate-deployment.ts",
-          "description": "validate_deployment from pre-deploy-validator"
+          "name": "validate-deployment",
+          "file": "src",
+          "description": "validate-deployment from pre-deploy-validator"
         }
       ],
       "enabled": true,
@@ -507,14 +437,9 @@
       "package": "@h4shed/skill-project-manager",
       "tools": [
         {
-          "name": "plan_project.d",
-          "file": "plan-project.d.ts",
-          "description": "plan_project.d from project-manager"
-        },
-        {
-          "name": "plan_project",
-          "file": "plan-project.ts",
-          "description": "plan_project from project-manager"
+          "name": "plan-project",
+          "file": "src",
+          "description": "plan-project from project-manager"
         }
       ],
       "enabled": true,
@@ -537,9 +462,39 @@
       "package": "@h4shed/skill-project-manager-skill",
       "tools": [
         {
-          "name": "task_management",
-          "file": "task-management.ts",
-          "description": "task_management from project-manager-skill"
+          "name": "add-task-dependency",
+          "file": "src",
+          "description": "add-task-dependency from project-manager-skill"
+        },
+        {
+          "name": "add-task-label",
+          "file": "src",
+          "description": "add-task-label from project-manager-skill"
+        },
+        {
+          "name": "assign-task",
+          "file": "src",
+          "description": "assign-task from project-manager-skill"
+        },
+        {
+          "name": "create-task",
+          "file": "src",
+          "description": "create-task from project-manager-skill"
+        },
+        {
+          "name": "get-metrics",
+          "file": "src",
+          "description": "get-metrics from project-manager-skill"
+        },
+        {
+          "name": "log-task-time",
+          "file": "src",
+          "description": "log-task-time from project-manager-skill"
+        },
+        {
+          "name": "update-task-status",
+          "file": "src",
+          "description": "update-task-status from project-manager-skill"
         }
       ],
       "enabled": true,
@@ -564,33 +519,33 @@
       "tools": [
         {
           "name": "create-project",
-          "file": "tool-definitions.ts",
+          "file": "src",
           "description": "create-project from project-status-tool"
         },
         {
-          "name": "update-project-progress",
-          "file": "tool-definitions.ts",
-          "description": "update-project-progress from project-status-tool"
-        },
-        {
-          "name": "update-project-status",
-          "file": "tool-definitions.ts",
-          "description": "update-project-status from project-status-tool"
-        },
-        {
-          "name": "validate-project",
-          "file": "tool-definitions.ts",
-          "description": "validate-project from project-status-tool"
-        },
-        {
           "name": "generate-dashboard",
-          "file": "tool-definitions.ts",
+          "file": "src",
           "description": "generate-dashboard from project-status-tool"
         },
         {
           "name": "summarize-project-status",
-          "file": "tool-definitions.ts",
+          "file": "src",
           "description": "summarize-project-status from project-status-tool"
+        },
+        {
+          "name": "update-project-progress",
+          "file": "src",
+          "description": "update-project-progress from project-status-tool"
+        },
+        {
+          "name": "update-project-status",
+          "file": "src",
+          "description": "update-project-status from project-status-tool"
+        },
+        {
+          "name": "validate-project",
+          "file": "src",
+          "description": "validate-project from project-status-tool"
         }
       ],
       "enabled": true,
@@ -678,9 +633,9 @@
       "package": "@h4shed/skill-svg-generator",
       "tools": [
         {
-          "name": "generate_svg_asset",
-          "file": "generate-svg-asset.ts",
-          "description": "generate_svg_asset from svg-generator"
+          "name": "generate-svg-asset",
+          "file": "src",
+          "description": "generate-svg-asset from svg-generator"
         }
       ],
       "enabled": true,
@@ -790,14 +745,9 @@
       "package": "@h4shed/skill-theme-factory",
       "tools": [
         {
-          "name": "generate_theme.d",
-          "file": "generate-theme.d.ts",
-          "description": "generate_theme.d from theme-factory"
-        },
-        {
-          "name": "generate_theme",
-          "file": "generate-theme.ts",
-          "description": "generate_theme from theme-factory"
+          "name": "generate-theme",
+          "file": "src",
+          "description": "generate-theme from theme-factory"
         }
       ],
       "enabled": true,
@@ -869,9 +819,9 @@
       "package": "@h4shed/skill-ux-journeymapper",
       "tools": [
         {
-          "name": "map_user_journey",
-          "file": "map-user-journey.ts",
-          "description": "map_user_journey from ux-journeymapper"
+          "name": "map-user-journey",
+          "file": "src",
+          "description": "map-user-journey from ux-journeymapper"
         }
       ],
       "enabled": true,
@@ -930,7 +880,7 @@
     }
   ],
   "totalSkills": 30,
-  "totalTools": 58,
+  "totalTools": 48,
   "categories": {
     "design": 7,
     "generative-art": 3,

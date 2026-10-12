@@ -3,5 +3,5 @@
   <rect x="61" y="67" width="37" height="63" fill="#44FF44" stroke="#333" stroke-width="1"/>
   <rect x="102" y="46" width="37" height="84" fill="#4444FF" stroke="#333" stroke-width="1"/>
   <rect x="143" y="77.5" width="37" height="52.5" fill="#44FF44" stroke="#333" stroke-width="1"/>
-  <line x1="10" y1="130" x2="190" y2="130" stroke="#333" stroke-width="1.5"/>
+  <line x1="20" y1="130" x2="180" y2="130" stroke="#333" stroke-width="1.5"/>
 </svg>

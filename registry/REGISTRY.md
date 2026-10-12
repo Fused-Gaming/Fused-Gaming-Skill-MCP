@@ -1,12 +1,12 @@
 # 🎮 Fused Gaming Skill Registry
 
-**Generated:** 10/12/2026, 10:23:11 AM
+**Generated:** 10/12/2026, 10:34:37 AM
 **Version:** 1.0.0
 
 ## 📊 Summary
 
 - **Total Skills:** 30
-- **Total Tools:** 58
+- **Total Tools:** 48
 - **Categories:** 11
 
 ## 📑 Skills by Category
@@ -18,19 +18,19 @@
 - **Package:** `@h4shed/skill-agentic-flow-devkit`
 - **Description:** Design and visualize agentic orchestration flows with trailer A/B-roll planning support.
 - **Version:** 1.0.21
-- **Tools:** `plan_trailer_rolls.d`, `plan_trailer_rolls`, `visualize_agentic_flow.d`, `visualize_agentic_flow`
+- **Tools:** `plan-trailer-rolls`, `visualize-agentic-flow`
 
 #### 📦 canvas-design
 - **Package:** `@h4shed/skill-canvas-design`
 - **Description:** Visual design generation for web with SVG and canvas rendering
 - **Version:** 1.0.24
-- **Tools:** `generate_svg.d`, `generate_svg`
+- **Tools:** `generate-svg-design`
 
 #### 📦 frontend-design
 - **Package:** `@h4shed/skill-frontend-design`
 - **Description:** Frontend component design and HTML/CSS generation for modern web applications
 - **Version:** 1.0.24
-- **Tools:** `generate_component.d`, `generate_component`
+- **Tools:** `generate-component`
 
 #### 📦 style-dictionary-system
 - **Package:** `@h4shed/skill-style-dictionary-system`
@@ -41,7 +41,7 @@
 - **Package:** `@h4shed/skill-svg-generator`
 - **Description:** Generate SVG assets and icon concepts from structured prompts.
 - **Version:** 1.1.1
-- **Tools:** `generate_svg_asset`
+- **Tools:** `generate-svg-asset`
 
 #### 📦 tailwindcss-style-builder
 - **Package:** `@h4shed/skill-tailwindcss-style-builder`
@@ -52,7 +52,7 @@
 - **Package:** `@h4shed/skill-theme-factory`
 - **Description:** Design system and theme generation for consistent UI/UX across applications
 - **Version:** 1.0.24
-- **Tools:** `generate_theme.d`, `generate_theme`
+- **Tools:** `generate-theme`
 
 
 ### Generative Art (3 skills)
@@ -61,7 +61,7 @@
 - **Package:** `@h4shed/skill-algorithmic-art`
 - **Description:** Generative art using p5.js with seeded randomness, flow fields, and particle systems
 - **Version:** 1.0.24
-- **Tools:** `flow_field.d`, `flow_field`, `generate_art.d`, `generate_art`
+- **Tools:** `create-flow-field`, `generate-art`
 
 #### 📦 nft-generative-art
 - **Package:** `@h4shed/skill-nft-generative-art`
@@ -80,7 +80,7 @@
 - **Package:** `@h4shed/skill-ascii-mockup`
 - **Description:** Mobile-first ASCII wireframe mockup generator for rapid UI prototyping
 - **Version:** 1.0.24
-- **Tools:** `generate_mockup.d`, `generate_mockup`
+- **Tools:** `generate-mockup`
 
 #### 📦 playwright-test-automation
 - **Package:** `@h4shed/skill-playwright-test-automation`
@@ -120,13 +120,13 @@
 - **Package:** `@h4shed/skill-creator`
 - **Description:** Create custom skills and tools for the Fused Gaming MCP ecosystem
 - **Version:** 1.0.24
-- **Tools:** `create_skill.d`, `create_skill`
+- **Tools:** `create-skill`
 
 #### 📦 mcp-builder
 - **Package:** `@h4shed/skill-mcp-builder`
 - **Description:** Build and scaffold MCP servers and skills with best practices
 - **Version:** 1.0.24
-- **Tools:** `scaffold_skill.d`, `scaffold_skill`
+- **Tools:** `scaffold-skill`
 
 
 ### Productivity (1 skills)
@@ -135,7 +135,7 @@
 - **Package:** `@h4shed/skill-daily-review`
 - **Description:** Productivity tracking and daily review skill for session aggregation, metrics analysis, and multi-account reporting
 - **Version:** 1.0.23
-- **Tools:** `analyze_weekly.d`, `analyze_weekly`, `generate_daily_review.d`, `generate_daily_review`, `log_session.d`, `log_session`
+- **Tools:** `analyze-weekly`, `generate-daily-review`, `log-session`
 
 
 ### Content Creation (2 skills)
@@ -144,7 +144,7 @@
 - **Package:** `@h4shed/skill-linkedin-master-journalist`
 - **Description:** Draft polished LinkedIn release and thought-leadership posts.
 - **Version:** 1.0.23
-- **Tools:** `analyze_content_quality.d`, `analyze_content_quality`, `draft_linkedin_post.d`, `draft_linkedin_post`, `track_content_performance.d`, `track_content_performance`, `verify_hashtags.d`, `verify_hashtags`
+- **Tools:** `analyze-content-quality`, `draft-linkedin-post`, `track-content-performance`, `verify-hashtags`
 
 #### 📦 underworld-writer
 - **Package:** `@h4shed/skill-underworld-writer`
@@ -158,7 +158,7 @@
 - **Package:** `@h4shed/skill-mermaid-terminal`
 - **Description:** Generate terminal-friendly Mermaid diagrams and flowcharts.
 - **Version:** 1.0.41
-- **Tools:** `generate_mermaid_diagram`, `render_mermaid_terminal`, `validate_mermaid_diagram`
+- **Tools:** `generate-mermaid-diagram`, `render-mermaid-terminal`, `validate-mermaid-diagram`
 
 
 ### Session Management (1 skills)
@@ -167,7 +167,7 @@
 - **Package:** `@h4shed/skill-multi-account-session-tracking`
 - **Description:** Extended framework for tracking Claude sessions across multiple accounts with unified metrics
 - **Version:** 1.0.23
-- **Tools:** `session_aggregation.d`, `session_aggregation`
+- **Tools:** `aggregate-sessions`, `analyze-specialization`, `compare-accounts`, `generate-multi-account-report`, `get-account-metrics`
 
 
 ### Development (2 skills)
@@ -176,7 +176,7 @@
 - **Package:** `@h4shed/skill-pre-deploy-validator`
 - **Description:** Pre-deployment validation and quality checks for production readiness
 - **Version:** 1.0.24
-- **Tools:** `validate_deployment.d`, `validate_deployment`
+- **Tools:** `validate-deployment`
 
 #### 📦 vercel-nextjs-deployment
 - **Package:** `@h4shed/skill-vercel-nextjs-deployment`
@@ -190,19 +190,19 @@
 - **Package:** `@h4shed/skill-project-manager`
 - **Description:** Plan projects with milestones, dependencies, and delivery phases.
 - **Version:** 1.0.23
-- **Tools:** `plan_project.d`, `plan_project`
+- **Tools:** `plan-project`
 
 #### 📦 project-manager-skill
 - **Package:** `@h4shed/skill-project-manager-skill`
 - **Description:** Task and project management skill for tracking work items and team collaboration
 - **Version:** 1.0.41
-- **Tools:** `task_management`
+- **Tools:** `add-task-dependency`, `add-task-label`, `assign-task`, `create-task`, `get-metrics`, `log-task-time`, `update-task-status`
 
 #### 📦 project-status-tool
 - **Package:** `@h4shed/skill-project-status-tool`
 - **Description:** Summarize current project status, risks, and next actions.
 - **Version:** 1.0.41
-- **Tools:** `create-project`, `update-project-progress`, `update-project-status`, `validate-project`, `generate-dashboard`, `summarize-project-status`
+- **Tools:** `create-project`, `generate-dashboard`, `summarize-project-status`, `update-project-progress`, `update-project-status`, `validate-project`
 
 
 ### User Experience (1 skills)
@@ -211,68 +211,58 @@
 - **Package:** `@h4shed/skill-ux-journeymapper`
 - **Description:** Create UX journey maps with pain points, touchpoints, and opportunities.
 - **Version:** 1.0.41
-- **Tools:** `map_user_journey`
+- **Tools:** `map-user-journey`
 
 
 ## 🛠️ All Tools
 
 | Skill | Tool | File |
 |-------|------|------|
-| `agentic-flow-devkit` | `plan_trailer_rolls.d` | `plan-trailer-rolls.d.ts` |
-| `agentic-flow-devkit` | `plan_trailer_rolls` | `plan-trailer-rolls.ts` |
-| `agentic-flow-devkit` | `visualize_agentic_flow.d` | `visualize-agentic-flow.d.ts` |
-| `agentic-flow-devkit` | `visualize_agentic_flow` | `visualize-agentic-flow.ts` |
-| `algorithmic-art` | `flow_field.d` | `flow-field.d.ts` |
-| `algorithmic-art` | `flow_field` | `flow-field.ts` |
-| `algorithmic-art` | `generate_art.d` | `generate-art.d.ts` |
-| `algorithmic-art` | `generate_art` | `generate-art.ts` |
-| `ascii-mockup` | `generate_mockup.d` | `generate-mockup.d.ts` |
-| `ascii-mockup` | `generate_mockup` | `generate-mockup.ts` |
-| `canvas-design` | `generate_svg.d` | `generate-svg.d.ts` |
-| `canvas-design` | `generate_svg` | `generate-svg.ts` |
-| `creator` | `create_skill.d` | `create-skill.d.ts` |
-| `creator` | `create_skill` | `create-skill.ts` |
-| `daily-review` | `analyze_weekly.d` | `analyze-weekly.d.ts` |
-| `daily-review` | `analyze_weekly` | `analyze-weekly.ts` |
-| `daily-review` | `generate_daily_review.d` | `generate-daily-review.d.ts` |
-| `daily-review` | `generate_daily_review` | `generate-daily-review.ts` |
-| `daily-review` | `log_session.d` | `log-session.d.ts` |
-| `daily-review` | `log_session` | `log-session.ts` |
-| `frontend-design` | `generate_component.d` | `generate-component.d.ts` |
-| `frontend-design` | `generate_component` | `generate-component.ts` |
-| `linkedin-master-journalist` | `analyze_content_quality.d` | `analyze-content-quality.d.ts` |
-| `linkedin-master-journalist` | `analyze_content_quality` | `analyze-content-quality.ts` |
-| `linkedin-master-journalist` | `draft_linkedin_post.d` | `draft-linkedin-post.d.ts` |
-| `linkedin-master-journalist` | `draft_linkedin_post` | `draft-linkedin-post.ts` |
-| `linkedin-master-journalist` | `track_content_performance.d` | `track-content-performance.d.ts` |
-| `linkedin-master-journalist` | `track_content_performance` | `track-content-performance.ts` |
-| `linkedin-master-journalist` | `verify_hashtags.d` | `verify-hashtags.d.ts` |
-| `linkedin-master-journalist` | `verify_hashtags` | `verify-hashtags.ts` |
-| `mcp-builder` | `scaffold_skill.d` | `scaffold-skill.d.ts` |
-| `mcp-builder` | `scaffold_skill` | `scaffold-skill.ts` |
-| `mermaid-terminal` | `generate_mermaid_diagram` | `generate-mermaid-diagram.ts` |
-| `mermaid-terminal` | `render_mermaid_terminal` | `render-mermaid-terminal.ts` |
-| `mermaid-terminal` | `validate_mermaid_diagram` | `validate-mermaid-diagram.ts` |
-| `multi-account-session-tracking` | `session_aggregation.d` | `session-aggregation.d.ts` |
-| `multi-account-session-tracking` | `session_aggregation` | `session-aggregation.ts` |
-| `pre-deploy-validator` | `validate_deployment.d` | `validate-deployment.d.ts` |
-| `pre-deploy-validator` | `validate_deployment` | `validate-deployment.ts` |
-| `project-manager` | `plan_project.d` | `plan-project.d.ts` |
-| `project-manager` | `plan_project` | `plan-project.ts` |
-| `project-manager-skill` | `task_management` | `task-management.ts` |
-| `project-status-tool` | `create-project` | `tool-definitions.ts` |
-| `project-status-tool` | `update-project-progress` | `tool-definitions.ts` |
-| `project-status-tool` | `update-project-status` | `tool-definitions.ts` |
-| `project-status-tool` | `validate-project` | `tool-definitions.ts` |
-| `project-status-tool` | `generate-dashboard` | `tool-definitions.ts` |
-| `project-status-tool` | `summarize-project-status` | `tool-definitions.ts` |
-| `svg-generator` | `generate_svg_asset` | `generate-svg-asset.ts` |
+| `agentic-flow-devkit` | `plan-trailer-rolls` | `src` |
+| `agentic-flow-devkit` | `visualize-agentic-flow` | `src` |
+| `algorithmic-art` | `create-flow-field` | `src` |
+| `algorithmic-art` | `generate-art` | `src` |
+| `ascii-mockup` | `generate-mockup` | `src` |
+| `canvas-design` | `generate-svg-design` | `src` |
+| `creator` | `create-skill` | `src` |
+| `daily-review` | `analyze-weekly` | `src` |
+| `daily-review` | `generate-daily-review` | `src` |
+| `daily-review` | `log-session` | `src` |
+| `frontend-design` | `generate-component` | `src` |
+| `linkedin-master-journalist` | `analyze-content-quality` | `src` |
+| `linkedin-master-journalist` | `draft-linkedin-post` | `src` |
+| `linkedin-master-journalist` | `track-content-performance` | `src` |
+| `linkedin-master-journalist` | `verify-hashtags` | `src` |
+| `mcp-builder` | `scaffold-skill` | `src` |
+| `mermaid-terminal` | `generate-mermaid-diagram` | `src` |
+| `mermaid-terminal` | `render-mermaid-terminal` | `src` |
+| `mermaid-terminal` | `validate-mermaid-diagram` | `src` |
+| `multi-account-session-tracking` | `aggregate-sessions` | `src` |
+| `multi-account-session-tracking` | `analyze-specialization` | `src` |
+| `multi-account-session-tracking` | `compare-accounts` | `src` |
+| `multi-account-session-tracking` | `generate-multi-account-report` | `src` |
+| `multi-account-session-tracking` | `get-account-metrics` | `src` |
+| `pre-deploy-validator` | `validate-deployment` | `src` |
+| `project-manager` | `plan-project` | `src` |
+| `project-manager-skill` | `add-task-dependency` | `src` |
+| `project-manager-skill` | `add-task-label` | `src` |
+| `project-manager-skill` | `assign-task` | `src` |
+| `project-manager-skill` | `create-task` | `src` |
+| `project-manager-skill` | `get-metrics` | `src` |
+| `project-manager-skill` | `log-task-time` | `src` |
+| `project-manager-skill` | `update-task-status` | `src` |
+| `project-status-tool` | `create-project` | `src` |
+| `project-status-tool` | `generate-dashboard` | `src` |
+| `project-status-tool` | `summarize-project-status` | `src` |
+| `project-status-tool` | `update-project-progress` | `src` |
+| `project-status-tool` | `update-project-status` | `src` |
+| `project-status-tool` | `validate-project` | `src` |
+| `svg-generator` | `generate-svg-asset` | `src` |
 | `syncpulse` | `email_tools.d` | `email-tools.d.ts` |
 | `syncpulse` | `email_tools` | `email-tools.ts` |
 | `syncpulse` | `email_workflows.d` | `email-workflows.d.ts` |
 | `syncpulse` | `email_workflows` | `email-workflows.ts` |
 | `syncpulse` | `index.d` | `index.d.ts` |
 | `syncpulse` | `index` | `index.ts` |
-| `theme-factory` | `generate_theme.d` | `generate-theme.d.ts` |
-| `theme-factory` | `generate_theme` | `generate-theme.ts` |
-| `ux-journeymapper` | `map_user_journey` | `map-user-journey.ts` |
+| `theme-factory` | `generate-theme` | `src` |
+| `ux-journeymapper` | `map-user-journey` | `src` |

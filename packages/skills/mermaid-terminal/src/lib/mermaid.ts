@@ -147,7 +147,7 @@ export function validateMermaidDiagram(input: unknown): ValidationResult {
 // Terminal rendering
 // ---------------------------------------------------------------------------
 
-const ARROW_PATTERN = /(-\.->|==>|-->|---)(?:\s*\|([^|]*)\|)?/g;
+const ARROW_PATTERN = /(--\s[^>]*?\s-->|-\.->|==>|-->|---)(?:\s*\|([^|]*)\|)?/g;
 
 /**
  * Blanks the contents of double-quoted labels so an arrow written inside a label
@@ -217,8 +217,11 @@ function renderFlowchart(lines: string[], header: string): RenderResult {
       const end = ARROW_PATTERN.lastIndex;
       parts.push(line.slice(last, m.index));
       // Read the edge label from the original line so quoted label text is kept.
-      const pipeLabel = /\|([^|]*)\|/.exec(line.slice(m.index, end));
-      edgeLabels.push(pipeLabel?.[1].trim() || undefined);
+      const token = line.slice(m.index, end);
+      const pipeLabel = /\|([^|]*)\|/.exec(token)?.[1].trim();
+      // Inline form "-- text -->" carries its label between the dashes.
+      const inlineLabel = /^--\s.*\s-->$/.test(token) ? token.slice(2, -3).trim() : undefined;
+      edgeLabels.push(pipeLabel || inlineLabel || undefined);
       last = end;
     }
     parts.push(line.slice(last));

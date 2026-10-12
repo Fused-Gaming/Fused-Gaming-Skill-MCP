@@ -230,3 +230,17 @@ describe('nested collection and date validation', () => {
     expect(result).toEqual({ ok: true, data: { valid: true, errors: [] } });
   });
 });
+
+describe('optional nested strings and timestamp calendar days', () => {
+  it('rejects a non-string risk mitigation and blocker resolution', () => {
+    const risk = { id: 'r', title: 't', description: 'd', probability: 'low', impact: 'low', status: 'open', mitigation: 42 };
+    const blocker = { id: 'b', title: 't', description: 'd', impact: 'low', reportedBy: 'x', reportedAt: '2026-10-01', status: 'resolved', resolution: 7 };
+    expect(JSON.stringify(runTool('validate-project', { project: { ...makeProject(), risks: [risk] } }))).toContain('mitigation');
+    expect(JSON.stringify(runTool('validate-project', { project: { ...makeProject(), blockers: [blocker] } }))).toContain('resolution');
+  });
+
+  it('reports a timestamp with an impossible calendar day as invalid', () => {
+    const result = runTool('validate-project', { project: makeProject({ targetDate: '2026-02-30T12:00:00Z' }) });
+    expect(result).toMatchObject({ ok: true, data: { valid: false } });
+  });
+});

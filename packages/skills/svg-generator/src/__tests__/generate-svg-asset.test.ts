@@ -239,3 +239,21 @@ describe("published success discriminator", () => {
     expect(bad).toMatchObject({ ok: false, success: false });
   });
 });
+
+describe("chart axis and per-axis text dimensions", () => {
+  it("keeps the baseline inside a very narrow chart", async () => {
+    const result = await run({ objective: "bar chart", context: "", width: 5, height: 40 });
+    expect(result.ok).toBe(true);
+    const line = String(result.svgCode).match(/<line x1="([\d.-]+)"[^>]*x2="([\d.-]+)"/);
+    expect(line).not.toBeNull();
+    expect(Number(line![1])).toBeGreaterThanOrEqual(0);
+    expect(Number(line![2])).toBeLessThanOrEqual(5);
+  });
+
+  it("ignores an invalid text width when width is given explicitly", async () => {
+    const result = await run({ objective: "icon 5000x128", context: "", width: 300 });
+    expect(result.ok).toBe(true);
+    expect(result.svgCode).toContain('width="300"');
+    expect(result.svgCode).toContain('height="128"');
+  });
+});

@@ -53,7 +53,7 @@ results. Generation is deterministic: identical input yields identical output.
 - **Opportunity discovery**: Recommends improvement opportunities
 - **Emotional journey**: Captures user emotions throughout the journey
 - **Actionable insights**: Provides key insights and recommendations
-- **Persona-aware**: Adapts journey mapping based on user persona
+- **Persona profile**: a validated persona supplies the label and is echoed as `personaProfile`; stages are generated from the objective and context
 
 ## Usage Examples
 

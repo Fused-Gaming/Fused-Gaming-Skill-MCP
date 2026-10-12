@@ -114,12 +114,17 @@ const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2
  * lenient (it accepts impossible dates like 2026-02-30 and locale strings), so
  * date-only values must also round-trip through their calendar components.
  */
+function isCalendarDay(day: string): boolean {
+  if (!DATE_ONLY.test(day)) return false;
+  const parsed = new Date(`${day}T00:00:00Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === day;
+}
+
 export function isValidDate(value: string): boolean {
-  if (DATE_ONLY.test(value)) {
-    const parsed = new Date(`${value}T00:00:00Z`);
-    return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
-  }
-  return ISO_DATETIME.test(value) && !Number.isNaN(Date.parse(value));
+  if (DATE_ONLY.test(value)) return isCalendarDay(value);
+  // The calendar day of a timestamp must round-trip too, or Date.parse would silently
+  // move 2026-02-30T12:00:00Z to March 2.
+  return ISO_DATETIME.test(value) && isCalendarDay(value.slice(0, 10)) && !Number.isNaN(Date.parse(value));
 }
 
 export function checkDate(
@@ -182,6 +187,7 @@ const checkRisk: EntryCheck = (entry, issues) => {
   checkEnum(entry, 'probability', LEVELS, issues);
   checkEnum(entry, 'impact', LEVELS, issues);
   checkEnum(entry, 'status', ['open', 'mitigated', 'realized'] as const, issues);
+  checkString(entry, 'mitigation', issues, { optional: true });
 };
 
 const checkBlocker: EntryCheck = (entry, issues) => {
@@ -192,6 +198,7 @@ const checkBlocker: EntryCheck = (entry, issues) => {
   checkString(entry, 'reportedBy', issues);
   checkDate(entry, 'reportedAt', issues);
   checkEnum(entry, 'status', ['open', 'in-progress', 'resolved'] as const, issues);
+  checkString(entry, 'resolution', issues, { optional: true });
 };
 
 const checkDependency: EntryCheck = (entry, issues) => {

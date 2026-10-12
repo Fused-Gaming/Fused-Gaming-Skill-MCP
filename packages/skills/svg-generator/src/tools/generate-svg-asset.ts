@@ -71,18 +71,32 @@ export function detectAssetType(objective: string): string {
  * Extracts "WxH" dimensions from free text (e.g. "256x256", "512 x 128").
  * Returns null when no pattern is present; a validation failure when the match is out of range.
  */
-function extractTextDimensions(text: string, path: string): ValidationResult<Canvas> | null {
+function extractTextDimensions(
+  text: string,
+  path: string,
+  overridden: { width: boolean; height: boolean }
+): ValidationResult<Partial<Canvas>> | null {
   const match = text.toLowerCase().match(/(\d+)\s*x\s*(\d+)/);
   if (!match) {
     return null;
   }
-  const width = validateDimension(Number(match[1]), `${path}.width`);
-  const height = validateDimension(Number(match[2]), `${path}.height`);
-  const issues = [...(width.ok ? [] : width.issues), ...(height.ok ? [] : height.issues)];
+  // An axis given explicitly overrides the text, so its text value is not validated.
+  const value: Partial<Canvas> = {};
+  const issues: ValidationIssue[] = [];
+  if (!overridden.width) {
+    const width = validateDimension(Number(match[1]), `${path}.width`);
+    if (width.ok) value.width = Number(match[1]);
+    else issues.push(...width.issues);
+  }
+  if (!overridden.height) {
+    const height = validateDimension(Number(match[2]), `${path}.height`);
+    if (height.ok) value.height = Number(match[2]);
+    else issues.push(...height.issues);
+  }
   if (issues.length > 0) {
     return { ok: false, issues };
   }
-  return { ok: true, value: { width: Number(match[1]), height: Number(match[2]) } };
+  return { ok: true, value };
 }
 
 /** Extracts named colors mentioned in free text, in documented palette order. */
@@ -188,9 +202,11 @@ export function generateSvgAsset(input: unknown): SvgAsset {
 
   // Text dimensions fill whichever axis is not given explicitly, so an explicit
   // width or height must not discard the other text-derived axis.
-  const textDims = extractTextDimensions(`${trimmedObjective} ${context}`, "objective");
-  const bothAxesExplicit = width !== undefined && height !== undefined;
-  if (textDims !== null && !textDims.ok && !bothAxesExplicit) {
+  const textDims = extractTextDimensions(`${trimmedObjective} ${context}`, "objective", {
+    width: width !== undefined,
+    height: height !== undefined,
+  });
+  if (textDims !== null && !textDims.ok) {
     return fail("Invalid input: " + textDims.issues.map((i) => `${i.path} ${i.message}`).join("; "), textDims.issues);
   }
   const explicitCanvas = textDims?.ok ? textDims.value : undefined;

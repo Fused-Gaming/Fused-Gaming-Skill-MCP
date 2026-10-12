@@ -129,3 +129,14 @@ describe("asymmetric node shapes", () => {
     expect(result.ok && result.text).toContain("Flag --> B");
   });
 });
+
+describe("inline edge labels", () => {
+  it("keeps the source node and reads the label between the dashes", () => {
+    const result = renderMermaidToText(["flowchart LR", "    A -- yes --> B"].join("\n"));
+    expect(result).toEqual({
+      ok: true,
+      diagramType: "flowchart",
+      text: "Flowchart LR (2 nodes, 1 edges)\nA --yes--> B\n",
+    });
+  });
+});
