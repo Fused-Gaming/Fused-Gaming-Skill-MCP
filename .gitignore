@@ -158,6 +158,7 @@ orchestration-state.json
 .claude/logs
 .claude-flow/cache
 .claude-flow/logs
+.claude/settings.local.json
 
 # Temporary Files
 *.tmp

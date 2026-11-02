@@ -190,8 +190,14 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_FLOW_V3_ENABLED": "true",
-    "CLAUDE_FLOW_HOOKS_ENABLED": "true"
+    "CLAUDE_FLOW_HOOKS_ENABLED": "true",
+    "SYNC_MCP_URL": "https://sync.vln.gg/mcp",
+    "SKILL_MCP_URL": "https://skill.vln.gg/mcp"
   },
+  "enabledMcpjsonServers": [
+    "sync-coordinator",
+    "skill-repository"
+  ],
   "claudeFlow": {
     "version": "3.0.0",
     "enabled": true,
